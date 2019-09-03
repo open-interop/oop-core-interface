@@ -1,4 +1,4 @@
-## Strengthening Interoperability user interface
+## Open Interop user interface
 
 Run instructions:
 
