@@ -1,4 +1,4 @@
-##Strengthening Interoperability user interface
+## Strengthening Interoperability user interface
 
 Run instructions:
 
@@ -11,12 +11,6 @@ Run instructions:
 `yarn install`
 
 4. In the project root directory, run
-
-`yarn run compile-scss`
-
-This needs to be run whenever styles are updated
-
-5. In the project root directory, run
 
 `yarn run start`
 
