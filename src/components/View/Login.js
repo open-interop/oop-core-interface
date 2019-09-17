@@ -16,6 +16,8 @@ const Login = props => {
                 <FormControl>
                     <Input
                         id="input-email"
+                        type="text"
+                        autoComplete="email"
                         value={email}
                         onChange={event => setEmail(event.currentTarget.value)}
                         placeholder="E-mail address"
@@ -24,6 +26,8 @@ const Login = props => {
                 <FormControl>
                     <Input
                         id="input-password"
+                        type="password"
+                        autoComplete="password"
                         value={password}
                         onChange={event =>
                             setPassword(event.currentTarget.value)
@@ -32,6 +36,7 @@ const Login = props => {
                     />
                 </FormControl>
                 <Button
+                    type="submit"
                     onClick={() => {
                         setLoading(true);
                         setErrorMessage("");
