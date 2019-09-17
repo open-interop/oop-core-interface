@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "baseui": "^8.17.1",
+    "query-string": "^6.8.3",
     "react": "^16.9.0",
     "react-cookies": "^0.1.1",
     "react-dom": "^16.9.0",

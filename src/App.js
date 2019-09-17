@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Router, Route, Redirect } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { Devices, Home, Login } from "./components/View";
+import { Devices, Home, Login, Settings } from "./components/View";
+import { ComponentWithNavigation } from "./components/Global";
 import api from "./APIservice";
+const queryString = require("query-string");
 
 class App extends Component {
     constructor(props) {
@@ -15,7 +17,9 @@ class App extends Component {
             user: false,
         };
 
-        api.onLoggedOut(() => this.setState({ isLoading: false, user: false }));
+        api.onLoggedOut(() => {
+            this.setState({ isLoading: false, user: false });
+        });
         api.onLoggedIn(user => {
             this.setState({ isLoading: false, user: user });
         });
@@ -28,13 +32,9 @@ class App extends Component {
     pathName = props => {
         return (
             props.location.nextPath ||
-            sessionStorage.getItem("sessionStoragePathName") ||
+            queryString.parse(props.location.search).redirect ||
             "/"
         );
-    };
-
-    savePathNameInSessionStorage = pathName => {
-        sessionStorage.setItem("sessionStoragePathName", pathName);
     };
 
     renderRoutes = () => {
@@ -59,14 +59,16 @@ class App extends Component {
                     path="/"
                     exact
                     render={() => {
-                        this.savePathNameInSessionStorage("/");
                         return this.state.user ? (
-                            <Home />
+                            <ComponentWithNavigation
+                                component={Home}
+                                history={this.history}
+                            />
                         ) : (
                             <Redirect
                                 to={{
                                     pathname: "/login",
-                                    nextPath: "/",
+                                    search: "?redirect=/",
                                 }}
                             />
                         );
@@ -76,14 +78,35 @@ class App extends Component {
                     path="/devices"
                     exact
                     render={() => {
-                        this.savePathNameInSessionStorage("/devices");
                         return this.state.user ? (
-                            <Devices />
+                            <ComponentWithNavigation
+                                component={Devices}
+                                history={this.history}
+                            />
                         ) : (
                             <Redirect
                                 to={{
                                     pathname: "/login",
-                                    nextPath: "/devices",
+                                    search: "?redirect=/devices",
+                                }}
+                            />
+                        );
+                    }}
+                />
+                <Route
+                    path="/settings"
+                    exact
+                    render={() => {
+                        return this.state.user ? (
+                            <ComponentWithNavigation
+                                component={Settings}
+                                history={this.history}
+                            />
+                        ) : (
+                            <Redirect
+                                to={{
+                                    pathname: "/login",
+                                    search: "?redirect=/settings",
                                 }}
                             />
                         );

@@ -1,4 +1,4 @@
-export * from "./Header";
-export * from "./Login";
-export * from "./Home";
 export * from "./Devices";
+export * from "./Home";
+export * from "./Login";
+export * from "./Settings";

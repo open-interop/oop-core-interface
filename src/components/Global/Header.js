@@ -12,15 +12,12 @@ import api from "../../APIservice";
 const Header = () => (
     <HeaderNavigation>
         <NavigationList $align={ALIGN.left}>
-            <NavigationItem>OOP</NavigationItem>
+            <NavigationItem>Open Interop</NavigationItem>
         </NavigationList>
         <NavigationList $align={ALIGN.center} />
         <NavigationList $align={ALIGN.right}>
             <NavigationItem>
-                <Link href="#basic-link1">Tab Link One</Link>
-            </NavigationItem>
-            <NavigationItem>
-                <Link href="#basic-link2">Tab Link Two</Link>
+                <Link href="#">Dan User</Link>
             </NavigationItem>
         </NavigationList>
         <NavigationList $align={ALIGN.right}>

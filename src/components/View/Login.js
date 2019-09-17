@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "baseui/button";
 import api from "../../APIservice";
 
 const Login = props => {
+    const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+
     return (
         <>
             <div>
-                This is the login page. Once you click login you will be
-                redirected to {props.nextPath}
+                <Button
+                    onClick={() => {
+                        setLoading(true);
+                        setErrorMessage("");
+                        api.login().catch(error => {
+                            setErrorMessage(error.message);
+                            setLoading(false);
+                        });
+                    }}
+                >
+                    login
+                </Button>
             </div>
-            <div>
-                <Button onClick={() => api.login()}>login</Button>
-            </div>
+            <div> {errorMessage && "Error: " + errorMessage}</div>
+            <div> {loading && "loading"}</div>
         </>
     );
 };
