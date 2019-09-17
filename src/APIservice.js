@@ -53,7 +53,7 @@ class APIservice {
             });
     }
 
-    login(email = "hello_life@from.dan.com", password = "llamafarms") {
+    login(email, password) {
         return this.makeRequest(
             "/auth/login",
             {
