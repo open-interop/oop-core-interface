@@ -68,7 +68,6 @@ class App extends Component {
                             <Redirect
                                 to={{
                                     pathname: "/login",
-                                    search: "?redirect=/",
                                 }}
                             />
                         );
