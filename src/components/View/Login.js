@@ -7,7 +7,7 @@ const Login = props => {
         <>
             <div>
                 This is the login page. Once you click login you will be
-                redirected to {props.nextPath || "/"}
+                redirected to {props.nextPath}
             </div>
             <div>
                 <Button onClick={() => api.login()}>login</Button>

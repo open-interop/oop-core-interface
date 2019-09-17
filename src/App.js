@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Router, Route, Redirect } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { Dashboard, Login } from "./components/View";
+import { Devices, Home, Login } from "./components/View";
 import api from "./APIservice";
 
 class App extends Component {
@@ -25,39 +25,69 @@ class App extends Component {
         });
     }
 
+    pathName = props => {
+        return (
+            props.location.nextPath ||
+            sessionStorage.getItem("sessionStoragePathName") ||
+            "/"
+        );
+    };
+
+    savePathNameInSessionStorage = pathName => {
+        sessionStorage.setItem("sessionStoragePathName", pathName);
+    };
+
     renderRoutes = () => {
         return (
             <Router history={this.history}>
                 <Route
                     path="/login"
                     exact
-                    render={() =>
+                    render={props =>
                         this.state.user ? (
                             <Redirect
                                 to={{
-                                    pathname: "/",
+                                    pathname: this.pathName(props),
                                 }}
                             />
                         ) : (
-                            <Login />
+                            <Login nextPath={this.pathName(props)} />
                         )
                     }
                 />
                 <Route
                     path="/"
                     exact
-                    render={() =>
-                        this.state.user ? (
-                            <Dashboard />
+                    render={() => {
+                        this.savePathNameInSessionStorage("/");
+                        return this.state.user ? (
+                            <Home />
                         ) : (
                             <Redirect
                                 to={{
                                     pathname: "/login",
-                                    nextPath: "/passing from props",
+                                    nextPath: "/",
                                 }}
                             />
-                        )
-                    }
+                        );
+                    }}
+                />
+                <Route
+                    path="/devices"
+                    exact
+                    render={() => {
+                        this.savePathNameInSessionStorage("/devices");
+                        return this.state.user ? (
+                            <Devices />
+                        ) : (
+                            <Redirect
+                                to={{
+                                    pathname: "/login",
+                                    nextPath: "/devices",
+                                }}
+                            />
+                        );
+                    }}
                 />
             </Router>
         );

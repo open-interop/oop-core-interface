@@ -1,13 +1,13 @@
 import React from "react";
 import { Header } from ".";
 
-const Dashboard = () => {
+const Home = () => {
     return (
         <>
             <Header />
-            <div>this is the dashboard</div>
+            <div>this is the main dashboard</div>
         </>
     );
 };
 
-export { Dashboard };
+export { Home };
