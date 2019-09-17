@@ -9,7 +9,7 @@ import { StyledLink as Link } from "baseui/link";
 import { Button } from "baseui/button";
 import api from "../../APIservice";
 
-const Header = () => (
+const Header = props => (
     <HeaderNavigation>
         <NavigationList $align={ALIGN.left}>
             <NavigationItem>Open Interop</NavigationItem>
@@ -22,7 +22,14 @@ const Header = () => (
         </NavigationList>
         <NavigationList $align={ALIGN.right}>
             <NavigationItem>
-                <Button onClick={() => api.logout()}>logout</Button>
+                <Button
+                    onClick={() => {
+                        api.logout();
+                        props.history.push("/");
+                    }}
+                >
+                    logout
+                </Button>
             </NavigationItem>
         </NavigationList>
     </HeaderNavigation>
