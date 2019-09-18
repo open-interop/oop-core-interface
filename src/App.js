@@ -36,16 +36,25 @@ class App extends Component {
     }
 
     pathName = props => {
-        return (
-            props.location.nextPath ||
-            queryString.parse(props.location.search).redirect ||
-            "/"
-        );
+        return queryString.parse(props.location.search).redirect || "/";
     };
 
     HeaderWithRouter = withRouter(Header);
 
     SideNavigationWithRouter = withRouter(SideNavigation);
+
+    getRouteContent = (redirect, redirectPath, Component, componentPath) => {
+        return redirect ? (
+            <Redirect
+                to={{
+                    pathname: redirectPath,
+                    search: componentPath ? `?redirect=${componentPath}` : "",
+                }}
+            />
+        ) : (
+            <Component />
+        );
+    };
 
     renderRoutes = () => {
         return (
@@ -54,71 +63,58 @@ class App extends Component {
                     path="/login"
                     exact
                     render={props =>
-                        this.state.user ? (
-                            <Redirect
-                                to={{
-                                    pathname: this.pathName(props),
-                                }}
-                            />
-                        ) : (
-                            <Login nextPath={this.pathName(props)} />
+                        this.getRouteContent(
+                            this.state.user,
+                            this.pathName(props),
+                            Login,
                         )
                     }
                 />
 
-                <>
-                    {this.state.user && <this.HeaderWithRouter />}
-                    {this.state.user && <this.SideNavigationWithRouter />}
-                    <div className="content">
-                        <Route
-                            path="/"
-                            exact
-                            render={() => {
-                                return this.state.user ? (
-                                    <Home />
-                                ) : (
-                                    <Redirect
-                                        to={{
-                                            pathname: "/login",
-                                        }}
-                                    />
-                                );
-                            }}
-                        />
-                        <Route
-                            path="/devices"
-                            exact
-                            render={() => {
-                                return this.state.user ? (
-                                    <Devices />
-                                ) : (
-                                    <Redirect
-                                        to={{
-                                            pathname: "/login",
-                                            search: "?redirect=/devices",
-                                        }}
-                                    />
-                                );
-                            }}
-                        />
-                        <Route
-                            path="/settings"
-                            exact
-                            render={() => {
-                                return this.state.user ? (
-                                    <Settings />
-                                ) : (
-                                    <Redirect
-                                        to={{
-                                            pathname: "/login",
-                                            search: "?redirect=/settings",
-                                        }}
-                                    />
-                                );
-                            }}
-                        />
-                    </div>
-                </>
+                {this.state.user && (
+                    <>
+                        <this.HeaderWithRouter />
+                        <this.SideNavigationWithRouter />
+                    </>
+                )}
+
+                <div className="content">
+                    <Route
+                        path="/"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Home,
+                            )
+                        }
+                    />
+                    <Route
+                        path="/devices"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Devices,
+                                "/devices",
+                            )
+                        }
+                    />
+                    <Route
+                        path="/settings"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Settings,
+                                "/settings",
+                            )
+                        }
+                    />
+                </div>
             </Router>
         );
     };
