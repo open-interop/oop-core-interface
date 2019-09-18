@@ -1,10 +1,11 @@
 import cookie from "react-cookies";
-class OopCore {
-    constructor() {
-        this.apiBase = "http://localhost:3000/api";
+const EventEmitter = require("events");
 
-        this.onLoggedOutFunc = false;
-        this.onLoggedInFunc = false;
+class OopCore extends EventEmitter {
+    constructor(props) {
+        super(props);
+
+        this.apiBase = "http://localhost:3000/api";
 
         this.token = cookie.load("token");
     }
@@ -71,22 +72,14 @@ class OopCore {
     logout() {
         cookie.remove("token");
         this.token = null;
-        this.onLoggedOutFunc && this.onLoggedOutFunc();
+        this.emit("loggedout");
         return Promise.resolve();
     }
 
     getLoggedInUser() {
-        return this.makeRequest("/me").then(response => {
-            return this.onLoggedInFunc && this.onLoggedInFunc(response);
+        return this.makeRequest("/me").then(loggedInUser => {
+            this.emit("loggedin", loggedInUser);
         });
-    }
-
-    onLoggedOut(func) {
-        this.onLoggedOutFunc = func;
-    }
-
-    onLoggedIn(func) {
-        this.onLoggedInFunc = func;
     }
 }
 

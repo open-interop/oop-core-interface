@@ -23,16 +23,18 @@ class App extends Component {
             user: false,
         };
 
-        OopCore.onLoggedOut(() => {
-            this.setState({ isLoading: false, user: false });
-        });
-        OopCore.onLoggedIn(user => {
-            this.setState({ isLoading: false, user: user });
-        });
+        const setUser = user => {
+            return this.setState({ isLoading: false, user: user });
+        };
 
-        OopCore.getLoggedInUser().catch(() => {
-            this.setState({ isLoading: false, user: false });
-        });
+        const setNoUser = () => {
+            return this.setState({ isLoading: false, user: false });
+        };
+
+        OopCore.getLoggedInUser().catch(() => setNoUser());
+
+        OopCore.on("loggedin", user => setUser(user));
+        OopCore.on("loggedout", () => setNoUser());
     }
 
     pathName = props => {
