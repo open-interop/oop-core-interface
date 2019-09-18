@@ -10,6 +10,7 @@ import {
     SideNavigation,
 } from "./components/View";
 import OopCore from "./OopCore";
+import "./styles/App.scss";
 const queryString = require("query-string");
 
 class App extends Component {
