@@ -43,12 +43,17 @@ class App extends Component {
 
     SideNavigationWithRouter = withRouter(SideNavigation);
 
-    getRouteContent = (redirect, redirectPath, Component, componentPath) => {
-        return redirect ? (
+    getRouteContent = (
+        shouldRedirect,
+        redirectPath,
+        Component,
+        queryParameter,
+    ) => {
+        return shouldRedirect ? (
             <Redirect
                 to={{
                     pathname: redirectPath,
-                    search: componentPath ? `?redirect=${componentPath}` : "",
+                    search: queryParameter ? `?redirect=${queryParameter}` : "",
                 }}
             />
         ) : (
