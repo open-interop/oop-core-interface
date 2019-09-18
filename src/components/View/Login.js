@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
-import api from "../../APIservice";
+import OopCore from "../../OopCore";
 
 const Login = props => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -40,7 +40,7 @@ const Login = props => {
                     onClick={() => {
                         setLoading(true);
                         setErrorMessage("");
-                        api.login(email, password).catch(error => {
+                        OopCore.login(email, password).catch(error => {
                             setErrorMessage(error.message);
                             setLoading(false);
                         });

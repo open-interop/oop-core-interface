@@ -7,7 +7,7 @@ import {
 } from "baseui/header-navigation";
 import { StyledLink as Link } from "baseui/link";
 import { Button } from "baseui/button";
-import api from "../../APIservice";
+import OopCore from "../../OopCore";
 
 const Header = props => (
     <HeaderNavigation>
@@ -24,7 +24,7 @@ const Header = props => (
             <NavigationItem>
                 <Button
                     onClick={() => {
-                        api.logout();
+                        OopCore.logout();
                         props.history.push("/");
                     }}
                 >

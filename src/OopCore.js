@@ -1,5 +1,5 @@
 import cookie from "react-cookies";
-class APIservice {
+class OopCore {
     constructor() {
         this.apiBase = "http://localhost:3000/api";
 
@@ -90,4 +90,4 @@ class APIservice {
     }
 }
 
-export default new APIservice();
+export default new OopCore();

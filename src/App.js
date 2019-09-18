@@ -3,7 +3,7 @@ import { Router, Route, Redirect } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { Devices, Home, Login, Settings } from "./components/View";
 import { ComponentWithNavigation } from "./components/Global";
-import api from "./APIservice";
+import OopCore from "./OopCore";
 const queryString = require("query-string");
 
 class App extends Component {
@@ -17,14 +17,14 @@ class App extends Component {
             user: false,
         };
 
-        api.onLoggedOut(() => {
+        OopCore.onLoggedOut(() => {
             this.setState({ isLoading: false, user: false });
         });
-        api.onLoggedIn(user => {
+        OopCore.onLoggedIn(user => {
             this.setState({ isLoading: false, user: user });
         });
 
-        api.getLoggedInUser().catch(() => {
+        OopCore.getLoggedInUser().catch(() => {
             this.setState({ isLoading: false, user: false });
         });
     }
