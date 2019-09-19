@@ -3,9 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "baseui": "^8.17.1",
+    "query-string": "^6.8.3",
     "react": "^16.9.0",
+    "react-cookies": "^0.1.1",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.1.1",
+    "styletron-engine-atomic": "^1.4.0",
+    "styletron-react": "^5.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
