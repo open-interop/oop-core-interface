@@ -38,6 +38,10 @@ class OopCore extends EventEmitter {
             .then(response => {
                 if (response.status === 401) {
                     this.logout();
+
+                    if (this.onLoggedOutFunc) {
+                        this.onLoggedOutFunc();
+                    }
                 }
                 if (response.status !== 200) {
                     throw new Error(response.statusText);

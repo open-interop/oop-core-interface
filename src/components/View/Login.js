@@ -37,8 +37,7 @@ const Login = props => {
                 </FormControl>
                 <Button
                     type="submit"
-                    onClick={e => {
-                        e.preventDefault();
+                    onClick={() => {
                         setLoading(true);
                         setErrorMessage("");
                         OopCore.login(email, password).catch(error => {
