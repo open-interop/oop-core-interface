@@ -25,10 +25,9 @@ const Header = props => (
                 <Button
                     onClick={() => {
                         OopCore.logout();
-                        props.history.push("/");
                     }}
                 >
-                    logout
+                    Log out
                 </Button>
             </NavigationItem>
         </NavigationList>
