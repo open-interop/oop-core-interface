@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Router, Route, withRouter } from "react-router-dom";
+import { Router, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Devices,
@@ -21,44 +21,51 @@ class App extends Component {
         this.state = {
             isLoading: true,
             user: false,
-            query: queryString.parse(this.history.location.search),
         };
 
-        const setUser = user => {
+        const setUser = (user, pathName) => {
             this.setState({ isLoading: false, user: user });
-
-            if (/^\/login/.test(this.history.location.pathname)) {
-                const pathname = this.state.query.redirect || "/";
-                const query = this.state.query;
-                delete query.redirect;
-                this.setState({ query: query });
-
-                this.history.push({
-                    pathname: pathname,
-                    search: queryString.stringify(query),
-                });
-            }
+            this.history.push({
+                pathname: pathName || "/",
+            });
         };
 
-        const setNoUser = () => {
+        const setNoUser = redirectPath => {
             this.setState({ isLoading: false, user: false });
-
-            if (!/^\/login/.test(this.history.location.pathname)) {
-                const query = this.state.query;
-                query.redirect = this.history.location.pathname;
-                this.setState({ query: query });
-
-                this.history.push({
-                    pathname: "/login",
-                    search: queryString.stringify(query),
-                });
-            }
+            this.history.push({
+                pathname: "/login",
+                search:
+                    redirectPath &&
+                    redirectPath !== "/login" &&
+                    redirectPath !== "/"
+                        ? `?redirect=${redirectPath}`
+                        : "",
+            });
         };
 
-        OopCore.getLoggedInUser().catch(() => setNoUser());
-        OopCore.on("loggedin", user => setUser(user));
-        OopCore.on("loggedout", () => setNoUser());
+        OopCore.getLoggedInUser().catch(() => {
+            const existingRedirect = queryString.parse(
+                this.history.location.search,
+            ).redirect;
+
+            setNoUser(existingRedirect || this.history.location.pathname);
+        });
+
+        OopCore.on("loggedin", user => {
+            setUser(
+                user,
+                queryString.parse(this.history.location.search).redirect,
+            );
+        });
+
+        OopCore.on("loggedout", () => {
+            setNoUser();
+        });
     }
+
+    pathName = props => {
+        return queryString.parse(props.location.search).redirect || "/";
+    };
 
     HeaderWithRouter = withRouter(Header);
 
