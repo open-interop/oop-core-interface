@@ -21,44 +21,52 @@ class App extends Component {
         this.state = {
             isLoading: true,
             user: false,
-            query: queryString.parse(this.history.location.search),
         };
+
+        this.history.listen(location => {
+            this.handleRedirect();
+        });
 
         const setUser = user => {
             this.setState({ isLoading: false, user: user });
-
-            if (/^\/login/.test(this.history.location.pathname)) {
-                const pathname = this.state.query.redirect || "/";
-                const query = this.state.query;
-                delete query.redirect;
-                this.setState({ query: query });
-
-                this.history.push({
-                    pathname: pathname,
-                    search: queryString.stringify(query),
-                });
-            }
         };
 
         const setNoUser = () => {
             this.setState({ isLoading: false, user: false });
-
-            if (!/^\/login/.test(this.history.location.pathname)) {
-                const query = this.state.query;
-                query.redirect = this.history.location.pathname;
-                this.setState({ query: query });
-
-                this.history.push({
-                    pathname: "/login",
-                    search: queryString.stringify(query),
-                });
-            }
         };
 
         OopCore.getLoggedInUser().catch(() => setNoUser());
         OopCore.on("loggedin", user => setUser(user));
         OopCore.on("loggedout", () => setNoUser());
     }
+
+    componentDidUpdate() {
+        this.handleRedirect();
+    }
+
+    handleRedirect = () => {
+        let query = queryString.parse(this.history.location.search);
+        if (this.state.user) {
+            if (/^\/login/.test(this.history.location.pathname)) {
+                const pathname = query.redirect || "/";
+                delete query.redirect;
+
+                this.history.replace({
+                    pathname: pathname,
+                    search: queryString.stringify(query),
+                });
+            }
+        } else {
+            if (!/^\/login/.test(this.history.location.pathname)) {
+                query.redirect = this.history.location.pathname;
+
+                this.history.replace({
+                    pathname: "/login",
+                    search: queryString.stringify(query),
+                });
+            }
+        }
+    };
 
     HeaderWithRouter = withRouter(Header);
 
