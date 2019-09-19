@@ -56,11 +56,20 @@ class App extends Component {
             <Redirect
                 to={{
                     pathname: redirectPath,
-                    search: queryParameter ? `?redirect=${queryParameter}` : "",
+                    search:
+                        queryParameter &&
+                        queryParameter !== "/" &&
+                        queryParameter !== "/login"
+                            ? `?redirect=${queryParameter}`
+                            : "",
                 }}
             />
-        ) : (
+        ) : queryParameter === "/login" ? (
             <Component />
+        ) : (
+            <div className="content">
+                <Component />
+            </div>
         );
     };
 
@@ -75,6 +84,7 @@ class App extends Component {
                             this.state.user,
                             this.pathName(props),
                             Login,
+                            "/login",
                         )
                     }
                 />
@@ -86,43 +96,42 @@ class App extends Component {
                     </>
                 )}
 
-                <div className="content">
-                    <Route
-                        path="/"
-                        exact
-                        render={() =>
-                            this.getRouteContent(
-                                !this.state.user,
-                                "/login",
-                                Home,
-                            )
-                        }
-                    />
-                    <Route
-                        path="/devices"
-                        exact
-                        render={() =>
-                            this.getRouteContent(
-                                !this.state.user,
-                                "/login",
-                                Devices,
-                                "/devices",
-                            )
-                        }
-                    />
-                    <Route
-                        path="/settings"
-                        exact
-                        render={() =>
-                            this.getRouteContent(
-                                !this.state.user,
-                                "/login",
-                                Settings,
-                                "/settings",
-                            )
-                        }
-                    />
-                </div>
+                <Route
+                    path="/"
+                    exact
+                    render={() =>
+                        this.getRouteContent(
+                            !this.state.user,
+                            "/login",
+                            Home,
+                            "/",
+                        )
+                    }
+                />
+                <Route
+                    path="/devices"
+                    exact
+                    render={() =>
+                        this.getRouteContent(
+                            !this.state.user,
+                            "/login",
+                            Devices,
+                            "/devices",
+                        )
+                    }
+                />
+                <Route
+                    path="/settings"
+                    exact
+                    render={() =>
+                        this.getRouteContent(
+                            !this.state.user,
+                            "/login",
+                            Settings,
+                            "/settings",
+                        )
+                    }
+                />
             </Router>
         );
     };
