@@ -65,7 +65,9 @@ class App extends Component {
                 }}
             />
         ) : queryParameter === "/login" ? (
-            <Component />
+            <div className="login">
+                <Component />
+            </div>
         ) : (
             <div className="content">
                 <Component />
