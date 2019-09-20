@@ -11,16 +11,10 @@ import OopCore from "../../OopCore";
 
 const Header = props => (
     <HeaderNavigation>
-        <NavigationList $align={ALIGN.left}>
-            <NavigationItem>Open Interop</NavigationItem>
-        </NavigationList>
-        <NavigationList $align={ALIGN.center} />
         <NavigationList $align={ALIGN.right}>
             <NavigationItem>
                 <Link href="#">Dan User</Link>
             </NavigationItem>
-        </NavigationList>
-        <NavigationList $align={ALIGN.right}>
             <NavigationItem>
                 <Button
                     onClick={() => {
