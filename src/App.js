@@ -3,6 +3,7 @@ import { Router, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Devices,
+    DeviceTransmissions,
     Header,
     Home,
     Login,
@@ -57,9 +58,7 @@ class App extends Component {
                 to={{
                     pathname: redirectPath,
                     search:
-                        queryParameter &&
-                        queryParameter !== "/" &&
-                        queryParameter !== "/login"
+                        queryParameter && queryParameter !== "/login"
                             ? `?redirect=${queryParameter}`
                             : "",
                 }}
@@ -102,12 +101,7 @@ class App extends Component {
                     path="/"
                     exact
                     render={() =>
-                        this.getRouteContent(
-                            !this.state.user,
-                            "/login",
-                            Home,
-                            "/",
-                        )
+                        this.getRouteContent(!this.state.user, "/login", Home)
                     }
                 />
                 <Route
@@ -118,9 +112,21 @@ class App extends Component {
                             !this.state.user,
                             "/login",
                             Devices,
-                            "/devices",
+                            this.history.location.pathname,
                         )
                     }
+                />
+                <Route
+                    path="/devices/:deviceId/transmissions"
+                    exact
+                    render={() => {
+                        return this.getRouteContent(
+                            !this.state.user,
+                            "/login",
+                            DeviceTransmissions,
+                            this.history.location.pathname,
+                        );
+                    }}
                 />
                 <Route
                     path="/settings"
@@ -130,7 +136,7 @@ class App extends Component {
                             !this.state.user,
                             "/login",
                             Settings,
-                            "/settings",
+                            this.history.location.pathname,
                         )
                     }
                 />
