@@ -66,6 +66,31 @@ const SortableTable = props => {
         return sortedData;
     };
 
+    function TableRows() {
+        if (props.data.length) {
+            return (
+                <StyledBody>
+                    {getSortedData().map((row, index) => (
+                        <StyledRow key={index}>
+                            {props.columns.map(column => (
+                                <StyledCell
+                                    key={`table-cell-${index}-${column.id}`}
+                                >
+                                    {props.mapFunction(
+                                        column.id,
+                                        row[column.id],
+                                    )}
+                                </StyledCell>
+                            ))}
+                        </StyledRow>
+                    ))}
+                </StyledBody>
+            );
+        } else {
+            return <StyledBody>No items to show</StyledBody>;
+        }
+    }
+
     return (
         <StyledTable>
             <StyledHead>
@@ -80,19 +105,7 @@ const SortableTable = props => {
                     />
                 ))}
             </StyledHead>
-            <StyledBody>
-                {getSortedData().map((row, index) => (
-                    <StyledRow key={index}>
-                        {props.columns.map(column => (
-                            <StyledCell
-                                key={`table-cell-${index}-${column.id}`}
-                            >
-                                {props.mapFunction(column.id, row[column.id])}
-                            </StyledCell>
-                        ))}
-                    </StyledRow>
-                ))}
-            </StyledBody>
+            {TableRows()}
         </StyledTable>
     );
 };

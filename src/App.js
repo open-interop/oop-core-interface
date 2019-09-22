@@ -52,6 +52,7 @@ class App extends Component {
         redirectPath,
         Component,
         queryParameter,
+        routeProps,
     ) => {
         return shouldRedirect ? (
             <Redirect
@@ -65,11 +66,11 @@ class App extends Component {
             />
         ) : queryParameter === "/login" ? (
             <div className="login">
-                <Component />
+                <Component {...routeProps} />
             </div>
         ) : (
             <div className="content">
-                <Component />
+                <Component {...routeProps} />
             </div>
         );
     };
@@ -119,12 +120,13 @@ class App extends Component {
                 <Route
                     path="/devices/:deviceId/transmissions"
                     exact
-                    render={() => {
+                    render={routeProps => {
                         return this.getRouteContent(
                             !this.state.user,
                             "/login",
                             DeviceTransmissions,
                             this.history.location.pathname,
+                            routeProps,
                         );
                     }}
                 />

@@ -3,21 +3,21 @@ import { Button } from "baseui/button";
 import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
 
-const DeviceTransmissions = () => {
-    const [transmissions, setTransmissions] = useState([]);
+const DeviceTransmissions = props => {
+    const [transmissions, setTransmissions] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
-        OopCore.getDeviceTransmissions(1)
+        OopCore.getDeviceTransmissions(props.match.params.deviceId)
             .then(response => setTransmissions(response))
             .catch(error => setErrorMessage(error.message));
-    }, []);
+    }, [props.match.params.deviceId]);
 
     if (errorMessage) {
         return <div>{errorMessage}</div>;
     }
 
-    if (transmissions && transmissions.length) {
+    if (transmissions) {
         return (
             <>
                 <SortableTable
