@@ -81,6 +81,14 @@ class OopCore extends EventEmitter {
             this.emit("loggedin", loggedInUser);
         });
     }
+
+    getDevices() {
+        return this.makeRequest("/devices");
+    }
+
+    getDeviceTransmissions(deviceId) {
+        return this.makeRequest(`/devices/${deviceId}/transmissions`);
+    }
 }
 
 export default new OopCore();

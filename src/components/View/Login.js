@@ -6,7 +6,7 @@ import OopCore from "../../OopCore";
 import logo from "../../resources/open_interop_logo_wide.png";
 import { FormWrapper } from "../Universal/FormWrapper";
 
-const Login = props => {
+const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = React.useState("");
