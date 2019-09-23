@@ -91,57 +91,61 @@ class App extends Component {
                     }
                 />
 
-                {this.state.user && (
-                    <>
-                        <this.HeaderWithRouter />
-                        <this.SideNavigationWithRouter />
-                    </>
-                )}
+                <div className="left-side">
+                    {this.state.user && <this.SideNavigationWithRouter />}
+                </div>
 
-                <Route
-                    path="/"
-                    exact
-                    render={() =>
-                        this.getRouteContent(!this.state.user, "/login", Home)
-                    }
-                />
-                <Route
-                    path="/devices"
-                    exact
-                    render={() =>
-                        this.getRouteContent(
-                            !this.state.user,
-                            "/login",
-                            Devices,
-                            this.history.location.pathname,
-                        )
-                    }
-                />
-                <Route
-                    path="/devices/:deviceId/transmissions"
-                    exact
-                    render={routeProps => {
-                        return this.getRouteContent(
-                            !this.state.user,
-                            "/login",
-                            DeviceTransmissions,
-                            this.history.location.pathname,
-                            routeProps,
-                        );
-                    }}
-                />
-                <Route
-                    path="/settings"
-                    exact
-                    render={() =>
-                        this.getRouteContent(
-                            !this.state.user,
-                            "/login",
-                            Settings,
-                            this.history.location.pathname,
-                        )
-                    }
-                />
+                <div className="right-side">
+                    {this.state.user && <this.HeaderWithRouter />}
+                    <Route
+                        path="/"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Home,
+                            )
+                        }
+                    />
+                    <Route
+                        path="/devices"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Devices,
+                                this.history.location.pathname,
+                            )
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId/transmissions"
+                        exact
+                        render={routeProps => {
+                            return this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                DeviceTransmissions,
+                                this.history.location.pathname,
+                                routeProps,
+                            );
+                        }}
+                    />
+                    <Route
+                        path="/settings"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Settings,
+                                this.history.location.pathname,
+                            )
+                        }
+                    />
+                </div>
             </Router>
         );
     };

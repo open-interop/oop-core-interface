@@ -10,23 +10,25 @@ import { Button } from "baseui/button";
 import OopCore from "../../OopCore";
 
 const Header = props => (
-    <HeaderNavigation>
-        <NavigationList $align={ALIGN.right}>
-            <NavigationItem>
-                <Link href="#">Dan User</Link>
-            </NavigationItem>
-            <NavigationItem>
-                <Button
-                    onClick={() => {
-                        OopCore.logout();
-                        props.history.push("/");
-                    }}
-                >
-                    logout
-                </Button>
-            </NavigationItem>
-        </NavigationList>
-    </HeaderNavigation>
+    <div className="header">
+        <HeaderNavigation>
+            <NavigationList $align={ALIGN.right}>
+                <NavigationItem>
+                    <Link href="#">Dan User</Link>
+                </NavigationItem>
+                <NavigationItem>
+                    <Button
+                        onClick={() => {
+                            OopCore.logout();
+                            props.history.push("/");
+                        }}
+                    >
+                        logout
+                    </Button>
+                </NavigationItem>
+            </NavigationList>
+        </HeaderNavigation>
+    </div>
 );
 
 export { Header };

@@ -1,35 +1,55 @@
 body {
     margin: 0;
+    overflow: hidden;
+    height: 100vh;
 }
 
-nav {
-    position: fixed;
+div {
+    &[id="root"] {
+        display: flex;
+        flex-direction: row;
 
-    &[data-baseweb="header-navigation"] {
-        height: 4rem;
-        border: 0;
-        width: 100%;
-        justify-content: flex-end;
-        padding-right: 12px;
-    }
+        .left-side {
+            width: 7rem;
 
-    &[data-baseweb="side-navigation"] {
-        z-index: 100;
-        width: 7rem;
-        height: 100%;
-    }
+            .side-navigation {
+                img {
+                    width: 7rem;
+                }
+            }
+        }
 
-    + img {
-        width: 7rem;
+        .right-side {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+
+            .header {
+                height: 4rem;
+
+                nav {
+                    &[data-baseweb="header-navigation"] {
+                        border: 0;
+                        justify-content: flex-end;
+                        padding-right: 12px;
+                    }
+                }
+            }
+
+            .content {
+                padding: 2rem;
+                overflow: auto;
+                flex-grow: 1;
+            }
+        }
     }
 }
 
-.content {
-    position: fixed;
-    left: 7rem;
-    top: 5rem;
-    height: 100%;
-    width: 100%;
+div {
+    &[data-baseweb="table-custom"] {
+        overflow: unset;
+    }
 }
 
 .login {
