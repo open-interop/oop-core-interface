@@ -4,7 +4,7 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import OopCore from "../../OopCore";
 import logo from "../../resources/open_interop_logo_wide.png";
-import { FormWrapper } from "../Universal/FormWrapper";
+import { LineWrapper } from "../Global";
 
 const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -16,7 +16,7 @@ const Login = () => {
         <>
             <div className="login-form">
                 <img src={logo} alt="logo" />
-                <FormWrapper title="Sign in">
+                <LineWrapper title="Sign in">
                     <FormControl>
                         <Input
                             id="input-email"
@@ -56,7 +56,7 @@ const Login = () => {
                     </Button>
                     <div> {errorMessage && "Error: " + errorMessage}</div>
                     <div> {loading && "loading"}</div>
-                </FormWrapper>
+                </LineWrapper>
             </div>
         </>
     );

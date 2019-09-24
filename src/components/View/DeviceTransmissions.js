@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "baseui/button";
-import { SortableTable } from "../Global";
+import { LineWrapper, SortableTable, PaginationWrapper } from "../Global";
 import OopCore from "../../OopCore";
 
 const DeviceTransmissions = props => {
@@ -19,25 +19,38 @@ const DeviceTransmissions = props => {
 
     if (transmissions) {
         return (
-            <>
-                <SortableTable
+            <div className="device-transmissions">
+                <h2>Transmissions - Device {props.match.params.deviceId}</h2>
+                <LineWrapper title={"Filters"}></LineWrapper>
+                <PaginationWrapper
                     data={transmissions}
-                    mapFunction={(columnName, content) => {
-                        if (columnName === "action") {
-                            return <Button>{content}</Button>;
-                        }
-                        return content;
-                    }}
-                    columns={[
-                        { id: "id", name: "Id" },
-                        { id: "device_tempr_id", name: "Device Tempr Id" },
-                        { id: "transmission_uuid", name: "Transmission UUID" },
-                        { id: "message_uuid", name: "Message UUID" },
-                        { id: "status", name: "Status" },
-                        { id: "action", name: "Action" },
-                    ]}
+                    render={rows => (
+                        <SortableTable
+                            data={rows}
+                            mapFunction={(columnName, content) => {
+                                if (columnName === "action") {
+                                    return <Button>{content}</Button>;
+                                }
+                                return content;
+                            }}
+                            columns={[
+                                { id: "id", name: "Id" },
+                                {
+                                    id: "device_tempr_id",
+                                    name: "Device Tempr Id",
+                                },
+                                {
+                                    id: "transmission_uuid",
+                                    name: "Transmission UUID",
+                                },
+                                { id: "message_uuid", name: "Message UUID" },
+                                { id: "status", name: "Status" },
+                                { id: "action", name: "Action" },
+                            ]}
+                        />
+                    )}
                 />
-            </>
+            </div>
         );
     }
 

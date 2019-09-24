@@ -1,3 +1,7 @@
+$color-grey: #eee;
+$color-dark-grey: lightgrey;
+$color-white: #fff;
+
 body {
     margin: 0;
     overflow: hidden;
@@ -11,6 +15,7 @@ div {
 
         .left-side {
             width: 7rem;
+            border-right: 1px solid $color-grey;
 
             .side-navigation {
                 img {
@@ -41,6 +46,12 @@ div {
                 padding: 2rem;
                 overflow: auto;
                 flex-grow: 1;
+                background-color: $color-grey;
+
+                .device-transmissions {
+                    background-color: $color-white;
+                    padding: 1rem;
+                }
             }
         }
     }
@@ -48,7 +59,7 @@ div {
 
 div {
     &[data-baseweb="table-custom"] {
-        overflow: unset;
+        overflow-x: unset;
     }
 }
 
@@ -79,10 +90,10 @@ div {
 
 .form-wrapper {
     position: relative;
-    border-width: 1px;
-    border-style: solid;
+    border: 1px solid $color-dark-grey;
     border-radius: 5px;
     padding: 1.5rem;
+    margin: 1rem 0;
 
     .form-wrapper-title {
         padding: 5px;
@@ -91,5 +102,17 @@ div {
         position: absolute;
         top: -15px;
         left: 10px;
+    }
+}
+
+.pagination-footer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    .select-label {
+        margin-right: auto;
+        align-self: center;
+        margin-left: 1rem;
     }
 }
