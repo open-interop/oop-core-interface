@@ -1,3 +1,4 @@
+export * from "./Error";
 export * from "./DataProvider";
 export * from "./LineWrapper";
-export * from "./SortableTable";
+export * from "./Spinner";

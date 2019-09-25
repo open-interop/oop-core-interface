@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "baseui/button";
-import { DataProvider, LineWrapper, SortableTable } from "../Universal";
+import { DataProvider, LineWrapper } from "../Universal";
+import { SortableTable } from "../Global";
 import { Pagination } from "baseui/pagination";
 import { Select } from "baseui/select";
 import OopCore from "../../OopCore";
@@ -32,16 +33,17 @@ const DeviceTransmissions = props => {
         );
     };
 
-    const updateQueryParameters = objectWithParams => {
+    const updateQueryParameters = parameters => {
         const newParams = { ...queryParams };
-        const fieldsToUpdate = Object.keys(objectWithParams);
-        fieldsToUpdate.forEach(field => {
-            if (objectWithParams[field]) {
-                newParams[field] = objectWithParams[field];
+
+        Object.keys(parameters).forEach(parameterType => {
+            if (parameters[parameterType]) {
+                newParams[parameterType] = parameters[parameterType];
             } else {
-                delete objectWithParams[field];
+                delete newParams[parameterType];
             }
         });
+
         setQueryParams(newParams);
         props.history.push({
             search: queryString.stringify(newParams),

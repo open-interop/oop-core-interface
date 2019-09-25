@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Error, Spinner } from ".";
 
 const DataProvider = props => {
     const [data, setData] = useState([]);
@@ -19,7 +20,7 @@ const DataProvider = props => {
     }, [props.renderKey]);
 
     if (error) {
-        return <div>error </div>;
+        return <Error />;
     } else if (loaded) {
         try {
             return props.renderData(data);
@@ -27,12 +28,12 @@ const DataProvider = props => {
             return (
                 <div>
                     {String(e)}
-                    <div>error</div>
+                    <Error />
                 </div>
             );
         }
     } else {
-        return <div> loading</div>;
+        return <Spinner />;
     }
 };
 

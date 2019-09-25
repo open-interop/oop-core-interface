@@ -22,35 +22,35 @@ div {
                     width: 7rem;
                 }
             }
-        }
 
-        .right-side {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
+            + .right-side {
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
 
-            .header {
-                height: 4rem;
+                .header {
+                    height: 4rem;
 
-                nav {
-                    &[data-baseweb="header-navigation"] {
-                        border: 0;
-                        justify-content: flex-end;
-                        padding-right: 12px;
+                    nav {
+                        &[data-baseweb="header-navigation"] {
+                            border: 0;
+                            justify-content: flex-end;
+                            padding-right: 12px;
+                        }
                     }
                 }
-            }
 
-            .content {
-                padding: 2rem;
-                overflow: auto;
-                flex-grow: 1;
-                background-color: $color-grey;
+                .content {
+                    padding: 2rem;
+                    overflow: auto;
+                    flex-grow: 1;
+                    background-color: $color-grey;
 
-                .device-transmissions {
-                    background-color: $color-white;
-                    padding: 1rem;
+                    .device-transmissions {
+                        background-color: $color-white;
+                        padding: 1rem;
+                    }
                 }
             }
         }
@@ -68,6 +68,11 @@ div {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    width: 100%;
+
+    + .right-side {
+        display: none;
+    }
 
     .login-form {
         width: 25%;

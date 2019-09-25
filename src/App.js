@@ -10,6 +10,7 @@ import {
     Settings,
     SideNavigation,
 } from "./components/View";
+import { Spinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 const queryString = require("query-string");
@@ -90,10 +91,11 @@ class App extends Component {
                         )
                     }
                 />
-
-                <div className="left-side">
-                    {this.state.user && <this.SideNavigationWithRouter />}
-                </div>
+                {this.state.user && (
+                    <div className="left-side">
+                        <this.SideNavigationWithRouter />
+                    </div>
+                )}
 
                 <div className="right-side">
                     {this.state.user && <this.HeaderWithRouter />}
@@ -152,7 +154,7 @@ class App extends Component {
 
     render() {
         if (this.state.isLoading) {
-            return <div>LOADING</div>;
+            return <Spinner />;
         }
         if (!this.state.isLoading) {
             return this.renderRoutes();
