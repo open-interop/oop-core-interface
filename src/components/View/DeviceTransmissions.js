@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button } from "baseui/button";
-import { DataProvider, LineWrapper } from "../Universal";
-import { SortableTable } from "../Global";
 import { Pagination } from "baseui/pagination";
 import { Select } from "baseui/select";
+import { DataProvider, LineWrapper } from "../Universal";
+import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
 
 const queryString = require("query-string");
@@ -110,8 +110,8 @@ const DeviceTransmissions = props => {
                 <Pagination
                     numPages={100}
                     currentPage={queryParams.page || 1}
-                    onPageChange={e => {
-                        updateQueryParameters({ page: e.nextPage });
+                    onPageChange={event => {
+                        updateQueryParameters({ page: event.nextPage });
                     }}
                 />
             </div>

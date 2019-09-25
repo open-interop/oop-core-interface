@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button } from "baseui/button";
 import {
     HeaderNavigation,
     ALIGN,
@@ -6,7 +7,6 @@ import {
     StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
 import { StyledLink as Link } from "baseui/link";
-import { Button } from "baseui/button";
 import OopCore from "../../OopCore";
 
 const Header = props => (
