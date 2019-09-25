@@ -27,8 +27,7 @@ const DataProvider = props => {
         } catch (e) {
             return (
                 <div>
-                    {String(e)}
-                    <Error />
+                    <Error message={String(e)} />
                 </div>
             );
         }
