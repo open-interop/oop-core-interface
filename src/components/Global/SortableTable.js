@@ -11,8 +11,8 @@ import {
 
 const SortableTable = props => {
     const data = props.data;
-    const [sortColumn, setSortColumn] = useState(props.columns[0].id);
-    const [sortDirection, setSortDirection] = useState(SORT_DIRECTION.DESC);
+    const [sortColumn, setSortColumn] = useState(null);
+    const [sortDirection, setSortDirection] = useState(null);
 
     const getNextDirection = currentDirection => {
         switch (currentDirection) {

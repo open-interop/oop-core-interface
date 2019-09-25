@@ -10,6 +10,7 @@ import {
     Settings,
     SideNavigation,
 } from "./components/View";
+import { Spinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 const queryString = require("query-string");
@@ -90,65 +91,70 @@ class App extends Component {
                         )
                     }
                 />
-
                 {this.state.user && (
-                    <>
-                        <this.HeaderWithRouter />
+                    <div className="left-side">
                         <this.SideNavigationWithRouter />
-                    </>
+                    </div>
                 )}
 
-                <Route
-                    path="/"
-                    exact
-                    render={() =>
-                        this.getRouteContent(!this.state.user, "/login", Home)
-                    }
-                />
-                <Route
-                    path="/devices"
-                    exact
-                    render={() =>
-                        this.getRouteContent(
-                            !this.state.user,
-                            "/login",
-                            Devices,
-                            this.history.location.pathname,
-                        )
-                    }
-                />
-                <Route
-                    path="/devices/:deviceId/transmissions"
-                    exact
-                    render={routeProps => {
-                        return this.getRouteContent(
-                            !this.state.user,
-                            "/login",
-                            DeviceTransmissions,
-                            this.history.location.pathname,
-                            routeProps,
-                        );
-                    }}
-                />
-                <Route
-                    path="/settings"
-                    exact
-                    render={() =>
-                        this.getRouteContent(
-                            !this.state.user,
-                            "/login",
-                            Settings,
-                            this.history.location.pathname,
-                        )
-                    }
-                />
+                <div className="right-side">
+                    {this.state.user && <this.HeaderWithRouter />}
+                    <Route
+                        path="/"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Home,
+                            )
+                        }
+                    />
+                    <Route
+                        path="/devices"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Devices,
+                                this.history.location.pathname,
+                            )
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId/transmissions"
+                        exact
+                        render={routeProps => {
+                            return this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                DeviceTransmissions,
+                                this.history.location.pathname,
+                                routeProps,
+                            );
+                        }}
+                    />
+                    <Route
+                        path="/settings"
+                        exact
+                        render={() =>
+                            this.getRouteContent(
+                                !this.state.user,
+                                "/login",
+                                Settings,
+                                this.history.location.pathname,
+                            )
+                        }
+                    />
+                </div>
             </Router>
         );
     };
 
     render() {
         if (this.state.isLoading) {
-            return <div>LOADING</div>;
+            return <Spinner />;
         }
         if (!this.state.isLoading) {
             return this.renderRoutes();

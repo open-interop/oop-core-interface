@@ -33,7 +33,7 @@ const SideNavigation = props => {
     };
 
     return (
-        <>
+        <div className="side-navigation">
             <img src={logo} alt="logo" />
             <Navigation
                 items={items}
@@ -43,7 +43,7 @@ const SideNavigation = props => {
                     props.history.push(item.itemId);
                 }}
             />
-        </>
+        </div>
     );
 };
 

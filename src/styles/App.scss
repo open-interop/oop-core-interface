@@ -1,35 +1,66 @@
+$color-grey: #eee;
+$color-dark-grey: lightgrey;
+$color-white: #fff;
+
 body {
     margin: 0;
+    overflow: hidden;
+    height: 100vh;
 }
 
-nav {
-    position: fixed;
+div {
+    &[id="root"] {
+        display: flex;
+        flex-direction: row;
 
-    &[data-baseweb="header-navigation"] {
-        height: 4rem;
-        border: 0;
-        width: 100%;
-        justify-content: flex-end;
-        padding-right: 12px;
-    }
+        .left-side {
+            width: 7rem;
+            border-right: 1px solid $color-grey;
 
-    &[data-baseweb="side-navigation"] {
-        z-index: 100;
-        width: 7rem;
-        height: 100%;
-    }
+            .side-navigation {
+                img {
+                    width: 7rem;
+                }
+            }
 
-    + img {
-        width: 7rem;
+            + .right-side {
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                .header {
+                    height: 4rem;
+
+                    nav {
+                        &[data-baseweb="header-navigation"] {
+                            border: 0;
+                            justify-content: flex-end;
+                            padding-right: 12px;
+                        }
+                    }
+                }
+
+                .content {
+                    padding: 2rem;
+                    overflow: auto;
+                    flex-grow: 1;
+                    background-color: $color-grey;
+
+                    .device-transmissions {
+                        background-color: $color-white;
+                        padding: 1rem;
+                    }
+                }
+            }
+        }
     }
 }
 
-.content {
-    position: fixed;
-    left: 7rem;
-    top: 5rem;
-    height: 100%;
-    width: 100%;
+div {
+    &[data-baseweb="table-custom"] {
+        overflow-x: unset;
+    }
 }
 
 .login {
@@ -37,6 +68,11 @@ nav {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    width: 100%;
+
+    + .right-side {
+        display: none;
+    }
 
     .login-form {
         width: 25%;
@@ -59,10 +95,10 @@ nav {
 
 .form-wrapper {
     position: relative;
-    border-width: 1px;
-    border-style: solid;
+    border: 1px solid $color-dark-grey;
     border-radius: 5px;
     padding: 1.5rem;
+    margin: 1rem 0;
 
     .form-wrapper-title {
         padding: 5px;
@@ -71,5 +107,23 @@ nav {
         position: absolute;
         top: -15px;
         left: 10px;
+    }
+}
+
+.pagination-footer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    div {
+        &[data-baseweb="select"] {
+            width: 4.5rem;
+        }
+    }
+
+    .select-label {
+        margin-right: auto;
+        align-self: center;
+        margin-left: 1rem;
     }
 }

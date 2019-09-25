@@ -1,6 +1,6 @@
 import React from "react";
 
-const FormWrapper = props => {
+const LineWrapper = props => {
     return (
         <div className="form-wrapper">
             <div className="form-wrapper-title">{props.title}</div>
@@ -9,4 +9,4 @@ const FormWrapper = props => {
     );
 };
 
-export { FormWrapper };
+export { LineWrapper };
