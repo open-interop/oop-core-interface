@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { SortableTable } from "../Global";
+import { SortableTable } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Devices = () => {

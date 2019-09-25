@@ -4,7 +4,7 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import OopCore from "../../OopCore";
 import logo from "../../resources/open_interop_logo_wide.png";
-import { LineWrapper } from "../Global";
+import { LineWrapper } from "../Universal";
 
 const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");

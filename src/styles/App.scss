@@ -110,6 +110,12 @@ div {
     display: flex;
     justify-content: space-between;
 
+    div {
+        &[data-baseweb="select"] {
+            width: 4.5rem;
+        }
+    }
+
     .select-label {
         margin-right: auto;
         align-self: center;

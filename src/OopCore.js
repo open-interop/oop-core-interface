@@ -86,8 +86,28 @@ class OopCore extends EventEmitter {
         return this.makeRequest("/devices");
     }
 
-    getDeviceTransmissions(deviceId) {
-        return this.makeRequest(`/devices/${deviceId}/transmissions`);
+    mapQueryParameter(key) {
+        switch (key) {
+            case "pageSize":
+                return "page[size]";
+            case "page":
+                return "page[number]";
+            default:
+                return key;
+        }
+    }
+
+    getDeviceTransmissions(deviceId, queryParams) {
+        const parameters = Object.keys(queryParams)
+            .map(key => `${this.mapQueryParameter(key)}=${queryParams[key]}`)
+            .join("&");
+
+        let path = `/devices/${deviceId}/transmissions`;
+        if (parameters) {
+            path += "/?" + parameters;
+        }
+
+        return this.makeRequest(path);
     }
 }
 
