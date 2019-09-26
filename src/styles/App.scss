@@ -60,6 +60,13 @@ div {
 div {
     &[data-baseweb="table-custom"] {
         overflow-x: unset;
+
+        div {
+            &[role="columnheader"] {
+                display: flex;
+                align-items: center;
+            }
+        }
     }
 }
 
