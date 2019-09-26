@@ -12,6 +12,15 @@ const Login = () => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
+    function handleSubmit() {
+        setLoading(true);
+        setErrorMessage("");
+        OopCore.login(email, password).catch(error => {
+            setErrorMessage(error.message);
+            setLoading(false);
+        });
+    }
+
     return (
         <>
             <div className="login-form">
@@ -35,23 +44,18 @@ const Login = () => {
                             type="password"
                             autoComplete="password"
                             value={password}
-                            onChange={event =>
-                                setPassword(event.currentTarget.value)
-                            }
+                            onChange={event => {
+                                setPassword(event.currentTarget.value);
+                            }}
+                            onKeyDown={event => {
+                                if (event.keyCode === 13) {
+                                    handleSubmit();
+                                }
+                            }}
                             placeholder="Password"
                         />
                     </FormControl>
-                    <Button
-                        type="submit"
-                        onClick={() => {
-                            setLoading(true);
-                            setErrorMessage("");
-                            OopCore.login(email, password).catch(error => {
-                                setErrorMessage(error.message);
-                                setLoading(false);
-                            });
-                        }}
-                    >
+                    <Button type="submit" onClick={handleSubmit}>
                         login
                     </Button>
                     <div> {errorMessage && "Error: " + errorMessage}</div>
