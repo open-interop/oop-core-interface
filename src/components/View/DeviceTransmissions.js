@@ -109,7 +109,7 @@ const DeviceTransmissions = props => {
                 <div className="select-label">per page</div>
                 <Pagination
                     numPages={100}
-                    currentPage={queryParams.page || 1}
+                    currentPage={Number(queryParams.page) || 1}
                     onPageChange={event => {
                         updateQueryParameters({ page: event.nextPage });
                     }}

@@ -17,6 +17,7 @@ const DataProvider = props => {
                 console.log(err);
                 setError(err);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.renderKey]);
 
     if (error) {
