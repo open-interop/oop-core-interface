@@ -10,7 +10,9 @@ Run instructions:
 
 `yarn install`
 
-4. In the project root directory, run
+4. Rename `.env.example` to `.env` and update the value of `PROXY` to match the host and port you are running [oop-core](https://github.com/open-interop/oop-core) on
+
+5. In the project root directory, run
 
 `yarn run start`
 

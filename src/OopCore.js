@@ -5,7 +5,7 @@ class OopCore extends EventEmitter {
     constructor(props) {
         super(props);
 
-        this.apiBase = "http://localhost:3000/api";
+        this.apiBase = "/api/v1";
 
         this.token = cookie.load("token");
     }
@@ -25,7 +25,7 @@ class OopCore extends EventEmitter {
 
         const options = {
             method: "GET",
-            headers: { Authorization: token },
+            headers: { Authorization: token, Accept: "application/json" },
         };
 
         if (postData) {

@@ -2,13 +2,10 @@ const proxy = require("http-proxy-middleware");
 
 module.exports = app => {
     app.use(
-        "/api",
+        "/api/v1",
         proxy({
-            target: "http://diditagain.bluefrontier.local:9009",
+            target: process.env.PROXY,
             changeOrigin: true,
-            pathRewrite: {
-                "^/api": "/api/v1",
-            },
         }),
     );
 };
