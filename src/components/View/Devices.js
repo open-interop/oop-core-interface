@@ -17,7 +17,7 @@ const Devices = () => {
             }
             renderData={() => (
                 <SortableTable
-                    data={devices}
+                    data={devices.data}
                     mapFunction={(columnName, content) => {
                         if (columnName === "id") {
                             return (
