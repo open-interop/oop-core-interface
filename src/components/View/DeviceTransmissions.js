@@ -59,62 +59,69 @@ const DeviceTransmissions = props => {
                     return OopCore.getDeviceTransmissions(
                         props.match.params.deviceId,
                         queryString.parse(props.location.search),
-                    ).then(data => {
-                        setTransmissions(data);
-                        return data;
+                    ).then(response => {
+                        setTransmissions(response);
+                        return response;
                     });
                 }}
                 renderData={() => (
-                    <SortableTable
-                        data={transmissions}
-                        mapFunction={(columnName, content) => {
-                            if (columnName === "action") {
-                                return <Button>{content}</Button>;
-                            }
-                            return content;
-                        }}
-                        columns={[
-                            { id: "id", name: "Id" },
-                            {
-                                id: "device_tempr_id",
-                                name: "Device Tempr Id",
-                            },
-                            {
-                                id: "transmission_uuid",
-                                name: "Transmission UUID",
-                            },
-                            { id: "message_uuid", name: "Message UUID" },
-                            { id: "status", name: "Status" },
-                            { id: "action", name: "Action" },
-                        ]}
-                    />
+                    <>
+                        <SortableTable
+                            data={transmissions.data}
+                            mapFunction={(columnName, content) => {
+                                if (columnName === "action") {
+                                    return <Button>{content}</Button>;
+                                }
+                                return content;
+                            }}
+                            columns={[
+                                { id: "id", name: "Id" },
+                                {
+                                    id: "device_tempr_id",
+                                    name: "Device Tempr Id",
+                                },
+                                {
+                                    id: "transmission_uuid",
+                                    name: "Transmission UUID",
+                                },
+                                { id: "message_uuid", name: "Message UUID" },
+                                { id: "status", name: "Status" },
+                                { id: "action", name: "Action" },
+                            ]}
+                        />
+                        <div className="pagination-footer">
+                            <Select
+                                options={pageSizeOptions}
+                                labelKey="id"
+                                valueKey="id"
+                                searchable={false}
+                                clearable={false}
+                                onChange={value => {
+                                    updateQueryParameters({
+                                        pageSize: value.option.id,
+                                        page: null,
+                                    });
+                                }}
+                                value={getPageSizeOption()}
+                            />
+                            <div className="pagination-label">per page</div>
+                            <div className="pagination-label">
+                                {transmissions.totalRecords} records
+                            </div>
+                            <Pagination
+                                numPages={transmissions.numberOfPages}
+                                currentPage={Number(queryParams.page) || 1}
+                                onPageChange={event => {
+                                    updateQueryParameters({
+                                        page: event.nextPage,
+                                    });
+                                }}
+                            />
+                        </div>
+                    </>
                 )}
                 renderKey={props.location.search}
             />
-            <div className="pagination-footer">
-                <Select
-                    options={pageSizeOptions}
-                    labelKey="id"
-                    valueKey="id"
-                    searchable={false}
-                    clearable={false}
-                    onChange={value => {
-                        updateQueryParameters({
-                            pageSize: value.option.id,
-                            page: null,
-                        });
-                    }}
-                    value={getPageSizeOption()}
-                />
-                <div className="select-label">per page</div>
-                <Pagination
-                    numPages={100}
-                    currentPage={Number(queryParams.page) || 1}
-                    onPageChange={event => {
-                        updateQueryParameters({ page: event.nextPage });
-                    }}
-                />
-            </div>
         </div>
     );
 };
