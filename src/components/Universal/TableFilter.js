@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Filter from "baseui/icon/filter";
 import { SearchBar } from ".";
 import { PLACEMENT, Popover } from "baseui/popover";
+import { TrueFalseCheckboxes } from "./TrueFalseCheckboxes";
 
 const useOutsideClick = (ref, callback) => {
     const handleClick = e => {
@@ -39,8 +40,22 @@ const TableFilter = props => {
                 </div>
             );
         }
+
+        if (props.contentType === "bool") {
+            return (
+                <div ref={ref} className="filter-content">
+                    <TrueFalseCheckboxes
+                        trueText="Successful"
+                        falseText="Unsuccessful"
+                        value={props.filterValue}
+                        setValue={value => props.setFilterValue(value)}
+                    />
+                </div>
+            );
+        }
         return <div> this is not text content</div>;
     };
+
     return (
         <>
             <Popover
@@ -55,7 +70,7 @@ const TableFilter = props => {
                         onClick={() => {
                             setPopoverOpen(!popoverOpen);
                         }}
-                        color={props.filterValue ? "black" : "lightgrey"}
+                        color={props.filterValue !== "" ? "black" : "lightgrey"}
                     />
                 </div>
             </Popover>

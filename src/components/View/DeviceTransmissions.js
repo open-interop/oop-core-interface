@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Button } from "baseui/button";
 import { Pagination } from "baseui/pagination";
 import { Select } from "baseui/select";
+import Check from "baseui/icon/check";
+import Delete from "baseui/icon/delete";
 import { DataProvider } from "../Universal";
 import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
@@ -37,7 +39,7 @@ const DeviceTransmissions = props => {
         const newParameters = { ...queryParameters };
 
         Object.keys(parameters).forEach(parameterType => {
-            if (parameters[parameterType]) {
+            if (parameters[parameterType] !== null) {
                 newParameters[parameterType] = parameters[parameterType];
             } else {
                 delete newParameters[parameterType];
@@ -73,33 +75,48 @@ const DeviceTransmissions = props => {
                                 if (columnName === "action") {
                                     return <Button>{content}</Button>;
                                 }
+
+                                if (columnName === "success") {
+                                    return content ? <Check /> : <Delete />;
+                                }
                                 return content;
                             }}
                             columns={[
-                                { id: "id", name: "Id", hasFilter: false },
+                                { id: "id", name: "Id", hasFilter: true },
                                 {
                                     id: "device_tempr_id",
                                     name: "Device Tempr Id",
+                                    type: "text",
                                     hasFilter: true,
                                 },
                                 {
-                                    id: "transmission_uuid",
+                                    id: "transmissionUuid",
                                     name: "Transmission UUID",
-                                    hasFilter: false,
+                                    type: "text",
+                                    hasFilter: true,
                                 },
                                 {
-                                    id: "message_uuid",
+                                    id: "messageUuid",
                                     name: "Message UUID",
+                                    type: "text",
                                     hasFilter: true,
                                 },
                                 {
                                     id: "status",
                                     name: "Status",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "success",
+                                    name: "Success",
+                                    type: "bool",
                                     hasFilter: true,
                                 },
                                 {
                                     id: "action",
                                     name: "Action",
+                                    type: "action",
                                     hasFilter: false,
                                 },
                             ]}
@@ -124,7 +141,9 @@ const DeviceTransmissions = props => {
                             <div className="pagination-label">per page</div>
                             <div className="pagination-label">
                                 {transmissions.totalRecords}
-                                {Object.keys(filters).length && " filtered"}
+                                {Object.keys(filters).length > 0
+                                    ? " filtered"
+                                    : ""}
                                 {transmissions.totalRecords > 1 ||
                                 transmissions.totalRecords === 0
                                     ? " records"
