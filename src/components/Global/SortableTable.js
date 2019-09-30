@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-    Filter,
     StyledTable,
     StyledHead,
     StyledBody,
@@ -10,7 +9,6 @@ import {
     SORT_DIRECTION,
 } from "baseui/table";
 import { TableFilter } from "../Universal";
-import { Button } from "baseui/button";
 
 const SortableTable = props => {
     const data = props.data;
@@ -94,6 +92,18 @@ const SortableTable = props => {
         }
     }
 
+    function getFilterValue(filters, column) {
+        if (filters) {
+            return Object.keys(filters).find(
+                filterName => filterName === column,
+            )
+                ? props.filters[column]
+                : "";
+        }
+
+        return "";
+    }
+
     return (
         <StyledTable>
             <StyledHead>
@@ -106,7 +116,20 @@ const SortableTable = props => {
                         }
                         onSort={() => handleSort(column.id)}
                     >
-                        <TableFilter contentType={column.type || "text"} />
+                        {column.hasFilter && (
+                            <TableFilter
+                                contentType={column.type || "text"}
+                                filterValue={getFilterValue(
+                                    props.filters,
+                                    column.id,
+                                )}
+                                setFilterValue={newValue =>
+                                    props.updateFilters({
+                                        [column.id]: newValue,
+                                    })
+                                }
+                            />
+                        )}
                     </SortableHeadCell>
                 ))}
             </StyledHead>
