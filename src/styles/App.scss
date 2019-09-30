@@ -60,6 +60,13 @@ div {
 div {
     &[data-baseweb="table-custom"] {
         overflow-x: unset;
+
+        div {
+            &[role="columnheader"] {
+                display: flex;
+                align-items: center;
+            }
+        }
     }
 }
 
@@ -126,4 +133,12 @@ div {
         align-self: center;
         margin-left: 1rem;
     }
+}
+
+.filter-content {
+    padding: 1rem;
+}
+
+.filter-button {
+    cursor: pointer;
 }

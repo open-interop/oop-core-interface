@@ -8,6 +8,7 @@ import {
     SortableHeadCell,
     SORT_DIRECTION,
 } from "baseui/table";
+import { TableFilter } from "../Universal";
 
 const SortableTable = props => {
     const data = props.data;
@@ -91,6 +92,18 @@ const SortableTable = props => {
         }
     }
 
+    function getFilterValue(filters, column) {
+        if (filters) {
+            return Object.keys(filters).find(
+                filterName => filterName === column,
+            )
+                ? props.filters[column]
+                : "";
+        }
+
+        return "";
+    }
+
     return (
         <StyledTable>
             <StyledHead>
@@ -102,7 +115,22 @@ const SortableTable = props => {
                             sortColumn === column.id ? sortDirection : null
                         }
                         onSort={() => handleSort(column.id)}
-                    />
+                    >
+                        {column.hasFilter && (
+                            <TableFilter
+                                contentType={column.type}
+                                filterValue={getFilterValue(
+                                    props.filters,
+                                    column.id,
+                                )}
+                                setFilterValue={newValue =>
+                                    props.updateFilters({
+                                        [column.id]: newValue,
+                                    })
+                                }
+                            />
+                        )}
+                    </SortableHeadCell>
                 ))}
             </StyledHead>
             {TableRows()}

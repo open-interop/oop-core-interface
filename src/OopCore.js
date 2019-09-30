@@ -92,14 +92,20 @@ class OopCore extends EventEmitter {
                 return "page[size]";
             case "page":
                 return "page[number]";
+            case "transmissionUuid":
+                return "transmission_uuid";
+            case "messageUuid":
+                return "message_uuid";
             default:
                 return key;
         }
     }
 
-    getDeviceTransmissions(deviceId, queryParams) {
-        const parameters = Object.keys(queryParams)
-            .map(key => `${this.mapQueryParameter(key)}=${queryParams[key]}`)
+    getDeviceTransmissions(deviceId, queryParameters) {
+        const parameters = Object.keys(queryParameters)
+            .map(
+                key => `${this.mapQueryParameter(key)}=${queryParameters[key]}`,
+            )
             .join("&");
 
         let path = `/devices/${deviceId}/transmissions`;

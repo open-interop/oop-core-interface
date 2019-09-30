@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Button } from "baseui/button";
 import { Pagination } from "baseui/pagination";
 import { Select } from "baseui/select";
-import { DataProvider, LineWrapper } from "../Universal";
+import { DataProvider } from "../Universal";
+import Check from "baseui/icon/check";
+import Delete from "baseui/icon/delete";
 import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
 
@@ -19,14 +21,14 @@ const pageSizeOptions = [
 
 const DeviceTransmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
-    const [queryParams, setQueryParams] = useState(
+    const [queryParameters, setQueryParameters] = useState(
         queryString.parse(props.location.search),
     );
 
     const getPageSizeOption = () => {
         return (
             pageSizeOptions.find(
-                option => option.id === queryParams.pageSize,
+                option => option.id === queryParameters.pageSize,
             ) || {
                 id: "10",
             }
@@ -34,26 +36,30 @@ const DeviceTransmissions = props => {
     };
 
     const updateQueryParameters = parameters => {
-        const newParams = { ...queryParams };
+        const newParameters = { ...queryParameters };
 
         Object.keys(parameters).forEach(parameterType => {
-            if (parameters[parameterType]) {
-                newParams[parameterType] = parameters[parameterType];
+            if (
+                parameters[parameterType] !== null &&
+                parameters[parameterType] !== ""
+            ) {
+                newParameters[parameterType] = parameters[parameterType];
             } else {
-                delete newParams[parameterType];
+                delete newParameters[parameterType];
             }
         });
 
-        setQueryParams(newParams);
+        setQueryParameters(newParameters);
         props.history.push({
-            search: queryString.stringify(newParams),
+            search: queryString.stringify(newParameters),
         });
     };
+
+    const { page, pageSize, ...filters } = queryParameters;
 
     return (
         <div className="device-transmissions">
             <h2>Transmissions - Device {props.match.params.deviceId}</h2>
-            <LineWrapper title={"Filters"}></LineWrapper>
             <DataProvider
                 getData={() => {
                     return OopCore.getDeviceTransmissions(
@@ -72,22 +78,58 @@ const DeviceTransmissions = props => {
                                 if (columnName === "action") {
                                     return <Button>{content}</Button>;
                                 }
+
+                                if (columnName === "success") {
+                                    return content ? <Check /> : <Delete />;
+                                }
                                 return content;
                             }}
                             columns={[
-                                { id: "id", name: "Id" },
+                                {
+                                    id: "id",
+                                    name: "Id",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 {
                                     id: "device_tempr_id",
                                     name: "Device Tempr Id",
+                                    type: "text",
+                                    hasFilter: true,
                                 },
                                 {
-                                    id: "transmission_uuid",
+                                    id: "transmissionUuid",
                                     name: "Transmission UUID",
+                                    type: "text",
+                                    hasFilter: true,
                                 },
-                                { id: "message_uuid", name: "Message UUID" },
-                                { id: "status", name: "Status" },
-                                { id: "action", name: "Action" },
+                                {
+                                    id: "messageUuid",
+                                    name: "Message UUID",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "status",
+                                    name: "Status",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "success",
+                                    name: "Success",
+                                    type: "bool",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "action",
+                                    name: "Action",
+                                    type: "action",
+                                    hasFilter: false,
+                                },
                             ]}
+                            filters={filters}
+                            updateFilters={updateQueryParameters}
                         />
                         <div className="pagination-footer">
                             <Select
@@ -106,11 +148,18 @@ const DeviceTransmissions = props => {
                             />
                             <div className="pagination-label">per page</div>
                             <div className="pagination-label">
-                                {transmissions.totalRecords} records
+                                {transmissions.totalRecords}
+                                {Object.keys(filters).length > 0
+                                    ? " filtered"
+                                    : ""}
+                                {transmissions.totalRecords > 1 ||
+                                transmissions.totalRecords === 0
+                                    ? " records"
+                                    : " record"}
                             </div>
                             <Pagination
                                 numPages={transmissions.numberOfPages}
-                                currentPage={Number(queryParams.page) || 1}
+                                currentPage={Number(queryParameters.page) || 1}
                                 onPageChange={event => {
                                     updateQueryParameters({
                                         page: event.nextPage,
