@@ -53,28 +53,25 @@ const TableFilter = props => {
                 </div>
             );
         }
-        return <div> this is not text content</div>;
+        return null;
     };
 
     return (
-        <>
-            <Popover
-                isOpen={popoverOpen}
-                dismissOnEsc={true}
-                placement={PLACEMENT.bottomRight}
-                accessibilityType={"tooltip"}
-                content={PopoverContent()}
-            >
-                <div className="filter-button">
-                    <Filter
-                        onClick={() => {
-                            setPopoverOpen(!popoverOpen);
-                        }}
-                        color={props.filterValue !== "" ? "black" : "lightgrey"}
-                    />
-                </div>
-            </Popover>
-        </>
+        <Popover
+            isOpen={popoverOpen}
+            placement={PLACEMENT.bottomRight}
+            accessibilityType={"tooltip"}
+            content={PopoverContent()}
+        >
+            <div className="filter-button">
+                <Filter
+                    onClick={() => {
+                        setPopoverOpen(!popoverOpen);
+                    }}
+                    color={props.filterValue !== "" ? "black" : "lightgrey"}
+                />
+            </div>
+        </Popover>
     );
 };
 

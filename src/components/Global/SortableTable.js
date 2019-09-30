@@ -118,7 +118,7 @@ const SortableTable = props => {
                     >
                         {column.hasFilter && (
                             <TableFilter
-                                contentType={column.type || "text"}
+                                contentType={column.type}
                                 filterValue={getFilterValue(
                                     props.filters,
                                     column.id,

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Button } from "baseui/button";
 import { Pagination } from "baseui/pagination";
 import { Select } from "baseui/select";
+import { DataProvider } from "../Universal";
 import Check from "baseui/icon/check";
 import Delete from "baseui/icon/delete";
-import { DataProvider } from "../Universal";
 import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
 
@@ -82,7 +82,12 @@ const DeviceTransmissions = props => {
                                 return content;
                             }}
                             columns={[
-                                { id: "id", name: "Id", hasFilter: true },
+                                {
+                                    id: "id",
+                                    name: "Id",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 {
                                     id: "device_tempr_id",
                                     name: "Device Tempr Id",
