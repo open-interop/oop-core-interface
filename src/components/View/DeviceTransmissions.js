@@ -39,7 +39,10 @@ const DeviceTransmissions = props => {
         const newParameters = { ...queryParameters };
 
         Object.keys(parameters).forEach(parameterType => {
-            if (parameters[parameterType] !== null) {
+            if (
+                parameters[parameterType] !== null &&
+                parameters[parameterType] !== ""
+            ) {
                 newParameters[parameterType] = parameters[parameterType];
             } else {
                 delete newParameters[parameterType];
