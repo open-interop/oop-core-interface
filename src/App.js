@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Router, Route, Redirect, withRouter } from "react-router-dom";
+import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Devices,
@@ -60,7 +60,9 @@ class App extends Component {
                 to={{
                     pathname: redirectPath,
                     search:
-                        queryParameter && queryParameter !== "/login"
+                        queryParameter &&
+                        queryParameter !== "/login" &&
+                        queryParameter !== "/"
                             ? `?redirect=${queryParameter}`
                             : "",
                 }}
@@ -78,7 +80,7 @@ class App extends Component {
 
     renderRoutes = () => {
         return (
-            <Router history={this.history}>
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Route
                     path="/login"
                     exact
@@ -102,23 +104,24 @@ class App extends Component {
                     <Route
                         path="/"
                         exact
-                        render={() =>
+                        render={routeProps =>
                             this.getRouteContent(
                                 !this.state.user,
                                 "/login",
                                 Home,
+                                routeProps.match.url,
                             )
                         }
                     />
                     <Route
                         path="/devices"
                         exact
-                        render={() =>
+                        render={routeProps =>
                             this.getRouteContent(
                                 !this.state.user,
                                 "/login",
                                 Devices,
-                                this.history.location.pathname,
+                                routeProps.match.url,
                             )
                         }
                     />
@@ -130,7 +133,7 @@ class App extends Component {
                                 !this.state.user,
                                 "/login",
                                 DeviceTransmissions,
-                                this.history.location.pathname,
+                                routeProps.match.url,
                                 routeProps,
                             );
                         }}
@@ -138,17 +141,17 @@ class App extends Component {
                     <Route
                         path="/settings"
                         exact
-                        render={() =>
+                        render={routeProps =>
                             this.getRouteContent(
                                 !this.state.user,
                                 "/login",
                                 Settings,
-                                this.history.location.pathname,
+                                routeProps.match.url,
                             )
                         }
                     />
                 </div>
-            </Router>
+            </BrowserRouter>
         );
     };
 
