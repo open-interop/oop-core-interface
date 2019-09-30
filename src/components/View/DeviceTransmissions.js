@@ -123,7 +123,12 @@ const DeviceTransmissions = props => {
                             />
                             <div className="pagination-label">per page</div>
                             <div className="pagination-label">
-                                {transmissions.totalRecords} records
+                                {transmissions.totalRecords}
+                                {Object.keys(filters).length && " filtered"}
+                                {transmissions.totalRecords > 1 ||
+                                transmissions.totalRecords === 0
+                                    ? " records"
+                                    : " record"}
                             </div>
                             <Pagination
                                 numPages={transmissions.numberOfPages}
