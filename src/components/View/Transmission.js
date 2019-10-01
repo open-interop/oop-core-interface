@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Modal } from "../Global";
 import { DataProvider } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -16,7 +17,12 @@ const Transmission = props => {
                         return response;
                     });
                 }}
-                renderData={() => <div>{transmission.id}</div>}
+                renderData={() => (
+                    <>
+                        {" "}
+                        {transmission.id} <Modal />
+                    </>
+                )}
             />
         </div>
     );
