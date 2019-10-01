@@ -70,7 +70,7 @@ class OopCore extends EventEmitter {
     }
 
     logout() {
-        cookie.remove("token");
+        cookie.remove("token", { path: "/" });
         this.token = null;
         this.emit("loggedout");
         return Promise.resolve();
