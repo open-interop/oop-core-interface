@@ -55,6 +55,11 @@ const DeviceTransmissions = props => {
         });
     };
 
+    const updateTableFilters = parameters => {
+        parameters.page = null;
+        updateQueryParameters(parameters);
+    };
+
     const { page, pageSize, ...filters } = queryParameters;
 
     return (
@@ -129,7 +134,7 @@ const DeviceTransmissions = props => {
                                 },
                             ]}
                             filters={filters}
-                            updateFilters={updateQueryParameters}
+                            updateFilters={updateTableFilters}
                         />
                         <div className="pagination-footer">
                             <Select
