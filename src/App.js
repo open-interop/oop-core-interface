@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Devices,
-    DeviceTransmissions,
+    Transmission,
+    Transmissions,
     Header,
     Home,
     Login,
@@ -40,114 +41,89 @@ class App extends Component {
         OopCore.on("loggedout", () => setNoUser());
     }
 
-    pathName = props => {
-        return queryString.parse(props.location.search).redirect || "/";
-    };
-
     HeaderWithRouter = withRouter(Header);
 
     SideNavigationWithRouter = withRouter(SideNavigation);
 
-    getRouteContent = (
-        shouldRedirect,
-        redirectPath,
-        Component,
-        queryParameter,
-        routeProps,
-    ) => {
+    getComponent = (shouldRedirect, Component, props) => {
+        const currentPath = props.match.url;
+
         return shouldRedirect ? (
             <Redirect
                 to={{
-                    pathname: redirectPath,
+                    pathname:
+                        currentPath === "/login"
+                            ? queryString.parse(props.location.search).redirect
+                            : "/login",
                     search:
-                        queryParameter &&
-                        queryParameter !== "/login" &&
-                        queryParameter !== "/"
-                            ? `?redirect=${queryParameter}`
-                            : "",
+                        currentPath === "/login" || currentPath === "/"
+                            ? ""
+                            : `?redirect=${currentPath}`,
                 }}
             />
-        ) : queryParameter === "/login" ? (
+        ) : currentPath === "/login" ? (
             <div className="login">
-                <Component {...routeProps} />
+                <Component {...props} />
             </div>
         ) : (
             <div className="content">
-                <Component {...routeProps} />
+                <Component {...props} />
             </div>
         );
     };
 
     renderRoutes = () => {
+        const hasUser = this.state.user;
+
         return (
             <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Route
                     path="/login"
                     exact
-                    render={props =>
-                        this.getRouteContent(
-                            this.state.user,
-                            this.pathName(props),
-                            Login,
-                            "/login",
-                        )
-                    }
+                    render={props => this.getComponent(hasUser, Login, props)}
                 />
-                {this.state.user && (
+
+                {hasUser && (
                     <div className="left-side">
                         <this.SideNavigationWithRouter />
                     </div>
                 )}
 
                 <div className="right-side">
-                    {this.state.user && <this.HeaderWithRouter />}
+                    {hasUser && <this.HeaderWithRouter />}
                     <Route
                         path="/"
                         exact
-                        render={routeProps =>
-                            this.getRouteContent(
-                                !this.state.user,
-                                "/login",
-                                Home,
-                                routeProps.match.url,
-                            )
+                        render={props =>
+                            this.getComponent(!hasUser, Home, props)
                         }
                     />
                     <Route
                         path="/devices"
                         exact
-                        render={routeProps =>
-                            this.getRouteContent(
-                                !this.state.user,
-                                "/login",
-                                Devices,
-                                routeProps.match.url,
-                            )
+                        render={props =>
+                            this.getComponent(!hasUser, Devices, props)
                         }
                     />
                     <Route
                         path="/devices/:deviceId/transmissions"
                         exact
-                        render={routeProps => {
-                            return this.getRouteContent(
-                                !this.state.user,
-                                "/login",
-                                DeviceTransmissions,
-                                routeProps.match.url,
-                                routeProps,
-                            );
-                        }}
+                        render={props =>
+                            this.getComponent(!hasUser, Transmissions, props)
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId/transmissions/:transmissionId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Transmission, props)
+                        }
                     />
                     <Route
                         path="/settings"
                         exact
-                        render={routeProps =>
-                            this.getRouteContent(
-                                !this.state.user,
-                                "/login",
-                                Settings,
-                                routeProps.match.url,
-                            )
+                        render={props =>
+                            this.getComponent(!hasUser, Settings, props)
                         }
                     />
                 </div>

@@ -70,7 +70,7 @@ class OopCore extends EventEmitter {
     }
 
     logout() {
-        cookie.remove("token");
+        cookie.remove("token", { path: "/" });
         this.token = null;
         this.emit("loggedout");
         return Promise.resolve();
@@ -101,7 +101,7 @@ class OopCore extends EventEmitter {
         }
     }
 
-    getDeviceTransmissions(deviceId, queryParameters) {
+    getTransmissions(deviceId, queryParameters) {
         const parameters = Object.keys(queryParameters)
             .map(
                 key => `${this.mapQueryParameter(key)}=${queryParameters[key]}`,

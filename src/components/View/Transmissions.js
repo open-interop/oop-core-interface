@@ -19,7 +19,7 @@ const pageSizeOptions = [
     { id: "100" },
 ];
 
-const DeviceTransmissions = props => {
+const Transmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
     const [queryParameters, setQueryParameters] = useState(
         queryString.parse(props.location.search),
@@ -67,7 +67,7 @@ const DeviceTransmissions = props => {
             <h2>Transmissions - Device {props.match.params.deviceId}</h2>
             <DataProvider
                 getData={() => {
-                    return OopCore.getDeviceTransmissions(
+                    return OopCore.getTransmissions(
                         props.match.params.deviceId,
                         queryString.parse(props.location.search),
                     ).then(response => {
@@ -81,13 +81,30 @@ const DeviceTransmissions = props => {
                             data={transmissions.data}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
-                                    return <Button>{content}</Button>;
+                                    return (
+                                        <Button
+                                            onClick={() =>
+                                                props.history.push(
+                                                    props.location.pathname +
+                                                        `/${content}`,
+                                                )
+                                            }
+                                        >
+                                            {content}
+                                        </Button>
+                                    );
                                 }
 
                                 if (columnName === "success") {
                                     return content ? <Check /> : <Delete />;
                                 }
                                 return content;
+                            }}
+                            columnContent={columnName => {
+                                if (columnName === "action") {
+                                    return "id";
+                                }
+                                return columnName;
                             }}
                             columns={[
                                 {
@@ -180,4 +197,4 @@ const DeviceTransmissions = props => {
     );
 };
 
-export { DeviceTransmissions };
+export { Transmissions };
