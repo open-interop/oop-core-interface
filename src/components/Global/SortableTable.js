@@ -8,7 +8,7 @@ import {
     SortableHeadCell,
     SORT_DIRECTION,
 } from "baseui/table";
-import { TableFilter } from "../Universal";
+import { TableFilter } from ".";
 
 const SortableTable = props => {
     const data = props.data;

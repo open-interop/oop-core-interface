@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Filter from "baseui/icon/filter";
-import { SearchBar } from ".";
+import { SearchBar } from "../Universal";
 import { PLACEMENT, Popover } from "baseui/popover";
-import { TrueFalseCheckboxes } from "./TrueFalseCheckboxes";
+import { TrueFalseCheckboxes } from ".";
 
 const useOutsideClick = (ref, callback) => {
     const handleClick = e => {
