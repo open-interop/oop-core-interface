@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import { DataProvider } from "../Universal";
+import OopCore from "../../OopCore";
 
 const Transmission = props => {
-    return <div>Transmission {props.match.params.transmissionId}</div>;
+    const [transmission, setTransmission] = useState(null);
+    return (
+        <div className="device-transmissions">
+            <DataProvider
+                getData={() => {
+                    return OopCore.getTransmission(
+                        props.match.params.deviceId,
+                        props.match.params.transmissionId,
+                    ).then(response => {
+                        setTransmission(response);
+                        return response;
+                    });
+                }}
+                renderData={() => <div>{transmission.id}</div>}
+            />
+        </div>
+    );
 };
 
 export { Transmission };
