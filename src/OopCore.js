@@ -101,7 +101,7 @@ class OopCore extends EventEmitter {
         }
     }
 
-    getDeviceTransmissions(deviceId, queryParameters) {
+    getTransmissions(deviceId, queryParameters) {
         const parameters = Object.keys(queryParameters)
             .map(
                 key => `${this.mapQueryParameter(key)}=${queryParameters[key]}`,

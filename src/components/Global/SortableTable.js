@@ -79,7 +79,11 @@ const SortableTable = props => {
                                 >
                                     {props.mapFunction(
                                         column.id,
-                                        row[column.id],
+                                        row[
+                                            props.columnContent
+                                                ? props.columnContent(column.id)
+                                                : column.id
+                                        ],
                                     )}
                                 </StyledCell>
                             ))}
