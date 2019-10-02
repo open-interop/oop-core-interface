@@ -142,3 +142,15 @@ div {
 .filter-button {
     cursor: pointer;
 }
+
+.modal-content {
+    min-width: 500px;
+    padding: 1rem;
+    min-height: 300px;
+}
+
+input {
+    &[disabled=""] {
+        cursor: default;
+    }
+}

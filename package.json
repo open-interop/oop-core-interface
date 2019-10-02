@@ -2,7 +2,7 @@
   "name": "oop-core-interface",
   "version": "0.1.0",
   "private": true,
-  "homepage":".",
+  "homepage": ".",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.24",
     "@fortawesome/free-solid-svg-icons": "^5.11.1",
@@ -13,6 +13,7 @@
     "react": "^16.9.0",
     "react-cookies": "^0.1.1",
     "react-dom": "^16.9.0",
+    "react-json-pretty": "^2.1.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "styletron-engine-atomic": "^1.4.0",
@@ -68,6 +69,6 @@
     }
   },
   "resolutions": {
-    "eslint":"6.4.0"
+    "eslint": "6.4.0"
   }
 }
