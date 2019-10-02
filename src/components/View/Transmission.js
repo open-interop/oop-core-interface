@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Modal } from "../Global";
-import { DataProvider } from "../Universal";
+import { DataProvider, Modal } from "../Universal";
 import OopCore from "../../OopCore";
+var JSONPretty = require("react-json-pretty");
 
 const Transmission = props => {
     const [transmission, setTransmission] = useState(null);
@@ -19,8 +19,15 @@ const Transmission = props => {
                 }}
                 renderData={() => (
                     <>
-                        {" "}
-                        {transmission.id} <Modal />
+                        {transmission.id}
+                        <Modal
+                            content={
+                                <JSONPretty
+                                    id="json-pretty"
+                                    data={`{"event": {"patientId":1,"testId":1,"result": "positive"}}`}
+                                ></JSONPretty>
+                            }
+                        />
                     </>
                 )}
             />
