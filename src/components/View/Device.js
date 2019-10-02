@@ -7,12 +7,6 @@ import OopCore from "../../OopCore";
 const Device = props => {
     const [device, setDevice] = useState({});
 
-    const {
-        authentication_headers,
-        authentication_query,
-        ...formData
-    } = device;
-
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -28,7 +22,7 @@ const Device = props => {
                     <>
                         <Form
                             readOnly={true}
-                            data={formData}
+                            data={device}
                             setData={setDevice}
                             dataLabels={
                                 new Map([
