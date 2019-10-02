@@ -11,14 +11,7 @@ const Transmission = props => {
     formDataWithBodyComponent.body = (
         <Modal
             buttonText="View"
-            content={
-                <JSONPretty
-                    data={
-                        transmission.body ||
-                        `{"event": {"patientId":1,"testId":1,"result": "positive"}}`
-                    }
-                ></JSONPretty>
-            }
+            content={<JSONPretty data={transmission.body}></JSONPretty>}
         />
     );
 
