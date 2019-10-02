@@ -16,8 +16,8 @@ const Modal = props => {
     }
 
     return (
-        <React.Fragment>
-            <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
+        <>
+            <Button onClick={() => setIsOpen(true)}>{props.buttonText}</Button>
             <ModalBase onClose={close} isOpen={isOpen}>
                 <FocusOnce>
                     <ModalHeader>{props.title}</ModalHeader>
@@ -39,7 +39,7 @@ const Modal = props => {
                         </ModalFooter>
                     ))}
             </ModalBase>
-        </React.Fragment>
+        </>
     );
 };
 

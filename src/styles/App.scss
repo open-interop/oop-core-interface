@@ -148,3 +148,9 @@ div {
     padding: 1rem;
     min-height: 300px;
 }
+
+input {
+    &[disabled=""] {
+        cursor: default;
+    }
+}
