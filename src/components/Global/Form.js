@@ -9,7 +9,7 @@ const Form = props => {
         props.setData(updatedData);
     };
 
-    const getContent = key => {
+    const getFormRow = key => {
         if (props.data[key] === Object(props.data[key])) {
             return props.data[key];
         } else {
@@ -24,6 +24,9 @@ const Form = props => {
         }
     };
 
+    // The optional dataLabels prop is a map object used to
+    // 1) override the object property names with custom labels and
+    // 2) define the order in which they appear
     if (props.dataLabels) {
         return (
             <>
@@ -32,7 +35,7 @@ const Form = props => {
                         label={props.dataLabels.get(key)}
                         key={`form-control-${key}`}
                     >
-                        {getContent(key)}
+                        {getFormRow(key)}
                     </FormControl>
                 ))}
             </>
@@ -42,7 +45,7 @@ const Form = props => {
             <>
                 {Object.keys(props.data).map(key => (
                     <FormControl label={key} key={`form-control-${key}`}>
-                        {getContent(key)}
+                        {getFormRow(key)}
                     </FormControl>
                 ))}
             </>

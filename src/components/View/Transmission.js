@@ -37,7 +37,7 @@ const Transmission = props => {
                 renderData={() => (
                     <>
                         <Form
-                            readonly={true}
+                            readOnly={true}
                             data={formDataWithBodyComponent}
                             setData={setTransmission}
                             dataLabels={
