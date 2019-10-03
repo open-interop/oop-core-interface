@@ -5,6 +5,7 @@ import OopCore from "../../OopCore";
 
 const Device = props => {
     const [device, setDevice] = useState({});
+    const [updatedDevice, setUpdatedDevice] = useState({});
 
     const getData = () => {
         return Promise.all([
@@ -13,10 +14,7 @@ const Device = props => {
             OopCore.getDeviceGroups(),
         ]).then(([deviceDetails, sites, groups]) => {
             deviceDetails.sites = sites.data;
-            // this is to duplicate the sites results
-            deviceDetails.sites[1] = { id: 1, name: "fake name" };
             deviceDetails.groups = groups.data;
-            deviceDetails.groups[1] = { id: 1, name: "another group name" };
             return deviceDetails;
         });
     };
@@ -27,15 +25,15 @@ const Device = props => {
                 getData={() => {
                     return getData().then(response => {
                         setDevice(response);
+                        setUpdatedDevice(response);
                         return response;
                     });
                 }}
                 renderData={() => (
                     <>
                         <Form
-                            readOnly={true}
-                            data={device}
-                            setData={setDevice}
+                            data={updatedDevice}
+                            setData={setUpdatedDevice}
                             dataLabels={
                                 new Map([
                                     ["sites", "Site"],
@@ -52,6 +50,12 @@ const Device = props => {
                                     return "device_group_id";
                                 }
                             }}
+                            onSave={() => {
+                                console.log(updatedDevice);
+                            }}
+                            saveDisabled={Object.keys(device).every(
+                                key => device[key] === updatedDevice[key],
+                            )}
                         />
                     </>
                 )}

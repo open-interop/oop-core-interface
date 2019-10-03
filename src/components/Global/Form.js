@@ -1,7 +1,8 @@
 import React from "react";
 import { FormControl } from "baseui/form-control";
-import { Select } from "baseui/select";
+import { Button } from "baseui/button";
 import { Input } from "baseui/input";
+import { Select } from "baseui/select";
 
 const Form = props => {
     const data = props.data;
@@ -50,30 +51,43 @@ const Form = props => {
     // The optional dataLabels prop is a map object used to
     // 1) override the object property names with custom labels and
     // 2) define the order in which they appear
-    if (props.dataLabels) {
-        return (
-            <>
-                {[...props.dataLabels.keys()].map(key => (
-                    <FormControl
-                        label={props.dataLabels.get(key)}
-                        key={`form-control-${key}`}
-                    >
-                        {getFormRow(key)}
-                    </FormControl>
-                ))}
-            </>
-        );
-    } else {
-        return (
-            <>
-                {Object.keys(data).map(key => (
-                    <FormControl label={key} key={`form-control-${key}`}>
-                        {getFormRow(key)}
-                    </FormControl>
-                ))}
-            </>
-        );
-    }
+    const formBody = () => {
+        if (props.dataLabels) {
+            return (
+                <>
+                    {[...props.dataLabels.keys()].map(key => (
+                        <FormControl
+                            label={props.dataLabels.get(key)}
+                            key={`form-control-${key}`}
+                        >
+                            {getFormRow(key)}
+                        </FormControl>
+                    ))}
+                </>
+            );
+        } else {
+            return (
+                <>
+                    {Object.keys(data).map(key => (
+                        <FormControl label={key} key={`form-control-${key}`}>
+                            {getFormRow(key)}
+                        </FormControl>
+                    ))}
+                </>
+            );
+        }
+    };
+
+    return (
+        <>
+            {formBody()}
+            {!props.readOnly && (
+                <Button onClick={props.onSave} disabled={props.saveDisabled}>
+                    save
+                </Button>
+            )}
+        </>
+    );
 };
 
 export { Form };
