@@ -63,7 +63,7 @@ const Transmissions = props => {
     const { page, pageSize, ...filters } = queryParameters;
 
     return (
-        <div className="device-transmissions">
+        <div className="content-wrapper">
             <h2>Transmissions - Device {props.match.params.deviceId}</h2>
             <DataProvider
                 getData={() => {

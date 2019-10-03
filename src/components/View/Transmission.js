@@ -16,7 +16,7 @@ const Transmission = props => {
     );
 
     return (
-        <div className="device-transmissions">
+        <div className="content-wrapper">
             <DataProvider
                 getData={() => {
                     return OopCore.getTransmission(
