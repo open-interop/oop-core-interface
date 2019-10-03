@@ -125,6 +125,14 @@ class OopCore extends EventEmitter {
             `/devices/${deviceId}/transmissions/${transmissionId}`,
         );
     }
+
+    getSites() {
+        return this.makeRequest("/sites");
+    }
+
+    getDeviceGroups() {
+        return this.makeRequest("/device_groups");
+    }
 }
 
 export default new OopCore();
