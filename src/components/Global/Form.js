@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { FormControl } from "baseui/form-control";
 import { Button } from "baseui/button";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
@@ -6,6 +7,11 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 
 const Form = props => {
+    Form.propTypes = {
+        data: PropTypes.object.isRequired,
+        setData: PropTypes.func.isRequired,
+    };
+
     const data = props.data;
 
     const setValue = (key, value) => {
