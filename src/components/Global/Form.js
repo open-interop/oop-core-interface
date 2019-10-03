@@ -11,6 +11,9 @@ const Form = props => {
 
     const getFormRow = key => {
         if (props.data[key] === Object(props.data[key])) {
+            if (props.data[key].constructor === Array) {
+                return <div>This would be an array</div>;
+            }
             return props.data[key];
         } else {
             return (

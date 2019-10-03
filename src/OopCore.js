@@ -86,6 +86,10 @@ class OopCore extends EventEmitter {
         return this.makeRequest("/devices");
     }
 
+    getDevice(deviceId) {
+        return this.makeRequest(`/devices/${deviceId}`);
+    }
+
     mapQueryParameter(key) {
         switch (key) {
             case "pageSize":

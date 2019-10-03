@@ -1,3 +1,4 @@
+export * from "./Device";
 export * from "./Devices";
 export * from "./Transmission";
 export * from "./Transmissions";

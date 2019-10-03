@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Show from "baseui/icon/show";
+import Menu from "baseui/icon/menu";
 import { DataProvider } from "../Universal";
 import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
@@ -19,18 +21,38 @@ const Devices = () => {
                 <SortableTable
                     data={devices.data}
                     mapFunction={(columnName, content) => {
-                        if (columnName === "id") {
+                        if (columnName === "action") {
                             return (
-                                <Link to={`/devices/${content}/transmissions`}>
-                                    {content}
-                                </Link>
+                                <>
+                                    <Link to={`/devices/${content}`}>
+                                        <Show />
+                                    </Link>
+                                    <Link
+                                        to={`/devices/${content}/transmissions`}
+                                    >
+                                        <Menu />
+                                    </Link>
+                                </>
                             );
+                        } else {
+                            return content;
                         }
                     }}
-                    columns={[{ id: "id", name: "Device ID" }]}
+                    columns={[
+                        { id: "id", name: "ID" },
+                        { id: "name", name: "Name" },
+                        { id: "deviceGroupId", name: "Group" },
+                        { id: "siteId", name: "Site" },
+                        { id: "action", name: "Action" },
+                    ]}
+                    columnContent={columnName => {
+                        if (columnName === "action") {
+                            return "id";
+                        }
+                        return columnName;
+                    }}
                 />
             )}
-            renderKey="1234"
         />
     );
 };

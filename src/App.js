@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
+    Device,
     Devices,
     Transmission,
     Transmissions,
@@ -103,6 +104,13 @@ class App extends Component {
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Devices, props)
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Device, props)
                         }
                     />
                     <Route
