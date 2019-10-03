@@ -17,7 +17,12 @@ class OopCore extends EventEmitter {
         });
     }
 
-    makeRequest(endpoint, postData = false, requireToken = true) {
+    makeRequest({
+        endpoint,
+        postData = false,
+        putData = false,
+        requireToken = true,
+    }) {
         const token = this.token;
         if (!token && requireToken) {
             return Promise.reject(new Error("No token set."));
@@ -32,6 +37,12 @@ class OopCore extends EventEmitter {
             options.method = "POST";
             options.headers["Content-Type"] = "application/json";
             options.body = JSON.stringify(postData);
+        }
+
+        if (putData) {
+            options.method = "PUT";
+            options.headers["Content-Type"] = "application/json";
+            options.body = JSON.stringify(putData);
         }
 
         return fetch(this.apiBase + endpoint, options)
@@ -55,14 +66,14 @@ class OopCore extends EventEmitter {
     }
 
     login(email, password) {
-        return this.makeRequest(
-            "/auth/login",
-            {
+        return this.makeRequest({
+            endpoint: "/auth/login",
+            postData: {
                 email,
                 password,
             },
-            false,
-        ).then(response => {
+            requireToken: false,
+        }).then(response => {
             this.token = response.token;
             this.saveCookie("token", response.token);
             return this.getLoggedInUser();
@@ -77,17 +88,25 @@ class OopCore extends EventEmitter {
     }
 
     getLoggedInUser() {
-        return this.makeRequest("/me").then(loggedInUser => {
+        return this.makeRequest({ endpoint: "/me" }).then(loggedInUser => {
             this.emit("loggedin", loggedInUser);
         });
     }
 
     getDevices() {
-        return this.makeRequest("/devices");
+        return this.makeRequest({ endpoint: "/devices" });
     }
 
     getDevice(deviceId) {
-        return this.makeRequest(`/devices/${deviceId}`);
+        return this.makeRequest({ endpoint: `/devices/${deviceId}` });
+    }
+
+    updateDevice(device) {
+        const data = { device: device };
+        return this.makeRequest({
+            endpoint: `/devices/${device.id}`,
+            putData: data,
+        });
     }
 
     mapQueryParameter(key) {
@@ -117,21 +136,21 @@ class OopCore extends EventEmitter {
             path += "/?" + parameters;
         }
 
-        return this.makeRequest(path);
+        return this.makeRequest({ endpoint: path });
     }
 
     getTransmission(deviceId, transmissionId) {
-        return this.makeRequest(
-            `/devices/${deviceId}/transmissions/${transmissionId}`,
-        );
+        return this.makeRequest({
+            endpoint: `/devices/${deviceId}/transmissions/${transmissionId}`,
+        });
     }
 
     getSites() {
-        return this.makeRequest("/sites");
+        return this.makeRequest({ endpoint: "/sites" });
     }
 
     getDeviceGroups() {
-        return this.makeRequest("/device_groups");
+        return this.makeRequest({ endpoint: "/device_groups" });
     }
 }
 

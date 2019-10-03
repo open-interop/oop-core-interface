@@ -36,7 +36,9 @@ const Form = props => {
                 );
             }
             return data[key];
-        } else {
+        } else if (!!data[key] === data[key]) {
+            return <div>put a toggle here</div>;
+        } else if ("" + data[key] === data[key]) {
             return (
                 <Input
                     id={`input-${key}`}
@@ -83,9 +85,10 @@ const Form = props => {
             {formBody()}
             {!props.readOnly && (
                 <Button onClick={props.onSave} disabled={props.saveDisabled}>
-                    save
+                    Save
                 </Button>
             )}
+            {props.error && <div>{props.error}</div>}
         </>
     );
 };

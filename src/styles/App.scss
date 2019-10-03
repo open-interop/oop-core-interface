@@ -154,3 +154,9 @@ input {
         cursor: default;
     }
 }
+
+button {
+    &[disabled=""] {
+        cursor: default !important;
+    }
+}
