@@ -160,3 +160,10 @@ button {
         cursor: default !important;
     }
 }
+
+label {
+    &[data-baseweb="checkbox"] {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+}

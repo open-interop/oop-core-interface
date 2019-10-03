@@ -1,6 +1,7 @@
 import React from "react";
 import { FormControl } from "baseui/form-control";
 import { Button } from "baseui/button";
+import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 
@@ -18,6 +19,7 @@ const Form = props => {
             if (data[key].constructor === Array) {
                 return (
                     <Select
+                        disabled={props.readOnly || data.readOnly}
                         options={data[key]}
                         labelKey="name"
                         valueKey="id"
@@ -37,7 +39,13 @@ const Form = props => {
             }
             return data[key];
         } else if (!!data[key] === data[key]) {
-            return <div>put a toggle here</div>;
+            return (
+                <Checkbox
+                    checked={data[key]}
+                    onChange={() => setValue(key, !data[key])}
+                    checkmarkType={STYLE_TYPE.toggle}
+                />
+            );
         } else if ("" + data[key] === data[key]) {
             return (
                 <Input
