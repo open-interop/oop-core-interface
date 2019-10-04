@@ -41,7 +41,6 @@ const Device = props => {
         return response;
     };
 
-    console.log(updatedDevice);
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -54,14 +53,13 @@ const Device = props => {
                             data={updatedDevice}
                             setData={setUpdatedDevice}
                             dataTypes={{
-                                sites: TYPE.SELECT,
-                                groups: TYPE.SELECT,
-                                name: TYPE.STRING_INPUT,
-                                active: TYPE.TOGGLE,
-                                timezones: TYPE.SEARCHABLE_SELECT,
-                                latitude: TYPE.STRING_INPUT,
-                                longitude: TYPE.STRING_INPUT,
-                             
+                                sites: InputType.SELECT,
+                                groups: InputType.SELECT,
+                                name: InputType.STRING_INPUT,
+                                active: InputType.TOGGLE,
+                                timezones: InputType.SEARCHABLE_SELECT,
+                                latitude: InputType.STRING_INPUT,
+                                longitude: InputType.STRING_INPUT,
                             }}
                             dataLabels={
                                 new Map([
