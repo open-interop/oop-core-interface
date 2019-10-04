@@ -1,6 +1,12 @@
 import cookie from "react-cookies";
 const EventEmitter = require("events");
 
+const REQUESTTYPES = {
+    GET: "GET",
+    POST: "POST",
+    PUT: "PUT",
+};
+
 class OopCore extends EventEmitter {
     constructor(props) {
         super(props);
@@ -17,32 +23,30 @@ class OopCore extends EventEmitter {
         });
     }
 
-    makeRequest({
-        endpoint,
-        postData = false,
-        putData = false,
-        requireToken = true,
-    }) {
+    makeRequest(endpoint, requestType, data = false, requireToken = true) {
         const token = this.token;
         if (!token && requireToken) {
             return Promise.reject(new Error("No token set."));
         }
 
         const options = {
-            method: "GET",
             headers: { Authorization: token, Accept: "application/json" },
         };
 
-        if (postData) {
-            options.method = "POST";
-            options.headers["Content-Type"] = "application/json";
-            options.body = JSON.stringify(postData);
+        if (requestType === REQUESTTYPES.GET) {
+            options.method = "GET";
         }
 
-        if (putData) {
+        if (requestType === REQUESTTYPES.POST) {
+            options.method = "POST";
+            options.headers["Content-Type"] = "application/json";
+            options.body = JSON.stringify(data);
+        }
+
+        if (requestType === REQUESTTYPES.PUT) {
             options.method = "PUT";
             options.headers["Content-Type"] = "application/json";
-            options.body = JSON.stringify(putData);
+            options.body = JSON.stringify(data);
         }
 
         return fetch(this.apiBase + endpoint, options)
@@ -66,14 +70,12 @@ class OopCore extends EventEmitter {
     }
 
     login(email, password) {
-        return this.makeRequest({
-            endpoint: "/auth/login",
-            postData: {
-                email,
-                password,
-            },
-            requireToken: false,
-        }).then(response => {
+        return this.makeRequest(
+            "/auth/login",
+            REQUESTTYPES.POST,
+            { email, password },
+            false,
+        ).then(response => {
             this.token = response.token;
             this.saveCookie("token", response.token);
             return this.getLoggedInUser();
@@ -88,25 +90,26 @@ class OopCore extends EventEmitter {
     }
 
     getLoggedInUser() {
-        return this.makeRequest({ endpoint: "/me" }).then(loggedInUser => {
+        return this.makeRequest("/me", REQUESTTYPES.GET).then(loggedInUser => {
             this.emit("loggedin", loggedInUser);
         });
     }
 
     getDevices() {
-        return this.makeRequest({ endpoint: "/devices" });
+        return this.makeRequest("/devices", REQUESTTYPES.GET);
     }
 
     getDevice(deviceId) {
-        return this.makeRequest({ endpoint: `/devices/${deviceId}` });
+        return this.makeRequest(`/devices/${deviceId}`, REQUESTTYPES.GET);
     }
 
     updateDevice(device) {
         const data = { device: device };
-        return this.makeRequest({
-            endpoint: `/devices/${device.id}`,
-            putData: data,
-        });
+        return this.makeRequest(
+            `/devices/${device.id}`,
+            REQUESTTYPES.PUT,
+            data,
+        );
     }
 
     mapQueryParameter(key) {
@@ -136,21 +139,22 @@ class OopCore extends EventEmitter {
             path += "/?" + parameters;
         }
 
-        return this.makeRequest({ endpoint: path });
+        return this.makeRequest(path, REQUESTTYPES.GET);
     }
 
     getTransmission(deviceId, transmissionId) {
-        return this.makeRequest({
-            endpoint: `/devices/${deviceId}/transmissions/${transmissionId}`,
-        });
+        return this.makeRequest(
+            `/devices/${deviceId}/transmissions/${transmissionId}`,
+            REQUESTTYPES.GET,
+        );
     }
 
     getSites() {
-        return this.makeRequest({ endpoint: "/sites" });
+        return this.makeRequest("/sites", REQUESTTYPES.GET);
     }
 
     getDeviceGroups() {
-        return this.makeRequest({ endpoint: "/device_groups" });
+        return this.makeRequest("/device_groups", REQUESTTYPES.GET);
     }
 }
 
