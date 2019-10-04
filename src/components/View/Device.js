@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataProvider } from "../Universal";
-import { Form, TYPE } from "../Global";
+import { Form, InputType } from "../Global";
 import OopCore from "../../OopCore";
 import { Timezones } from "./Timezones";
 
@@ -61,6 +61,7 @@ const Device = props => {
                                 timezones: TYPE.SEARCHABLE_SELECT,
                                 latitude: TYPE.STRING_INPUT,
                                 longitude: TYPE.STRING_INPUT,
+                             
                             }}
                             dataLabels={
                                 new Map([
