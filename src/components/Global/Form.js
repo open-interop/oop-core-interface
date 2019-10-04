@@ -59,12 +59,13 @@ const Form = props => {
             case InputType.NUMBER_INPUT:
                 return (
                     <Input
+                        type="number"
                         id={`input-${key}`}
                         value={data[key] || ""}
                         disabled={props.readOnly || data.readOnly}
-                        onChange={event => {
-                            setValue(key, Number(event.currentTarget.value));
-                        }}
+                        onChange={event =>
+                            setValue(key, Number(event.currentTarget.value))
+                        }
                     />
                 );
             case InputType.TOGGLE:
@@ -79,6 +80,7 @@ const Form = props => {
             case InputType.DATETIME_PICKER:
                 return (
                     <Input
+                        type="datetime-local"
                         id={`input-${key}`}
                         value={data[key] || ""}
                         disabled={props.readOnly || data.readOnly}
