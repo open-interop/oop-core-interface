@@ -6,14 +6,17 @@ import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 
+const TYPE = {
+    STRING_INPUT: "string",
+    NUMBER_INPUT: "number",
+    SELECT: "select",
+    TOGGLE: "toggle",
+    DATETIME_PICKER: "datetime",
+    COMPONENT: "component",
+};
+
 const Form = props => {
-    Form.propTypes = {
-        data: PropTypes.object.isRequired,
-        setData: PropTypes.func.isRequired,
-    };
-
     const data = props.data;
-
     const setValue = (key, value) => {
         const updatedData = { ...data };
         updatedData[key] = value;
@@ -21,8 +24,19 @@ const Form = props => {
     };
 
     const getFormRow = key => {
-        if (data[key] === Object(data[key])) {
-            if (data[key].constructor === Array) {
+        switch (props.dataTypes[key]) {
+            case TYPE.STRING_INPUT:
+                return (
+                    <Input
+                        id={`input-${key}`}
+                        value={data[key] || ""}
+                        disabled={props.readOnly || data.readOnly}
+                        onChange={event =>
+                            setValue(key, event.currentTarget.value)
+                        }
+                    />
+                );
+            case TYPE.SELECT:
                 return (
                     <Select
                         disabled={props.readOnly || data.readOnly}
@@ -42,25 +56,42 @@ const Form = props => {
                         )}
                     />
                 );
-            }
-            return data[key];
-        } else if (!!data[key] === data[key]) {
-            return (
-                <Checkbox
-                    checked={data[key]}
-                    onChange={() => setValue(key, !data[key])}
-                    checkmarkType={STYLE_TYPE.toggle}
-                />
-            );
-        } else if ("" + data[key] === data[key]) {
-            return (
-                <Input
-                    id={`input-${key}`}
-                    value={data[key] || ""}
-                    disabled={props.readOnly || data.readOnly}
-                    onChange={event => setValue(key, event.currentTarget.value)}
-                />
-            );
+            case TYPE.NUMBER_INPUT:
+                return (
+                    <Input
+                        id={`input-${key}`}
+                        value={data[key] || ""}
+                        disabled={props.readOnly || data.readOnly}
+                        onChange={event => {
+                            setValue(key, Number(event.currentTarget.value));
+                        }}
+                    />
+                );
+            case TYPE.TOGGLE:
+                return (
+                    <Checkbox
+                        disabled={props.readOnly || data.readOnly}
+                        checked={data[key]}
+                        onChange={() => setValue(key, !data[key])}
+                        checkmarkType={STYLE_TYPE.toggle}
+                    />
+                );
+            case TYPE.DATETIME_PICKER:
+                return (
+                    <Input
+                        id={`input-${key}`}
+                        value={data[key] || ""}
+                        disabled={props.readOnly || data.readOnly}
+                        onChange={event =>
+                            setValue(key, event.currentTarget.value)
+                        }
+                    />
+                );
+            case TYPE.COMPONENT:
+                return data[key];
+
+            default:
+                return <div>No content available</div>;
         }
     };
 
@@ -107,4 +138,10 @@ const Form = props => {
     );
 };
 
-export { Form };
+Form.propTypes = {
+    data: PropTypes.object.isRequired,
+    setData: PropTypes.func.isRequired,
+    dataTypes: PropTypes.object.isRequired,
+};
+
+export { Form, TYPE };
