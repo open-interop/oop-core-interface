@@ -37,14 +37,11 @@ class OopCore extends EventEmitter {
             options.method = "GET";
         }
 
-        if (requestType === RequestType.POST) {
-            options.method = "POST";
-            options.headers["Content-Type"] = "application/json";
-            options.body = JSON.stringify(data);
-        }
-
-        if (requestType === RequestType.PUT) {
-            options.method = "PUT";
+        if (
+            requestType === RequestType.POST ||
+            requestType === RequestType.PUT
+        ) {
+            options.method = requestType;
             options.headers["Content-Type"] = "application/json";
             options.body = JSON.stringify(data);
         }
