@@ -1,6 +1,12 @@
 import cookie from "react-cookies";
 const EventEmitter = require("events");
 
+const RequestType = {
+    GET: "GET",
+    POST: "POST",
+    PUT: "PUT",
+};
+
 class OopCore extends EventEmitter {
     constructor(props) {
         super(props);
@@ -17,21 +23,28 @@ class OopCore extends EventEmitter {
         });
     }
 
-    makeRequest(endpoint, postData = false, requireToken = true) {
+    makeRequest(
+        endpoint,
+        requestType = RequestType.GET,
+        data = false,
+        requireToken = true,
+    ) {
         const token = this.token;
         if (!token && requireToken) {
             return Promise.reject(new Error("No token set."));
         }
 
         const options = {
-            method: "GET",
             headers: { Authorization: token, Accept: "application/json" },
+            method: requestType,
         };
 
-        if (postData) {
-            options.method = "POST";
+        if (
+            requestType === RequestType.POST ||
+            requestType === RequestType.PUT
+        ) {
             options.headers["Content-Type"] = "application/json";
-            options.body = JSON.stringify(postData);
+            options.body = JSON.stringify(data);
         }
 
         return fetch(this.apiBase + endpoint, options)
@@ -57,10 +70,8 @@ class OopCore extends EventEmitter {
     login(email, password) {
         return this.makeRequest(
             "/auth/login",
-            {
-                email,
-                password,
-            },
+            RequestType.POST,
+            { email, password },
             false,
         ).then(response => {
             this.token = response.token;
@@ -88,6 +99,11 @@ class OopCore extends EventEmitter {
 
     getDevice(deviceId) {
         return this.makeRequest(`/devices/${deviceId}`);
+    }
+
+    updateDevice(device) {
+        const data = { device: device };
+        return this.makeRequest(`/devices/${device.id}`, RequestType.PUT, data);
     }
 
     mapQueryParameter(key) {
@@ -124,6 +140,14 @@ class OopCore extends EventEmitter {
         return this.makeRequest(
             `/devices/${deviceId}/transmissions/${transmissionId}`,
         );
+    }
+
+    getSites() {
+        return this.makeRequest("/sites");
+    }
+
+    getDeviceGroups() {
+        return this.makeRequest("/device_groups");
     }
 }
 

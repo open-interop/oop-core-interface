@@ -154,3 +154,16 @@ input {
         cursor: default;
     }
 }
+
+button {
+    &[disabled=""] {
+        cursor: default !important;
+    }
+}
+
+label {
+    &[data-baseweb="checkbox"] {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+}
