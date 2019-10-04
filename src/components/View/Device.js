@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DataProvider } from "../Universal";
 import { Form, TYPE } from "../Global";
 import OopCore from "../../OopCore";
+import { Timezones } from "./Timezones";
 
 const Device = props => {
     const [device, setDevice] = useState({});
@@ -13,6 +14,12 @@ const Device = props => {
     const getFormData = (deviceDetails, sites, groups) => {
         deviceDetails.sites = sites.data;
         deviceDetails.groups = groups.data;
+        deviceDetails.timezones = Timezones.map(timezone => {
+            return {
+                id: timezone,
+                name: timezone,
+            };
+        });
         return deviceDetails;
     };
 
@@ -34,6 +41,7 @@ const Device = props => {
         return response;
     };
 
+    console.log(updatedDevice);
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -50,6 +58,9 @@ const Device = props => {
                                 groups: TYPE.SELECT,
                                 name: TYPE.STRING_INPUT,
                                 active: TYPE.TOGGLE,
+                                timezones: TYPE.SELECT,
+                                latitude: TYPE.STRING_INPUT,
+                                longitude: TYPE.STRING_INPUT,
                             }}
                             dataLabels={
                                 new Map([
@@ -57,6 +68,9 @@ const Device = props => {
                                     ["groups", "Group"],
                                     ["name", "Name"],
                                     ["active", "Active"],
+                                    ["timezones", "Timezone"],
+                                    ["latitude", "Latitude"],
+                                    ["longitude", "Longitude"],
                                 ])
                             }
                             selectedValue={arrayKey => {
@@ -65,6 +79,9 @@ const Device = props => {
                                 }
                                 if (arrayKey === "groups") {
                                     return "device_group_id";
+                                }
+                                if (arrayKey === "timezones") {
+                                    return "time_zone";
                                 }
                             }}
                             onSave={() => {

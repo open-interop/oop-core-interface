@@ -24,6 +24,10 @@ const Form = props => {
     };
 
     const getFormRow = key => {
+        if (data[key] === undefined) {
+            return <div>No content available</div>;
+        }
+
         switch (props.dataTypes[key]) {
             case TYPE.STRING_INPUT:
                 return (
