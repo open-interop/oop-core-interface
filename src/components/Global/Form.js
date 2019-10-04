@@ -60,7 +60,7 @@ const Form = props => {
                         )}
                     />
                 );
-            case TYPE.SEARCHABLE_SELECT:
+            case InputType.SEARCHABLE_SELECT:
                 return (
                     <Select
                         disabled={props.readOnly || data.readOnly}
