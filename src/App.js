@@ -3,14 +3,15 @@ import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Device,
+    DeviceGroups,
     Devices,
     Transmission,
     Transmissions,
     Header,
     Home,
     Login,
-    Settings,
     SideNavigation,
+    Temprs,
 } from "./components/View";
 import { Spinner } from "./components/Universal";
 import OopCore from "./OopCore";
@@ -128,10 +129,17 @@ class App extends Component {
                         }
                     />
                     <Route
-                        path="/settings"
+                        path="/deviceGroups"
                         exact
                         render={props =>
-                            this.getComponent(!hasUser, Settings, props)
+                            this.getComponent(!hasUser, DeviceGroups, props)
+                        }
+                    />
+                    <Route
+                        path="/deviceGroups/:deviceGroupId/temprs"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Temprs, props)
                         }
                     />
                 </div>
