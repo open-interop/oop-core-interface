@@ -1,7 +1,7 @@
 import cookie from "react-cookies";
 const EventEmitter = require("events");
 
-const REQUESTTYPES = {
+const RequestType = {
     GET: "GET",
     POST: "POST",
     PUT: "PUT",
@@ -33,17 +33,17 @@ class OopCore extends EventEmitter {
             headers: { Authorization: token, Accept: "application/json" },
         };
 
-        if (requestType === REQUESTTYPES.GET) {
+        if (requestType === RequestType.GET) {
             options.method = "GET";
         }
 
-        if (requestType === REQUESTTYPES.POST) {
+        if (requestType === RequestType.POST) {
             options.method = "POST";
             options.headers["Content-Type"] = "application/json";
             options.body = JSON.stringify(data);
         }
 
-        if (requestType === REQUESTTYPES.PUT) {
+        if (requestType === RequestType.PUT) {
             options.method = "PUT";
             options.headers["Content-Type"] = "application/json";
             options.body = JSON.stringify(data);
@@ -72,7 +72,7 @@ class OopCore extends EventEmitter {
     login(email, password) {
         return this.makeRequest(
             "/auth/login",
-            REQUESTTYPES.POST,
+            RequestType.POST,
             { email, password },
             false,
         ).then(response => {
@@ -90,26 +90,22 @@ class OopCore extends EventEmitter {
     }
 
     getLoggedInUser() {
-        return this.makeRequest("/me", REQUESTTYPES.GET).then(loggedInUser => {
+        return this.makeRequest("/me", RequestType.GET).then(loggedInUser => {
             this.emit("loggedin", loggedInUser);
         });
     }
 
     getDevices() {
-        return this.makeRequest("/devices", REQUESTTYPES.GET);
+        return this.makeRequest("/devices", RequestType.GET);
     }
 
     getDevice(deviceId) {
-        return this.makeRequest(`/devices/${deviceId}`, REQUESTTYPES.GET);
+        return this.makeRequest(`/devices/${deviceId}`, RequestType.GET);
     }
 
     updateDevice(device) {
         const data = { device: device };
-        return this.makeRequest(
-            `/devices/${device.id}`,
-            REQUESTTYPES.PUT,
-            data,
-        );
+        return this.makeRequest(`/devices/${device.id}`, RequestType.PUT, data);
     }
 
     mapQueryParameter(key) {
@@ -139,22 +135,22 @@ class OopCore extends EventEmitter {
             path += "/?" + parameters;
         }
 
-        return this.makeRequest(path, REQUESTTYPES.GET);
+        return this.makeRequest(path, RequestType.GET);
     }
 
     getTransmission(deviceId, transmissionId) {
         return this.makeRequest(
             `/devices/${deviceId}/transmissions/${transmissionId}`,
-            REQUESTTYPES.GET,
+            RequestType.GET,
         );
     }
 
     getSites() {
-        return this.makeRequest("/sites", REQUESTTYPES.GET);
+        return this.makeRequest("/sites", RequestType.GET);
     }
 
     getDeviceGroups() {
-        return this.makeRequest("/device_groups", REQUESTTYPES.GET);
+        return this.makeRequest("/device_groups", RequestType.GET);
     }
 }
 

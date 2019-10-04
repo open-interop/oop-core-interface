@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataProvider, Modal } from "../Universal";
-import { Form, TYPE } from "../Global";
+import { Form, InputType } from "../Global";
 import OopCore from "../../OopCore";
 var JSONPretty = require("react-json-pretty");
 
@@ -34,13 +34,13 @@ const Transmission = props => {
                             data={formDataWithBodyComponent}
                             setData={setTransmission}
                             dataTypes={{
-                                transmission_uuid: TYPE.STRING_INPUT,
-                                message_uuid: TYPE.STRING_INPUT,
-                                device_id: TYPE.NUMBER_INPUT,
-                                device_tempr_id: TYPE.NUMBER_INPUT,
-                                status: TYPE.TOGGLE,
-                                transmitted_at: TYPE.DATETIME_PICKER,
-                                body: TYPE.COMPONENT,
+                                transmission_uuid: InputType.STRING_INPUT,
+                                message_uuid: InputType.STRING_INPUT,
+                                device_id: InputType.NUMBER_INPUT,
+                                device_tempr_id: InputType.NUMBER_INPUT,
+                                status: InputType.TOGGLE,
+                                transmitted_at: InputType.DATETIME_PICKER,
+                                body: InputType.COMPONENT,
                             }}
                             dataLabels={
                                 new Map([

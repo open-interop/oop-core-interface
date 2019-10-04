@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataProvider } from "../Universal";
-import { Form, TYPE } from "../Global";
+import { Form, InputType } from "../Global";
 import OopCore from "../../OopCore";
 
 const Device = props => {
@@ -46,10 +46,10 @@ const Device = props => {
                             data={updatedDevice}
                             setData={setUpdatedDevice}
                             dataTypes={{
-                                sites: TYPE.SELECT,
-                                groups: TYPE.SELECT,
-                                name: TYPE.STRING_INPUT,
-                                active: TYPE.TOGGLE,
+                                sites: InputType.SELECT,
+                                groups: InputType.SELECT,
+                                name: InputType.STRING_INPUT,
+                                active: InputType.TOGGLE,
                             }}
                             dataLabels={
                                 new Map([

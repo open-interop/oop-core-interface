@@ -6,7 +6,7 @@ import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 
-const TYPE = {
+const InputType = {
     STRING_INPUT: "string",
     NUMBER_INPUT: "number",
     SELECT: "select",
@@ -25,7 +25,7 @@ const Form = props => {
 
     const getFormRow = key => {
         switch (props.dataTypes[key]) {
-            case TYPE.STRING_INPUT:
+            case InputType.STRING_INPUT:
                 return (
                     <Input
                         id={`input-${key}`}
@@ -36,7 +36,7 @@ const Form = props => {
                         }
                     />
                 );
-            case TYPE.SELECT:
+            case InputType.SELECT:
                 return (
                     <Select
                         disabled={props.readOnly || data.readOnly}
@@ -56,7 +56,7 @@ const Form = props => {
                         )}
                     />
                 );
-            case TYPE.NUMBER_INPUT:
+            case InputType.NUMBER_INPUT:
                 return (
                     <Input
                         id={`input-${key}`}
@@ -67,7 +67,7 @@ const Form = props => {
                         }}
                     />
                 );
-            case TYPE.TOGGLE:
+            case InputType.TOGGLE:
                 return (
                     <Checkbox
                         disabled={props.readOnly || data.readOnly}
@@ -76,7 +76,7 @@ const Form = props => {
                         checkmarkType={STYLE_TYPE.toggle}
                     />
                 );
-            case TYPE.DATETIME_PICKER:
+            case InputType.DATETIME_PICKER:
                 return (
                     <Input
                         id={`input-${key}`}
@@ -87,7 +87,7 @@ const Form = props => {
                         }
                     />
                 );
-            case TYPE.COMPONENT:
+            case InputType.COMPONENT:
                 return data[key];
 
             default:
@@ -144,4 +144,4 @@ Form.propTypes = {
     dataTypes: PropTypes.object.isRequired,
 };
 
-export { Form, TYPE };
+export { Form, InputType };
