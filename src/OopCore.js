@@ -23,7 +23,12 @@ class OopCore extends EventEmitter {
         });
     }
 
-    makeRequest(endpoint, requestType, data = false, requireToken = true) {
+    makeRequest(
+        endpoint,
+        requestType = RequestType.GET,
+        data = false,
+        requireToken = true,
+    ) {
         const token = this.token;
         if (!token && requireToken) {
             return Promise.reject(new Error("No token set."));
@@ -31,17 +36,13 @@ class OopCore extends EventEmitter {
 
         const options = {
             headers: { Authorization: token, Accept: "application/json" },
+            method: requestType,
         };
-
-        if (requestType === RequestType.GET) {
-            options.method = "GET";
-        }
 
         if (
             requestType === RequestType.POST ||
             requestType === RequestType.PUT
         ) {
-            options.method = requestType;
             options.headers["Content-Type"] = "application/json";
             options.body = JSON.stringify(data);
         }
@@ -87,17 +88,17 @@ class OopCore extends EventEmitter {
     }
 
     getLoggedInUser() {
-        return this.makeRequest("/me", RequestType.GET).then(loggedInUser => {
+        return this.makeRequest("/me").then(loggedInUser => {
             this.emit("loggedin", loggedInUser);
         });
     }
 
     getDevices() {
-        return this.makeRequest("/devices", RequestType.GET);
+        return this.makeRequest("/devices");
     }
 
     getDevice(deviceId) {
-        return this.makeRequest(`/devices/${deviceId}`, RequestType.GET);
+        return this.makeRequest(`/devices/${deviceId}`);
     }
 
     updateDevice(device) {
@@ -132,22 +133,21 @@ class OopCore extends EventEmitter {
             path += "/?" + parameters;
         }
 
-        return this.makeRequest(path, RequestType.GET);
+        return this.makeRequest(path);
     }
 
     getTransmission(deviceId, transmissionId) {
         return this.makeRequest(
             `/devices/${deviceId}/transmissions/${transmissionId}`,
-            RequestType.GET,
         );
     }
 
     getSites() {
-        return this.makeRequest("/sites", RequestType.GET);
+        return this.makeRequest("/sites");
     }
 
     getDeviceGroups() {
-        return this.makeRequest("/device_groups", RequestType.GET);
+        return this.makeRequest("/device_groups");
     }
 }
 
