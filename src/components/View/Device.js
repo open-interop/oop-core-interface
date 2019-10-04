@@ -58,7 +58,7 @@ const Device = props => {
                                 groups: TYPE.SELECT,
                                 name: TYPE.STRING_INPUT,
                                 active: TYPE.TOGGLE,
-                                timezones: TYPE.SELECT,
+                                timezones: TYPE.SEARCHABLE_SELECT,
                                 latitude: TYPE.STRING_INPUT,
                                 longitude: TYPE.STRING_INPUT,
                             }}

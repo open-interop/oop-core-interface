@@ -10,6 +10,7 @@ const TYPE = {
     STRING_INPUT: "string",
     NUMBER_INPUT: "number",
     SELECT: "select",
+    SEARCHABLE_SELECT: "searchable",
     TOGGLE: "toggle",
     DATETIME_PICKER: "datetime",
     COMPONENT: "component",
@@ -48,7 +49,25 @@ const Form = props => {
                         labelKey="name"
                         valueKey="id"
                         searchable={false}
-                        clearable={false}
+                        onChange={event =>
+                            setValue(
+                                props.selectedValue(key),
+                                event.value[0].id,
+                            )
+                        }
+                        value={data[key].find(
+                            item => item.id === data[props.selectedValue(key)],
+                        )}
+                    />
+                );
+            case TYPE.SEARCHABLE_SELECT:
+                return (
+                    <Select
+                        disabled={props.readOnly || data.readOnly}
+                        options={data[key]}
+                        labelKey="name"
+                        valueKey="id"
+                        searchable={true}
                         onChange={event =>
                             setValue(
                                 props.selectedValue(key),
