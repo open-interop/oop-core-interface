@@ -167,3 +167,8 @@ label {
         flex-direction: row-reverse;
     }
 }
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+}

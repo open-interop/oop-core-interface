@@ -155,7 +155,7 @@ const Form = props => {
             {formBody()}
             {!props.readOnly && (
                 <Button onClick={props.onSave} disabled={props.saveDisabled}>
-                    Save
+                    {props.buttonText || "Save"}
                 </Button>
             )}
             {props.error && <div>{props.error}</div>}
