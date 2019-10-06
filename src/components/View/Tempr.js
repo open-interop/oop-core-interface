@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataProvider } from "../Universal";
-import { Form, InputType } from "../Global";
+import { CodeEditor, Form, InputType } from "../Global";
 import OopCore from "../../OopCore";
 
 const Tempr = props => {
@@ -22,6 +22,7 @@ const Tempr = props => {
         return Promise.all([getTempr(), OopCore.getDeviceGroups()]).then(
             ([tempr, groups]) => {
                 tempr.groups = groups.data;
+                tempr.body = <CodeEditor />;
                 return tempr;
             },
         );
@@ -45,7 +46,7 @@ const Tempr = props => {
                                 name: InputType.STRING_INPUT,
                                 groups: InputType.SELECT,
                                 description: InputType.STRING_INPUT,
-                                body: InputType.STRING_INPUT,
+                                body: InputType.COMPONENT,
                             }}
                             dataLabels={
                                 new Map([
