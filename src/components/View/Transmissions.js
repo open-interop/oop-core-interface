@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { Pagination } from "baseui/pagination";
 import { Select } from "baseui/select";
@@ -83,12 +84,9 @@ const Transmissions = props => {
                                 if (columnName === "action") {
                                     return (
                                         <Button
-                                            onClick={() =>
-                                                props.history.push(
-                                                    props.location.pathname +
-                                                        `/${content}`,
-                                                )
-                                            }
+                                            $as={Link}
+                                            to={`${props.location.pathname}
+                                            /${content}`}
                                         >
                                             {content}
                                         </Button>

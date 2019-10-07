@@ -18,12 +18,13 @@ const Header = props => (
                 </NavigationItem>
                 <NavigationItem>
                     <Button
+                        $as={Link}
+                        to={"/"}
                         onClick={() => {
                             OopCore.logout();
-                            props.history.push("/");
                         }}
                     >
-                        logout
+                        Log out
                     </Button>
                 </NavigationItem>
             </NavigationList>

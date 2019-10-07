@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { DataProvider } from "../Universal";
 import { SortableTable } from "../Global";
@@ -24,14 +25,10 @@ const DeviceGroups = props => {
                                 if (columnName === "action") {
                                     return (
                                         <Button
-                                            onClick={() =>
-                                                props.history.push(
-                                                    props.location.pathname +
-                                                        `/${content}/temprs`,
-                                                )
-                                            }
+                                            $as={Link}
+                                            to={`${props.location.pathname}/${content}/temprs`}
                                         >
-                                            view temprs
+                                            View temprs
                                         </Button>
                                     );
                                 }
