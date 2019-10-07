@@ -15,16 +15,14 @@ const Tempr = props => {
 
     const getTempr = () => {
         return blankTempr
-            ? new Promise(function(resolve) {
-                  resolve({
-                      name: "",
-                      description: "",
-                      device_group_id: null,
-                      body: {
-                          language: "javascript",
-                          script: "this is the script",
-                      },
-                  });
+            ? Promise.resolve({
+                  name: "",
+                  description: "",
+                  device_group_id: null,
+                  body: {
+                      language: "javascript",
+                      script: "this is the script",
+                  },
               })
             : OopCore.getTempr(
                   props.match.params.deviceGroupId,
