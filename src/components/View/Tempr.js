@@ -57,7 +57,6 @@ const Tempr = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
-    console.log(updatedTempr);
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allTemprsPath}>
