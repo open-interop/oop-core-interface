@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
-import { Pagination } from "baseui/pagination";
-import { Select } from "baseui/select";
-import { DataProvider } from "../Universal";
+import { DataProvider, Pagination } from "../Universal";
 import Check from "baseui/icon/check";
 import Delete from "baseui/icon/delete";
 import { SortableTable } from "../Global";
@@ -26,7 +24,7 @@ const Transmissions = props => {
         queryString.parse(props.location.search),
     );
 
-    const getPageSizeOption = () => {
+    const getPageSize = () => {
         return (
             pageSizeOptions.find(
                 option => option.id === queryParameters.pageSize,
@@ -151,42 +149,16 @@ const Transmissions = props => {
                             filters={filters}
                             updateFilters={updateTableFilters}
                         />
-                        <div className="pagination-footer">
-                            <Select
-                                options={pageSizeOptions}
-                                labelKey="id"
-                                valueKey="id"
-                                searchable={false}
-                                clearable={false}
-                                onChange={value => {
-                                    updateQueryParameters({
-                                        pageSize: value.option.id,
-                                        page: null,
-                                    });
-                                }}
-                                value={getPageSizeOption()}
-                            />
-                            <div className="pagination-label">per page</div>
-                            <div className="pagination-label">
-                                {transmissions.totalRecords}
-                                {Object.keys(filters).length > 0
-                                    ? " filtered"
-                                    : ""}
-                                {transmissions.totalRecords > 1 ||
-                                transmissions.totalRecords === 0
-                                    ? " records"
-                                    : " record"}
-                            </div>
-                            <Pagination
-                                numPages={transmissions.numberOfPages}
-                                currentPage={Number(queryParameters.page) || 1}
-                                onPageChange={event => {
-                                    updateQueryParameters({
-                                        page: event.nextPage,
-                                    });
-                                }}
-                            />
-                        </div>
+                        <Pagination
+                            pageSizeOptions={pageSizeOptions}
+                            updatePagination={pagination =>
+                                updateQueryParameters(pagination)
+                            }
+                            currentPageSize={getPageSize()}
+                            totalRecords={transmissions.totalRecords}
+                            numberOfPages={transmissions.numberOfPages}
+                            currentPage={Number(queryParameters.page) || 1}
+                        />
                     </>
                 )}
                 renderKey={props.location.search}
