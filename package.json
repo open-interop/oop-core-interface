@@ -12,7 +12,6 @@
     "prop-types": "^15.7.2",
     "query-string": "^6.8.3",
     "react": "^16.9.0",
-    "react-ace": "^7.0.4",
     "react-cookies": "^0.1.1",
     "react-dom": "^16.9.0",
     "react-json-pretty": "^2.1.0",

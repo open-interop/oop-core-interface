@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import { CodeEditor, Form, InputType } from "../Global";
+import { Form, InputType } from "../Global";
 import OopCore from "../../OopCore";
 
 const Tempr = props => {
