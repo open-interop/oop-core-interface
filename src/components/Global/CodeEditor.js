@@ -1,21 +1,22 @@
 import React, { Component } from "react";
-import SplitEditor from "react-ace";
+import AceEditor from "react-ace";
 
-import "brace/mode/json";
+import "brace/mode/javascript";
 import "brace/theme/github";
 
 class CodeEditor extends Component {
     render() {
         return (
-            <SplitEditor
-                mode="json"
-                theme="github"
-                splits={2}
-                orientation="below"
-                value={[`hi hello`, "what"]}
-                name="UNIQUE_ID_OF_DIV"
-                editorProps={{ $blockScrolling: true }}
-            />
+            <>
+                <AceEditor
+                    mode="javascript"
+                    theme="github"
+                    orientation="below"
+                    value={`hi hello`}
+                    name="UNIQUE_ID_OF_DIV"
+                    editorProps={{ $blockScrolling: true }}
+                />
+            </>
         );
     }
 }
