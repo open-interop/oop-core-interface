@@ -8,6 +8,7 @@ import OopCore from "../../OopCore";
 
 const Tempr = props => {
     const [tempr, setTempr] = useState({});
+    const [updatedTempr, setUpdatedTempr] = useState({});
     const [stateGroups, setGroups] = useState([]);
 
     const blankTempr = props.match.params.temprId === "new";
@@ -45,15 +46,21 @@ const Tempr = props => {
         );
     };
 
+    const refreshTempr = response => {
+        const freshData = getFormData(response, stateGroups);
+        setTempr(freshData);
+        setUpdatedTempr(freshData);
+    };
+
+    const allTemprsPath = props.location.pathname.substr(
+        0,
+        props.location.pathname.lastIndexOf("/"),
+    );
+
+    console.log(updatedTempr);
     return (
         <div className="content-wrapper">
-            <Button
-                $as={Link}
-                to={`${props.location.pathname.substr(
-                    0,
-                    props.location.pathname.lastIndexOf("/"),
-                )}`}
-            >
+            <Button $as={Link} to={allTemprsPath}>
                 <ArrowLeft size={24} />
             </Button>
             <h2>Tempr</h2>
@@ -61,14 +68,15 @@ const Tempr = props => {
                 getData={() => {
                     return getData().then(response => {
                         setTempr(response);
+                        setUpdatedTempr(response);
                         return response;
                     });
                 }}
                 renderData={() => (
                     <>
                         <Form
-                            data={tempr}
-                            setData={setTempr}
+                            data={updatedTempr}
+                            setData={setUpdatedTempr}
                             dataTypes={{
                                 name: InputType.STRING_INPUT,
                                 groups: InputType.SELECT,
@@ -89,21 +97,27 @@ const Tempr = props => {
                                 }
                             }}
                             buttonText={blankTempr ? "Create" : "Save"}
+                            saveDisabled={
+                                blankTempr
+                                    ? false
+                                    : Object.keys(tempr).every(
+                                          key =>
+                                              tempr[key] === updatedTempr[key],
+                                      )
+                            }
                             onSave={() => {
-                                const { groups, ...updatedTempr } = tempr;
+                                const { groups, ...tempr } = updatedTempr;
                                 if (blankTempr) {
                                     return OopCore.createTempr(
                                         props.match.params.deviceGroupId,
-                                        updatedTempr,
+                                        tempr,
                                     )
-                                        .then(response =>
-                                            setTempr(
-                                                getFormData(
-                                                    response,
-                                                    stateGroups,
-                                                ),
-                                            ),
-                                        )
+                                        .then(response => {
+                                            refreshTempr(response);
+                                            props.history.replace(
+                                                `${allTemprsPath}/${response.id}`,
+                                            );
+                                        })
                                         .catch(error => {
                                             console.error(error);
                                         });
@@ -111,13 +125,9 @@ const Tempr = props => {
                                 OopCore.updateTempr(
                                     props.match.params.deviceGroupId,
                                     props.match.params.temprId,
-                                    updatedTempr,
+                                    tempr,
                                 )
-                                    .then(response =>
-                                        setTempr(
-                                            getFormData(response, stateGroups),
-                                        ),
-                                    )
+                                    .then(response => refreshTempr(response))
                                     .catch(error => {
                                         console.error(error);
                                     });

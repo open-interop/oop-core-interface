@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { DataProvider } from "../Universal";
 import { SortableTable } from "../Global";
@@ -30,11 +31,7 @@ const Temprs = props => {
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Temprs</h2>
-                <Button
-                    onClick={() => {
-                        props.history.push(props.location.pathname + "/new");
-                    }}
-                >
+                <Button $as={Link} to={`${props.location.pathname}/new`}>
                     New tempr
                 </Button>
             </div>
@@ -53,11 +50,8 @@ const Temprs = props => {
                                 if (columnName === "action") {
                                     return (
                                         <Button
-                                            onClick={() => {
-                                                props.history.push(
-                                                    `${props.location.pathname}/${content}`,
-                                                );
-                                            }}
+                                            $as={Link}
+                                            to={`${props.location.pathname}/${content}`}
                                         >
                                             Edit
                                         </Button>
