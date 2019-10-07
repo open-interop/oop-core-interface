@@ -149,6 +149,10 @@ class OopCore extends EventEmitter {
     getDeviceGroups() {
         return this.makeRequest("/device_groups");
     }
+
+    getTemprs(deviceGroupId) {
+        return this.makeRequest(`/device_groups/${deviceGroupId}/temprs`);
+    }
 }
 
 export default new OopCore();
