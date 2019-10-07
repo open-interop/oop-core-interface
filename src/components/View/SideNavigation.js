@@ -14,7 +14,7 @@ const SideNavigation = props => {
         },
         {
             title: "Settings",
-            itemId: "/deviceGroups",
+            itemId: "/device-groups",
         },
     ];
 

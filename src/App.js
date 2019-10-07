@@ -129,14 +129,14 @@ class App extends Component {
                         }
                     />
                     <Route
-                        path="/deviceGroups"
+                        path="/device-groups"
                         exact
                         render={props =>
                             this.getComponent(!hasUser, DeviceGroups, props)
                         }
                     />
                     <Route
-                        path="/deviceGroups/:deviceGroupId/temprs"
+                        path="/device-groups/:deviceGroupId/temprs"
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Temprs, props)
