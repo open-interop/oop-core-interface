@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
-import { DataProvider } from "../Universal";
-import { SortableTable } from "../Global";
+import { DataProvider, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
 const DeviceGroups = props => {
@@ -19,7 +18,7 @@ const DeviceGroups = props => {
                 }}
                 renderData={() => (
                     <>
-                        <SortableTable
+                        <Table
                             data={deviceGroups}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {

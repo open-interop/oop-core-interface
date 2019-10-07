@@ -6,3 +6,4 @@ export * from "./Pagination";
 export * from "./PopoverWithButton";
 export * from "./SearchBar";
 export * from "./Spinner";
+export * from "./Table";

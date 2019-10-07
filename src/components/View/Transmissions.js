@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
-import { DataProvider, Pagination } from "../Universal";
+import { DataProvider, Pagination, Table } from "../Universal";
 import Check from "baseui/icon/check";
 import Delete from "baseui/icon/delete";
-import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
 
 const queryString = require("query-string");
@@ -76,7 +75,7 @@ const Transmissions = props => {
                 }}
                 renderData={() => (
                     <>
-                        <SortableTable
+                        <Table
                             data={transmissions.data}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
