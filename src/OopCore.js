@@ -122,6 +122,7 @@ class OopCore extends EventEmitter {
     }
 
     getParameters(queryParameters) {
+        // extract the parameters found in filters into the base queryParameters object
         if (queryParameters && queryParameters.filters) {
             Object.keys(queryParameters.filters).forEach(filter => {
                 queryParameters[filter] = queryParameters.filters[filter];
