@@ -11,6 +11,7 @@ import {
     Home,
     Login,
     SideNavigation,
+    Tempr,
     Temprs,
 } from "./components/View";
 import { Spinner } from "./components/Universal";
@@ -140,6 +141,13 @@ class App extends Component {
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Temprs, props)
+                        }
+                    />
+                    <Route
+                        path="/device-groups/:deviceGroupId/temprs/:temprId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Tempr, props)
                         }
                     />
                 </div>

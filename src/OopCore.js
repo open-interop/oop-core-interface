@@ -56,7 +56,7 @@ class OopCore extends EventEmitter {
                         this.onLoggedOutFunc();
                     }
                 }
-                if (response.status !== 200) {
+                if (response.status !== 200 && response.status !== 201) {
                     throw new Error(response.statusText);
                 }
 
@@ -152,6 +152,28 @@ class OopCore extends EventEmitter {
 
     getTemprs(deviceGroupId) {
         return this.makeRequest(`/device_groups/${deviceGroupId}/temprs`);
+    }
+
+    getTempr(deviceGroupId, temprId) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/temprs/${temprId}`,
+        );
+    }
+
+    updateTempr(deviceGroupId, temprId, data) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/temprs/${temprId}`,
+            RequestType.PUT,
+            data,
+        );
+    }
+
+    createTempr(deviceGroupId, data) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/temprs`,
+            RequestType.POST,
+            data,
+        );
     }
 }
 

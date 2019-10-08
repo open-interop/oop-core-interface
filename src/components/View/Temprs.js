@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { DataProvider } from "../Universal";
 import { SortableTable } from "../Global";
@@ -28,7 +29,12 @@ const Temprs = props => {
 
     return (
         <div className="content-wrapper">
-            <h2>Temprs</h2>
+            <div className="space-between">
+                <h2>Temprs</h2>
+                <Button $as={Link} to={`${props.location.pathname}/new`}>
+                    New tempr
+                </Button>
+            </div>
             <DataProvider
                 getData={() => {
                     return getData().then(response => {
@@ -42,7 +48,14 @@ const Temprs = props => {
                             data={temprs}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
-                                    return <Button>edit</Button>;
+                                    return (
+                                        <Button
+                                            $as={Link}
+                                            to={`${props.location.pathname}/${content}`}
+                                        >
+                                            Edit
+                                        </Button>
+                                    );
                                 }
 
                                 return content;

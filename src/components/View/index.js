@@ -7,4 +7,5 @@ export * from "./Header";
 export * from "./Home";
 export * from "./Login";
 export * from "./SideNavigation";
+export * from "./Tempr";
 export * from "./Temprs";
