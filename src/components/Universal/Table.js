@@ -44,7 +44,8 @@ const Table = props => {
     function getFilterValue(filters, column) {
         if (filters) {
             return Object.keys(filters).find(
-                filterName => filterName === column,
+                filterName =>
+                    filterName === column && filters[filterName] !== undefined,
             )
                 ? props.filters[column]
                 : "";

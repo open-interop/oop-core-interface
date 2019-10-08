@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
-import { useQueryParam, NumberParam, JsonParam } from "use-query-params";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 
 import Check from "baseui/icon/check";
 import Delete from "baseui/icon/delete";
@@ -12,13 +12,23 @@ const Transmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-    const [filters, setFilters] = useQueryParam("filters", JsonParam);
+    const [id, setId] = useQueryParam("id", NumberParam);
+    const [transmissionUuid, setTransmissionUuid] = useQueryParam(
+        "transmissionUuid",
+        StringParam,
+    );
+    const [messageUuid, setMessageUuid] = useQueryParam(
+        "messageUuid",
+        StringParam,
+    );
+    const [status, setStatus] = useQueryParam("status", StringParam);
+    const [success, setSuccess] = useQueryParam("success", StringParam);
 
     // reset page number when the search query is changed
     useEffect(() => {
         setPage(null);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageSize, filters]);
+    }, [pageSize, transmissionUuid, messageUuid, success]);
 
     return (
         <div className="content-wrapper">
@@ -27,7 +37,13 @@ const Transmissions = props => {
                 getData={() => {
                     return OopCore.getTransmissions(
                         props.match.params.deviceId,
-                        { page, pageSize, filters },
+                        {
+                            page,
+                            pageSize,
+                            transmissionUuid,
+                            messageUuid,
+                            success,
+                        },
                     ).then(response => {
                         setTransmissions(response);
                         return response;
@@ -72,7 +88,7 @@ const Transmissions = props => {
                                     id: "device_tempr_id",
                                     name: "Device Tempr Id",
                                     type: "text",
-                                    hasFilter: true,
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "transmissionUuid",
@@ -105,19 +121,26 @@ const Transmissions = props => {
                                     hasFilter: false,
                                 },
                             ]}
-                            filters={filters}
+                            filters={{
+                                id,
+                                messageUuid,
+                                transmissionUuid,
+                                status,
+                                success,
+                            }}
                             updateFilters={(key, value) => {
-                                const updatedFilters = { ...filters };
-                                if (value) {
-                                    updatedFilters[key] = value;
-                                } else {
-                                    delete updatedFilters[key];
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
+                                    case "transmissionUuid":
+                                        return setTransmissionUuid(value);
+                                    case "messageUuid":
+                                        return setMessageUuid(value);
+                                    case "status":
+                                        return setStatus(value);
+                                    case "success":
+                                        return setSuccess(value);
                                 }
-                                setFilters(
-                                    Object.keys(updatedFilters).length
-                                        ? updatedFilters
-                                        : null,
-                                );
                             }}
                         />
                         <Pagination

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
-import { useQueryParam, NumberParam, JsonParam } from "use-query-params";
+import { useQueryParam, NumberParam } from "use-query-params";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -9,13 +9,13 @@ const DeviceGroups = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-    const [filters, setFilters] = useQueryParam("filters", JsonParam);
+    const [id, setId] = useQueryParam("filters", NumberParam);
 
     // reset page number when the search query is changed
     useEffect(() => {
         setPage(null);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageSize, filters]);
+    }, [pageSize, id]);
 
     return (
         <div className="content-wrapper">
@@ -65,19 +65,12 @@ const DeviceGroups = props => {
                                     hasFilter: false,
                                 },
                             ]}
-                            filters={filters}
+                            filters={{ id }}
                             updateFilters={(key, value) => {
-                                const updatedFilters = { ...filters };
-                                if (value) {
-                                    updatedFilters[key] = value;
-                                } else {
-                                    delete updatedFilters[key];
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
                                 }
-                                setFilters(
-                                    Object.keys(updatedFilters).length
-                                        ? updatedFilters
-                                        : null,
-                                );
                             }}
                         />
                         <Pagination
