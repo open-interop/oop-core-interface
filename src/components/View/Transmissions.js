@@ -8,15 +8,6 @@ import Check from "baseui/icon/check";
 import Delete from "baseui/icon/delete";
 import OopCore from "../../OopCore";
 
-const pageSizeOptions = [
-    { id: 10 },
-    { id: 20 },
-    { id: 40 },
-    { id: 60 },
-    { id: 80 },
-    { id: 100 },
-];
-
 const Transmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
     const [page, setPage] = useQueryParam("page", NumberParam);
@@ -130,17 +121,10 @@ const Transmissions = props => {
                             }}
                         />
                         <Pagination
-                            pageSizeOptions={pageSizeOptions}
                             updatePageSize={pageSize => {
                                 setPageSize(pageSize);
                             }}
-                            currentPageSize={
-                                pageSizeOptions.find(
-                                    option => option.id === pageSize,
-                                ) || {
-                                    id: 10,
-                                }
-                            }
+                            currentPageSize={pageSize}
                             updatePageNumber={pageNumber => setPage(pageNumber)}
                             totalRecords={transmissions.totalRecords}
                             numberOfPages={transmissions.numberOfPages}

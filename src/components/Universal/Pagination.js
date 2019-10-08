@@ -2,11 +2,20 @@ import React from "react";
 import { Pagination as PaginationUI } from "baseui/pagination";
 import { Select } from "baseui/select";
 
+const pageSizeOptions = [
+    { id: 10 },
+    { id: 20 },
+    { id: 40 },
+    { id: 60 },
+    { id: 80 },
+    { id: 100 },
+];
+
 const Pagination = props => {
     return (
         <div className="pagination-footer">
             <Select
-                options={props.pageSizeOptions}
+                options={pageSizeOptions}
                 labelKey="id"
                 valueKey="id"
                 searchable={false}
@@ -14,7 +23,13 @@ const Pagination = props => {
                 onChange={value => {
                     props.updatePageSize(value.option.id);
                 }}
-                value={props.currentPageSize}
+                value={
+                    pageSizeOptions.find(
+                        option => option.id === props.currentPageSize,
+                    ) || {
+                        id: 10,
+                    }
+                }
             />
             <div className="pagination-label">per page</div>
             <div className="pagination-label">

@@ -5,15 +5,6 @@ import { useQueryParam, NumberParam, JsonParam } from "use-query-params";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
-const pageSizeOptions = [
-    { id: 10 },
-    { id: 20 },
-    { id: 40 },
-    { id: 60 },
-    { id: 80 },
-    { id: 100 },
-];
-
 const DeviceGroups = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
@@ -90,17 +81,10 @@ const DeviceGroups = props => {
                             }}
                         />
                         <Pagination
-                            pageSizeOptions={pageSizeOptions}
                             updatePageSize={pageSize => {
                                 setPageSize(pageSize);
                             }}
-                            currentPageSize={
-                                pageSizeOptions.find(
-                                    option => option.id === pageSize,
-                                ) || {
-                                    id: 10,
-                                }
-                            }
+                            currentPageSize={pageSize}
                             updatePageNumber={pageNumber => setPage(pageNumber)}
                             totalRecords={deviceGroups.totalRecords}
                             numberOfPages={deviceGroups.numberOfPages}
