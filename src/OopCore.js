@@ -121,13 +121,24 @@ class OopCore extends EventEmitter {
         }
     }
 
-    getTransmissions(deviceId, queryParameters) {
-        const parameters = Object.keys(queryParameters)
+    getParameters(queryParameters) {
+        if (queryParameters && queryParameters.filters) {
+            Object.keys(queryParameters.filters).forEach(filter => {
+                queryParameters[filter] = queryParameters.filters[filter];
+            });
+            delete queryParameters.filters;
+        }
+
+        return Object.keys(queryParameters)
+            .filter(key => queryParameters[key] !== undefined)
             .map(
                 key => `${this.mapQueryParameter(key)}=${queryParameters[key]}`,
             )
             .join("&");
+    }
 
+    getTransmissions(deviceId, queryParameters) {
+        const parameters = this.getParameters(queryParameters);
         let path = `/devices/${deviceId}/transmissions`;
         if (parameters) {
             path += "/?" + parameters;

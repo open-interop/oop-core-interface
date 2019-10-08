@@ -12,10 +12,7 @@ const Pagination = props => {
                 searchable={false}
                 clearable={false}
                 onChange={value => {
-                    props.updatePagination({
-                        pageSize: value.option.id,
-                        page: null,
-                    });
+                    props.updatePageSize(value.option.id);
                 }}
                 value={props.currentPageSize}
             />
@@ -30,9 +27,7 @@ const Pagination = props => {
                 numPages={props.numberOfPages}
                 currentPage={props.currentPage}
                 onPageChange={event => {
-                    props.updatePagination({
-                        page: event.nextPage,
-                    });
+                    props.updatePageNumber(event.nextPage);
                 }}
             />
         </div>

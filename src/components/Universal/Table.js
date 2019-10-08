@@ -69,9 +69,7 @@ const Table = props => {
                                     column.id,
                                 )}
                                 setFilterValue={newValue =>
-                                    props.updateFilters({
-                                        [column.id]: newValue,
-                                    })
+                                    props.updateFilters(column.id, newValue)
                                 }
                             />
                         )}

@@ -1,64 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
+import { useQueryParam, NumberParam, JsonParam } from "use-query-params";
+
 import Check from "baseui/icon/check";
 import Delete from "baseui/icon/delete";
 import OopCore from "../../OopCore";
 
-const queryString = require("query-string");
-
 const pageSizeOptions = [
-    { id: "10" },
-    { id: "20" },
-    { id: "40" },
-    { id: "60" },
-    { id: "80" },
-    { id: "100" },
+    { id: 10 },
+    { id: 20 },
+    { id: 40 },
+    { id: 60 },
+    { id: 80 },
+    { id: 100 },
 ];
 
 const Transmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
-    const [queryParameters, setQueryParameters] = useState(
-        queryString.parse(props.location.search),
-    );
+    const [page, setPage] = useQueryParam("page", NumberParam);
+    const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [filters, setFilters] = useQueryParam("filters", JsonParam);
 
-    const getPageSize = () => {
-        return (
-            pageSizeOptions.find(
-                option => option.id === queryParameters.pageSize,
-            ) || {
-                id: "10",
-            }
-        );
-    };
-
-    const updateQueryParameters = parameters => {
-        const newParameters = { ...queryParameters };
-
-        Object.keys(parameters).forEach(parameterType => {
-            if (
-                parameters[parameterType] !== null &&
-                parameters[parameterType] !== ""
-            ) {
-                newParameters[parameterType] = parameters[parameterType];
-            } else {
-                delete newParameters[parameterType];
-            }
-        });
-
-        setQueryParameters(newParameters);
-        props.history.push({
-            search: queryString.stringify(newParameters),
-        });
-    };
-
-    const updateTableFilters = parameters => {
-        parameters.page = null;
-        updateQueryParameters(parameters);
-    };
-
-    const { page, pageSize, ...filters } = queryParameters;
+    // reset page number when the search query is changed
+    useEffect(() => {
+        setPage(null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pageSize, filters]);
 
     return (
         <div className="content-wrapper">
@@ -67,7 +36,7 @@ const Transmissions = props => {
                 getData={() => {
                     return OopCore.getTransmissions(
                         props.match.params.deviceId,
-                        queryString.parse(props.location.search),
+                        { page, pageSize, filters },
                     ).then(response => {
                         setTransmissions(response);
                         return response;
@@ -146,17 +115,36 @@ const Transmissions = props => {
                                 },
                             ]}
                             filters={filters}
-                            updateFilters={updateTableFilters}
+                            updateFilters={(key, value) => {
+                                const updatedFilters = { ...filters };
+                                if (value) {
+                                    updatedFilters[key] = value;
+                                } else {
+                                    delete updatedFilters[key];
+                                }
+                                setFilters(
+                                    Object.keys(updatedFilters).length
+                                        ? updatedFilters
+                                        : null,
+                                );
+                            }}
                         />
                         <Pagination
                             pageSizeOptions={pageSizeOptions}
-                            updatePagination={pagination =>
-                                updateQueryParameters(pagination)
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={
+                                pageSizeOptions.find(
+                                    option => option.id === pageSize,
+                                ) || {
+                                    id: 10,
+                                }
                             }
-                            currentPageSize={getPageSize()}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
                             totalRecords={transmissions.totalRecords}
                             numberOfPages={transmissions.numberOfPages}
-                            currentPage={Number(queryParameters.page) || 1}
+                            currentPage={page || 1}
                         />
                     </>
                 )}
