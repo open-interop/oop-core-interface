@@ -1,26 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
-import { DataProvider } from "../Universal";
-import { SortableTable } from "../Global";
+import { useQueryParam, NumberParam } from "use-query-params";
+import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
 const DeviceGroups = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
+    const [page, setPage] = useQueryParam("page", NumberParam);
+    const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [id, setId] = useQueryParam("filters", NumberParam);
+
+    // reset page number when the search query is changed
+    useEffect(() => {
+        setPage(null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pageSize, id]);
+
     return (
         <div className="content-wrapper">
             <h2>Device Groups</h2>
             <DataProvider
                 getData={() => {
                     return OopCore.getDeviceGroups().then(response => {
-                        setDeviceGroups(response.data);
+                        setDeviceGroups(response);
                         return response;
                     });
                 }}
                 renderData={() => (
                     <>
-                        <SortableTable
-                            data={deviceGroups}
+                        <Table
+                            data={deviceGroups.data}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
@@ -55,6 +65,23 @@ const DeviceGroups = props => {
                                     hasFilter: false,
                                 },
                             ]}
+                            filters={{ id }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
+                                }
+                            }}
+                        />
+                        <Pagination
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={deviceGroups.totalRecords}
+                            numberOfPages={deviceGroups.numberOfPages}
+                            currentPage={page || 1}
                         />
                     </>
                 )}

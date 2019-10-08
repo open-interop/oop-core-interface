@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Show from "baseui/icon/show";
 import Menu from "baseui/icon/menu";
-import { DataProvider } from "../Universal";
-import { SortableTable } from "../Global";
+import { DataProvider, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Devices = () => {
@@ -18,7 +17,7 @@ const Devices = () => {
                 })
             }
             renderData={() => (
-                <SortableTable
+                <Table
                     data={devices.data}
                     mapFunction={(columnName, content) => {
                         if (columnName === "action") {

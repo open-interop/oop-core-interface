@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
-import { DataProvider } from "../Universal";
-import { SortableTable } from "../Global";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Temprs = props => {
     const [temprs, setTemprs] = useState([]);
+    const [page, setPage] = useQueryParam("page", NumberParam);
+    const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [id, setId] = useQueryParam("id", NumberParam);
+    const [name, setName] = useQueryParam("name", StringParam);
+    const [group, setGroup] = useQueryParam("group", StringParam);
+
+    // reset page number when the search query is changed
+    useEffect(() => {
+        setPage(null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pageSize, id, name, group]);
 
     const getData = () => {
         return Promise.all([
             OopCore.getTemprs(props.match.params.deviceGroupId),
             OopCore.getDeviceGroups(),
         ]).then(([temprs, groups]) => {
-            const tableData = temprs.data.map(tempr => ({
+            temprs.data = temprs.data.map(tempr => ({
                 ...tempr,
                 group: groups.data.some(
                     group => group.id === tempr.deviceGroupId,
@@ -23,7 +34,7 @@ const Temprs = props => {
                       ).name
                     : "No group name provided",
             }));
-            return tableData;
+            return temprs;
         });
     };
 
@@ -44,8 +55,8 @@ const Temprs = props => {
                 }}
                 renderData={() => (
                     <>
-                        <SortableTable
-                            data={temprs}
+                        <Table
+                            data={temprs.data}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
@@ -92,6 +103,27 @@ const Temprs = props => {
                                     hasFilter: false,
                                 },
                             ]}
+                            filters={{ id, name, group }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
+                                    case "name":
+                                        return setName(value);
+                                    case "group":
+                                        return setGroup(value);
+                                }
+                            }}
+                        />
+                        <Pagination
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={temprs.totalRecords}
+                            numberOfPages={temprs.numberOfPages}
+                            currentPage={page || 1}
                         />
                     </>
                 )}

@@ -1,4 +1,5 @@
 import cookie from "react-cookies";
+const queryString = require("query-string");
 const EventEmitter = require("events");
 
 const RequestType = {
@@ -121,13 +122,31 @@ class OopCore extends EventEmitter {
         }
     }
 
-    getTransmissions(deviceId, queryParameters) {
-        const parameters = Object.keys(queryParameters)
-            .map(
-                key => `${this.mapQueryParameter(key)}=${queryParameters[key]}`,
-            )
-            .join("&");
+    getParameters(params) {
+        // extract the parameters found in filters into the base queryParameters object
+        const queryParameters = { ...params };
+        if (queryParameters && queryParameters.filters) {
+            Object.keys(queryParameters.filters).forEach(filter => {
+                queryParameters[filter] = queryParameters.filters[filter];
+            });
+            delete queryParameters.filters;
+        }
 
+        const parametersObject = {};
+
+        Object.keys(queryParameters)
+            .filter(key => queryParameters[key] !== undefined)
+            .forEach(
+                key =>
+                    (parametersObject[this.mapQueryParameter(key)] =
+                        queryParameters[key]),
+            );
+
+        return queryString.stringify(parametersObject);
+    }
+
+    getTransmissions(deviceId, queryParameters) {
+        const parameters = this.getParameters(queryParameters);
         let path = `/devices/${deviceId}/transmissions`;
         if (parameters) {
             path += "/?" + parameters;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     StyledTable,
     StyledHead,
@@ -6,72 +6,17 @@ import {
     StyledRow,
     StyledCell,
     SortableHeadCell,
-    SORT_DIRECTION,
 } from "baseui/table";
-import { TableFilter } from ".";
+import { TableFilter } from "../Global";
 
-const SortableTable = props => {
+const Table = props => {
     const data = props.data;
-    const [sortColumn, setSortColumn] = useState(null);
-    const [sortDirection, setSortDirection] = useState(null);
-
-    const getNextDirection = currentDirection => {
-        switch (currentDirection) {
-            case null:
-                return SORT_DIRECTION.DESC;
-            case SORT_DIRECTION.DESC:
-                return SORT_DIRECTION.ASC;
-            case SORT_DIRECTION.ASC:
-                return null;
-            default:
-                return null;
-        }
-    };
-
-    const handleSort = column => {
-        if (sortColumn === column) {
-            const nextDirection = getNextDirection(sortDirection);
-            if (nextDirection === null) {
-                setSortColumn(null);
-            }
-            setSortDirection(nextDirection);
-        } else {
-            setSortColumn(column);
-            setSortDirection(SORT_DIRECTION.DESC);
-        }
-    };
-
-    const getSortedData = () => {
-        if (sortColumn === null || sortDirection === null) {
-            return data;
-        }
-
-        const sortFunction = (sortColumn, a, b) => {
-            if (typeof a[sortColumn] === "string") {
-                return b[sortColumn]
-                    .toLowerCase()
-                    .localeCompare(a[sortColumn].toLowerCase());
-            } else {
-                return a[sortColumn] < b[sortColumn];
-            }
-        };
-
-        const sortedData = [...data].sort((a, b) =>
-            sortFunction(sortColumn, a, b),
-        );
-
-        if (sortDirection === SORT_DIRECTION.DESC) {
-            return sortedData.reverse();
-        }
-
-        return sortedData;
-    };
 
     function TableRows() {
         if (props.data.length) {
             return (
                 <StyledBody>
-                    {getSortedData().map((row, index) => (
+                    {data.map((row, index) => (
                         <StyledRow key={index}>
                             {props.columns.map(column => (
                                 <StyledCell
@@ -99,7 +44,8 @@ const SortableTable = props => {
     function getFilterValue(filters, column) {
         if (filters) {
             return Object.keys(filters).find(
-                filterName => filterName === column,
+                filterName =>
+                    filterName === column && filters[filterName] !== undefined,
             )
                 ? props.filters[column]
                 : "";
@@ -115,10 +61,6 @@ const SortableTable = props => {
                     <SortableHeadCell
                         key={`table-head-${column.id}`}
                         title={column.name}
-                        direction={
-                            sortColumn === column.id ? sortDirection : null
-                        }
-                        onSort={() => handleSort(column.id)}
                     >
                         {column.hasFilter && (
                             <TableFilter
@@ -128,9 +70,7 @@ const SortableTable = props => {
                                     column.id,
                                 )}
                                 setFilterValue={newValue =>
-                                    props.updateFilters({
-                                        [column.id]: newValue,
-                                    })
+                                    props.updateFilters(column.id, newValue)
                                 }
                             />
                         )}
@@ -142,4 +82,4 @@ const SortableTable = props => {
     );
 };
 
-export { SortableTable };
+export { Table };

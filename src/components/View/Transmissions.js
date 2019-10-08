@@ -1,67 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
-import { Pagination } from "baseui/pagination";
-import { Select } from "baseui/select";
-import { DataProvider } from "../Universal";
+import { DataProvider, Pagination, Table } from "../Universal";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+
 import Check from "baseui/icon/check";
 import Delete from "baseui/icon/delete";
-import { SortableTable } from "../Global";
 import OopCore from "../../OopCore";
-
-const queryString = require("query-string");
-
-const pageSizeOptions = [
-    { id: "10" },
-    { id: "20" },
-    { id: "40" },
-    { id: "60" },
-    { id: "80" },
-    { id: "100" },
-];
 
 const Transmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
-    const [queryParameters, setQueryParameters] = useState(
-        queryString.parse(props.location.search),
+    const [page, setPage] = useQueryParam("page", NumberParam);
+    const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [id, setId] = useQueryParam("id", NumberParam);
+    const [transmissionUuid, setTransmissionUuid] = useQueryParam(
+        "transmissionUuid",
+        StringParam,
     );
+    const [messageUuid, setMessageUuid] = useQueryParam(
+        "messageUuid",
+        StringParam,
+    );
+    const [status, setStatus] = useQueryParam("status", StringParam);
+    const [success, setSuccess] = useQueryParam("success", StringParam);
 
-    const getPageSizeOption = () => {
-        return (
-            pageSizeOptions.find(
-                option => option.id === queryParameters.pageSize,
-            ) || {
-                id: "10",
-            }
-        );
-    };
-
-    const updateQueryParameters = parameters => {
-        const newParameters = { ...queryParameters };
-
-        Object.keys(parameters).forEach(parameterType => {
-            if (
-                parameters[parameterType] !== null &&
-                parameters[parameterType] !== ""
-            ) {
-                newParameters[parameterType] = parameters[parameterType];
-            } else {
-                delete newParameters[parameterType];
-            }
-        });
-
-        setQueryParameters(newParameters);
-        props.history.push({
-            search: queryString.stringify(newParameters),
-        });
-    };
-
-    const updateTableFilters = parameters => {
-        parameters.page = null;
-        updateQueryParameters(parameters);
-    };
-
-    const { page, pageSize, ...filters } = queryParameters;
+    // reset page number when the search query is changed
+    useEffect(() => {
+        setPage(null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pageSize, transmissionUuid, messageUuid, success]);
 
     return (
         <div className="content-wrapper">
@@ -70,7 +37,13 @@ const Transmissions = props => {
                 getData={() => {
                     return OopCore.getTransmissions(
                         props.match.params.deviceId,
-                        queryString.parse(props.location.search),
+                        {
+                            page,
+                            pageSize,
+                            transmissionUuid,
+                            messageUuid,
+                            success,
+                        },
                     ).then(response => {
                         setTransmissions(response);
                         return response;
@@ -78,7 +51,7 @@ const Transmissions = props => {
                 }}
                 renderData={() => (
                     <>
-                        <SortableTable
+                        <Table
                             data={transmissions.data}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
@@ -115,7 +88,7 @@ const Transmissions = props => {
                                     id: "device_tempr_id",
                                     name: "Device Tempr Id",
                                     type: "text",
-                                    hasFilter: true,
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "transmissionUuid",
@@ -148,45 +121,38 @@ const Transmissions = props => {
                                     hasFilter: false,
                                 },
                             ]}
-                            filters={filters}
-                            updateFilters={updateTableFilters}
+                            filters={{
+                                id,
+                                messageUuid,
+                                transmissionUuid,
+                                status,
+                                success,
+                            }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
+                                    case "transmissionUuid":
+                                        return setTransmissionUuid(value);
+                                    case "messageUuid":
+                                        return setMessageUuid(value);
+                                    case "status":
+                                        return setStatus(value);
+                                    case "success":
+                                        return setSuccess(value);
+                                }
+                            }}
                         />
-                        <div className="pagination-footer">
-                            <Select
-                                options={pageSizeOptions}
-                                labelKey="id"
-                                valueKey="id"
-                                searchable={false}
-                                clearable={false}
-                                onChange={value => {
-                                    updateQueryParameters({
-                                        pageSize: value.option.id,
-                                        page: null,
-                                    });
-                                }}
-                                value={getPageSizeOption()}
-                            />
-                            <div className="pagination-label">per page</div>
-                            <div className="pagination-label">
-                                {transmissions.totalRecords}
-                                {Object.keys(filters).length > 0
-                                    ? " filtered"
-                                    : ""}
-                                {transmissions.totalRecords > 1 ||
-                                transmissions.totalRecords === 0
-                                    ? " records"
-                                    : " record"}
-                            </div>
-                            <Pagination
-                                numPages={transmissions.numberOfPages}
-                                currentPage={Number(queryParameters.page) || 1}
-                                onPageChange={event => {
-                                    updateQueryParameters({
-                                        page: event.nextPage,
-                                    });
-                                }}
-                            />
-                        </div>
+                        <Pagination
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={transmissions.totalRecords}
+                            numberOfPages={transmissions.numberOfPages}
+                            currentPage={page || 1}
+                        />
                     </>
                 )}
                 renderKey={props.location.search}
