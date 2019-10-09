@@ -72,7 +72,7 @@ const Tempr = props => {
             <Button $as={Link} to={allTemprsPath}>
                 <ArrowLeft size={24} />
             </Button>
-            <h2>Tempr</h2>
+            <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
                 getData={() => {
                     return getData().then(response => {
@@ -177,8 +177,7 @@ const Tempr = props => {
                                         theme="github"
                                         editorProps={{ $blockScrolling: true }}
                                         defaultValue={
-                                            updatedTempr.output_transmission_body ||
-                                            "Provide an example to see output"
+                                            updatedTempr.output_transmission_body
                                         }
                                         readOnly
                                     />
@@ -225,7 +224,7 @@ const Tempr = props => {
                                       )
                             }
                         >
-                            {props.buttonText || "Save"}
+                            {blankTempr ? "Create" : "Save"}
                         </Button>
                         {props.error && <div>{props.error}</div>}
                     </>
