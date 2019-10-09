@@ -58,8 +58,7 @@ const Transmissions = props => {
                                     return (
                                         <Button
                                             $as={Link}
-                                            to={`${props.location.pathname}
-                                            /${content}`}
+                                            to={`${props.location.pathname}/${content}`}
                                         >
                                             {content}
                                         </Button>

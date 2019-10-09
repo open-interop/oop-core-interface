@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import AceEditor from "react-ace";
 import { Button } from "baseui/button";
+import { FormControl } from "baseui/form-control";
+import { Input } from "baseui/input";
+import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import { Form, InputType } from "../Global";
 import OopCore from "../../OopCore";
+
+import "brace/mode/json";
+import "brace/theme/github";
 
 const Tempr = props => {
     const [tempr, setTempr] = useState({});
@@ -20,8 +26,8 @@ const Tempr = props => {
                   description: "",
                   device_group_id: null,
                   body: {
-                      language: "javascript",
-                      script: "this is the script",
+                      language: "js",
+                      script: "",
                   },
               })
             : OopCore.getTempr(
@@ -55,12 +61,18 @@ const Tempr = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
+    const setValue = (key, value) => {
+        const updatedData = { ...updatedTempr };
+        updatedData[key] = value;
+        setUpdatedTempr(updatedData);
+    };
+
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allTemprsPath}>
                 <ArrowLeft size={24} />
             </Button>
-            <h2>Tempr</h2>
+            <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
                 getData={() => {
                     return getData().then(response => {
@@ -71,38 +83,109 @@ const Tempr = props => {
                 }}
                 renderData={() => (
                     <>
-                        <Form
-                            data={updatedTempr}
-                            setData={setUpdatedTempr}
-                            dataTypes={{
-                                name: InputType.STRING_INPUT,
-                                groups: InputType.SELECT,
-                                description: InputType.STRING_INPUT,
-                                body: InputType.STRING_INPUT,
-                            }}
-                            dataLabels={
-                                new Map([
-                                    ["name", "Name"],
-                                    ["groups", "Group"],
-                                    ["description", "Description"],
-                                    ["body", "Body"],
-                                ])
-                            }
-                            selectedValue={arrayKey => {
-                                if (arrayKey === "groups") {
-                                    return "device_group_id";
+                        <FormControl
+                            label="Name"
+                            key={"form-control-group-name"}
+                        >
+                            <Input
+                                id={"input-name"}
+                                value={updatedTempr.name || ""}
+                                onChange={event =>
+                                    setValue("name", event.currentTarget.value)
                                 }
-                            }}
-                            buttonText={blankTempr ? "Create" : "Save"}
-                            saveDisabled={
-                                blankTempr
-                                    ? false
-                                    : Object.keys(tempr).every(
-                                          key =>
-                                              tempr[key] === updatedTempr[key],
-                                      )
-                            }
-                            onSave={() => {
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Group"
+                            key={"form-control-group-group"}
+                        >
+                            <Select
+                                options={updatedTempr.groups}
+                                labelKey="name"
+                                valueKey="id"
+                                searchable={false}
+                                onChange={event =>
+                                    setValue(
+                                        "device_group_id",
+                                        event.value[0].id,
+                                    )
+                                }
+                                value={updatedTempr.groups.find(
+                                    item =>
+                                        item.id ===
+                                        updatedTempr.device_group_id,
+                                )}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Description"
+                            key={"form-control-group-description"}
+                        >
+                            <Input
+                                id={"input-description"}
+                                value={updatedTempr.description || ""}
+                                onChange={event =>
+                                    setValue(
+                                        "description",
+                                        event.currentTarget.value,
+                                    )
+                                }
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Body"
+                            key={"form-control-group-body-example"}
+                        >
+                            <div className="one-row">
+                                <div>
+                                    <label>Example</label>
+                                    <AceEditor
+                                        name="test"
+                                        mode="json"
+                                        theme="github"
+                                        onChange={value =>
+                                            setValue(
+                                                "example_transmission_body",
+                                                value,
+                                            )
+                                        }
+                                        editorProps={{ $blockScrolling: true }}
+                                        value={
+                                            updatedTempr.example_transmission_body
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label>Mapping</label>
+                                    <AceEditor
+                                        mode="json"
+                                        theme="github"
+                                        onChange={value =>
+                                            setValue("body", {
+                                                language: "js",
+                                                script: value,
+                                            })
+                                        }
+                                        editorProps={{ $blockScrolling: true }}
+                                        value={updatedTempr.body.script}
+                                    />
+                                </div>
+                                <div>
+                                    <label>Output</label>
+                                    <AceEditor
+                                        mode="json"
+                                        theme="github"
+                                        editorProps={{ $blockScrolling: true }}
+                                        defaultValue={
+                                            updatedTempr.output_transmission_body
+                                        }
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
+                        </FormControl>
+                        <Button
+                            onClick={() => {
                                 const { groups, ...tempr } = updatedTempr;
                                 if (blankTempr) {
                                     return OopCore.createTempr(
@@ -118,18 +201,32 @@ const Tempr = props => {
                                         .catch(error => {
                                             console.error(error);
                                         });
+                                } else {
+                                    OopCore.updateTempr(
+                                        props.match.params.deviceGroupId,
+                                        props.match.params.temprId,
+                                        tempr,
+                                    )
+                                        .then(response =>
+                                            refreshTempr(response),
+                                        )
+                                        .catch(error => {
+                                            console.error(error);
+                                        });
                                 }
-                                OopCore.updateTempr(
-                                    props.match.params.deviceGroupId,
-                                    props.match.params.temprId,
-                                    tempr,
-                                )
-                                    .then(response => refreshTempr(response))
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
                             }}
-                        />
+                            disabled={
+                                blankTempr
+                                    ? false
+                                    : Object.keys(tempr).every(
+                                          key =>
+                                              tempr[key] === updatedTempr[key],
+                                      )
+                            }
+                        >
+                            {blankTempr ? "Create" : "Save"}
+                        </Button>
+                        {props.error && <div>{props.error}</div>}
                     </>
                 )}
             />

@@ -50,13 +50,10 @@ const Form = props => {
                         valueKey="id"
                         searchable={false}
                         onChange={event =>
-                            setValue(
-                                props.selectedValue(key),
-                                event.value[0].id,
-                            )
+                            setValue(props.targetValue(key), event.value[0].id)
                         }
                         value={data[key].find(
-                            item => item.id === data[props.selectedValue(key)],
+                            item => item.id === data[props.targetValue(key)],
                         )}
                     />
                 );
@@ -69,13 +66,10 @@ const Form = props => {
                         valueKey="id"
                         searchable={true}
                         onChange={event =>
-                            setValue(
-                                props.selectedValue(key),
-                                event.value[0].id,
-                            )
+                            setValue(props.targetValue(key), event.value[0].id)
                         }
                         value={data[key].find(
-                            item => item.id === data[props.selectedValue(key)],
+                            item => item.id === data[props.targetValue(key)],
                         )}
                     />
                 );
