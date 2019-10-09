@@ -177,3 +177,9 @@ label {
     display: flex;
     flex-direction: row;
 }
+
+div {
+    &[data-baseweb="popover"] {
+        z-index: 100;
+    }
+}

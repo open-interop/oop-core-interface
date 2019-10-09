@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import AceEditor from "react-ace";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
-import ArrowLeft from "baseui/icon/arrow-left";
-import { Select } from "baseui/select";
 import { Input } from "baseui/input";
+import { Select } from "baseui/select";
+import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import { Form, InputType, TemprEditor } from "../Global";
 import OopCore from "../../OopCore";
-import AceEditor from "react-ace";
 
 import "brace/mode/json";
 import "brace/theme/github";
@@ -27,8 +26,8 @@ const Tempr = props => {
                   description: "",
                   device_group_id: null,
                   body: {
-                      language: "javascript",
-                      script: "this is the script",
+                      language: "js",
+                      script: "",
                   },
               })
             : OopCore.getTempr(
@@ -65,7 +64,6 @@ const Tempr = props => {
 
     const setValue = (key, value) => {
         const updatedData = { ...updatedTempr };
-        console.log(updatedData);
         updatedData[key] = value;
         setUpdatedTempr(updatedData);
     };
@@ -128,39 +126,49 @@ const Tempr = props => {
                             key={"form-control-group-body-example"}
                         >
                             <div className="one-row">
-                                <AceEditor
-                                    mode="json"
-                                    theme="github"
-                                    onChange={value =>
-                                        setValue(
-                                            "example_transmission_body",
-                                            value,
-                                        )
-                                    }
-                                    editorProps={{ $blockScrolling: true }}
-                                    value={
-                                        updatedTempr.example_transmission_body
-                                    }
-                                />
-
-                                <AceEditor
-                                    mode="json"
-                                    theme="github"
-                                    onChange={value => setValue("body", value)}
-                                    editorProps={{ $blockScrolling: true }}
-                                    value={updatedTempr.body}
-                                />
-
-                                <AceEditor
-                                    mode="json"
-                                    theme="github"
-                                    editorProps={{ $blockScrolling: true }}
-                                    defaultValue={
-                                        updatedTempr.output_transmission_body ||
-                                        "Provide an example to see output"
-                                    }
-                                    readOnly
-                                />
+                                <div>
+                                    <label>Example</label>
+                                    <AceEditor
+                                        name="test"
+                                        mode="json"
+                                        theme="github"
+                                        onChange={value =>
+                                            setValue(
+                                                "example_transmission_body",
+                                                value,
+                                            )
+                                        }
+                                        editorProps={{ $blockScrolling: true }}
+                                        value={
+                                            updatedTempr.example_transmission_body
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label>Mapping</label>
+                                    <AceEditor
+                                        mode="json"
+                                        theme="github"
+                                        onChange={value =>
+                                            setValue("body", value)
+                                        }
+                                        editorProps={{ $blockScrolling: true }}
+                                        value={updatedTempr.body}
+                                    />
+                                </div>
+                                <div>
+                                    <label>Output</label>
+                                    <AceEditor
+                                        mode="json"
+                                        theme="github"
+                                        editorProps={{ $blockScrolling: true }}
+                                        defaultValue={
+                                            updatedTempr.output_transmission_body ||
+                                            "Provide an example to see output"
+                                        }
+                                        readOnly
+                                    />
+                                </div>
                             </div>
                         </FormControl>
                         <Button
