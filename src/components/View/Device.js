@@ -72,7 +72,7 @@ const Device = props => {
                                     ["longitude", "Longitude"],
                                 ])
                             }
-                            selectedValue={arrayKey => {
+                            targetValue={arrayKey => {
                                 if (arrayKey === "sites") {
                                     return "site_id";
                                 }

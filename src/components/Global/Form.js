@@ -14,6 +14,7 @@ const InputType = {
     TOGGLE: "toggle",
     DATETIME_PICKER: "datetime",
     COMPONENT: "component",
+    RENDER_FUNCTION: "render",
 };
 
 const Form = props => {
@@ -35,7 +36,10 @@ const Form = props => {
                     <Input
                         id={`input-${key}`}
                         value={data[key] || ""}
-                        disabled={props.readOnly || data.readOnly}
+                        disabled={
+                            props.readOnly ||
+                            props.readOnlyFields.find(field => field === key)
+                        }
                         onChange={event =>
                             setValue(key, event.currentTarget.value)
                         }
@@ -44,38 +48,46 @@ const Form = props => {
             case InputType.SELECT:
                 return (
                     <Select
-                        disabled={props.readOnly || data.readOnly}
+                        disabled={
+                            props.readOnly ||
+                            props.readOnlyFields.find(
+                                field =>
+                                    field === key ||
+                                    field === props.targetValue(key),
+                            )
+                        }
                         options={data[key]}
                         labelKey="name"
                         valueKey="id"
                         searchable={false}
                         onChange={event =>
-                            setValue(
-                                props.selectedValue(key),
-                                event.value[0].id,
-                            )
+                            setValue(props.targetValue(key), event.value[0].id)
                         }
                         value={data[key].find(
-                            item => item.id === data[props.selectedValue(key)],
+                            item => item.id === data[props.targetValue(key)],
                         )}
                     />
                 );
             case InputType.SEARCHABLE_SELECT:
                 return (
                     <Select
-                        disabled={props.readOnly || data.readOnly}
+                        disabled={
+                            props.readOnly ||
+                            props.readOnlyFields.find(
+                                field =>
+                                    field === key ||
+                                    field === props.targetValue(key),
+                            )
+                        }
                         options={data[key]}
                         labelKey="name"
                         valueKey="id"
                         searchable={true}
                         onChange={event =>
-                            setValue(
-                                props.selectedValue(key),
-                                event.value[0].id,
-                            )
+                            setValue(props.targetValue(key), event.value[0].id)
                         }
                         value={data[key].find(
-                            item => item.id === data[props.selectedValue(key)],
+                            item => item.id === data[props.targetValue(key)],
                         )}
                     />
                 );
@@ -85,7 +97,10 @@ const Form = props => {
                         type="number"
                         id={`input-${key}`}
                         value={data[key] || ""}
-                        disabled={props.readOnly || data.readOnly}
+                        disabled={
+                            props.readOnly ||
+                            props.readOnlyFields.find(field => field === key)
+                        }
                         onChange={event =>
                             setValue(key, Number(event.currentTarget.value))
                         }
@@ -94,7 +109,10 @@ const Form = props => {
             case InputType.TOGGLE:
                 return (
                     <Checkbox
-                        disabled={props.readOnly || data.readOnly}
+                        disabled={
+                            props.readOnly ||
+                            props.readOnlyFields.find(field => field === key)
+                        }
                         checked={data[key]}
                         onChange={() => setValue(key, !data[key])}
                         checkmarkType={STYLE_TYPE.toggle}
@@ -106,7 +124,10 @@ const Form = props => {
                         type="datetime-local"
                         id={`input-${key}`}
                         value={data[key] || ""}
-                        disabled={props.readOnly || data.readOnly}
+                        disabled={
+                            props.readOnly ||
+                            props.readOnlyFields.find(field => field === key)
+                        }
                         onChange={event =>
                             setValue(key, event.currentTarget.value)
                         }
@@ -114,6 +135,21 @@ const Form = props => {
                 );
             case InputType.COMPONENT:
                 return data[key];
+
+            case InputType.RENDER_FUNCTION:
+                const value = data[props.targetValue(key)];
+                const updateValue = newValue =>
+                    setValue(props.targetValue(key), newValue);
+                if (
+                    props.readOnlyFields.find(
+                        field =>
+                            field === key || field === props.targetValue(key),
+                    )
+                ) {
+                    return data[key](value);
+                } else {
+                    return data[key](value, updateValue);
+                }
 
             default:
                 return <div>No content available</div>;

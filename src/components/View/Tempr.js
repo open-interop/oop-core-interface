@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import { Form, InputType } from "../Global";
+import { Form, InputType, TemprEditor } from "../Global";
 import OopCore from "../../OopCore";
 
 const Tempr = props => {
@@ -31,10 +31,32 @@ const Tempr = props => {
     };
 
     const getFormData = (temprDetails, groups) => {
+        temprDetails.body = temprDetails.body.script;
         temprDetails.groups = groups.data;
+        temprDetails.exampleComponent = (value, setValue) => {
+            return (
+                <TemprEditor
+                    title="Example"
+                    text={value}
+                    updateText={setValue}
+                />
+            );
+        };
+        temprDetails.bodyComponent = (value, setValue) => {
+            return (
+                <TemprEditor
+                    title="Mapping"
+                    text={value}
+                    updateText={setValue}
+                />
+            );
+        };
+        temprDetails.output_transmission_body = "this is the computed output";
+        temprDetails.outputComponent = defaultValue => {
+            return <TemprEditor title="Output" defaultText={defaultValue} />;
+        };
         return temprDetails;
     };
-
     const getData = () => {
         return Promise.all([getTempr(), OopCore.getDeviceGroups()]).then(
             ([tempr, groups]) => {
@@ -78,21 +100,38 @@ const Tempr = props => {
                                 name: InputType.STRING_INPUT,
                                 groups: InputType.SELECT,
                                 description: InputType.STRING_INPUT,
-                                body: InputType.STRING_INPUT,
+                                exampleComponent: InputType.RENDER_FUNCTION,
+                                bodyComponent: InputType.RENDER_FUNCTION,
+                                outputComponent: InputType.RENDER_FUNCTION,
                             }}
                             dataLabels={
                                 new Map([
                                     ["name", "Name"],
                                     ["groups", "Group"],
                                     ["description", "Description"],
-                                    ["body", "Body"],
+                                    [
+                                        "exampleComponent",
+                                        "Example transmission",
+                                    ],
+                                    ["bodyComponent", "Mapping"],
+                                    ["outputComponent", "Output"],
                                 ])
                             }
-                            selectedValue={arrayKey => {
+                            targetValue={arrayKey => {
                                 if (arrayKey === "groups") {
                                     return "device_group_id";
                                 }
+                                if (arrayKey === "bodyComponent") {
+                                    return "body";
+                                }
+                                if (arrayKey === "exampleComponent") {
+                                    return "example_transmission_body";
+                                }
+                                if (arrayKey === "outputComponent") {
+                                    return "output_transmission_body";
+                                }
                             }}
+                            readOnlyFields={["output_transmission_body"]}
                             buttonText={blankTempr ? "Create" : "Save"}
                             saveDisabled={
                                 blankTempr

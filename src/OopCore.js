@@ -180,6 +180,10 @@ class OopCore extends EventEmitter {
     }
 
     updateTempr(deviceGroupId, temprId, data) {
+        data.body = {
+            language: "js",
+            script: data.body,
+        };
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/temprs/${temprId}`,
             RequestType.PUT,
