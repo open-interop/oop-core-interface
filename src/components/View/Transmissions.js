@@ -141,6 +141,8 @@ const Transmissions = props => {
                                         return setStatus(value);
                                     case "success":
                                         return setSuccess(value);
+                                    default:
+                                        return null;
                                 }
                             }}
                         />

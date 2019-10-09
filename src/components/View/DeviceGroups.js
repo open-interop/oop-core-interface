@@ -70,6 +70,8 @@ const DeviceGroups = props => {
                                 switch (key) {
                                     case "id":
                                         return setId(value);
+                                    default:
+                                        return null;
                                 }
                             }}
                         />

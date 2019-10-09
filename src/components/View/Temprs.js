@@ -112,6 +112,8 @@ const Temprs = props => {
                                         return setName(value);
                                     case "group":
                                         return setGroup(value);
+                                    default:
+                                        return null;
                                 }
                             }}
                         />
