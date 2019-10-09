@@ -37,7 +37,6 @@ const Tempr = props => {
     };
 
     const getFormData = (temprDetails, groups) => {
-        temprDetails.body = temprDetails.body.script;
         temprDetails.groups = groups.data;
         return temprDetails;
     };
@@ -84,6 +83,18 @@ const Tempr = props => {
                 }}
                 renderData={() => (
                     <>
+                        <FormControl
+                            label="Name"
+                            key={"form-control-group-name"}
+                        >
+                            <Input
+                                id={"input-name"}
+                                value={updatedTempr.name || ""}
+                                onChange={event =>
+                                    setValue("name", event.currentTarget.value)
+                                }
+                            />
+                        </FormControl>
                         <FormControl
                             label="Group"
                             key={"form-control-group-group"}
@@ -150,10 +161,13 @@ const Tempr = props => {
                                         mode="json"
                                         theme="github"
                                         onChange={value =>
-                                            setValue("body", value)
+                                            setValue("body", {
+                                                language: "js",
+                                                script: value,
+                                            })
                                         }
                                         editorProps={{ $blockScrolling: true }}
-                                        value={updatedTempr.body}
+                                        value={updatedTempr.body.script}
                                     />
                                 </div>
                                 <div>
