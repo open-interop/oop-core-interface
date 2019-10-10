@@ -60,12 +60,20 @@ const Temprs = props => {
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
-                                        <Button
-                                            $as={Link}
-                                            to={`${props.location.pathname}/${content}`}
-                                        >
-                                            Edit
-                                        </Button>
+                                        <>
+                                            <Button
+                                                $as={Link}
+                                                to={`${props.location.pathname}/${content}`}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                to={`/device-groups/${props.match.params.deviceGroupId}/device-temprs/?temprId=${content}`}
+                                            >
+                                                View Device associations
+                                            </Button>
+                                        </>
                                     );
                                 }
 

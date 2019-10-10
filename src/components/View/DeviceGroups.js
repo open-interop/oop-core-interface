@@ -20,6 +20,7 @@ const DeviceGroups = props => {
     return (
         <div className="content-wrapper">
             <h2>Device Groups</h2>
+
             <DataProvider
                 getData={() => {
                     return OopCore.getDeviceGroups().then(response => {
@@ -34,12 +35,20 @@ const DeviceGroups = props => {
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
-                                        <Button
-                                            $as={Link}
-                                            to={`${props.location.pathname}/${content}/temprs`}
-                                        >
-                                            View temprs
-                                        </Button>
+                                        <>
+                                            <Button
+                                                $as={Link}
+                                                to={`${props.location.pathname}/${content}/temprs`}
+                                            >
+                                                View temprs
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                to={`/device-groups/${content}/device-temprs/?deviceId=${content}`}
+                                            >
+                                                View Tempr associations
+                                            </Button>
+                                        </>
                                     );
                                 }
 

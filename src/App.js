@@ -5,6 +5,7 @@ import {
     Device,
     DeviceGroups,
     Devices,
+    DeviceTemprs,
     Transmission,
     Transmissions,
     Header,
@@ -156,6 +157,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Tempr, props)
+                            }
+                        />
+                        <Route
+                            path="/device-groups/:deviceGroupId/device-temprs"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, DeviceTemprs, props)
                             }
                         />
                     </div>

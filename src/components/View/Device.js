@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "baseui/button";
 import { DataProvider } from "../Universal";
 import { Form, InputType } from "../Global";
 import OopCore from "../../OopCore";
@@ -14,6 +16,14 @@ const Device = props => {
     const getFormData = (deviceDetails, sites, groups) => {
         deviceDetails.sites = sites.data;
         deviceDetails.groups = groups.data;
+        deviceDetails.temprAssociations = (
+            <Button
+                $as={Link}
+                to={`/device-groups/${deviceDetails.device_group_id}/device-temprs/?deviceId=${deviceDetails.id}`}
+            >
+                Tempr associations
+            </Button>
+        );
         deviceDetails.timezones = Timezones.map(timezone => {
             return {
                 id: timezone,
@@ -60,6 +70,7 @@ const Device = props => {
                                 timezones: InputType.SEARCHABLE_SELECT,
                                 latitude: InputType.STRING_INPUT,
                                 longitude: InputType.STRING_INPUT,
+                                temprAssociations: InputType.COMPONENT,
                             }}
                             dataLabels={
                                 new Map([
@@ -70,6 +81,7 @@ const Device = props => {
                                     ["timezones", "Timezone"],
                                     ["latitude", "Latitude"],
                                     ["longitude", "Longitude"],
+                                    ["temprAssociations", "Tempr associations"],
                                 ])
                             }
                             targetValue={arrayKey => {

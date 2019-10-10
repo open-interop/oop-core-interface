@@ -133,6 +133,17 @@ const Tempr = props => {
                             />
                         </FormControl>
                         <FormControl
+                            label="Device associations"
+                            key={"form-control-device-associations"}
+                        >
+                            <Button
+                                $as={Link}
+                                to={`/device-groups/${updatedTempr.device_group_id}/device-temprs`}
+                            >
+                                Device associations
+                            </Button>
+                        </FormControl>
+                        <FormControl
                             label="Body"
                             key={"form-control-group-body-example"}
                         >

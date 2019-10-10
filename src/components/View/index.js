@@ -1,6 +1,7 @@
 export * from "./Device";
 export * from "./DeviceGroups";
 export * from "./Devices";
+export * from "./DeviceTemprs";
 export * from "./Transmission";
 export * from "./Transmissions";
 export * from "./Header";
