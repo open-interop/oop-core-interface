@@ -119,20 +119,27 @@ const Tempr = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
-                                onChange={event =>
-                                    canMoveTempr().then(result => {
-                                        if (result) {
-                                            setValue(
-                                                "device_group_id",
-                                                event.value[0].id,
-                                            );
-                                        } else {
-                                            setMoveGroupError(
-                                                "This tempr can't be moved to another group because it's currently used in a device tempr",
-                                            );
-                                        }
-                                    })
-                                }
+                                onChange={event => {
+                                    if (blankTempr) {
+                                        setValue(
+                                            "device_group_id",
+                                            event.value[0].id,
+                                        );
+                                    } else {
+                                        canMoveTempr().then(result => {
+                                            if (result) {
+                                                setValue(
+                                                    "device_group_id",
+                                                    event.value[0].id,
+                                                );
+                                            } else {
+                                                setMoveGroupError(
+                                                    "This tempr can't be moved to another group because it's currently used in a device tempr",
+                                                );
+                                            }
+                                        });
+                                    }
+                                }}
                                 value={updatedTempr.groups.find(
                                     item =>
                                         item.id ===
