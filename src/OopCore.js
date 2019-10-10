@@ -113,12 +113,8 @@ class OopCore extends EventEmitter {
                 return "page[size]";
             case "page":
                 return "page[number]";
-            case "transmissionUuid":
-                return "transmission_uuid";
-            case "messageUuid":
-                return "message_uuid";
             default:
-                return key;
+                return `filter[${key}]`;
         }
     }
 

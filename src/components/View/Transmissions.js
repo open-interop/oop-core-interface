@@ -12,7 +12,7 @@ const Transmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-    const [id, setId] = useQueryParam("id", NumberParam);
+    const [id, setId] = useQueryParam("id", StringParam);
     const [transmissionUuid, setTransmissionUuid] = useQueryParam(
         "transmissionUuid",
         StringParam,
@@ -38,10 +38,12 @@ const Transmissions = props => {
                     return OopCore.getTransmissions(
                         props.match.params.deviceId,
                         {
+                            id,
                             page,
                             pageSize,
                             transmissionUuid,
                             messageUuid,
+                            status,
                             success,
                         },
                     ).then(response => {
