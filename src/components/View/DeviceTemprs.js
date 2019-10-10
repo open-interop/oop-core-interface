@@ -11,21 +11,19 @@ const DeviceTemprs = props => {
         Number(props.match.params.deviceGroupId),
     );
     const [groups, setGroups] = useState([]);
-    const [devices, setDevices] = useState([]);
-    const [temprs, setTemprs] = useState([]);
-    const [associations, setAssociations] = useState([]);
+    const [deviceTemprs, setDeviceTemprs] = useState([]);
     const [deviceId, setDeviceId] = useQueryParam("deviceId", StringParam);
     const [temprId, setTemprId] = useQueryParam("temprId", StringParam);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-    const getTableData = (associations, devices, groups, temprs) => {
-        associations.data.forEach(row => {
+    const getTableData = (deviceTemprs, devices, temprs) => {
+        deviceTemprs.data.forEach(row => {
             row.tempr = temprs.find(tempr => tempr.id === row.temprId).name;
             row.device = devices.find(
                 device => device.id === row.deviceId,
             ).name;
         });
-        return associations;
+        return deviceTemprs;
     };
 
     const getData = () => {
@@ -34,24 +32,17 @@ const DeviceTemprs = props => {
             OopCore.getDevices(),
             OopCore.getDeviceGroups(),
             OopCore.getTemprs(groupId),
-        ]).then(([associations, devices, groups, temprs]) => {
-            setAssociations(associations);
-            setDevices(devices.data);
+        ]).then(([deviceTemprs, devices, groups, temprs]) => {
+            setDeviceTemprs(deviceTemprs);
             setGroups(groups.data);
-            setTemprs(temprs.data);
-            return getTableData(
-                associations,
-                devices.data,
-                groups.data,
-                temprs.data,
-            );
+            return getTableData(deviceTemprs, devices.data, temprs.data);
         });
     };
 
     return (
         <div className="content-wrapper">
             <h2>
-                Device Tempr Associations
+                Device Temprs
                 <Select
                     options={groups}
                     labelKey="name"
@@ -72,20 +63,20 @@ const DeviceTemprs = props => {
                 }
                 getData={() => {
                     return getData().then(response => {
-                        setAssociations(response);
+                        setDeviceTemprs(response);
                         return response;
                     });
                 }}
                 renderData={() => (
                     <>
                         <Table
-                            data={associations.data}
+                            data={deviceTemprs.data}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
                                         <Button
                                             $as={Link}
-                                            to={`${props.location.pathname}/${content}`}
+                                            to={`/device-groups/${props.match.params.deviceGroupId}/device-temprs/${content}`}
                                         >
                                             View
                                         </Button>
@@ -155,8 +146,8 @@ const DeviceTemprs = props => {
                                 updatePageNumber={pageNumber =>
                                     setPage(pageNumber)
                                 }
-                                totalRecords={temprs.totalRecords}
-                                numberOfPages={temprs.numberOfPages}
+                                totalRecords={deviceTemprs.totalRecords}
+                                numberOfPages={deviceTemprs.numberOfPages}
                                 currentPage={page || 1}
                             />
                         }

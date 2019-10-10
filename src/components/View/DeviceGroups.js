@@ -46,7 +46,7 @@ const DeviceGroups = props => {
                                                 $as={Link}
                                                 to={`/device-groups/${content}/device-temprs/?deviceId=${content}`}
                                             >
-                                                View Tempr associations
+                                                Device Temprs
                                             </Button>
                                         </>
                                     );
@@ -65,7 +65,13 @@ const DeviceGroups = props => {
                                     id: "id",
                                     name: "Id",
                                     type: "text",
-                                    hasFilter: true,
+                                    hasFilter: false,
+                                },
+                                {
+                                    id: "name",
+                                    name: "Name",
+                                    type: "text",
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "action",

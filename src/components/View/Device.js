@@ -16,12 +16,12 @@ const Device = props => {
     const getFormData = (deviceDetails, sites, groups) => {
         deviceDetails.sites = sites.data;
         deviceDetails.groups = groups.data;
-        deviceDetails.temprAssociations = (
+        deviceDetails.deviceTemprs = (
             <Button
                 $as={Link}
                 to={`/device-groups/${deviceDetails.device_group_id}/device-temprs/?deviceId=${deviceDetails.id}`}
             >
-                Tempr associations
+                Device Temprs
             </Button>
         );
         deviceDetails.timezones = Timezones.map(timezone => {
@@ -70,7 +70,7 @@ const Device = props => {
                                 timezones: InputType.SEARCHABLE_SELECT,
                                 latitude: InputType.STRING_INPUT,
                                 longitude: InputType.STRING_INPUT,
-                                temprAssociations: InputType.COMPONENT,
+                                deviceTemprs: InputType.COMPONENT,
                             }}
                             dataLabels={
                                 new Map([
@@ -81,7 +81,7 @@ const Device = props => {
                                     ["timezones", "Timezone"],
                                     ["latitude", "Latitude"],
                                     ["longitude", "Longitude"],
-                                    ["temprAssociations", "Tempr associations"],
+                                    ["deviceTemprs", "Device temprs"],
                                 ])
                             }
                             targetValue={arrayKey => {
