@@ -9,7 +9,7 @@ const DeviceGroups = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-    const [id, setId] = useQueryParam("filters", NumberParam);
+    const [id, setId] = useQueryParam("id", NumberParam);
 
     // reset page number when the search query is changed
     useEffect(() => {
