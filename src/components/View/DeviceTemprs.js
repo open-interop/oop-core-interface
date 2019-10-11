@@ -62,10 +62,7 @@ const DeviceTemprs = props => {
                     props.match.params.deviceGroupId + props.location.search
                 }
                 getData={() => {
-                    return getData().then(response => {
-                        setDeviceTemprs(response);
-                        return response;
-                    });
+                    return getData();
                 }}
                 renderData={() => (
                     <>

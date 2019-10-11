@@ -60,9 +60,7 @@ const Transmissions = props => {
             </h2>
             <DataProvider
                 getData={() => {
-                    return getData().then(response => {
-                        return response;
-                    });
+                    return getData();
                 }}
                 renderData={() => (
                     <>
