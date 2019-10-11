@@ -15,6 +15,7 @@ const Device = props => {
     const [stateSites, setSites] = useState([]);
     const [stateGroups, setGroups] = useState([]);
     const [error, setError] = useState("");
+    const [moveGroupError, setMoveGroupError] = useState("");
 
     const getFormData = (deviceDetails, sites, groups) => {
         deviceDetails.sites = sites.data;
@@ -52,6 +53,19 @@ const Device = props => {
         setUpdatedDevice(updatedData);
     };
 
+    const canMoveDevice = () => {
+        setMoveGroupError("");
+        return OopCore.getDeviceTemprs(updatedDevice.device_group_id, {
+            deviceId: updatedDevice.id,
+        }).then(response => {
+            if (response.data.length) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    };
+
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -83,18 +97,30 @@ const Device = props => {
                                 )}
                             />
                         </FormControl>
-                        <FormControl label="Group" key={`form-control-group`}>
+                        <FormControl
+                            label="Group"
+                            key={`form-control-group`}
+                            error={moveGroupError}
+                        >
                             <Select
                                 options={updatedDevice.groups}
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
-                                onChange={event =>
-                                    setValue(
-                                        "device_group_id",
-                                        event.value[0].id,
-                                    )
-                                }
+                                onChange={event => {
+                                    canMoveDevice().then(result => {
+                                        if (result) {
+                                            setValue(
+                                                "device_group_id",
+                                                event.value[0].id,
+                                            );
+                                        } else {
+                                            setMoveGroupError(
+                                                "This tempr can't be moved to another group because it's currently used in a device tempr",
+                                            );
+                                        }
+                                    });
+                                }}
                                 value={updatedDevice.sites.find(
                                     item =>
                                         item.id ===
