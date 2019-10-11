@@ -16,6 +16,7 @@ const Tempr = props => {
     const [tempr, setTempr] = useState({});
     const [updatedTempr, setUpdatedTempr] = useState({});
     const [stateGroups, setGroups] = useState([]);
+    const [moveGroupError, setMoveGroupError] = useState("");
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -67,6 +68,19 @@ const Tempr = props => {
         setUpdatedTempr(updatedData);
     };
 
+    const canMoveTempr = () => {
+        setMoveGroupError("");
+        return OopCore.getDeviceTemprs(updatedTempr.device_group_id, {
+            temprId: updatedTempr.id,
+        }).then(response => {
+            if (response.data.length) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    };
+
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allTemprsPath}>
@@ -98,18 +112,34 @@ const Tempr = props => {
                         <FormControl
                             label="Group"
                             key={"form-control-group-group"}
+                            error={moveGroupError}
                         >
                             <Select
                                 options={updatedTempr.groups}
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
-                                onChange={event =>
-                                    setValue(
-                                        "device_group_id",
-                                        event.value[0].id,
-                                    )
-                                }
+                                onChange={event => {
+                                    if (blankTempr) {
+                                        setValue(
+                                            "device_group_id",
+                                            event.value[0].id,
+                                        );
+                                    } else {
+                                        canMoveTempr().then(result => {
+                                            if (result) {
+                                                setValue(
+                                                    "device_group_id",
+                                                    event.value[0].id,
+                                                );
+                                            } else {
+                                                setMoveGroupError(
+                                                    "This tempr can't be moved to another group because it's currently used in a device tempr",
+                                                );
+                                            }
+                                        });
+                                    }
+                                }}
                                 value={updatedTempr.groups.find(
                                     item =>
                                         item.id ===

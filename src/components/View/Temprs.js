@@ -21,7 +21,10 @@ const Temprs = props => {
 
     const getData = () => {
         return Promise.all([
-            OopCore.getTemprs(props.match.params.deviceGroupId),
+            OopCore.getTemprs(props.match.params.deviceGroupId, {
+                page,
+                pageSize,
+            }),
             OopCore.getDeviceGroups(),
         ]).then(([temprs, groups]) => {
             temprs.data = temprs.data.map(tempr => ({
@@ -47,6 +50,7 @@ const Temprs = props => {
                 </Button>
             </div>
             <DataProvider
+                renderKey={props.location.search}
                 getData={() => {
                     return getData().then(response => {
                         setTemprs(response);
