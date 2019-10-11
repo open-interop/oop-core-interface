@@ -206,6 +206,28 @@ class OopCore extends EventEmitter {
 
         return this.makeRequest(path);
     }
+
+    getDeviceTempr(deviceGroupId, deviceTemprId) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
+        );
+    }
+
+    updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
+            RequestType.PUT,
+            data,
+        );
+    }
+
+    createDeviceTempr(deviceGroupId, data) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/device_temprs`,
+            RequestType.POST,
+            data,
+        );
+    }
 }
 
 export default new OopCore();
