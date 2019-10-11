@@ -73,7 +73,7 @@ const Tempr = props => {
         return OopCore.getDeviceTemprs(updatedTempr.device_group_id, {
             temprId: updatedTempr.id,
         }).then(response => {
-            if (response.data.length) {
+            if (response.totalRecords) {
                 return false;
             } else {
                 return true;

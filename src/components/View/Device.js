@@ -58,7 +58,7 @@ const Device = props => {
         return OopCore.getDeviceTemprs(updatedDevice.device_group_id, {
             deviceId: updatedDevice.id,
         }).then(response => {
-            if (response.data.length) {
+            if (response.totalRecords) {
                 return false;
             } else {
                 return true;
