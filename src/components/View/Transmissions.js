@@ -10,6 +10,7 @@ import OopCore from "../../OopCore";
 
 const Transmissions = props => {
     const [transmissions, setTransmissions] = useState(null);
+    const [device, setDevice] = useState({});
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
     const [id, setId] = useQueryParam("id", StringParam);
@@ -30,26 +31,36 @@ const Transmissions = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize, transmissionUuid, messageUuid, success]);
 
+    const getData = () => {
+        return Promise.all([
+            OopCore.getTransmissions(props.match.params.deviceId, {
+                id,
+                page,
+                pageSize,
+                transmissionUuid,
+                messageUuid,
+                status,
+                success,
+            }),
+            OopCore.getDevices(),
+        ]).then(([transmissions, devices]) => {
+            const device = devices.data.find(
+                device => device.id === Number(props.match.params.deviceId),
+            );
+            setTransmissions(transmissions);
+            setDevice(device);
+            return transmissions;
+        });
+    };
     return (
         <div className="content-wrapper">
-            <h2>Transmissions - Device {props.match.params.deviceId}</h2>
+            <h2>
+                Transmissions -{" "}
+                {device ? device.name : `Device ${props.match.params.deviceId}`}
+            </h2>
             <DataProvider
                 getData={() => {
-                    return OopCore.getTransmissions(
-                        props.match.params.deviceId,
-                        {
-                            id,
-                            page,
-                            pageSize,
-                            transmissionUuid,
-                            messageUuid,
-                            status,
-                            success,
-                        },
-                    ).then(response => {
-                        setTransmissions(response);
-                        return response;
-                    });
+                    return getData();
                 }}
                 renderData={() => (
                     <>
@@ -141,6 +152,8 @@ const Transmissions = props => {
                                         return setStatus(value);
                                     case "success":
                                         return setSuccess(value);
+                                    default:
+                                        return null;
                                 }
                             }}
                         />

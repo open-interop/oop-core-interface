@@ -132,6 +132,20 @@ const Tempr = props => {
                                 }
                             />
                         </FormControl>
+                        {!blankTempr && (
+                            <FormControl
+                                label="Device Temprs"
+                                key={"form-control-device-temprs"}
+                            >
+                                <Button
+                                    $as={Link}
+                                    to={`/device-groups/${updatedTempr.device_group_id}/device-temprs/?temprId=${updatedTempr.id}`}
+                                >
+                                    Device Temprs
+                                </Button>
+                            </FormControl>
+                        )}
+
                         <FormControl
                             label="Body"
                             key={"form-control-group-body-example"}

@@ -20,6 +20,7 @@ const DeviceGroups = props => {
     return (
         <div className="content-wrapper">
             <h2>Device Groups</h2>
+
             <DataProvider
                 getData={() => {
                     return OopCore.getDeviceGroups().then(response => {
@@ -34,12 +35,20 @@ const DeviceGroups = props => {
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
-                                        <Button
-                                            $as={Link}
-                                            to={`${props.location.pathname}/${content}/temprs`}
-                                        >
-                                            View temprs
-                                        </Button>
+                                        <>
+                                            <Button
+                                                $as={Link}
+                                                to={`${props.location.pathname}/${content}/temprs`}
+                                            >
+                                                View temprs
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                to={`/device-groups/${content}/device-temprs/?deviceId=${content}`}
+                                            >
+                                                Device Temprs
+                                            </Button>
+                                        </>
                                     );
                                 }
 
@@ -56,7 +65,13 @@ const DeviceGroups = props => {
                                     id: "id",
                                     name: "Id",
                                     type: "text",
-                                    hasFilter: true,
+                                    hasFilter: false,
+                                },
+                                {
+                                    id: "name",
+                                    name: "Name",
+                                    type: "text",
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "action",
@@ -70,6 +85,8 @@ const DeviceGroups = props => {
                                 switch (key) {
                                     case "id":
                                         return setId(value);
+                                    default:
+                                        return null;
                                 }
                             }}
                         />

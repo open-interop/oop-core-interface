@@ -60,12 +60,20 @@ const Temprs = props => {
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
-                                        <Button
-                                            $as={Link}
-                                            to={`${props.location.pathname}/${content}`}
-                                        >
-                                            Edit
-                                        </Button>
+                                        <>
+                                            <Button
+                                                $as={Link}
+                                                to={`${props.location.pathname}/${content}`}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                to={`/device-groups/${props.match.params.deviceGroupId}/device-temprs/?temprId=${content}`}
+                                            >
+                                                Device Temprs
+                                            </Button>
+                                        </>
                                     );
                                 }
 
@@ -82,19 +90,19 @@ const Temprs = props => {
                                     id: "id",
                                     name: "Id",
                                     type: "text",
-                                    hasFilter: true,
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "name",
                                     name: "Name",
                                     type: "text",
-                                    hasFilter: true,
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "group",
                                     name: "Group",
                                     type: "text",
-                                    hasFilter: true,
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "action",
@@ -112,6 +120,8 @@ const Temprs = props => {
                                         return setName(value);
                                     case "group":
                                         return setGroup(value);
+                                    default:
+                                        return null;
                                 }
                             }}
                         />

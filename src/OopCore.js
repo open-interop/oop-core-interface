@@ -190,6 +190,16 @@ class OopCore extends EventEmitter {
             data,
         );
     }
+
+    getDeviceTemprs(deviceGroupId, queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/device_groups/${deviceGroupId}/device_temprs`;
+        if (parameters) {
+            path += "/?" + parameters;
+        }
+
+        return this.makeRequest(path);
+    }
 }
 
 export default new OopCore();
