@@ -134,20 +134,16 @@ const DeviceTemprs = props => {
                                 }
                             }}
                         />
-                        {
-                            <Pagination
-                                updatePageSize={pageSize => {
-                                    setPageSize(pageSize);
-                                }}
-                                currentPageSize={pageSize}
-                                updatePageNumber={pageNumber =>
-                                    setPage(pageNumber)
-                                }
-                                totalRecords={deviceTemprs.totalRecords}
-                                numberOfPages={deviceTemprs.numberOfPages}
-                                currentPage={page || 1}
-                            />
-                        }
+                        <Pagination
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={deviceTemprs.totalRecords}
+                            numberOfPages={deviceTemprs.numberOfPages}
+                            currentPage={page || 1}
+                        />
                     </>
                 )}
             />
