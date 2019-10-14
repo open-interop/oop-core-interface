@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import {
     HeaderNavigation,
@@ -6,7 +7,7 @@ import {
     StyledNavigationItem as NavigationItem,
     StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
-import { StyledLink as Link } from "baseui/link";
+import { StyledLink } from "baseui/link";
 import OopCore from "../../OopCore";
 
 const Header = props => (
@@ -14,13 +15,14 @@ const Header = props => (
         <HeaderNavigation>
             <NavigationList $align={ALIGN.right}>
                 <NavigationItem>
-                    <Link href="#">Dan User</Link>
+                    <StyledLink href="#">Dan User</StyledLink>
                 </NavigationItem>
                 <NavigationItem>
                     <Button
+                        $as={Link}
+                        to={"/"}
                         onClick={() => {
                             OopCore.logout();
-                            props.history.push("/");
                         }}
                     >
                         Log out
