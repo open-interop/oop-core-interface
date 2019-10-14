@@ -7,6 +7,7 @@ import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
+import { Template } from "../Global";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
@@ -65,16 +66,14 @@ const DeviceTempr = props => {
         setUpdatedDeviceTempr(updatedData);
     };
 
-    const renderTemplate = template => {
-        return <div> this is the template</div>;
-    };
-
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allDeviceTemprsPath}>
                 <ArrowLeft size={24} />
             </Button>
-            <h2>{blankDeviceTempr ? "Create Tempr" : "Edit Tempr"}</h2>
+            <h2>
+                {blankDeviceTempr ? "Create Device Tempr" : "Edit Device Tempr"}
+            </h2>
             <DataProvider
                 getData={() => {
                     return getData();
@@ -157,12 +156,11 @@ const DeviceTempr = props => {
                                 />
                             </FormControl>
                         )}
-
-                        <FormControl
-                            label="Template"
-                            key={"form-control-group-body-template"}
-                        >
-                            {renderTemplate(updatedDeviceTempr.template)}
+                        <FormControl>
+                            <Template
+                                endpointType={updatedDeviceTempr.endpointType}
+                                {...updatedDeviceTempr.template}
+                            />
                         </FormControl>
                         <Button
                             onClick={() => {
