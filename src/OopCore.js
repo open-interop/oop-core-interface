@@ -12,7 +12,7 @@ class OopCore extends EventEmitter {
     constructor(props) {
         super(props);
 
-        this.apiBase = "/api/v1";
+        this.apiBase = (process.env.REACT_APP_BASE_PATH || "") + "/api/v1";
 
         this.token = cookie.load("token");
     }
