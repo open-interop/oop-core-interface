@@ -36,7 +36,6 @@ const DeviceTempr = props => {
             OopCore.getDevices(),
             OopCore.getTemprs(props.match.params.deviceGroupId),
         ]).then(([tempr, devices, temprs]) => {
-            console.log(tempr);
             const devicesForThisGroup = devices.data.filter(
                 device =>
                     device.deviceGroupId ===
@@ -145,17 +144,20 @@ const DeviceTempr = props => {
                                 checkmarkType={STYLE_TYPE.toggle}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Last updated"
-                            key={`form-control-queue-updated-at`}
-                        >
-                            <Input
-                                type="datetime-local"
-                                id={"input-updated"}
-                                value={updatedDeviceTempr.updatedAt}
-                                disabled
-                            />
-                        </FormControl>
+                        {!blankDeviceTempr && (
+                            <FormControl
+                                label="Last updated"
+                                key={`form-control-queue-updated-at`}
+                            >
+                                <Input
+                                    type="datetime-local"
+                                    id={"input-updated"}
+                                    value={updatedDeviceTempr.updatedAt}
+                                    disabled
+                                />
+                            </FormControl>
+                        )}
+
                         <FormControl
                             label="Template"
                             key={"form-control-group-body-template"}
@@ -181,7 +183,7 @@ const DeviceTempr = props => {
                                 } else {
                                     OopCore.updateDeviceTempr(
                                         props.match.params.deviceGroupId,
-                                        props.match.params.temprId,
+                                        props.match.params.deviceTemprId,
                                         updatedDeviceTempr,
                                     )
                                         .then(response =>

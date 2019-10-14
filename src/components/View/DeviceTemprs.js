@@ -19,10 +19,12 @@ const DeviceTemprs = props => {
 
     const getTableData = (deviceTemprs, devices, temprs) => {
         deviceTemprs.data.forEach(row => {
-            row.tempr =
-                temprs.find(tempr => tempr.id === row.temprId).name || "";
-            row.device =
-                devices.find(device => device.id === row.deviceId).name || "";
+            row.tempr = temprs.some(tempr => tempr.id === row.temprId)
+                ? temprs.find(tempr => tempr.id === row.temprId).name
+                : "";
+            row.device = devices.some(device => device.id === row.deviceId)
+                ? devices.find(device => device.id === row.deviceId).name
+                : "";
         });
         return deviceTemprs;
     };
