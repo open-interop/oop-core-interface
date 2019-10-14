@@ -82,7 +82,7 @@ class App extends Component {
         const hasUser = this.state.user;
 
         return (
-            <BrowserRouter basename={process.env.PUBLIC_URL}>
+            <BrowserRouter basename={process.env.REACT_APP_BASE_PATH}>
                 <QueryParamProvider ReactRouterRoute={Route}>
                     <Route
                         path="/login"
