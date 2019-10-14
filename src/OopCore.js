@@ -214,6 +214,8 @@ class OopCore extends EventEmitter {
     }
 
     updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
+        data.device_id = data.deviceId;
+        data.tempr_id = data.temprId;
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
             RequestType.PUT,
