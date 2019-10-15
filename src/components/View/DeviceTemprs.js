@@ -16,12 +16,15 @@ const DeviceTemprs = props => {
     const [temprId, setTemprId] = useQueryParam("temprId", StringParam);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+
     const getTableData = (deviceTemprs, devices, temprs) => {
         deviceTemprs.data.forEach(row => {
-            row.tempr = temprs.find(tempr => tempr.id === row.temprId).name;
-            row.device = devices.find(
-                device => device.id === row.deviceId,
-            ).name;
+            row.tempr = temprs.some(tempr => tempr.id === row.temprId)
+                ? temprs.find(tempr => tempr.id === row.temprId).name
+                : "";
+            row.device = devices.some(device => device.id === row.deviceId)
+                ? devices.find(device => device.id === row.deviceId).name
+                : "";
         });
         return deviceTemprs;
     };
@@ -35,28 +38,39 @@ const DeviceTemprs = props => {
         ]).then(([deviceTemprs, devices, groups, temprs]) => {
             setDeviceTemprs(deviceTemprs);
             setGroups(groups.data);
+            devices.data = devices.data.filter(
+                device => device.deviceGroupId === groupId,
+            );
             return getTableData(deviceTemprs, devices.data, temprs.data);
         });
     };
 
     return (
         <div className="content-wrapper">
-            <h2>
-                Device Temprs
-                <Select
-                    options={groups}
-                    labelKey="name"
-                    valueKey="id"
-                    searchable={false}
-                    onChange={item => {
-                        setGroupId(item.option.id);
-                        props.history.replace(
-                            `/device-groups/${item.option.id}/device-temprs/`,
-                        );
-                    }}
-                    value={groups.find(group => group.id === groupId)}
-                />
-            </h2>
+            <Select
+                options={groups}
+                labelKey="name"
+                valueKey="id"
+                searchable={false}
+                onChange={item => {
+                    setGroupId(item.option.id);
+                    props.history.replace(
+                        `/device-groups/${item.option.id}/device-temprs/`,
+                    );
+                }}
+                value={groups.find(group => group.id === groupId)}
+            />
+
+            <div className="space-between">
+                <h2>Device Temprs</h2>
+                <Button
+                    $as={Link}
+                    to={`/device-groups/${groupId}/device-temprs/new`}
+                >
+                    New
+                </Button>
+            </div>
+
             <DataProvider
                 renderKey={
                     props.match.params.deviceGroupId + props.location.search

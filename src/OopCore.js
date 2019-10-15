@@ -206,6 +206,54 @@ class OopCore extends EventEmitter {
 
         return this.makeRequest(path);
     }
+
+    getDeviceTempr(deviceGroupId, deviceTemprId) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
+        );
+    }
+
+    createDeviceTemprObject = data => {
+        const result = {};
+        result.device_id = data.deviceId;
+        result.tempr_id = data.temprId;
+        result.endpoint_type = data.endpointType;
+        result.queue_response = data.queueResponse;
+        const {
+            headers,
+            host,
+            path,
+            port,
+            protocol,
+            requestMethod,
+            ...rest
+        } = data.template;
+        result.options = { headers, host, path, port, protocol, requestMethod };
+        console.log(result.options);
+        return result;
+    };
+
+    updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
+        const payload = {
+            device_tempr: this.createDeviceTemprObject(data),
+        };
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
+            RequestType.PUT,
+            payload,
+        );
+    }
+
+    createDeviceTempr(deviceGroupId, data) {
+        const payload = {
+            device_tempr: this.createDeviceTemprObject(data),
+        };
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}/device_temprs`,
+            RequestType.POST,
+            payload,
+        );
+    }
 }
 
 export default new OopCore();

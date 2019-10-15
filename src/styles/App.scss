@@ -183,3 +183,17 @@ div {
         z-index: 100;
     }
 }
+
+.left-margin {
+    & + & {
+        margin-left: 10px;
+    }
+}
+
+.half {
+    width: 49%;
+}
+
+.mb {
+    margin-bottom: 10px;
+}
