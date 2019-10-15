@@ -219,7 +219,17 @@ class OopCore extends EventEmitter {
         result.tempr_id = data.temprId;
         result.endpoint_type = data.endpointType;
         result.queue_response = data.queueResponse;
-        result.options = { ...data.template };
+        const {
+            headers,
+            host,
+            path,
+            port,
+            protocol,
+            requestMethod,
+            ...rest
+        } = data.template;
+        result.options = { headers, host, path, port, protocol, requestMethod };
+        console.log(result.options);
         return result;
     };
 
