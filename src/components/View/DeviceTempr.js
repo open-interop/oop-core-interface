@@ -7,7 +7,7 @@ import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider, Error } from "../Universal";
-import { Template } from "../Global";
+import { HttpTemprTemplate } from "../Global";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
@@ -195,7 +195,7 @@ const DeviceTempr = props => {
                             </FormControl>
                         )}
                         <FormControl>
-                            <Template
+                            <HttpTemprTemplate
                                 endpointType={updatedDeviceTempr.endpointType}
                                 template={updatedDeviceTempr.template}
                                 updateTemplate={template =>

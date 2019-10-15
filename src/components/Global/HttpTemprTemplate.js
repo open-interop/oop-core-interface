@@ -14,7 +14,7 @@ const requestMethodOptions = [
     { id: "PUT" },
 ];
 
-const Template = props => {
+const HttpTemprTemplate = props => {
     const setValue = (key, value) => {
         const updatedTemplate = { ...props.template };
         updatedTemplate[key] = value;
@@ -131,4 +131,4 @@ const Template = props => {
     );
 };
 
-export { Template };
+export { HttpTemprTemplate };
