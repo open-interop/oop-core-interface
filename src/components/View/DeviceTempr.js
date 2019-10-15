@@ -15,15 +15,22 @@ const DeviceTempr = props => {
     const [updatedDeviceTempr, setUpdatedDeviceTempr] = useState({});
     const [devices, setDevices] = useState([]);
     const [temprs, setTemprs] = useState([]);
-
     const blankDeviceTempr = props.match.params.deviceTemprId === "new";
 
     const getDeviceTempr = () => {
         return blankDeviceTempr
             ? Promise.resolve({
                   deviceId: null,
+                  endpointType: "http",
                   temprId: null,
-                  template: {},
+                  template: {
+                      headers: {},
+                      host: "",
+                      path: "",
+                      port: 0,
+                      protocol: "",
+                      requestMethod: "",
+                  },
               })
             : OopCore.getDeviceTempr(
                   props.match.params.deviceGroupId,
@@ -64,6 +71,35 @@ const DeviceTempr = props => {
         const updatedData = { ...updatedDeviceTempr };
         updatedData[key] = value;
         setUpdatedDeviceTempr(updatedData);
+    };
+
+    const identical = (oldObject, updatedObject) => {
+        return Object.keys(oldObject).every(
+            key => oldObject[key] === updatedObject[key],
+        );
+    };
+
+    const saveButtonDisabled = () => {
+        const { template, ...restOfTempr } = deviceTempr;
+        const {
+            template: updatedTemplate,
+            ...updatedRestOfTempr
+        } = updatedDeviceTempr;
+        const { headers, ...restOfTemplate } = template;
+        const {
+            headers: updatedHeaders,
+            ...restOfUpdatedTemplate
+        } = updatedTemplate;
+
+        if (blankDeviceTempr) {
+            return false;
+        } else {
+            return (
+                identical(headers, updatedHeaders) &&
+                identical(restOfTemplate, restOfUpdatedTemplate) &&
+                identical(restOfTempr, updatedRestOfTempr)
+            );
+        }
     };
 
     return (
@@ -110,7 +146,7 @@ const DeviceTempr = props => {
                                 onChange={event => {
                                     setValue("temprId", event.value[0].id);
                                 }}
-                                value={devices.find(
+                                value={temprs.find(
                                     item =>
                                         item.id === updatedDeviceTempr.temprId,
                                 )}
@@ -159,7 +195,10 @@ const DeviceTempr = props => {
                         <FormControl>
                             <Template
                                 endpointType={updatedDeviceTempr.endpointType}
-                                {...updatedDeviceTempr.template}
+                                template={updatedDeviceTempr.template}
+                                updateTemplate={template =>
+                                    setValue("template", template)
+                                }
                             />
                         </FormControl>
                         <Button
@@ -192,15 +231,7 @@ const DeviceTempr = props => {
                                         });
                                 }
                             }}
-                            disabled={
-                                blankDeviceTempr
-                                    ? false
-                                    : Object.keys(deviceTempr).every(
-                                          key =>
-                                              deviceTempr[key] ===
-                                              updatedDeviceTempr[key],
-                                      )
-                            }
+                            disabled={saveButtonDisabled()}
                         >
                             {blankDeviceTempr ? "Create" : "Save"}
                         </Button>
