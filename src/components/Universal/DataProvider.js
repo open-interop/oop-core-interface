@@ -14,7 +14,7 @@ const DataProvider = props => {
                 setLoaded(true);
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 setError(err);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps

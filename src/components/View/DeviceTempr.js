@@ -6,7 +6,7 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider } from "../Universal";
+import { DataProvider, Error } from "../Universal";
 import { Template } from "../Global";
 import OopCore from "../../OopCore";
 
@@ -16,6 +16,7 @@ const DeviceTempr = props => {
     const [devices, setDevices] = useState([]);
     const [temprs, setTemprs] = useState([]);
     const blankDeviceTempr = props.match.params.deviceTemprId === "new";
+    const [error, setError] = useState("");
 
     const getDeviceTempr = () => {
         return blankDeviceTempr
@@ -85,6 +86,7 @@ const DeviceTempr = props => {
             template: updatedTemplate,
             ...updatedRestOfTempr
         } = updatedDeviceTempr;
+
         const { headers, ...restOfTemplate } = template;
         const {
             headers: updatedHeaders,
@@ -203,6 +205,7 @@ const DeviceTempr = props => {
                         </FormControl>
                         <Button
                             onClick={() => {
+                                setError("");
                                 if (blankDeviceTempr) {
                                     return OopCore.createDeviceTempr(
                                         props.match.params.deviceGroupId,
@@ -214,20 +217,26 @@ const DeviceTempr = props => {
                                                 `${allDeviceTemprsPath}/${response.id}`,
                                             );
                                         })
-                                        .catch(error => {
-                                            console.error(error);
+                                        .catch(err => {
+                                            console.error(err);
+                                            setError(
+                                                "Something went wrong while saving device tempr",
+                                            );
                                         });
                                 } else {
-                                    OopCore.updateDeviceTempr(
+                                    return OopCore.updateDeviceTempr(
                                         props.match.params.deviceGroupId,
                                         props.match.params.deviceTemprId,
                                         updatedDeviceTempr,
                                     )
-                                        .then(response =>
-                                            refreshDeviceTempr(response),
-                                        )
-                                        .catch(error => {
-                                            console.error(error);
+                                        .then(response => {
+                                            refreshDeviceTempr(response);
+                                        })
+                                        .catch(err => {
+                                            console.error(err);
+                                            setError(
+                                                "Something went wrong while saving device tempr",
+                                            );
                                         });
                                 }
                             }}
@@ -235,7 +244,7 @@ const DeviceTempr = props => {
                         >
                             {blankDeviceTempr ? "Create" : "Save"}
                         </Button>
-                        {props.error && <div>{props.error}</div>}
+                        <Error message={error} />
                     </>
                 )}
             />
