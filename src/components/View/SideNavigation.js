@@ -21,24 +21,13 @@ const SideNavigation = props => {
     const [settingsNavigationOpen, setSettingsNavigationOpen] = useState(false);
 
     const SettingsNavigation = () => {
-        const ref = useRef("test");
+        const ref = useRef();
         useOutsideClick(ref, () => {
             setSettingsNavigationOpen(false);
         });
 
-        const subItems = [
-            {
-                title: "Users",
-                itemId: "/users",
-            },
-            {
-                title: "Device Groups",
-                itemId: "/device-groups",
-            },
-        ];
-
         const getSubActiveItem = () => {
-            const activeItem = subItems
+            const activeItem = props.subItems
                 .filter(item => item.itemId !== "/")
                 .find(item =>
                     props.history.location.pathname.includes(item.itemId),
@@ -56,7 +45,7 @@ const SideNavigation = props => {
             >
                 <Navigation
                     activeItemId={getSubActiveItem()}
-                    items={subItems}
+                    items={props.subItems}
                     onChange={({ event, item }) => {
                         event.preventDefault();
                         props.history.push(item.itemId);
@@ -67,22 +56,6 @@ const SideNavigation = props => {
         );
     };
 
-    const items = [
-        {
-            title: "Home",
-            itemId: "/",
-        },
-        {
-            title: "Devices",
-            itemId: "/devices",
-        },
-        {
-            title: "Settings",
-            itemId: "/settings",
-            subItems: ["/users", "/device-groups"],
-        },
-    ];
-
     const getActiveItem = () => {
         if (settingsNavigationOpen) {
             return "/settings";
@@ -92,7 +65,7 @@ const SideNavigation = props => {
             return props.history.location.pathname;
         }
 
-        const activeItem = items
+        const activeItem = props.items
             .filter(item => item.itemId !== "/")
             .find(
                 item =>
@@ -120,7 +93,7 @@ const SideNavigation = props => {
         <>
             <div className="primary-side-navigation">
                 <Navigation
-                    items={items}
+                    items={props.items}
                     activeItemId={getActiveItem()}
                     onChange={({ event, item }) => {
                         event.preventDefault();

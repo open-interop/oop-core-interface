@@ -48,6 +48,33 @@ class App extends Component {
         OopCore.on("loggedout", () => setNoUser());
     }
 
+    navigationItems = [
+        {
+            title: "Home",
+            itemId: "/",
+        },
+        {
+            title: "Devices",
+            itemId: "/devices",
+        },
+        {
+            title: "Settings",
+            itemId: "/settings",
+            subItems: ["/users", "/device-groups"],
+        },
+    ];
+
+    settingsNavigationItems = [
+        {
+            title: "Users",
+            itemId: "/users",
+        },
+        {
+            title: "Device Groups",
+            itemId: "/device-groups",
+        },
+    ];
+
     HeaderWithRouter = withRouter(Header);
 
     SideNavigationWithRouter = withRouter(SideNavigation);
@@ -98,7 +125,10 @@ class App extends Component {
                         </>
                     )}
                     <div className="below-header">
-                        <this.SideNavigationWithRouter />
+                        <this.SideNavigationWithRouter
+                            items={this.navigationItems}
+                            subItems={this.settingsNavigationItems}
+                        />
                         <Route
                             path="/"
                             exact
