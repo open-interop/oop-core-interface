@@ -226,6 +226,7 @@ class OopCore extends EventEmitter {
             port,
             protocol,
             requestMethod,
+            // eslint-disable-next-line no-unused-vars
             ...rest
         } = data.template;
         result.options = { headers, host, path, port, protocol, requestMethod };
