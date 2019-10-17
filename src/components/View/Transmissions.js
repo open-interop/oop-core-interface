@@ -52,6 +52,7 @@ const Transmissions = props => {
             return transmissions;
         });
     };
+
     return (
         <div className="content-wrapper">
             <h2>
@@ -97,7 +98,7 @@ const Transmissions = props => {
                                     hasFilter: true,
                                 },
                                 {
-                                    id: "device_tempr_id",
+                                    id: "deviceTemprId",
                                     name: "Device Tempr Id",
                                     type: "text",
                                     hasFilter: false,

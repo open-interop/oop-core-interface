@@ -24,6 +24,58 @@ class OopCore extends EventEmitter {
         });
     }
 
+    toCamelCase(s) {
+        return s.replace(/([-_][a-z])/gi, $1 => {
+            return $1.toUpperCase().replace("_", "");
+        });
+    }
+
+    toSnakeCase(s) {
+        return s.replace(/([A-Z])/g, $1 => {
+            return "_" + $1.toLowerCase();
+        });
+    }
+
+    isObject(o) {
+        return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
+    }
+
+    snakeToCamel(o) {
+        if (this.isObject(o)) {
+            const n = {};
+
+            Object.keys(o).forEach(k => {
+                n[this.toCamelCase(k)] = this.snakeToCamel(o[k]);
+            });
+
+            return n;
+        } else if (Array.isArray(o)) {
+            return o.map(i => {
+                return this.snakeToCamel(i);
+            });
+        }
+
+        return o;
+    }
+
+    camelToSnake(o) {
+        if (this.isObject(o)) {
+            const n = {};
+
+            Object.keys(o).forEach(k => {
+                n[this.toSnakeCase(k)] = this.camelToSnake(o[k]);
+            });
+
+            return n;
+        } else if (Array.isArray(o)) {
+            return o.map(i => {
+                return this.camelToSnake(i);
+            });
+        }
+
+        return o;
+    }
+
     makeRequest(
         endpoint,
         requestType = RequestType.GET,
@@ -61,7 +113,9 @@ class OopCore extends EventEmitter {
                     throw new Error(response.statusText);
                 }
 
-                return response.json();
+                return response.json().then(res => {
+                    return this.snakeToCamel(res);
+                });
             })
             .catch(error => {
                 throw error;
@@ -102,9 +156,13 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/devices/${deviceId}`);
     }
 
-    updateDevice(device) {
-        const data = { device: device };
-        return this.makeRequest(`/devices/${device.id}`, RequestType.PUT, data);
+    updateDevice(data) {
+        const payload = { device: this.camelToSnake(data) };
+        return this.makeRequest(
+            `/devices/${data.id}`,
+            RequestType.PUT,
+            payload,
+        );
     }
 
     mapQueryParameter(key) {
@@ -185,7 +243,7 @@ class OopCore extends EventEmitter {
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/temprs/${temprId}`,
             RequestType.PUT,
-            data,
+            this.camelToSnake(data),
         );
     }
 
@@ -193,7 +251,7 @@ class OopCore extends EventEmitter {
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/temprs`,
             RequestType.POST,
-            data,
+            this.camelToSnake(data),
         );
     }
 
@@ -226,16 +284,16 @@ class OopCore extends EventEmitter {
             port,
             protocol,
             requestMethod,
+            // eslint-disable-next-line no-unused-vars
             ...rest
         } = data.template;
         result.options = { headers, host, path, port, protocol, requestMethod };
-        console.log(result.options);
         return result;
     };
 
     updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
         const payload = {
-            device_tempr: this.createDeviceTemprObject(data),
+            device_tempr: this.createDeviceTemprObject(this.camelToSnake(data)),
         };
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
@@ -246,7 +304,7 @@ class OopCore extends EventEmitter {
 
     createDeviceTempr(deviceGroupId, data) {
         const payload = {
-            device_tempr: this.createDeviceTemprObject(data),
+            device_tempr: this.createDeviceTemprObject(this.camelToSnake(data)),
         };
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/device_temprs`,

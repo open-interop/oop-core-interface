@@ -55,7 +55,7 @@ const Device = props => {
 
     const canMoveDevice = () => {
         setMoveGroupError("");
-        return OopCore.getDeviceTemprs(updatedDevice.device_group_id, {
+        return OopCore.getDeviceTemprs(updatedDevice.deviceGroupId, {
             deviceId: updatedDevice.id,
         }).then(response => {
             if (response.data.length) {
@@ -90,10 +90,10 @@ const Device = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event =>
-                                    setValue("site_id", event.value[0].id)
+                                    setValue("siteId", event.value[0].id)
                                 }
                                 value={updatedDevice.sites.find(
-                                    item => item.id === updatedDevice.site_id,
+                                    item => item.id === updatedDevice.siteId,
                                 )}
                             />
                         </FormControl>
@@ -111,7 +111,7 @@ const Device = props => {
                                     canMoveDevice().then(result => {
                                         if (result) {
                                             setValue(
-                                                "device_group_id",
+                                                "deviceGroupId",
                                                 event.value[0].id,
                                             );
                                         } else {
@@ -123,8 +123,7 @@ const Device = props => {
                                 }}
                                 value={updatedDevice.sites.find(
                                     item =>
-                                        item.id ===
-                                        updatedDevice.device_group_id,
+                                        item.id === updatedDevice.deviceGroupId,
                                 )}
                             />
                         </FormControl>
@@ -147,10 +146,10 @@ const Device = props => {
                                 valueKey="id"
                                 searchable={true}
                                 onChange={event =>
-                                    setValue("time_zone", event.value[0].id)
+                                    setValue("timeZone", event.value[0].id)
                                 }
                                 value={updatedDevice.timezones.find(
-                                    item => item.id === updatedDevice.time_zone,
+                                    item => item.id === updatedDevice.timeZone,
                                 )}
                             />
                         </FormControl>
@@ -190,7 +189,7 @@ const Device = props => {
                         >
                             <Button
                                 $as={Link}
-                                to={`/device-groups/${updatedDevice.device_group_id}/device-temprs/?deviceId=${updatedDevice.id}`}
+                                to={`/device-groups/${updatedDevice.deviceGroupId}/device-temprs/?deviceId=${updatedDevice.id}`}
                             >
                                 Device Temprs
                             </Button>
