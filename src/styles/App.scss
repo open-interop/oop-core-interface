@@ -4,53 +4,65 @@ $color-white: #fff;
 
 body {
     margin: 0;
-    overflow: hidden;
     height: 100vh;
 }
 
 div {
     &[id="root"] {
-        display: flex;
-        flex-direction: row;
+        .header {
+            height: 4rem;
+            width: 100%;
 
-        .left-side {
-            width: 7rem;
-            border-right: 1px solid $color-grey;
-
-            .side-navigation {
-                img {
-                    width: 7rem;
-                }
+            img {
+                width: 7rem;
             }
 
-            + .right-side {
-                height: 100vh;
+            nav {
                 display: flex;
-                flex-direction: column;
-                flex-grow: 1;
+                justify-content: space-between;
+                flex-direction: row;
 
-                .header {
-                    height: 4rem;
-
-                    nav {
-                        &[data-baseweb="header-navigation"] {
-                            border: 0;
-                            justify-content: flex-end;
-                            padding-right: 12px;
-                        }
-                    }
+                &[data-baseweb="header-navigation"] {
+                    border: 0;
+                    padding-right: 12px;
                 }
+            }
+        }
 
-                .content {
-                    padding: 2rem;
-                    overflow: auto;
-                    flex-grow: 1;
-                    background-color: $color-grey;
+        .below-header {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
 
-                    .content-wrapper {
-                        background-color: $color-white;
-                        padding: 1rem;
-                    }
+            .primary-side-navigation {
+                z-index: 200;
+                background-color: $color-white;
+                width: 7rem;
+                border-right: 1px solid $color-grey;
+                height: calc(100vh - 4rem);
+            }
+
+            .secondary-side-navigation-closed {
+                margin-left: -12em;
+                flex: 0 0 12em;
+                transition: margin 1s ease;
+                z-index: 0;
+                height: 100%;
+            }
+            .secondary-side-navigation-open {
+                flex: 0 0 12em;
+                transition: margin 1s ease;
+                height: 100%;
+            }
+
+            .content {
+                flex: 1;
+                padding: 2rem;
+                background-color: $color-grey;
+
+                .content-wrapper {
+                    background-color: $color-white;
+                    padding: 1rem;
                 }
             }
         }
@@ -76,10 +88,6 @@ div {
     justify-content: center;
     height: 100vh;
     width: 100%;
-
-    + .right-side {
-        display: none;
-    }
 
     .login-form {
         width: 25%;

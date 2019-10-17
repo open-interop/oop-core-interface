@@ -8,11 +8,17 @@ import {
     StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
 import { StyledLink } from "baseui/link";
+import logo from "../../resources/open_interop_logo_wide.png";
 import OopCore from "../../OopCore";
 
-const Header = props => (
+const Header = () => (
     <div className="header">
         <HeaderNavigation>
+            <NavigationList $align={ALIGN.left}>
+                <NavigationItem>
+                    <img src={logo} alt="logo" />
+                </NavigationItem>
+            </NavigationList>
             <NavigationList $align={ALIGN.right}>
                 <NavigationItem>
                     <StyledLink href="#">Dan User</StyledLink>

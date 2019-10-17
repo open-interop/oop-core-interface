@@ -230,7 +230,6 @@ class OopCore extends EventEmitter {
             ...rest
         } = data.template;
         result.options = { headers, host, path, port, protocol, requestMethod };
-        console.log(result.options);
         return result;
     };
 
