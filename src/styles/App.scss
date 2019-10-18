@@ -9,6 +9,8 @@ body {
 
 div {
     &[id="root"] {
+        position: relative;
+
         .header {
             height: 4rem;
             width: 100%;
@@ -32,27 +34,71 @@ div {
         .below-header {
             display: flex;
             flex-direction: row;
-            flex: 1;
 
-            .primary-side-navigation {
-                z-index: 200;
-                background-color: $color-white;
-                width: 7rem;
-                border-right: 1px solid $color-grey;
+            .side-navigation {
                 height: calc(100vh - 4rem);
-            }
+                position: relative;
+                width: 5rem;
+                z-index: 100;
 
-            .secondary-side-navigation-closed {
-                margin-left: -12em;
-                flex: 0 0 12em;
-                transition: margin 1s ease;
-                z-index: 0;
-                height: 100%;
-            }
-            .secondary-side-navigation-open {
-                flex: 0 0 12em;
-                transition: margin 1s ease;
-                height: 100%;
+                .filler {
+                    background: white;
+                    height: 100%;
+                }
+
+                .navigation-item {
+                    padding: 1rem;
+                    background: white;
+
+                    &.active {
+                        color: blue;
+                        a {
+                            color: blue;
+                        }
+                    }
+
+                    a {
+                        text-decoration: none;
+                        color: black;
+                    }
+
+                    span {
+                        cursor: pointer;
+                    }
+                }
+
+                .nested-navigation {
+                    width: 9rem;
+                    background-color: white;
+                    height: calc(100vh - 4rem);
+                    position: absolute;
+                    top: 0;
+                    left: -4rem;
+                    transition: 1s;
+                    z-index: -1;
+
+                    .navigation-item {
+                        padding: 1rem;
+                        position: relative;
+                        z-index: -1;
+
+                        &.active {
+                            a {
+                                color: blue;
+                            }
+                        }
+                    }
+
+                    &.open {
+                        background-color: white;
+                        position: absolute;
+                        top: 0;
+                        left: 5rem;
+                        height: calc(100vh - 4rem);
+                        transition: 1s;
+                        z-index: -1;
+                    }
+                }
             }
 
             .content {
