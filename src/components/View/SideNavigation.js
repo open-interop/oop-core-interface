@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavigationGroup, NavigationItem } from "../Global";
 
 const SideNavigation = props => {
-    const [settingsNavOpen, setSettingsNavOpen] = useState(false);
-
     const pathMatch = path => {
         return props.history.location.pathname === path;
     };
@@ -17,36 +15,39 @@ const SideNavigation = props => {
             <NavigationItem
                 path="/"
                 pathName="Home"
-                isActive={!settingsNavOpen && pathMatch("/")}
+                isActive={pathMatch("/")}
             />
             <NavigationItem
                 path="/devices"
                 pathName="Devices"
-                isActive={!settingsNavOpen && pathIncludes("/devices")}
+                isActive={pathIncludes("/devices")}
             />
 
             <NavigationGroup
                 isActive={
-                    settingsNavOpen ||
-                    pathIncludes("/users") ||
-                    pathIncludes("/device-groups")
+                    pathIncludes("/users") || pathIncludes("/device-groups")
                 }
-                isOpen={settingsNavOpen}
-                setOpen={isOpen => setSettingsNavOpen(isOpen)}
                 path="/settings"
                 pathName="Settings"
-            >
-                <NavigationItem
-                    path="/users"
-                    pathName="Users"
-                    isActive={pathIncludes("/users")}
-                />
-                <NavigationItem
-                    path="/device-groups"
-                    pathName="Device Groups"
-                    isActive={pathIncludes("/device-groups")}
-                />
-            </NavigationGroup>
+                render={callback => {
+                    return (
+                        <>
+                            <NavigationItem
+                                path="/users"
+                                pathName="Users"
+                                isActive={pathIncludes("/users")}
+                                onClick={callback}
+                            />
+                            <NavigationItem
+                                path="/device-groups"
+                                pathName="Device Groups"
+                                isActive={pathIncludes("/device-groups")}
+                                onClick={callback}
+                            />
+                        </>
+                    );
+                }}
+            />
             <div className="filler" />
         </div>
     );

@@ -92,11 +92,7 @@ class App extends Component {
                             this.getComponent(hasUser, Login, props)
                         }
                     />
-                    {hasUser && (
-                        <>
-                            <this.HeaderWithRouter />
-                        </>
-                    )}
+                    {hasUser && <this.HeaderWithRouter />}
                     <div className="below-header">
                         <this.SideNavigationWithRouter />
                         <Route

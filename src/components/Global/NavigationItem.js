@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const NavigationItem = props => {
-    if (props.onClick) {
+    if (props.button) {
         return (
             <div
                 className={`navigation-item${props.isActive ? " active" : ""}`}
@@ -16,7 +16,9 @@ const NavigationItem = props => {
             <div
                 className={`navigation-item${props.isActive ? " active" : ""}`}
             >
-                <Link to={props.path}>{props.pathName}</Link>
+                <Link onClick={props.onClick} to={props.path}>
+                    {props.pathName}
+                </Link>
             </div>
         );
     }
