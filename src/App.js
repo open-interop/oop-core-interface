@@ -12,6 +12,7 @@ import {
     Header,
     Home,
     Login,
+    Profile,
     SideNavigation,
     Tempr,
     Temprs,
@@ -93,7 +94,9 @@ class App extends Component {
                             this.getComponent(hasUser, Login, props)
                         }
                     />
-                    {hasUser && <this.HeaderWithRouter />}
+                    {hasUser && (
+                        <this.HeaderWithRouter user={this.state.user} />
+                    )}
                     <div className="below-header">
                         <this.SideNavigationWithRouter />
                         <Route
@@ -183,6 +186,16 @@ class App extends Component {
                             render={props =>
                                 this.getComponent(!hasUser, User, props)
                             }
+                            path="/profile"
+                            exact
+                            render={props => {
+                                const user = this.state.user;
+
+                                return this.getComponent(!hasUser, Profile, {
+                                    ...props,
+                                    user,
+                                });
+                            }}
                         />
                     </div>
                 </QueryParamProvider>
