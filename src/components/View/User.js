@@ -90,24 +90,6 @@ const User = props => {
                 }}
                 renderData={() => (
                     <>
-                        {/* <FormControl
-                            label="Tempr"
-                            key={"form-control-group-tempr"}
-                        >
-                            <Select
-                                options={temprs}
-                                labelKey="name"
-                                valueKey="id"
-                                searchable={false}
-                                onChange={event => {
-                                    setValue("temprId", event.value[0].id);
-                                }}
-                                value={temprs.find(
-                                    item =>
-                                        item.id === updatedDeviceTempr.temprId,
-                                )}
-                            /> */}
-                        {/* </FormControl> */}
                         <FormControl
                             label="Email"
                             key={"form-control-group-email"}
