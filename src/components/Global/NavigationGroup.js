@@ -5,7 +5,7 @@ const useOutsideClick = (ref, exception, callback) => {
     const handleClick = e => {
         if (
             ref.current &&
-            !ref.current.contains(e.target) &&
+            ref.current !== e.target &&
             exception.current !== e.target
         ) {
             callback();
@@ -47,7 +47,7 @@ const NavigationGroup = props => {
                 ref={navRef}
                 className={`nested-navigation${isOpen ? " open" : ""}`}
             >
-                {props.render(() => setOpen(false))}
+                {props.children}
             </div>
         </>
     );

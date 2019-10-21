@@ -29,25 +29,18 @@ const SideNavigation = props => {
                 }
                 path="/settings"
                 pathName="Settings"
-                render={callback => {
-                    return (
-                        <>
-                            <NavigationItem
-                                path="/users"
-                                pathName="Users"
-                                isActive={pathIncludes("/users")}
-                                onClick={callback}
-                            />
-                            <NavigationItem
-                                path="/device-groups"
-                                pathName="Device Groups"
-                                isActive={pathIncludes("/device-groups")}
-                                onClick={callback}
-                            />
-                        </>
-                    );
-                }}
-            />
+            >
+                <NavigationItem
+                    path="/users"
+                    pathName="Users"
+                    isActive={pathIncludes("/users")}
+                />
+                <NavigationItem
+                    path="/device-groups"
+                    pathName="Device Groups"
+                    isActive={pathIncludes("/device-groups")}
+                />
+            </NavigationGroup>
             <div className="filler" />
         </div>
     );
