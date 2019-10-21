@@ -233,6 +233,15 @@ class OopCore extends EventEmitter {
         return result;
     };
 
+    createUserObject = data => {
+        const result = {};
+        result.email = data.email;
+        result.password = data.newPassword;
+        result.confirm_password = data.confirmPassword;
+        result.time_zone = data.time_zone;
+        return result;
+    };
+
     updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
         const payload = {
             device_tempr: this.createDeviceTemprObject(data),
@@ -257,6 +266,24 @@ class OopCore extends EventEmitter {
 
     getUsers() {
         return this.makeRequest("/users");
+    }
+
+    getUser(userId) {
+        return this.makeRequest(`/users/${userId}`);
+    }
+
+    updateUser(userId, data) {
+        const payload = {
+            user: this.createUserObject(data),
+        };
+        return this.makeRequest(`/users/${userId}`, RequestType.PUT, payload);
+    }
+
+    createUser(data) {
+        const payload = {
+            user: this.createUserObject(data),
+        };
+        return this.makeRequest(`/users`, RequestType.POST, payload);
     }
 }
 
