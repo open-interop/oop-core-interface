@@ -17,40 +17,43 @@ const Devices = () => {
                 })
             }
             renderData={() => (
-                <Table
-                    data={devices.data}
-                    mapFunction={(columnName, content) => {
-                        if (columnName === "action") {
-                            return (
-                                <>
-                                    <Link to={`/devices/${content}`}>
-                                        <Show />
-                                    </Link>
-                                    <Link
-                                        to={`/devices/${content}/transmissions`}
-                                    >
-                                        <Menu />
-                                    </Link>
-                                </>
-                            );
-                        } else {
-                            return content;
-                        }
-                    }}
-                    columns={[
-                        { id: "id", name: "ID" },
-                        { id: "name", name: "Name" },
-                        { id: "deviceGroupId", name: "Group" },
-                        { id: "siteId", name: "Site" },
-                        { id: "action", name: "Action" },
-                    ]}
-                    columnContent={columnName => {
-                        if (columnName === "action") {
-                            return "id";
-                        }
-                        return columnName;
-                    }}
-                />
+                <div className="content-wrapper">
+                    <h2>Devices</h2>
+                    <Table
+                        data={devices.data}
+                        mapFunction={(columnName, content) => {
+                            if (columnName === "action") {
+                                return (
+                                    <>
+                                        <Link to={`/devices/${content}`}>
+                                            <Show />
+                                        </Link>
+                                        <Link
+                                            to={`/devices/${content}/transmissions`}
+                                        >
+                                            <Menu />
+                                        </Link>
+                                    </>
+                                );
+                            } else {
+                                return content;
+                            }
+                        }}
+                        columns={[
+                            { id: "id", name: "ID" },
+                            { id: "name", name: "Name" },
+                            { id: "deviceGroupId", name: "Group" },
+                            { id: "siteId", name: "Site" },
+                            { id: "action", name: "Action" },
+                        ]}
+                        columnContent={columnName => {
+                            if (columnName === "action") {
+                                return "id";
+                            }
+                            return columnName;
+                        }}
+                    />
+                </div>
             )}
         />
     );

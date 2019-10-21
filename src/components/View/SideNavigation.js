@@ -1,48 +1,47 @@
-import * as React from "react";
-import { Navigation } from "baseui/side-navigation";
-import logo from "../../resources/open_interop_logo_square.png";
+import React from "react";
+import { NavigationGroup, NavigationItem } from "../Global";
 
 const SideNavigation = props => {
-    const items = [
-        {
-            title: "Home",
-            itemId: "/",
-        },
-        {
-            title: "Devices",
-            itemId: "/devices",
-        },
-        {
-            title: "Settings",
-            itemId: "/device-groups",
-        },
-    ];
+    const pathMatch = path => {
+        return props.history.location.pathname === path;
+    };
 
-    const getActiveItem = pathName => {
-        if (pathName === "/") {
-            return pathName;
-        }
-
-        const activeItem = items
-            .filter(item => item.itemId !== "/")
-            .find(item =>
-                props.history.location.pathname.includes(item.itemId),
-            );
-
-        return activeItem ? activeItem.itemId : "/";
+    const pathIncludes = path => {
+        return props.history.location.pathname.includes(path);
     };
 
     return (
         <div className="side-navigation">
-            <img src={logo} alt="logo" />
-            <Navigation
-                items={items}
-                activeItemId={getActiveItem(props.history.location.pathname)}
-                onChange={({ event, item }) => {
-                    event.preventDefault();
-                    props.history.push(item.itemId);
-                }}
+            <NavigationItem
+                path="/"
+                pathName="Home"
+                isActive={pathMatch("/")}
             />
+            <NavigationItem
+                path="/devices"
+                pathName="Devices"
+                isActive={pathIncludes("/devices")}
+            />
+
+            <NavigationGroup
+                isActive={
+                    pathIncludes("/users") || pathIncludes("/device-groups")
+                }
+                path="/settings"
+                pathName="Settings"
+            >
+                <NavigationItem
+                    path="/users"
+                    pathName="Users"
+                    isActive={pathIncludes("/users")}
+                />
+                <NavigationItem
+                    path="/device-groups"
+                    pathName="Device Groups"
+                    isActive={pathIncludes("/device-groups")}
+                />
+            </NavigationGroup>
+            <div className="filler" />
         </div>
     );
 };

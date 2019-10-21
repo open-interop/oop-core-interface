@@ -15,6 +15,7 @@ import {
     SideNavigation,
     Tempr,
     Temprs,
+    Users,
 } from "./components/View";
 import { Spinner } from "./components/Universal";
 import OopCore from "./OopCore";
@@ -91,15 +92,9 @@ class App extends Component {
                             this.getComponent(hasUser, Login, props)
                         }
                     />
-
-                    {hasUser && (
-                        <div className="left-side">
-                            <this.SideNavigationWithRouter />
-                        </div>
-                    )}
-
-                    <div className="right-side">
-                        {hasUser && <this.HeaderWithRouter />}
+                    {hasUser && <this.HeaderWithRouter />}
+                    <div className="below-header">
+                        <this.SideNavigationWithRouter />
                         <Route
                             path="/"
                             exact
@@ -172,6 +167,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, DeviceTempr, props)
+                            }
+                        />
+                        <Route
+                            path="/users"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Users, props)
                             }
                         />
                     </div>
