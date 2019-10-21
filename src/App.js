@@ -15,6 +15,7 @@ import {
     SideNavigation,
     Tempr,
     Temprs,
+    User,
     Users,
 } from "./components/View";
 import { Spinner } from "./components/Universal";
@@ -174,6 +175,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Users, props)
+                            }
+                        />
+                        <Route
+                            path="/users/:userId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, User, props)
                             }
                         />
                     </div>

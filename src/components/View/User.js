@@ -4,10 +4,9 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider, Error } from "../Universal";
-import { HttpTemprTemplate } from "../Global";
+import { Timezones } from "./Timezones";
 import OopCore from "../../OopCore";
 
 const User = props => {
@@ -15,11 +14,19 @@ const User = props => {
     const [updatedUser, setUpdatedUser] = useState({});
     const blankUser = props.match.params.userId === "new";
     const [error, setError] = useState("");
+    const timezones = Timezones.map(timezone => {
+        return {
+            id: timezone,
+            name: timezone,
+        };
+    });
 
     const getUser = () => {
         return blankUser
             ? Promise.resolve({
                   id: "",
+                  email: "",
+                  time_zone: "",
               })
             : OopCore.getUser(props.match.params.userId);
     };
@@ -46,11 +53,37 @@ const User = props => {
         );
     };
 
+    const passwordMismatch =
+        updatedUser.confirmPassword &&
+        updatedUser.newPassword !== updatedUser.confirmPassword &&
+        "The passwords do not match";
+
+    const passwordComplete = () => {
+        if (blankUser) {
+            return (
+                updatedUser.newPassword &&
+                updatedUser.confirmPassword &&
+                !passwordMismatch
+            );
+        } else {
+            return (
+                updatedUser.currentPassword &&
+                updatedUser.newPassword &&
+                updatedUser.confirmPassword &&
+                !passwordMismatch
+            );
+        }
+    };
+
     const saveButtonDisabled = () => {
         if (blankUser) {
-            return false;
+            return (
+                !updatedUser.email ||
+                !updatedUser.time_zone ||
+                !passwordComplete()
+            );
         } else {
-            return identical(user, updatedUser);
+            return identical(user, updatedUser) && !passwordComplete();
         }
     };
 
@@ -94,9 +127,91 @@ const User = props => {
                             <Input
                                 id={"input-email"}
                                 value={updatedUser.email || ""}
-                                disabled
+                                onChange={event =>
+                                    setValue("email", event.currentTarget.value)
+                                }
                             />
                         </FormControl>
+                        {!blankUser && (
+                            <FormControl
+                                label="Current Password"
+                                key={"form-control-group-current-password"}
+                            >
+                                <Input
+                                    type="password"
+                                    id={"input-current-password"}
+                                    value={updatedUser.currentPassword || ""}
+                                    onChange={event =>
+                                        setValue(
+                                            "currentPassword",
+                                            event.currentTarget.value,
+                                        )
+                                    }
+                                />
+                            </FormControl>
+                        )}
+                        <FormControl
+                            label={blankUser ? "Password" : "New password"}
+                            key={"form-control-group-new-password"}
+                            error={
+                                updatedUser.newPassword &&
+                                updatedUser.newPassword.length < 6 &&
+                                "Minimum length is 6 characters"
+                            }
+                        >
+                            <Input
+                                type="password"
+                                id={"input-new-password"}
+                                value={updatedUser.newPassword || ""}
+                                onChange={event =>
+                                    setValue(
+                                        "newPassword",
+                                        event.currentTarget.value,
+                                    )
+                                }
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Confirm password"
+                            key={"form-control-group-confirm-password"}
+                            error={
+                                passwordMismatch ||
+                                (updatedUser.confirmPassword &&
+                                    updatedUser.confirmPassword.length < 6 &&
+                                    "Minimum length is 6 characters")
+                            }
+                        >
+                            <Input
+                                type="password"
+                                id={"input-confirm-password"}
+                                value={updatedUser.confirmPassword || ""}
+                                onChange={event =>
+                                    setValue(
+                                        "confirmPassword",
+                                        event.currentTarget.value,
+                                    )
+                                }
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Timezone"
+                            key={`form-control-timezone`}
+                        >
+                            <Select
+                                id="select-id"
+                                options={timezones}
+                                labelKey="name"
+                                valueKey="id"
+                                searchable={true}
+                                onChange={event =>
+                                    setValue("time_zone", event.value[0].id)
+                                }
+                                value={timezones.find(
+                                    item => item.id === updatedUser.time_zone,
+                                )}
+                            />
+                        </FormControl>
+
                         <Button
                             onClick={() => {
                                 setError("");

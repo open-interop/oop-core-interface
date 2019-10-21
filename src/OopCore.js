@@ -265,14 +265,14 @@ class OopCore extends EventEmitter {
 
     updateUser(userId, data) {
         const payload = {
-            user: this.createDeviceTemprObject(data),
+            user: data,
         };
         return this.makeRequest(`/users/${userId}`, RequestType.PUT, payload);
     }
 
     createUser(data) {
         const payload = {
-            user: this.createDeviceTemprObject(data),
+            user: data,
         };
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
