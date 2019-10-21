@@ -58,32 +58,20 @@ const User = props => {
         updatedUser.newPassword !== updatedUser.confirmPassword &&
         "The passwords do not match";
 
-    const passwordComplete = () => {
-        if (blankUser) {
-            return (
-                updatedUser.newPassword &&
-                updatedUser.confirmPassword &&
-                !passwordMismatch
-            );
-        } else {
-            return (
-                updatedUser.currentPassword &&
-                updatedUser.newPassword &&
-                updatedUser.confirmPassword &&
-                !passwordMismatch
-            );
-        }
-    };
+    const passwordComplete =
+        updatedUser.newPassword &&
+        updatedUser.confirmPassword &&
+        !passwordMismatch;
 
     const saveButtonDisabled = () => {
         if (blankUser) {
             return (
                 !updatedUser.email ||
                 !updatedUser.time_zone ||
-                !passwordComplete()
+                !passwordComplete
             );
         } else {
-            return identical(user, updatedUser) && !passwordComplete();
+            return identical(user, updatedUser) && !passwordComplete;
         }
     };
 
@@ -132,24 +120,6 @@ const User = props => {
                                 }
                             />
                         </FormControl>
-                        {!blankUser && (
-                            <FormControl
-                                label="Current Password"
-                                key={"form-control-group-current-password"}
-                            >
-                                <Input
-                                    type="password"
-                                    id={"input-current-password"}
-                                    value={updatedUser.currentPassword || ""}
-                                    onChange={event =>
-                                        setValue(
-                                            "currentPassword",
-                                            event.currentTarget.value,
-                                        )
-                                    }
-                                />
-                            </FormControl>
-                        )}
                         <FormControl
                             label={blankUser ? "Password" : "New password"}
                             key={"form-control-group-new-password"}
