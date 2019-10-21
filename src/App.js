@@ -75,10 +75,10 @@ class App extends Component {
                 <Component {...props} />
             </div>
         ) : (
-            <div className="content">
-                <Component {...props} />
-            </div>
-        );
+                    <div className="content">
+                        <Component {...props} />
+                    </div>
+                );
     };
 
     renderRoutes = () => {
@@ -186,6 +186,8 @@ class App extends Component {
                             render={props =>
                                 this.getComponent(!hasUser, User, props)
                             }
+                        />
+                        <Route
                             path="/profile"
                             exact
                             render={props => {
