@@ -161,6 +161,19 @@ class OopCore extends EventEmitter {
         return this.makeRequest("/sites");
     }
 
+    getSite(siteId) {
+        return this.makeRequest(`/sites/${siteId}`);
+    }
+
+    createSite(data) {
+        return this.makeRequest(`/sites`, RequestType.POST, data);
+    }
+
+    updateSite(siteId, data) {
+        const payload = { site: data };
+        return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
+    }
+
     getDeviceGroups() {
         return this.makeRequest("/device_groups");
     }

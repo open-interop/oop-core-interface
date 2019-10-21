@@ -14,6 +14,7 @@ import {
     Login,
     Profile,
     SideNavigation,
+    Site,
     Sites,
     Tempr,
     Temprs,
@@ -205,6 +206,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Sites, props)
+                            }
+                        />
+                        <Route
+                            path="/sites/:siteId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Site, props)
                             }
                         />
                     </div>
