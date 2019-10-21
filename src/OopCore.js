@@ -254,6 +254,10 @@ class OopCore extends EventEmitter {
             payload,
         );
     }
+
+    getUsers() {
+        return this.makeRequest("/users");
+    }
 }
 
 export default new OopCore();
