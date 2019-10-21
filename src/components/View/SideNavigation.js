@@ -36,6 +36,11 @@ const SideNavigation = props => {
                     isActive={pathIncludes("/users")}
                 />
                 <NavigationItem
+                    path="/sites"
+                    pathName="Sites"
+                    isActive={pathIncludes("/sites")}
+                />
+                <NavigationItem
                     path="/device-groups"
                     pathName="Device Groups"
                     isActive={pathIncludes("/device-groups")}

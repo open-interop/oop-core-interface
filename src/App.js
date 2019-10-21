@@ -14,6 +14,7 @@ import {
     Login,
     Profile,
     SideNavigation,
+    Sites,
     Tempr,
     Temprs,
     User,
@@ -75,10 +76,10 @@ class App extends Component {
                 <Component {...props} />
             </div>
         ) : (
-                    <div className="content">
-                        <Component {...props} />
-                    </div>
-                );
+            <div className="content">
+                <Component {...props} />
+            </div>
+        );
     };
 
     renderRoutes = () => {
@@ -198,6 +199,13 @@ class App extends Component {
                                     user,
                                 });
                             }}
+                        />
+                        <Route
+                            path="/sites"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Sites, props)
+                            }
                         />
                     </div>
                 </QueryParamProvider>
