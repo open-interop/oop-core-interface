@@ -11,4 +11,5 @@ export * from "./Login";
 export * from "./SideNavigation";
 export * from "./Tempr";
 export * from "./Temprs";
+export * from "./User";
 export * from "./Users";
