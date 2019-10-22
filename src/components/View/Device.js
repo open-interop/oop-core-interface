@@ -5,6 +5,9 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
+import ArrowLeft from "baseui/icon/arrow-left";
+import { Accordion, Panel } from "baseui/accordion";
+import { MultiInput } from "../Global";
 import { DataProvider, Error } from "../Universal";
 import OopCore from "../../OopCore";
 import { Timezones } from "./Timezones";
@@ -16,6 +19,24 @@ const Device = props => {
     const [stateGroups, setGroups] = useState([]);
     const [error, setError] = useState("");
     const [moveGroupError, setMoveGroupError] = useState("");
+    const blankDevice = props.match.params.deviceId === "new";
+
+    const getDevice = () => {
+        return blankDevice
+            ? Promise.resolve({
+                  active: false,
+                  authentication_headers: [],
+                  authentication_path: "",
+                  authentication_query: [],
+                  device_group_id: "",
+                  latitude: "",
+                  longitude: "",
+                  name: "",
+                  site_id: "",
+                  time_zone: "",
+              })
+            : OopCore.getDevice(props.match.params.deviceId);
+    };
 
     const getFormData = (deviceDetails, sites, groups) => {
         deviceDetails.sites = sites.data;
@@ -31,7 +52,7 @@ const Device = props => {
 
     const getData = () => {
         return Promise.all([
-            OopCore.getDevice(props.match.params.deviceId),
+            getDevice(),
             OopCore.getSites(),
             OopCore.getDeviceGroups(),
         ]).then(([deviceDetails, sites, groups]) => {
@@ -55,19 +76,33 @@ const Device = props => {
 
     const canMoveDevice = () => {
         setMoveGroupError("");
-        return OopCore.getDeviceTemprs(updatedDevice.device_group_id, {
-            deviceId: updatedDevice.id,
-        }).then(response => {
-            if (response.data.length) {
-                return false;
-            } else {
-                return true;
-            }
-        });
+        if (blankDevice) {
+            return Promise.resolve(true);
+        } else {
+            return OopCore.getDeviceTemprs(updatedDevice.device_group_id, {
+                deviceId: updatedDevice.id,
+            }).then(response => {
+                if (response.data.length) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        }
     };
+
+    const allDevicesPath = props.location.pathname.substr(
+        0,
+        props.location.pathname.lastIndexOf("/"),
+    );
+
+    console.log(device);
 
     return (
         <div className="content-wrapper">
+            <Button $as={Link} to={allDevicesPath}>
+                <ArrowLeft size={24} />
+            </Button>
             <DataProvider
                 getData={() => {
                     return getData().then(data => updateState(data));
@@ -184,6 +219,61 @@ const Device = props => {
                                 }
                             />
                         </FormControl>
+                        <Accordion>
+                            <Panel title="Authentication">
+                                <div className="content-wrapper">
+                                    <FormControl
+                                        label="Authentication path"
+                                        key={`form-control-authentication-path`}
+                                    >
+                                        <Input
+                                            id={`input-authentication-path`}
+                                            value={
+                                                updatedDevice.authentication_path
+                                            }
+                                            onChange={event =>
+                                                setValue(
+                                                    "authentication_path",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="Authentication headers"
+                                        key={`form-control-authentication-headers`}
+                                    >
+                                        <MultiInput
+                                            data={
+                                                updatedDevice.authentication_headers
+                                            }
+                                            updateData={data =>
+                                                setValue(
+                                                    "authentication_headers",
+                                                    data,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="Authentication query"
+                                        key={`form-control-authentication-query`}
+                                    >
+                                        <MultiInput
+                                            data={
+                                                updatedDevice.authentication_query
+                                            }
+                                            updateData={data =>
+                                                setValue(
+                                                    "authentication_query",
+                                                    data,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                </div>
+                            </Panel>
+                        </Accordion>
                         <FormControl
                             label="Device Temprs"
                             key={`form-control-device-temprs`}

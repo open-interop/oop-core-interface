@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Show from "baseui/icon/show";
 import Menu from "baseui/icon/menu";
+import { Button } from "baseui/button";
 import { DataProvider, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -18,7 +19,12 @@ const Devices = () => {
             }
             renderData={() => (
                 <div className="content-wrapper">
-                    <h2>Devices</h2>
+                    <div className="space-between">
+                        <h2>Devices</h2>
+                        <Button $as={Link} to={`/devices/new`}>
+                            New
+                        </Button>
+                    </div>
                     <Table
                         data={devices.data}
                         mapFunction={(columnName, content) => {
