@@ -32,10 +32,7 @@ const Site = props => {
                   city: "",
                   country: "",
                   description: "",
-                  external_uuids: {
-                      dhis2: "123123",
-                      cdp: 123132,
-                  },
+                  external_uuids: {},
                   latitude: "",
                   longitude: "",
                   name: "",
