@@ -251,3 +251,15 @@ div {
 .mb {
     margin-bottom: 10px;
 }
+
+ul {
+    &[data-baseweb="accordion"] {
+        li {
+            :first-child {
+                &:hover {
+                    color: initial;
+                }
+            }
+        }
+    }
+}

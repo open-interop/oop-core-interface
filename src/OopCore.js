@@ -157,8 +157,14 @@ class OopCore extends EventEmitter {
         );
     }
 
-    getSites() {
-        return this.makeRequest("/sites");
+    getSites(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/sites`;
+        if (parameters) {
+            path += "/?" + parameters;
+        }
+
+        return this.makeRequest(path);
     }
 
     getSite(siteId) {

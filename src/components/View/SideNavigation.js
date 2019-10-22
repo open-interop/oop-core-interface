@@ -25,7 +25,9 @@ const SideNavigation = props => {
 
             <NavigationGroup
                 isActive={
-                    pathIncludes("/users") || pathIncludes("/device-groups")
+                    pathIncludes("/users") ||
+                    pathIncludes("/sites") ||
+                    pathIncludes("/device-groups")
                 }
                 path="/settings"
                 pathName="Settings"

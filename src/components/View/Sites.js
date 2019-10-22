@@ -6,7 +6,7 @@ import Show from "baseui/icon/show";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
-const Sites = () => {
+const Sites = props => {
     const [sites, setSites] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
@@ -21,11 +21,12 @@ const Sites = () => {
             </div>
             <DataProvider
                 getData={() =>
-                    OopCore.getSites().then(response => {
+                    OopCore.getSites({ page, pageSize }).then(response => {
                         setSites(response);
                         return response;
                     })
                 }
+                renderKey={props.location.search}
                 renderData={() => (
                     <>
                         <Table

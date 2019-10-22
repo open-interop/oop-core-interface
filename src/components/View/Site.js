@@ -1,23 +1,49 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
+import { Select } from "baseui/select";
 import { FormControl } from "baseui/form-control";
+import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider, Error } from "../Universal";
+import { PairInput } from "../Global";
 import OopCore from "../../OopCore";
+import { Timezones } from "../../resources/Timezones";
 
 const Site = props => {
     const [site, setSite] = useState({});
     const [updatedSite, setUpdatedSite] = useState({});
+    const [sites, setSites] = useState([]);
     const blankSite = props.match.params.siteId === "new";
     const [error, setError] = useState("");
+    const timezones = Timezones.map(timezone => {
+        return {
+            id: timezone,
+            name: timezone,
+        };
+    });
 
     const getSite = () => {
         return blankSite
             ? Promise.resolve({
-                  id: "",
+                  account_id: "",
+                  address: "",
+                  city: "",
+                  country: "",
+                  description: "",
+                  external_uuids: {
+                      dhis2: "123123",
+                      cdp: 123132,
+                  },
+                  latitude: "",
+                  longitude: "",
                   name: "",
+                  region: "",
+                  site_id: "",
+                  state: "",
+                  time_zone: "",
+                  zip_code: "",
               })
             : OopCore.getSite(props.match.params.siteId);
     };
@@ -48,6 +74,27 @@ const Site = props => {
         return identical(site, updatedSite);
     };
 
+    const getData = () => {
+        return Promise.all([getSite(), OopCore.getSites()]).then(
+            ([site, sites]) => {
+                const filtered = sites.data.filter(
+                    existingSite => existingSite.id !== site.id,
+                );
+                setSites(filtered);
+                return site;
+            },
+        );
+    };
+
+    const accordionTitle = `${updatedSite.address || ""}, 
+                ${updatedSite.zip_code || ""}, 
+                ${updatedSite.city || ""}, 
+                ${updatedSite.region || ""}, 
+                ${updatedSite.state || ""}, 
+                ${updatedSite.country || ""}, 
+                ${updatedSite.latitude || ""}, 
+                ${updatedSite.longitude || ""}`;
+
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allSitesPath}>
@@ -56,10 +103,7 @@ const Site = props => {
             <h2>{blankSite ? "Create Site" : "Edit Site"}</h2>
             <DataProvider
                 getData={() => {
-                    return getSite().then(response => {
-                        setSite(response);
-                        setUpdatedSite(response);
-                    });
+                    return getData().then(response => refreshSite(response));
                 }}
                 renderData={() => (
                     <>
@@ -72,6 +116,197 @@ const Site = props => {
                                 value={updatedSite.name || ""}
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
+                                }
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Description"
+                            key={"form-control-group-description"}
+                        >
+                            <Input
+                                id={"input-description"}
+                                value={updatedSite.description || ""}
+                                onChange={event =>
+                                    setValue(
+                                        "description",
+                                        event.currentTarget.value,
+                                    )
+                                }
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Timezone"
+                            key={"form-control-group-time-zone"}
+                        >
+                            <Select
+                                options={timezones}
+                                labelKey="name"
+                                valueKey="id"
+                                searchable={false}
+                                onChange={event =>
+                                    setValue("time_zone", event.value[0].id)
+                                }
+                                value={timezones.find(
+                                    timezone =>
+                                        timezone.id === updatedSite.time_zone,
+                                )}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Parent site"
+                            key={"form-control-group-site-id"}
+                        >
+                            <Select
+                                options={sites}
+                                labelKey="name"
+                                valueKey="id"
+                                onChange={event => {
+                                    console.log(event);
+                                    setValue("site_id", event.value[0].id);
+                                }}
+                                value={
+                                    sites.find(
+                                        site => site.id === updatedSite.site_id,
+                                    ) || null
+                                }
+                            />
+                        </FormControl>
+
+                        <Accordion>
+                            <Panel title="Location">
+                                <div className="content-wrapper">
+                                    <FormControl
+                                        label="Address"
+                                        key={"form-control-group-address"}
+                                    >
+                                        <Input
+                                            id={"input-address"}
+                                            value={updatedSite.address || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "address",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+
+                                    <FormControl
+                                        label="Zip code"
+                                        key={"form-control-zip-code"}
+                                    >
+                                        <Input
+                                            id={"input-zip-code"}
+                                            value={updatedSite.zip_code || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "zip_code",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="City"
+                                        key={"form-control-group-city"}
+                                    >
+                                        <Input
+                                            id={"input-city"}
+                                            value={updatedSite.city || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "city",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="Region"
+                                        key={"form-control-group-region"}
+                                    >
+                                        <Input
+                                            id={"input-region"}
+                                            value={updatedSite.region || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "region",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="State"
+                                        key={"form-control-group-state"}
+                                    >
+                                        <Input
+                                            id={"input-state"}
+                                            value={updatedSite.state || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "state",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="Country"
+                                        key={"form-control-group-country"}
+                                    >
+                                        <Input
+                                            id={"input-country"}
+                                            value={updatedSite.country || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "country",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="Latitude"
+                                        key={"form-control-group-latitude"}
+                                    >
+                                        <Input
+                                            id={"input-latitude"}
+                                            value={updatedSite.latitude || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "latitude",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        label="Longitude"
+                                        key={"form-control-group-longitude"}
+                                    >
+                                        <Input
+                                            id={"input-longitude"}
+                                            value={updatedSite.longitude || ""}
+                                            onChange={event =>
+                                                setValue(
+                                                    "longitude",
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                        />
+                                    </FormControl>
+                                </div>
+                            </Panel>
+                        </Accordion>
+                        <FormControl
+                            label="External UUIDs"
+                            key={"form-control-group-external-uuids"}
+                        >
+                            <PairInput
+                                data={updatedSite.external_uuids}
+                                updateData={data =>
+                                    setValue("external_uuids", data)
                                 }
                             />
                         </FormControl>
