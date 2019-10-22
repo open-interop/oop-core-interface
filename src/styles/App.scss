@@ -36,6 +36,8 @@ div {
             flex-direction: row;
 
             .side-navigation {
+                display: flex;
+                flex-direction: column;
                 height: calc(100vh - 4rem);
                 position: relative;
                 width: 5rem;
@@ -43,7 +45,7 @@ div {
 
                 .filler {
                     background: white;
-                    height: 100%;
+                    flex-grow: 1;
                 }
 
                 .navigation-item {
@@ -68,24 +70,34 @@ div {
                 }
 
                 .nested-navigation {
-                    width: 9rem;
+                    overflow-y: auto;
+                    min-width: 10rem;
                     background-color: white;
-                    height: calc(100vh - 4rem);
+                    height: calc(100% - 4rem);
                     position: absolute;
                     top: 0;
-                    left: -4rem;
+                    left: -5rem;
                     transition: 1s;
                     z-index: -1;
 
                     .navigation-item {
+                        heigth: auto;
                         padding: 1rem;
                         position: relative;
                         z-index: -1;
+                        cursor: pointer;
 
                         &.active {
                             a {
                                 color: blue;
                             }
+                        }
+
+                        &.group-name {
+                            background-color: lightblue;
+                        }
+
+                        &.device-name {
                         }
                     }
 
@@ -97,6 +109,13 @@ div {
                         height: calc(100vh - 4rem);
                         transition: 1s;
                         z-index: -1;
+                    }
+
+                    .bottom {
+                        margin: 0.5rem;
+                        position: relative;
+                        right: 0;
+                        bottom: 0;
                     }
                 }
             }
