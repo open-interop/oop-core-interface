@@ -21,6 +21,10 @@ const DataProvider = props => {
     }, [props.renderKey]);
 
     if (error) {
+        if (props.dataFallback) {
+            return props.dataFallback;
+        }
+
         return <Error />;
     } else if (loaded) {
         try {

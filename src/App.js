@@ -75,10 +75,10 @@ class App extends Component {
                 <Component {...props} />
             </div>
         ) : (
-                    <div className="content">
-                        <Component {...props} />
-                    </div>
-                );
+            <div className="content">
+                <Component {...props} />
+            </div>
+        );
     };
 
     renderRoutes = () => {

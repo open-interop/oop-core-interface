@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { DataProvider } from "../Universal";
 import { NavigationGroup, NavigationItem } from "../Global";
 import OopCore from "../../OopCore";
 
@@ -14,8 +15,8 @@ const SideNavigation = props => {
         return props.history.location.pathname.includes(path);
     };
 
-    const set = (deviceGroups, devices) => {
-        const result = deviceGroups.map(deviceGroup => {
+    const createDevicesAccordion = (deviceGroups, devices) => {
+        return deviceGroups.map(deviceGroup => {
             return {
                 id: deviceGroup.id,
                 name: deviceGroup.name,
@@ -24,72 +25,80 @@ const SideNavigation = props => {
                 ),
             };
         });
-
-        return setDeviceGroups(result);
     };
 
-    useEffect(() => {
-        Promise.all([OopCore.getDeviceGroups(), OopCore.getDevices()])
-            .then(([deviceGroups, devices]) => {
-                return set(deviceGroups.data, devices.data);
-            })
-            .catch(() => set([]));
-    }, [devicesAccordionOpen]);
+    const getDeviceGroups = () => {
+        return Promise.all([
+            OopCore.getDeviceGroups(),
+            OopCore.getDevices(),
+        ]).then(([deviceGroups, devices]) =>
+            createDevicesAccordion(deviceGroups.data, devices.data),
+        );
+    };
 
     const devicesSubNavigation = () => {
-        if (deviceGroups && deviceGroups.length) {
-            return (
-                <NavigationGroup
-                    pathName="Devices"
-                    isActive={pathIncludes("/devices")}
-                    isOpen={devicesAccordionOpen}
-                    setOpen={setDevicesAccordionOpen}
-                >
-                    {deviceGroups.map((group, index) => (
-                        <React.Fragment key={`device-group-${index}`}>
-                            <NavigationItem
-                                pathName={group.name}
-                                path="/devices"
-                                className="group-name"
-                            />
-                            {group.devices.length ? (
-                                group.devices
-                                    .slice(0, 3)
-                                    .map(device => (
-                                        <NavigationItem
-                                            className="device-name"
-                                            key={`device-${device.id}-navigation-item`}
-                                            path={`/devices/${device.id}`}
-                                            pathName={device.name}
-                                            isActive={pathIncludes(
-                                                `/devices/${device.id}`,
-                                            )}
-                                        />
-                                    ))
-                            ) : (
-                                <div className="navigation-item">
-                                    No devices
-                                </div>
-                            )}
-                        </React.Fragment>
-                    ))}
+        return (
+            <DataProvider
+                getData={() => {
+                    return getDeviceGroups().then(response => {
+                        setDeviceGroups(response);
+                        return response;
+                    });
+                }}
+                renderKey={devicesAccordionOpen}
+                renderData={() => (
+                    <NavigationGroup
+                        pathName="Devices"
+                        isActive={pathIncludes("/devices")}
+                        isOpen={devicesAccordionOpen}
+                        setOpen={setDevicesAccordionOpen}
+                    >
+                        {deviceGroups.map((group, index) => (
+                            <React.Fragment key={`device-group-${index}`}>
+                                <NavigationItem
+                                    pathName={group.name}
+                                    path="/devices"
+                                    className="group-name"
+                                />
+                                {group.devices.length ? (
+                                    group.devices
+                                        .slice(0, 3)
+                                        .map(device => (
+                                            <NavigationItem
+                                                className="device-name"
+                                                key={`device-${device.id}-navigation-item`}
+                                                path={`/devices/${device.id}`}
+                                                pathName={device.name}
+                                                isActive={pathIncludes(
+                                                    `/devices/${device.id}`,
+                                                )}
+                                            />
+                                        ))
+                                ) : (
+                                    <div className="navigation-item">
+                                        No devices
+                                    </div>
+                                )}
+                            </React.Fragment>
+                        ))}
+                        <NavigationItem
+                            className="bottom"
+                            path={`/devices`}
+                            pathName="View All"
+                        />
+                    </NavigationGroup>
+                )}
+                dataFallback={
                     <NavigationItem
-                        className="bottom"
-                        path={`/devices`}
-                        pathName="View All"
+                        path="/devices"
+                        pathName="Devices"
+                        isActive={pathMatch("/devices")}
                     />
-                </NavigationGroup>
-            );
-        } else {
-            return (
-                <NavigationItem
-                    path="/devices"
-                    pathName="Devices"
-                    isActive={pathIncludes("/devices")}
-                />
-            );
-        }
+                }
+            />
+        );
     };
+
     return (
         <div className="side-navigation">
             <NavigationItem
