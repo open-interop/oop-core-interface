@@ -98,7 +98,7 @@ class App extends Component {
                         <this.HeaderWithRouter user={this.state.user} />
                     )}
                     <div className="below-header">
-                        <this.SideNavigationWithRouter />
+                        {hasUser && <this.SideNavigationWithRouter />}
                         <Route
                             path="/"
                             exact
