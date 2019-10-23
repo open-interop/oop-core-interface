@@ -12,8 +12,12 @@ const PairInput = props => {
             : [["", ""]];
     };
 
+    const getInitialArray = array => {
+        return array.length ? array : [["", ""]];
+    };
+
     const [dataArray, setDataArray] = useState(
-        dataIsArray ? props.data : getArrayFromObject(),
+        dataIsArray ? getInitialArray(props.data) : getArrayFromObject(),
     );
 
     const updateDataArray = array => {
