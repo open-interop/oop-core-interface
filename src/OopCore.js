@@ -107,6 +107,11 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/devices/${device.id}`, RequestType.PUT, data);
     }
 
+    createDevice(device) {
+        const data = { device: device };
+        return this.makeRequest(`/devices`, RequestType.POST, data);
+    }
+
     mapQueryParameter(key) {
         switch (key) {
             case "pageSize":

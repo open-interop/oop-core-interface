@@ -384,6 +384,18 @@ const Device = props => {
                                     ...device
                                 } = updatedDevice;
                                 setError("");
+                                if (blankDevice) {
+                                    return OopCore.createDevice(device).then(
+                                        response =>
+                                            updateState(
+                                                getFormData(
+                                                    response,
+                                                    stateSites,
+                                                    stateGroups,
+                                                ),
+                                            ),
+                                    );
+                                }
                                 OopCore.updateDevice(device)
                                     .then(response =>
                                         updateState(
