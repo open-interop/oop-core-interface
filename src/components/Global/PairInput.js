@@ -4,11 +4,16 @@ import { Input } from "baseui/input";
 
 const PairInput = props => {
     const dataChanged = useRef(false);
+    const dataIsArray = Array.isArray(props.data);
+
+    const getArrayFromObject = () => {
+        return Object.keys(props.data).length
+            ? Object.entries(props.data)
+            : [["", ""]];
+    };
 
     const [dataArray, setDataArray] = useState(
-        Object.keys(props.data).length
-            ? Object.entries(props.data)
-            : [["", ""]],
+        dataIsArray ? props.data : getArrayFromObject(),
     );
 
     const updateDataArray = array => {
@@ -17,15 +22,25 @@ const PairInput = props => {
     };
 
     useEffect(() => {
-        const resultObject = {};
-        dataArray.forEach(item => {
-            if (item[0] && item[1]) {
-                resultObject[item[0]] = item[1];
+        if (dataIsArray) {
+            if (dataChanged.current) {
+                props.updateData(
+                    dataArray.find(item => item[0] && item[1])
+                        ? dataArray.filter(item => item[0] && item[1])
+                        : [["", ""]],
+                );
             }
-        });
+        } else {
+            const resultObject = {};
+            dataArray.forEach(item => {
+                if (item[0] && item[1]) {
+                    resultObject[item[0]] = item[1];
+                }
+            });
 
-        if (dataChanged.current) {
-            props.updateData(resultObject);
+            if (dataChanged.current) {
+                props.updateData(resultObject);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataArray]);

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
@@ -7,7 +8,7 @@ import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { Accordion, Panel } from "baseui/accordion";
-import { MultiInput } from "../Global";
+import { PairInput } from "../Global";
 import { DataProvider, Error } from "../Universal";
 import OopCore from "../../OopCore";
 import { Timezones } from "./Timezones";
@@ -62,9 +63,29 @@ const Device = props => {
         });
     };
 
+    const copyOfArray = original => {
+        const copy = [];
+        original.forEach((item, index) => {
+            copy[index] = [...item];
+        });
+
+        return copy;
+    };
+
     const updateState = response => {
         setDevice(response);
-        setUpdatedDevice(response);
+        const copy = {};
+        Object.keys(response).map(key => {
+            if (
+                key === "authentication_headers" ||
+                key === "authentication_query"
+            ) {
+                return (copy[key] = copyOfArray(response[key]));
+            } else {
+                return (copy[key] = response[key]);
+            }
+        });
+        setUpdatedDevice(copy);
         return response;
     };
 
@@ -96,7 +117,59 @@ const Device = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
-    console.log(device);
+    const noAuthentication = () => {
+        return (
+            !updatedDevice.authentication_path &&
+            (updatedDevice.authentication_query &&
+                !updatedDevice.authentication_query.find(
+                    item => item[0] && item[1],
+                )) &&
+            (updatedDevice.authentication_headers &&
+                !updatedDevice.authentication_headers.find(
+                    item => item[0] && item[1],
+                ))
+        );
+    };
+
+    const identicalObject = (oldObject, newObject) => {
+        return Object.keys(oldObject).every(
+            key => oldObject[key] === newObject[key],
+        );
+    };
+
+    const identicalArray = (oldArray, newArray) => {
+        if (oldArray.length !== newArray.length) {
+            return false;
+        }
+        for (var i = 0; i <= oldArray.length; i++) {
+            if (Array.isArray(oldArray[i])) {
+                return identicalArray(oldArray[i], newArray[i]);
+            }
+            if (oldArray[i] !== newArray[i]) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const saveDisabled = () => {
+        const {
+            authentication_headers,
+            authentication_query,
+            ...rest
+        } = device;
+        const {
+            authentication_headers: updated_headers,
+            authentication_query: updated_query,
+            ...updatedRest
+        } = updatedDevice;
+        return (
+            noAuthentication() ||
+            (identicalArray(authentication_headers, updated_headers) &&
+                identicalArray(authentication_query, updated_query) &&
+                identicalObject(rest, updatedRest))
+        );
+    };
 
     return (
         <div className="content-wrapper">
@@ -226,16 +299,23 @@ const Device = props => {
                                     <FormControl
                                         label="Authentication path"
                                         key={`form-control-authentication-path`}
+                                        error={
+                                            noAuthentication()
+                                                ? "Please provide at least one form of authentication"
+                                                : ""
+                                        }
                                     >
                                         <Input
                                             id={`input-authentication-path`}
                                             value={
-                                                updatedDevice.authentication_path
+                                                updatedDevice.authentication_path ||
+                                                ""
                                             }
                                             onChange={event =>
                                                 setValue(
                                                     "authentication_path",
-                                                    event.currentTarget.value,
+                                                    event.currentTarget.value ||
+                                                        null,
                                                 )
                                             }
                                         />
@@ -243,8 +323,13 @@ const Device = props => {
                                     <FormControl
                                         label="Authentication headers"
                                         key={`form-control-authentication-headers`}
+                                        error={
+                                            noAuthentication()
+                                                ? "Please provide at least one form of authentication"
+                                                : ""
+                                        }
                                     >
-                                        <MultiInput
+                                        <PairInput
                                             data={
                                                 updatedDevice.authentication_headers
                                             }
@@ -259,8 +344,13 @@ const Device = props => {
                                     <FormControl
                                         label="Authentication query"
                                         key={`form-control-authentication-query`}
+                                        error={
+                                            noAuthentication()
+                                                ? "Please provide at least one form of authentication"
+                                                : ""
+                                        }
                                     >
-                                        <MultiInput
+                                        <PairInput
                                             data={
                                                 updatedDevice.authentication_query
                                             }
@@ -311,9 +401,7 @@ const Device = props => {
                                         );
                                     });
                             }}
-                            disabled={Object.keys(device).every(
-                                key => device[key] === updatedDevice[key],
-                            )}
+                            disabled={saveDisabled()}
                         >
                             {"Save"}
                         </Button>

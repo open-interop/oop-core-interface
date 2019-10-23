@@ -1,5 +1,4 @@
 export * from "./HttpTemprTemplate";
-export * from "./MultiInput";
 export * from "./NavigationItem";
 export * from "./NavigationGroup";
 export * from "./PairInput";
