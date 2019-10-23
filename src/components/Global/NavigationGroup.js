@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { NavigationItem } from ".";
 
 const useOutsideClick = (ref, exception, callback) => {
@@ -25,10 +25,8 @@ const NavigationGroup = props => {
     const navRef = useRef();
     const groupNameRef = useRef();
 
-    const [isOpen, setOpen] = useState(false);
-
     useOutsideClick(navRef, groupNameRef, () => {
-        setOpen(false);
+        props.setOpen(false);
     });
 
     return (
@@ -38,14 +36,14 @@ const NavigationGroup = props => {
                 isActive={props.isActive}
                 pathName={props.pathName}
                 onClick={() => {
-                    setOpen(!isOpen);
+                    props.setOpen(!props.isOpen);
                 }}
                 refName={groupNameRef}
             />
 
             <div
                 ref={navRef}
-                className={`nested-navigation${isOpen ? " open" : ""}`}
+                className={`nested-navigation${props.isOpen ? " open" : ""}`}
             >
                 {props.children}
             </div>
