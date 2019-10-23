@@ -7,7 +7,7 @@ import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { DataProvider, Error } from "../Universal";
 import OopCore from "../../OopCore";
-import { Timezones } from "./Timezones";
+import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
     const [device, setDevice] = useState({});
