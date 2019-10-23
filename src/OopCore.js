@@ -145,7 +145,7 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
         let path = `/devices/${deviceId}/transmissions`;
         if (parameters) {
-            path += `? ${parameters}`;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
@@ -161,7 +161,7 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
         let path = `/sites`;
         if (parameters) {
-            path += "?" + parameters;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
@@ -188,7 +188,7 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
         let path = `/device_groups/${deviceGroupId}/temprs`;
         if (parameters) {
-            path += "?" + parameters;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
@@ -220,7 +220,7 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
         let path = `/device_groups/${deviceGroupId}/device_temprs`;
         if (parameters) {
-            path += "?" + parameters;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);

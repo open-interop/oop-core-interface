@@ -158,7 +158,6 @@ const Site = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 onChange={event => {
-                                    console.log(event);
                                     setValue("site_id", event.value[0].id);
                                 }}
                                 value={
