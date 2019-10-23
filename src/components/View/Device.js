@@ -16,10 +16,16 @@ import { Timezones } from "./Timezones";
 const Device = props => {
     const [device, setDevice] = useState({});
     const [updatedDevice, setUpdatedDevice] = useState({});
-    const [stateSites, setSites] = useState([]);
-    const [stateGroups, setGroups] = useState([]);
+    const [sites, setSites] = useState([]);
+    const [groups, setGroups] = useState([]);
     const [error, setError] = useState("");
     const [moveGroupError, setMoveGroupError] = useState("");
+    const timezones = Timezones.map(timezone => {
+        return {
+            id: timezone,
+            name: timezone,
+        };
+    });
     const blankDevice = props.match.params.deviceId === "new";
 
     const getDevice = () => {
@@ -39,27 +45,16 @@ const Device = props => {
             : OopCore.getDevice(props.match.params.deviceId);
     };
 
-    const getFormData = (deviceDetails, sites, groups) => {
-        deviceDetails.sites = sites.data;
-        deviceDetails.groups = groups.data;
-        deviceDetails.timezones = Timezones.map(timezone => {
-            return {
-                id: timezone,
-                name: timezone,
-            };
-        });
-        return deviceDetails;
-    };
-
     const getData = () => {
         return Promise.all([
             getDevice(),
             OopCore.getSites(),
             OopCore.getDeviceGroups(),
         ]).then(([deviceDetails, sites, groups]) => {
-            setSites(sites);
-            setGroups(groups);
-            return getFormData(deviceDetails, sites, groups);
+            setSites(sites.data);
+            setGroups(groups.data);
+            refreshDevice(deviceDetails);
+            return deviceDetails;
         });
     };
 
@@ -72,7 +67,7 @@ const Device = props => {
         return copy;
     };
 
-    const updateState = response => {
+    const refreshDevice = response => {
         setDevice(response);
         const copy = {};
         Object.keys(response).map(key => {
@@ -176,9 +171,10 @@ const Device = props => {
             <Button $as={Link} to={allDevicesPath}>
                 <ArrowLeft size={24} />
             </Button>
+            <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>
             <DataProvider
                 getData={() => {
-                    return getData().then(data => updateState(data));
+                    return getData();
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
@@ -194,14 +190,14 @@ const Device = props => {
                         </FormControl>
                         <FormControl label="Site" key={`form-control-site`}>
                             <Select
-                                options={updatedDevice.sites}
+                                options={sites}
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event =>
                                     setValue("site_id", event.value[0].id)
                                 }
-                                value={updatedDevice.sites.find(
+                                value={sites.find(
                                     item => item.id === updatedDevice.site_id,
                                 )}
                             />
@@ -212,7 +208,7 @@ const Device = props => {
                             error={moveGroupError}
                         >
                             <Select
-                                options={updatedDevice.groups}
+                                options={groups}
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
@@ -230,7 +226,7 @@ const Device = props => {
                                         }
                                     });
                                 }}
-                                value={updatedDevice.sites.find(
+                                value={groups.find(
                                     item =>
                                         item.id ===
                                         updatedDevice.device_group_id,
@@ -251,14 +247,14 @@ const Device = props => {
                             key={`form-control-timezone`}
                         >
                             <Select
-                                options={updatedDevice.timezones}
+                                options={timezones}
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={true}
                                 onChange={event =>
                                     setValue("time_zone", event.value[0].id)
                                 }
-                                value={updatedDevice.timezones.find(
+                                value={timezones.find(
                                     item => item.id === updatedDevice.time_zone,
                                 )}
                             />
@@ -378,34 +374,19 @@ const Device = props => {
                         </FormControl>
                         <Button
                             onClick={() => {
-                                const {
-                                    sites,
-                                    groups,
-                                    ...device
-                                } = updatedDevice;
                                 setError("");
                                 if (blankDevice) {
-                                    return OopCore.createDevice(device).then(
-                                        response =>
-                                            updateState(
-                                                getFormData(
-                                                    response,
-                                                    stateSites,
-                                                    stateGroups,
-                                                ),
-                                            ),
-                                    );
+                                    return OopCore.createDevice(
+                                        updatedDevice,
+                                    ).then(response => {
+                                        refreshDevice(response);
+                                        props.history.replace(
+                                            `${allDevicesPath}/${response.id}`,
+                                        );
+                                    });
                                 }
-                                OopCore.updateDevice(device)
-                                    .then(response =>
-                                        updateState(
-                                            getFormData(
-                                                response,
-                                                stateSites,
-                                                stateGroups,
-                                            ),
-                                        ),
-                                    )
+                                OopCore.updateDevice(updatedDevice)
+                                    .then(response => refreshDevice(response))
                                     .catch(error => {
                                         console.error(error);
                                         setError(
@@ -415,7 +396,7 @@ const Device = props => {
                             }}
                             disabled={saveDisabled()}
                         >
-                            {"Save"}
+                            {blankDevice ? "Create" : "Save"}
                         </Button>
                         <Error message={error} />
                     </>
