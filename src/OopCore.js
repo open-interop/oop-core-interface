@@ -107,6 +107,24 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/devices/${device.id}`, RequestType.PUT, data);
     }
 
+    updateDeviceGroup(deviceGroup) {
+        const payload = { device_group: deviceGroup };
+        return this.makeRequest(
+            `/device_groups/${deviceGroup.id}`,
+            RequestType.PUT,
+            payload,
+        );
+    }
+
+    createDeviceGroup(deviceGroup) {
+        const payload = { device_group: deviceGroup };
+        return this.makeRequest(`/device_groups`, RequestType.POST, payload);
+    }
+
+    getDeviceGroup(deviceGroupId) {
+        return this.makeRequest(`/device_groups/${deviceGroupId}`);
+    }
+
     mapQueryParameter(key) {
         switch (key) {
             case "pageSize":

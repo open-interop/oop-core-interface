@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Device,
+    DeviceGroup,
     DeviceGroups,
     Devices,
     DeviceTempr,
@@ -143,6 +144,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, DeviceGroups, props)
+                            }
+                        />
+                        <Route
+                            path="/device-groups/:deviceGroupId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, DeviceGroup, props)
                             }
                         />
                         <Route
