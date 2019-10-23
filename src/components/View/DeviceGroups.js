@@ -29,11 +29,14 @@ const DeviceGroups = props => {
 
             <DataProvider
                 getData={() => {
-                    return OopCore.getDeviceGroups().then(response => {
-                        setDeviceGroups(response);
-                        return response;
-                    });
+                    return OopCore.getDeviceGroups({ page, pageSize }).then(
+                        response => {
+                            setDeviceGroups(response);
+                            return response;
+                        },
+                    );
                 }}
+                renderKey={props.location.search}
                 renderData={() => (
                     <>
                         <Table

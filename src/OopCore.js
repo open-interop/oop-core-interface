@@ -179,8 +179,14 @@ class OopCore extends EventEmitter {
         return this.makeRequest("/sites");
     }
 
-    getDeviceGroups() {
-        return this.makeRequest("/device_groups");
+    getDeviceGroups(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/device_groups`;
+        if (parameters) {
+            path += "/?" + parameters;
+        }
+
+        return this.makeRequest(path);
     }
 
     getTemprs(deviceGroupId, queryParameters) {

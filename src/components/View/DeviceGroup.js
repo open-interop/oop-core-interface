@@ -59,7 +59,7 @@ const DeviceGroup = props => {
                             <Input
                                 required
                                 id={`input-name`}
-                                value={updatedDeviceGroup.name}
+                                value={updatedDeviceGroup.name || ""}
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
@@ -71,7 +71,7 @@ const DeviceGroup = props => {
                         >
                             <Input
                                 id={`input-description`}
-                                value={updatedDeviceGroup.description}
+                                value={updatedDeviceGroup.description || ""}
                                 onChange={event =>
                                     setValue(
                                         "description",
