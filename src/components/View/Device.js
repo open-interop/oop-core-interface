@@ -72,6 +72,7 @@ const Device = props => {
                 getData={() => {
                     return getData().then(data => updateState(data));
                 }}
+                renderKey={props.location.pathname}
                 renderData={() => (
                     <>
                         <FormControl label="Name" key={`form-control-name`}>
@@ -160,7 +161,7 @@ const Device = props => {
                         >
                             <Input
                                 id={`input-latitude`}
-                                value={updatedDevice.latitude}
+                                value={updatedDevice.latitude || ""}
                                 onChange={event =>
                                     setValue(
                                         "latitude",
@@ -175,7 +176,7 @@ const Device = props => {
                         >
                             <Input
                                 id={`input-Longitude`}
-                                value={updatedDevice.longitude}
+                                value={updatedDevice.longitude || ""}
                                 onChange={event =>
                                     setValue(
                                         "longitude",

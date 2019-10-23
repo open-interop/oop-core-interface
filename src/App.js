@@ -75,10 +75,10 @@ class App extends Component {
                 <Component {...props} />
             </div>
         ) : (
-                    <div className="content">
-                        <Component {...props} />
-                    </div>
-                );
+            <div className="content">
+                <Component {...props} />
+            </div>
+        );
     };
 
     renderRoutes = () => {
@@ -98,7 +98,7 @@ class App extends Component {
                         <this.HeaderWithRouter user={this.state.user} />
                     )}
                     <div className="below-header">
-                        <this.SideNavigationWithRouter />
+                        {hasUser && <this.SideNavigationWithRouter />}
                         <Route
                             path="/"
                             exact
