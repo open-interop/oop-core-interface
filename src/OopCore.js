@@ -94,8 +94,14 @@ class OopCore extends EventEmitter {
         });
     }
 
-    getDevices() {
-        return this.makeRequest("/devices");
+    getDevices(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/devices`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     getDevice(deviceId) {
@@ -269,8 +275,14 @@ class OopCore extends EventEmitter {
         );
     }
 
-    getUsers() {
-        return this.makeRequest("/users");
+    getUsers(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/users`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     getUser(userId) {
