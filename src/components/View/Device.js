@@ -160,6 +160,9 @@ const Device = props => {
         } = updatedDevice;
         return (
             noAuthentication() ||
+            !updatedDevice.name ||
+            !updatedDevice.device_group_id ||
+            !updatedDevice.site_id ||
             (identicalArray(authentication_headers, updated_headers) &&
                 identicalArray(authentication_query, updated_query) &&
                 identicalObject(rest, updatedRest))
@@ -180,10 +183,12 @@ const Device = props => {
                 renderData={() => (
                     <>
                         <FormControl
-                            label="Name (required)"
+                            label="Name"
                             key={`form-control-name`}
+                            caption="required"
                         >
                             <Input
+                                required
                                 id={`input-name`}
                                 value={updatedDevice.name}
                                 onChange={event =>
@@ -191,8 +196,13 @@ const Device = props => {
                                 }
                             />
                         </FormControl>
-                        <FormControl label="Site" key={`form-control-site`}>
+                        <FormControl
+                            label="Site"
+                            key={`form-control-site`}
+                            caption="required"
+                        >
                             <Select
+                                required
                                 options={sites}
                                 labelKey="name"
                                 valueKey="id"
@@ -209,8 +219,10 @@ const Device = props => {
                             label="Group"
                             key={`form-control-group`}
                             error={moveGroupError}
+                            caption="required"
                         >
                             <Select
+                                required
                                 options={groups}
                                 labelKey="name"
                                 valueKey="id"
@@ -293,7 +305,7 @@ const Device = props => {
                             />
                         </FormControl>
                         <Accordion>
-                            <Panel title="Authentication (required)">
+                            <Panel title="Authentication">
                                 <div className="content-wrapper">
                                     <FormControl
                                         label="Authentication path"
@@ -364,20 +376,23 @@ const Device = props => {
                                 </div>
                             </Panel>
                         </Accordion>
-                        <FormControl
-                            label="Device Temprs"
-                            key={`form-control-device-temprs`}
-                        >
-                            <Button
-                                $as={Link}
-                                to={`/device-groups/${updatedDevice.device_group_id}/device-temprs/?deviceId=${updatedDevice.id}`}
+                        {!blankDevice && (
+                            <FormControl
+                                label="Device Temprs"
+                                key={`form-control-device-temprs`}
                             >
-                                Device Temprs
-                            </Button>
-                        </FormControl>
+                                <Button
+                                    $as={Link}
+                                    to={`/device-groups/${updatedDevice.device_group_id}/device-temprs/?deviceId=${updatedDevice.id}`}
+                                >
+                                    Device Temprs
+                                </Button>
+                            </FormControl>
+                        )}
                         <Button
                             onClick={() => {
                                 setError("");
+                                setMoveGroupError("");
                                 if (blankDevice) {
                                     return OopCore.createDevice(
                                         updatedDevice,
