@@ -179,7 +179,10 @@ const Device = props => {
                 renderKey={props.location.pathname}
                 renderData={() => (
                     <>
-                        <FormControl label="Name" key={`form-control-name`}>
+                        <FormControl
+                            label="Name (required)"
+                            key={`form-control-name`}
+                        >
                             <Input
                                 id={`input-name`}
                                 value={updatedDevice.name}
@@ -213,15 +216,15 @@ const Device = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event => {
-                                    canMoveDevice().then(result => {
-                                        if (result) {
+                                    canMoveDevice().then(canMove => {
+                                        if (canMove) {
                                             setValue(
                                                 "device_group_id",
                                                 event.value[0].id,
                                             );
                                         } else {
                                             setMoveGroupError(
-                                                "This tempr can't be moved to another group because it's currently used in a device tempr",
+                                                "This device can't be moved to another group because it's currently used in a device tempr",
                                             );
                                         }
                                     });
@@ -290,7 +293,7 @@ const Device = props => {
                             />
                         </FormControl>
                         <Accordion>
-                            <Panel title="Authentication">
+                            <Panel title="Authentication (required)">
                                 <div className="content-wrapper">
                                     <FormControl
                                         label="Authentication path"
