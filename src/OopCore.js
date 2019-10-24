@@ -40,12 +40,20 @@ class OopCore extends EventEmitter {
         return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
     }
 
+    doNotConvert = fieldName => {
+        return fieldName === "externalUuids" || fieldName === "headers";
+    };
+
     snakeToCamel(o) {
         if (this.isObject(o)) {
             const n = {};
 
             Object.keys(o).forEach(k => {
-                n[this.toCamelCase(k)] = this.snakeToCamel(o[k]);
+                if (this.doNotConvert(k)) {
+                    n[this.toCamelCase(k)] = o[k];
+                } else {
+                    n[this.toCamelCase(k)] = this.snakeToCamel(o[k]);
+                }
             });
 
             return n;
@@ -63,7 +71,11 @@ class OopCore extends EventEmitter {
             const n = {};
 
             Object.keys(o).forEach(k => {
-                n[this.toSnakeCase(k)] = this.camelToSnake(o[k]);
+                if (this.doNotConvert(k)) {
+                    n[this.toSnakeCase(k)] = o[k];
+                } else {
+                    n[this.toSnakeCase(k)] = this.camelToSnake(o[k]);
+                }
             });
 
             return n;
@@ -97,7 +109,7 @@ class OopCore extends EventEmitter {
             requestType === RequestType.PUT
         ) {
             options.headers["Content-Type"] = "application/json";
-            options.body = JSON.stringify(data);
+            options.body = JSON.stringify(this.camelToSnake(data));
         }
 
         return fetch(this.apiBase + endpoint, options)
@@ -163,7 +175,7 @@ class OopCore extends EventEmitter {
     }
 
     updateDevice(data) {
-        const payload = { device: this.camelToSnake(data) };
+        const payload = { device: data };
         return this.makeRequest(
             `/devices/${data.id}`,
             RequestType.PUT,
@@ -297,7 +309,7 @@ class OopCore extends EventEmitter {
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/temprs/${temprId}`,
             RequestType.PUT,
-            this.camelToSnake(data),
+            data,
         );
     }
 
@@ -305,7 +317,7 @@ class OopCore extends EventEmitter {
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/temprs`,
             RequestType.POST,
-            this.camelToSnake(data),
+            data,
         );
     }
 
@@ -326,22 +338,33 @@ class OopCore extends EventEmitter {
     }
 
     createDeviceTemprObject = data => {
-        const result = {};
-        result.device_id = data.deviceId;
-        result.tempr_id = data.temprId;
-        result.endpoint_type = data.endpointType;
-        result.queue_response = data.queueResponse;
-        const {
+        const result = (({
+            deviceId,
+            temprId,
+            endpointType,
+            queueResponse,
+        }) => ({
+            deviceId,
+            temprId,
+            endpointType,
+            queueResponse,
+        }))(data);
+
+        result.options = (({
             headers,
             host,
             path,
             port,
             protocol,
             requestMethod,
-            // eslint-disable-next-line no-unused-vars
-            ...rest
-        } = data.template;
-        result.options = { headers, host, path, port, protocol, requestMethod };
+        }) => ({
+            headers,
+            host,
+            path,
+            port,
+            protocol,
+            requestMethod,
+        }))(data.template);
         return result;
     };
 
@@ -356,7 +379,7 @@ class OopCore extends EventEmitter {
 
     updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
         const payload = {
-            device_tempr: this.createDeviceTemprObject(this.camelToSnake(data)),
+            device_tempr: this.createDeviceTemprObject(data),
         };
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
@@ -367,7 +390,7 @@ class OopCore extends EventEmitter {
 
     createDeviceTempr(deviceGroupId, data) {
         const payload = {
-            device_tempr: this.createDeviceTemprObject(this.camelToSnake(data)),
+            device_tempr: this.createDeviceTemprObject(data),
         };
         return this.makeRequest(
             `/device_groups/${deviceGroupId}/device_temprs`,
