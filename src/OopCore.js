@@ -25,7 +25,7 @@ class OopCore extends EventEmitter {
     }
 
     toCamelCase(s) {
-        return s.replace(/[-_]([a-z])/gi, $1 => {
+        return s.replace(/[-_]([a-z])/gi, ($0, $1) => {
             return $1.toUpperCase();
         });
     }
