@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
@@ -132,19 +131,30 @@ const Device = props => {
         );
     };
 
-    const identicalArray = (oldArray, newArray) => {
-        if (oldArray.length !== newArray.length) {
+    const identicalArray = (oldArray, updatedArray) => {
+        if (oldArray.length !== updatedArray.length) {
             return false;
         }
-        for (var i = 0; i <= oldArray.length; i++) {
+
+        var i = 0;
+        var foundDifferentValue = false;
+        while (i < oldArray.length && !foundDifferentValue) {
             if (Array.isArray(oldArray[i])) {
-                return identicalArray(oldArray[i], newArray[i]);
-            }
-            if (oldArray[i] !== newArray[i]) {
-                return false;
+                if (identicalArray(oldArray[i], updatedArray[i])) {
+                    i++;
+                } else {
+                    foundDifferentValue = true;
+                }
+            } else {
+                if (oldArray[i] !== updatedArray[i]) {
+                    foundDifferentValue = true;
+                } else {
+                }
+                i++;
             }
         }
-        return true;
+
+        return !foundDifferentValue;
     };
 
     const saveDisabled = () => {
@@ -345,6 +355,7 @@ const Device = props => {
                                                     data,
                                                 )
                                             }
+                                            refreshKey={updatedDevice.updatedAt}
                                         />
                                     </FormControl>
                                     <FormControl
@@ -366,6 +377,7 @@ const Device = props => {
                                                     data,
                                                 )
                                             }
+                                            refreshKey={updatedDevice.updatedAt}
                                         />
                                     </FormControl>
                                 </div>
@@ -389,23 +401,31 @@ const Device = props => {
                                 setError("");
                                 setMoveGroupError("");
                                 if (blankDevice) {
-                                    return OopCore.createDevice(
-                                        updatedDevice,
-                                    ).then(response => {
-                                        refreshDevice(response);
-                                        props.history.replace(
-                                            `${allDevicesPath}/${response.id}`,
-                                        );
-                                    });
+                                    return OopCore.createDevice(updatedDevice)
+                                        .then(response => {
+                                            refreshDevice(response);
+                                            props.history.replace(
+                                                `${allDevicesPath}/${response.id}`,
+                                            );
+                                        })
+                                        .catch(error => {
+                                            console.error(error);
+                                            setError(
+                                                "Something went wrong while attepting to save device details",
+                                            );
+                                        });
+                                } else {
+                                    return OopCore.updateDevice(updatedDevice)
+                                        .then(response =>
+                                            refreshDevice(response),
+                                        )
+                                        .catch(error => {
+                                            console.error(error);
+                                            setError(
+                                                "Something went wrong while attepting to save device details",
+                                            );
+                                        });
                                 }
-                                OopCore.updateDevice(updatedDevice)
-                                    .then(response => refreshDevice(response))
-                                    .catch(error => {
-                                        console.error(error);
-                                        setError(
-                                            "Something went wrong while attepting to save device details",
-                                        );
-                                    });
                             }}
                             disabled={saveDisabled()}
                         >
