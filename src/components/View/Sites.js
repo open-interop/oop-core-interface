@@ -1,35 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
-import Show from "baseui/icon/show";
-import Menu from "baseui/icon/menu";
 import { Button } from "baseui/button";
+import Show from "baseui/icon/show";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
-const Devices = props => {
-    const [devices, setDevices] = useState([]);
+const Sites = props => {
+    const [sites, setSites] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-
-    // reset page number when the search query is changed
-    useEffect(() => {
-        setPage(null);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageSize]);
 
     return (
         <div className="content-wrapper">
             <div className="space-between">
-                <h2>Devices</h2>
-                <Button $as={Link} to={`/devices/new`}>
+                <h2>Sites</h2>
+                <Button $as={Link} to={`/sites/new`}>
                     New
                 </Button>
             </div>
             <DataProvider
                 getData={() =>
-                    OopCore.getDevices({ page, pageSize }).then(response => {
-                        setDevices(response);
+                    OopCore.getSites({ page, pageSize }).then(response => {
+                        setSites(response);
                         return response;
                     })
                 }
@@ -37,18 +30,13 @@ const Devices = props => {
                 renderData={() => (
                     <>
                         <Table
-                            data={devices.data}
+                            data={sites.data}
                             mapFunction={(columnName, content) => {
                                 if (columnName === "action") {
                                     return (
                                         <>
-                                            <Link to={`/devices/${content}`}>
+                                            <Link to={`/sites/${content}`}>
                                                 <Show />
-                                            </Link>
-                                            <Link
-                                                to={`/devices/${content}/transmissions`}
-                                            >
-                                                <Menu />
                                             </Link>
                                         </>
                                     );
@@ -59,8 +47,6 @@ const Devices = props => {
                             columns={[
                                 { id: "id", name: "ID" },
                                 { id: "name", name: "Name" },
-                                { id: "deviceGroupId", name: "Group" },
-                                { id: "siteId", name: "Site" },
                                 { id: "action", name: "Action" },
                             ]}
                             columnContent={columnName => {
@@ -76,8 +62,8 @@ const Devices = props => {
                             }}
                             currentPageSize={pageSize}
                             updatePageNumber={pageNumber => setPage(pageNumber)}
-                            totalRecords={devices.totalRecords}
-                            numberOfPages={devices.numberOfPages}
+                            totalRecords={sites.totalRecords}
+                            numberOfPages={sites.numberOfPages}
                             currentPage={page || 1}
                         />
                     </>
@@ -87,4 +73,4 @@ const Devices = props => {
     );
 };
 
-export { Devices };
+export { Sites };

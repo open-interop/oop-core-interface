@@ -94,8 +94,14 @@ class OopCore extends EventEmitter {
         });
     }
 
-    getDevices() {
-        return this.makeRequest("/devices");
+    getDevices(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/devices`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     getDevice(deviceId) {
@@ -105,6 +111,11 @@ class OopCore extends EventEmitter {
     updateDevice(device) {
         const data = { device: device };
         return this.makeRequest(`/devices/${device.id}`, RequestType.PUT, data);
+    }
+
+    createDevice(device) {
+        const data = { device: device };
+        return this.makeRequest(`/devices`, RequestType.POST, data);
     }
 
     updateDeviceGroup(deviceGroup) {
@@ -175,8 +186,27 @@ class OopCore extends EventEmitter {
         );
     }
 
-    getSites() {
-        return this.makeRequest("/sites");
+    getSites(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/sites`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getSite(siteId) {
+        return this.makeRequest(`/sites/${siteId}`);
+    }
+
+    createSite(data) {
+        return this.makeRequest(`/sites`, RequestType.POST, data);
+    }
+
+    updateSite(siteId, data) {
+        const payload = { site: data };
+        return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
     }
 
     getDeviceGroups(queryParameters) {
@@ -288,8 +318,14 @@ class OopCore extends EventEmitter {
         );
     }
 
-    getUsers() {
-        return this.makeRequest("/users");
+    getUsers(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/users`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     getUser(userId) {

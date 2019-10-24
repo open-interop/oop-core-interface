@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
 import { Button } from "baseui/button";
@@ -6,10 +6,16 @@ import Show from "baseui/icon/show";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
-const Users = () => {
+const Users = props => {
     const [users, setUsers] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+
+    // reset page number when the search query is changed
+    useEffect(() => {
+        setPage(null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pageSize]);
 
     return (
         <div className="content-wrapper">
@@ -21,11 +27,12 @@ const Users = () => {
             </div>
             <DataProvider
                 getData={() =>
-                    OopCore.getUsers().then(response => {
+                    OopCore.getUsers({ page, pageSize }).then(response => {
                         setUsers(response);
                         return response;
                     })
                 }
+                renderKey={props.location.search}
                 renderData={() => (
                     <>
                         <Table
