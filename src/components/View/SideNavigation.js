@@ -95,6 +95,13 @@ const SideNavigation = props => {
                         isActive={pathMatch("/devices")}
                     />
                 }
+                loadingFallback={
+                    <NavigationItem
+                        path="/devices"
+                        pathName="Devices"
+                        isActive={pathMatch("/devices")}
+                    />
+                }
             />
         );
     };
