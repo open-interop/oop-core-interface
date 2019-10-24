@@ -374,7 +374,7 @@ class OopCore extends EventEmitter {
         const result = {};
         result.email = data.email;
         result.password = data.newPassword;
-        result.confirm_password = data.confirmPassword;
+        result.password_confirmation = data.confirmPassword;
         result.time_zone = data.time_zone;
         return result;
     };
