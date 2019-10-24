@@ -25,15 +25,17 @@ class OopCore extends EventEmitter {
     }
 
     toCamelCase(s) {
-        return s.replace(/([-_][a-z])/gi, $1 => {
-            return $1.toUpperCase().replace("_", "");
+        return s.replace(/[-_]([a-z])/gi, $1 => {
+            return $1.toUpperCase();
         });
     }
 
     toSnakeCase(s) {
-        return s.replace(/([A-Z])/g, $1 => {
-            return "_" + $1.toLowerCase();
-        });
+        return s
+            .replace(/^\w/, c => c.toLowerCase())
+            .replace(/[A-Z]/g, $1 => {
+                return "_" + $1.toLowerCase();
+            });
     }
 
     isObject(o) {
