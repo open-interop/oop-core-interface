@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Device,
+    DeviceGroup,
     DeviceGroups,
     Devices,
     DeviceTempr,
@@ -12,9 +13,12 @@ import {
     Header,
     Home,
     Login,
+    Profile,
     SideNavigation,
     Tempr,
     Temprs,
+    User,
+    Users,
 } from "./components/View";
 import { Spinner } from "./components/Universal";
 import OopCore from "./OopCore";
@@ -91,15 +95,11 @@ class App extends Component {
                             this.getComponent(hasUser, Login, props)
                         }
                     />
-
                     {hasUser && (
-                        <div className="left-side">
-                            <this.SideNavigationWithRouter />
-                        </div>
+                        <this.HeaderWithRouter user={this.state.user} />
                     )}
-
-                    <div className="right-side">
-                        {hasUser && <this.HeaderWithRouter />}
+                    <div className="below-header">
+                        {hasUser && <this.SideNavigationWithRouter />}
                         <Route
                             path="/"
                             exact
@@ -147,6 +147,13 @@ class App extends Component {
                             }
                         />
                         <Route
+                            path="/device-groups/:deviceGroupId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, DeviceGroup, props)
+                            }
+                        />
+                        <Route
                             path="/device-groups/:deviceGroupId/temprs"
                             exact
                             render={props =>
@@ -173,6 +180,32 @@ class App extends Component {
                             render={props =>
                                 this.getComponent(!hasUser, DeviceTempr, props)
                             }
+                        />
+                        <Route
+                            path="/users"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Users, props)
+                            }
+                        />
+                        <Route
+                            path="/users/:userId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, User, props)
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            exact
+                            render={props => {
+                                const user = this.state.user;
+
+                                return this.getComponent(!hasUser, Profile, {
+                                    ...props,
+                                    user,
+                                });
+                            }}
                         />
                     </div>
                 </QueryParamProvider>

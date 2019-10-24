@@ -1,48 +1,132 @@
-import * as React from "react";
-import { Navigation } from "baseui/side-navigation";
-import logo from "../../resources/open_interop_logo_square.png";
+import React, { useState } from "react";
+import { DataProvider } from "../Universal";
+import { NavigationGroup, NavigationItem } from "../Global";
+import OopCore from "../../OopCore";
 
 const SideNavigation = props => {
-    const items = [
-        {
-            title: "Home",
-            itemId: "/",
-        },
-        {
-            title: "Devices",
-            itemId: "/devices",
-        },
-        {
-            title: "Settings",
-            itemId: "/device-groups",
-        },
-    ];
+    const [deviceGroups, setDeviceGroups] = useState([]);
+    const [devicesAccordionOpen, setDevicesAccordionOpen] = useState(false);
+    const [settingsAccordionOpen, setSettingsAccordionOpen] = useState(false);
+    const pathMatch = path => {
+        return props.history.location.pathname === path;
+    };
 
-    const getActiveItem = pathName => {
-        if (pathName === "/") {
-            return pathName;
-        }
+    const pathIncludes = path => {
+        return props.history.location.pathname.includes(path);
+    };
 
-        const activeItem = items
-            .filter(item => item.itemId !== "/")
-            .find(item =>
-                props.history.location.pathname.includes(item.itemId),
-            );
+    const createDevicesAccordion = (deviceGroups, devices) => {
+        return deviceGroups.map(deviceGroup => {
+            return {
+                id: deviceGroup.id,
+                name: deviceGroup.name,
+                devices: devices.filter(
+                    device => device.deviceGroupId === deviceGroup.id,
+                ),
+            };
+        });
+    };
 
-        return activeItem ? activeItem.itemId : "/";
+    const getDeviceGroups = () => {
+        return Promise.all([
+            OopCore.getDeviceGroups(),
+            OopCore.getDevices(),
+        ]).then(([deviceGroups, devices]) =>
+            createDevicesAccordion(deviceGroups.data, devices.data),
+        );
+    };
+
+    const devicesSubNavigation = () => {
+        return (
+            <DataProvider
+                getData={() => {
+                    return getDeviceGroups().then(response => {
+                        setDeviceGroups(response);
+                        return response;
+                    });
+                }}
+                renderKey={devicesAccordionOpen}
+                renderData={() => (
+                    <NavigationGroup
+                        pathName="Devices"
+                        isActive={pathIncludes("/devices")}
+                        isOpen={devicesAccordionOpen}
+                        setOpen={setDevicesAccordionOpen}
+                    >
+                        {deviceGroups.map((group, index) => (
+                            <React.Fragment key={`device-group-${index}`}>
+                                <NavigationItem
+                                    pathName={group.name}
+                                    path="/devices"
+                                    className="group-name"
+                                />
+                                {group.devices.length ? (
+                                    group.devices
+                                        .slice(0, 3)
+                                        .map(device => (
+                                            <NavigationItem
+                                                className="device-name"
+                                                key={`device-${device.id}-navigation-item`}
+                                                path={`/devices/${device.id}`}
+                                                pathName={device.name}
+                                                isActive={pathIncludes(
+                                                    `/devices/${device.id}`,
+                                                )}
+                                            />
+                                        ))
+                                ) : (
+                                    <div className="navigation-item">
+                                        No devices
+                                    </div>
+                                )}
+                            </React.Fragment>
+                        ))}
+                        <NavigationItem
+                            className="bottom"
+                            path={`/devices`}
+                            pathName="View All"
+                        />
+                    </NavigationGroup>
+                )}
+                dataFallback={
+                    <NavigationItem
+                        path="/devices"
+                        pathName="Devices"
+                        isActive={pathMatch("/devices")}
+                    />
+                }
+            />
+        );
     };
 
     return (
         <div className="side-navigation">
-            <img src={logo} alt="logo" />
-            <Navigation
-                items={items}
-                activeItemId={getActiveItem(props.history.location.pathname)}
-                onChange={({ event, item }) => {
-                    event.preventDefault();
-                    props.history.push(item.itemId);
-                }}
+            <NavigationItem
+                path="/"
+                pathName="Home"
+                isActive={pathMatch("/")}
             />
+            {devicesSubNavigation()}
+            <NavigationGroup
+                isActive={
+                    pathIncludes("/users") || pathIncludes("/device-groups")
+                }
+                pathName="Settings"
+                isOpen={settingsAccordionOpen}
+                setOpen={setSettingsAccordionOpen}
+            >
+                <NavigationItem
+                    path="/users"
+                    pathName="Users"
+                    isActive={pathIncludes("/users")}
+                />
+                <NavigationItem
+                    path="/device-groups"
+                    pathName="Device Groups"
+                    isActive={pathIncludes("/device-groups")}
+                />
+            </NavigationGroup>
+            <div className="filler" />
         </div>
     );
 };

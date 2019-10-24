@@ -8,29 +8,39 @@ import {
     StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
 import { StyledLink } from "baseui/link";
+import logo from "../../resources/open_interop_logo_wide.png";
 import OopCore from "../../OopCore";
 
-const Header = props => (
-    <div className="header">
-        <HeaderNavigation>
-            <NavigationList $align={ALIGN.right}>
-                <NavigationItem>
-                    <StyledLink href="#">Dan User</StyledLink>
-                </NavigationItem>
-                <NavigationItem>
-                    <Button
-                        $as={Link}
-                        to={"/"}
-                        onClick={() => {
-                            OopCore.logout();
-                        }}
-                    >
-                        Log out
-                    </Button>
-                </NavigationItem>
-            </NavigationList>
-        </HeaderNavigation>
-    </div>
-);
+const Header = props => {
+    return (
+        <div className="header">
+            <HeaderNavigation>
+                <NavigationList $align={ALIGN.left}>
+                    <NavigationItem>
+                        <img src={logo} alt="logo" />
+                    </NavigationItem>
+                </NavigationList>
+                <NavigationList $align={ALIGN.right}>
+                    <NavigationItem>
+                        <StyledLink $as={Link} to={"/profile"}>
+                            {props.user.email}
+                        </StyledLink>
+                    </NavigationItem>
+                    <NavigationItem>
+                        <Button
+                            $as={Link}
+                            to={"/"}
+                            onClick={() => {
+                                OopCore.logout();
+                            }}
+                        >
+                            Log out
+                        </Button>
+                    </NavigationItem>
+                </NavigationList>
+            </HeaderNavigation>
+        </div>
+    );
+};
 
 export { Header };

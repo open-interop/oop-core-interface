@@ -165,6 +165,24 @@ class OopCore extends EventEmitter {
         );
     }
 
+    updateDeviceGroup(deviceGroup) {
+        const payload = { device_group: deviceGroup };
+        return this.makeRequest(
+            `/device_groups/${deviceGroup.id}`,
+            RequestType.PUT,
+            payload,
+        );
+    }
+
+    createDeviceGroup(deviceGroup) {
+        const payload = { device_group: deviceGroup };
+        return this.makeRequest(`/device_groups`, RequestType.POST, payload);
+    }
+
+    getDeviceGroup(deviceGroupId) {
+        return this.makeRequest(`/device_groups/${deviceGroupId}`);
+    }
+
     mapQueryParameter(key) {
         switch (key) {
             case "pageSize":
@@ -219,8 +237,14 @@ class OopCore extends EventEmitter {
         return this.makeRequest("/sites");
     }
 
-    getDeviceGroups() {
-        return this.makeRequest("/device_groups");
+    getDeviceGroups(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/device_groups`;
+        if (parameters) {
+            path += "/?" + parameters;
+        }
+
+        return this.makeRequest(path);
     }
 
     getTemprs(deviceGroupId, queryParameters) {
@@ -291,6 +315,15 @@ class OopCore extends EventEmitter {
         return result;
     };
 
+    createUserObject = data => {
+        const result = {};
+        result.email = data.email;
+        result.password = data.newPassword;
+        result.confirm_password = data.confirmPassword;
+        result.time_zone = data.time_zone;
+        return result;
+    };
+
     updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
         const payload = {
             device_tempr: this.createDeviceTemprObject(this.camelToSnake(data)),
@@ -311,6 +344,28 @@ class OopCore extends EventEmitter {
             RequestType.POST,
             payload,
         );
+    }
+
+    getUsers() {
+        return this.makeRequest("/users");
+    }
+
+    getUser(userId) {
+        return this.makeRequest(`/users/${userId}`);
+    }
+
+    updateUser(userId, data) {
+        const payload = {
+            user: this.createUserObject(data),
+        };
+        return this.makeRequest(`/users/${userId}`, RequestType.PUT, payload);
+    }
+
+    createUser(data) {
+        const payload = {
+            user: this.createUserObject(data),
+        };
+        return this.makeRequest(`/users`, RequestType.POST, payload);
     }
 }
 

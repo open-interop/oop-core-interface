@@ -4,53 +4,130 @@ $color-white: #fff;
 
 body {
     margin: 0;
-    overflow: hidden;
     height: 100vh;
 }
 
 div {
     &[id="root"] {
-        display: flex;
-        flex-direction: row;
+        position: relative;
 
-        .left-side {
-            width: 7rem;
-            border-right: 1px solid $color-grey;
+        .header {
+            height: 4rem;
+            width: 100%;
+
+            img {
+                width: 7rem;
+            }
+
+            nav {
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+
+                &[data-baseweb="header-navigation"] {
+                    border: 0;
+                    padding-right: 12px;
+                }
+            }
+        }
+
+        .below-header {
+            display: flex;
+            flex-direction: row;
 
             .side-navigation {
-                img {
-                    width: 7rem;
+                display: flex;
+                flex-direction: column;
+                height: calc(100vh - 4rem);
+                position: relative;
+                width: 5rem;
+                z-index: 100;
+
+                .filler {
+                    background: white;
+                    flex-grow: 1;
+                }
+
+                .navigation-item {
+                    padding: 1rem;
+                    background: white;
+
+                    &.active {
+                        color: blue;
+                        a {
+                            color: blue;
+                        }
+                    }
+
+                    a {
+                        text-decoration: none;
+                        color: black;
+                    }
+
+                    span {
+                        cursor: pointer;
+                    }
+                }
+
+                .nested-navigation {
+                    overflow-y: auto;
+                    min-width: 10rem;
+                    background-color: white;
+                    height: calc(100vh - 4rem);
+                    position: absolute;
+                    top: 0;
+                    left: -5rem;
+                    transition: 1s;
+                    z-index: -1;
+
+                    .navigation-item {
+                        heigth: auto;
+                        padding: 1rem;
+                        position: relative;
+                        z-index: -1;
+                        cursor: pointer;
+
+                        &.active {
+                            a {
+                                color: blue;
+                            }
+                        }
+
+                        &.group-name {
+                            background-color: lightblue;
+                        }
+
+                        &.device-name {
+                        }
+                    }
+
+                    &.open {
+                        background-color: white;
+                        position: absolute;
+                        top: 0;
+                        left: 5rem;
+                        height: calc(100vh - 4rem);
+                        transition: 1s;
+                        z-index: -1;
+                    }
+
+                    .bottom {
+                        margin: 0.5rem;
+                        position: relative;
+                        right: 0;
+                        bottom: 0;
+                    }
                 }
             }
 
-            + .right-side {
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
+            .content {
+                flex: 1;
+                padding: 2rem;
+                background-color: $color-grey;
 
-                .header {
-                    height: 4rem;
-
-                    nav {
-                        &[data-baseweb="header-navigation"] {
-                            border: 0;
-                            justify-content: flex-end;
-                            padding-right: 12px;
-                        }
-                    }
-                }
-
-                .content {
-                    padding: 2rem;
-                    overflow: auto;
-                    flex-grow: 1;
-                    background-color: $color-grey;
-
-                    .content-wrapper {
-                        background-color: $color-white;
-                        padding: 1rem;
-                    }
+                .content-wrapper {
+                    background-color: $color-white;
+                    padding: 1rem;
                 }
             }
         }
@@ -76,10 +153,6 @@ div {
     justify-content: center;
     height: 100vh;
     width: 100%;
-
-    + .right-side {
-        display: none;
-    }
 
     .login-form {
         width: 25%;
