@@ -149,6 +149,10 @@ class OopCore extends EventEmitter {
         });
     }
 
+    resetPassword(email) {
+        return Promise.resolve("check your email");
+    }
+
     logout() {
         cookie.remove("token", { path: "/" });
         this.token = null;

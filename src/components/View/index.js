@@ -9,6 +9,7 @@ export * from "./Transmissions";
 export * from "./Header";
 export * from "./Home";
 export * from "./Login";
+export * from "./PasswordReset";
 export * from "./Profile";
 export * from "./SideNavigation";
 export * from "./Site";

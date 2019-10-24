@@ -7,26 +7,30 @@ import { Error, LineWrapper } from "../Universal";
 import logo from "../../resources/open_interop_logo_wide.png";
 import OopCore from "../../OopCore";
 
-const Login = props => {
+const PasswordReset = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
 
     const handleSubmit = () => {
         setLoading(true);
         setErrorMessage("");
-        OopCore.login(email, password).catch(error => {
-            setErrorMessage(error.message);
-            setLoading(false);
-        });
+        OopCore.resetPassword(email)
+            .then(response => {
+                setErrorMessage(response);
+                setLoading(false);
+            })
+            .catch(error => {
+                setErrorMessage(error.message);
+                setLoading(false);
+            });
     };
 
     return (
         <>
             <div className="login-form">
                 <img src={logo} alt="logo" />
-                <LineWrapper title="Sign in">
+                <LineWrapper title="Forgotten your password?">
                     <FormControl>
                         <Input
                             id="input-email"
@@ -39,29 +43,16 @@ const Login = props => {
                             placeholder="E-mail address"
                         />
                     </FormControl>
-                    <FormControl>
-                        <Input
-                            id="input-password"
-                            type="password"
-                            autoComplete="password"
-                            value={password}
-                            onChange={event => {
-                                setPassword(event.currentTarget.value);
-                            }}
-                            onKeyDown={event => {
-                                if (event.keyCode === 13) {
-                                    handleSubmit();
-                                }
-                            }}
-                            placeholder="Password"
-                        />
-                    </FormControl>
+                    <div>
+                        Enter your email address and we'll send you a link to
+                        reset your password
+                    </div>
                     <div className="space-between">
                         <Button type="submit" onClick={handleSubmit}>
-                            login
+                            Submit
                         </Button>
-                        <Button $as={Link} to={"/password-reset"}>
-                            Forgot Password
+                        <Button $as={Link} to={"/login"}>
+                            Go back
                         </Button>
                     </div>
                     <div>
@@ -75,4 +66,4 @@ const Login = props => {
     );
 };
 
-export { Login };
+export { PasswordReset };

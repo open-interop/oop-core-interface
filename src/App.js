@@ -13,6 +13,7 @@ import {
     Header,
     Home,
     Login,
+    PasswordReset,
     Profile,
     SideNavigation,
     Site,
@@ -73,7 +74,7 @@ class App extends Component {
                             : `?redirect=${currentPath}`,
                 }}
             />
-        ) : currentPath === "/login" ? (
+        ) : currentPath === "/login" || currentPath === "/password-reset" ? (
             <div className="login">
                 <Component {...props} />
             </div>
@@ -95,6 +96,13 @@ class App extends Component {
                         exact
                         render={props =>
                             this.getComponent(hasUser, Login, props)
+                        }
+                    />
+                    <Route
+                        path="/password-reset"
+                        exact
+                        render={props =>
+                            this.getComponent(hasUser, PasswordReset, props)
                         }
                     />
                     {hasUser && (
