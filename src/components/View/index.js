@@ -1,4 +1,5 @@
 export * from "./Device";
+export * from "./DeviceGroup";
 export * from "./DeviceGroups";
 export * from "./Devices";
 export * from "./DeviceTempr";

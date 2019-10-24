@@ -118,6 +118,24 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/devices`, RequestType.POST, data);
     }
 
+    updateDeviceGroup(deviceGroup) {
+        const payload = { device_group: deviceGroup };
+        return this.makeRequest(
+            `/device_groups/${deviceGroup.id}`,
+            RequestType.PUT,
+            payload,
+        );
+    }
+
+    createDeviceGroup(deviceGroup) {
+        const payload = { device_group: deviceGroup };
+        return this.makeRequest(`/device_groups`, RequestType.POST, payload);
+    }
+
+    getDeviceGroup(deviceGroupId) {
+        return this.makeRequest(`/device_groups/${deviceGroupId}`);
+    }
+
     mapQueryParameter(key) {
         switch (key) {
             case "pageSize":
@@ -191,8 +209,14 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
     }
 
-    getDeviceGroups() {
-        return this.makeRequest("/device_groups");
+    getDeviceGroups(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/device_groups`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     getTemprs(deviceGroupId, queryParameters) {

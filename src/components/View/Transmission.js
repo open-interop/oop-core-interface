@@ -25,6 +25,9 @@ const Transmission = props => {
 
     return (
         <div className="content-wrapper">
+            <Button $as={Link} to={allTransmissionsPath}>
+                <ArrowLeft size={24} />
+            </Button>
             <DataProvider
                 getData={() => {
                     return OopCore.getTransmission(
@@ -37,9 +40,6 @@ const Transmission = props => {
                 }}
                 renderData={() => (
                     <>
-                        <Button $as={Link} to={allTransmissionsPath}>
-                            <ArrowLeft size={24} />
-                        </Button>
                         <FormControl
                             label="Transmission UUID"
                             key={`form-control-transmission-uuid`}

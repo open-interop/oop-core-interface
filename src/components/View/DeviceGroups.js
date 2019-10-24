@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
+import Show from "baseui/icon/show";
 import { useQueryParam, NumberParam } from "use-query-params";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
@@ -19,15 +20,23 @@ const DeviceGroups = props => {
 
     return (
         <div className="content-wrapper">
-            <h2>Device Groups</h2>
+            <div className="space-between">
+                <h2>Device Groups</h2>
+                <Button $as={Link} to={`/device-groups/new`}>
+                    New
+                </Button>
+            </div>
 
             <DataProvider
                 getData={() => {
-                    return OopCore.getDeviceGroups().then(response => {
-                        setDeviceGroups(response);
-                        return response;
-                    });
+                    return OopCore.getDeviceGroups({ page, pageSize }).then(
+                        response => {
+                            setDeviceGroups(response);
+                            return response;
+                        },
+                    );
                 }}
+                renderKey={props.location.search}
                 renderData={() => (
                     <>
                         <Table
@@ -36,6 +45,11 @@ const DeviceGroups = props => {
                                 if (columnName === "action") {
                                     return (
                                         <>
+                                            <Link
+                                                to={`/device-groups/${content}`}
+                                            >
+                                                <Show />
+                                            </Link>
                                             <Button
                                                 $as={Link}
                                                 to={`${props.location.pathname}/${content}/temprs`}
