@@ -26,7 +26,7 @@ const User = props => {
             ? Promise.resolve({
                   id: "",
                   email: "",
-                  time_zone: "",
+                  timeZone: "",
               })
             : OopCore.getUser(props.match.params.userId);
     };
@@ -66,9 +66,7 @@ const User = props => {
     const saveButtonDisabled = () => {
         if (blankUser) {
             return (
-                !updatedUser.email ||
-                !updatedUser.time_zone ||
-                !passwordComplete
+                !updatedUser.email || !updatedUser.timeZone || !passwordComplete
             );
         } else {
             return identical(user, updatedUser) && !passwordComplete;
@@ -156,10 +154,10 @@ const User = props => {
                                 valueKey="id"
                                 searchable={true}
                                 onChange={event =>
-                                    setValue("time_zone", event.value[0].id)
+                                    setValue("timeZone", event.value[0].id)
                                 }
                                 value={timezones.find(
-                                    item => item.id === updatedUser.time_zone,
+                                    item => item.id === updatedUser.timeZone,
                                 )}
                             />
                         </FormControl>

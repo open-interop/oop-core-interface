@@ -25,7 +25,7 @@ const Profile = props => {
             >
                 <Input
                     id={"input-created-at"}
-                    value={props.user.created_at}
+                    value={props.user.createdAt}
                     disabled
                 />
             </FormControl>
@@ -35,7 +35,7 @@ const Profile = props => {
             >
                 <Input
                     id={"input-updated-at"}
-                    value={props.user.updated_at}
+                    value={props.user.updatedAt}
                     disabled
                 />
             </FormControl>

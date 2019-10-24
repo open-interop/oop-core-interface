@@ -25,7 +25,7 @@ const Tempr = props => {
             ? Promise.resolve({
                   name: "",
                   description: "",
-                  device_group_id: null,
+                  deviceGroupId: null,
                   body: {
                       language: "js",
                       script: "",
@@ -70,7 +70,7 @@ const Tempr = props => {
 
     const canMoveTempr = () => {
         setMoveGroupError("");
-        return OopCore.getDeviceTemprs(updatedTempr.device_group_id, {
+        return OopCore.getDeviceTemprs(updatedTempr.deviceGroupId, {
             temprId: updatedTempr.id,
         }).then(response => {
             if (response.data.length) {
@@ -122,14 +122,14 @@ const Tempr = props => {
                                 onChange={event => {
                                     if (blankTempr) {
                                         setValue(
-                                            "device_group_id",
+                                            "deviceGroupId",
                                             event.value[0].id,
                                         );
                                     } else {
                                         canMoveTempr().then(result => {
                                             if (result) {
                                                 setValue(
-                                                    "device_group_id",
+                                                    "deviceGroupId",
                                                     event.value[0].id,
                                                 );
                                             } else {
@@ -142,8 +142,7 @@ const Tempr = props => {
                                 }}
                                 value={updatedTempr.groups.find(
                                     item =>
-                                        item.id ===
-                                        updatedTempr.device_group_id,
+                                        item.id === updatedTempr.deviceGroupId,
                                 )}
                             />
                         </FormControl>
@@ -169,7 +168,7 @@ const Tempr = props => {
                             >
                                 <Button
                                     $as={Link}
-                                    to={`/device-groups/${updatedTempr.device_group_id}/device-temprs/?temprId=${updatedTempr.id}`}
+                                    to={`/device-groups/${updatedTempr.deviceGroupId}/device-temprs/?temprId=${updatedTempr.id}`}
                                 >
                                     Device Temprs
                                 </Button>
@@ -189,13 +188,13 @@ const Tempr = props => {
                                         theme="github"
                                         onChange={value =>
                                             setValue(
-                                                "example_transmission_body",
+                                                "exampleTransmissionBody",
                                                 value,
                                             )
                                         }
                                         editorProps={{ $blockScrolling: true }}
                                         value={
-                                            updatedTempr.example_transmission_body
+                                            updatedTempr.exampleTransmissionBody
                                         }
                                     />
                                 </div>
@@ -221,7 +220,7 @@ const Tempr = props => {
                                         theme="github"
                                         editorProps={{ $blockScrolling: true }}
                                         defaultValue={
-                                            updatedTempr.output_transmission_body
+                                            updatedTempr.outputTransmissionBody
                                         }
                                         readOnly
                                     />

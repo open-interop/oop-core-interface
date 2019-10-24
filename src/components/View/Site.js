@@ -27,20 +27,20 @@ const Site = props => {
     const getSite = () => {
         return blankSite
             ? Promise.resolve({
-                  account_id: "",
+                  accountId: "",
                   address: "",
                   city: "",
                   country: "",
                   description: "",
-                  external_uuids: {},
+                  externalUuids: {},
                   latitude: "",
                   longitude: "",
                   name: "",
                   region: "",
-                  site_id: "",
+                  siteId: "",
                   state: "",
-                  time_zone: "",
-                  zip_code: "",
+                  timeZone: "",
+                  zipCode: "",
               })
             : OopCore.getSite(props.match.params.siteId);
     };
@@ -82,15 +82,6 @@ const Site = props => {
             },
         );
     };
-
-    const accordionTitle = `${updatedSite.address || ""}, 
-                ${updatedSite.zip_code || ""}, 
-                ${updatedSite.city || ""}, 
-                ${updatedSite.region || ""}, 
-                ${updatedSite.state || ""}, 
-                ${updatedSite.country || ""}, 
-                ${updatedSite.latitude || ""}, 
-                ${updatedSite.longitude || ""}`;
 
     return (
         <div className="content-wrapper">
@@ -141,11 +132,11 @@ const Site = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event =>
-                                    setValue("time_zone", event.value[0].id)
+                                    setValue("timeZone", event.value[0].id)
                                 }
                                 value={timezones.find(
                                     timezone =>
-                                        timezone.id === updatedSite.time_zone,
+                                        timezone.id === updatedSite.timeZone,
                                 )}
                             />
                         </FormControl>
@@ -158,11 +149,11 @@ const Site = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 onChange={event => {
-                                    setValue("site_id", event.value[0].id);
+                                    setValue("siteId", event.value[0].id);
                                 }}
                                 value={
                                     sites.find(
-                                        site => site.id === updatedSite.site_id,
+                                        site => site.id === updatedSite.siteId,
                                     ) || null
                                 }
                             />
@@ -193,10 +184,10 @@ const Site = props => {
                                     >
                                         <Input
                                             id={"input-zip-code"}
-                                            value={updatedSite.zip_code || ""}
+                                            value={updatedSite.zipCode || ""}
                                             onChange={event =>
                                                 setValue(
-                                                    "zip_code",
+                                                    "zipCode",
                                                     event.currentTarget.value,
                                                 )
                                             }
@@ -300,9 +291,9 @@ const Site = props => {
                             key={"form-control-group-external-uuids"}
                         >
                             <PairInput
-                                data={updatedSite.external_uuids}
+                                data={updatedSite.externalUuids}
                                 updateData={data =>
-                                    setValue("external_uuids", data)
+                                    setValue("externalUuids", data)
                                 }
                             />
                         </FormControl>

@@ -24,6 +24,72 @@ class OopCore extends EventEmitter {
         });
     }
 
+    toCamelCase(s) {
+        return s.replace(/[-_]([a-z])/gi, $1 => {
+            return $1.toUpperCase();
+        });
+    }
+
+    toSnakeCase(s) {
+        return s
+            .replace(/^\w/, c => c.toLowerCase())
+            .replace(/[A-Z]/g, $1 => {
+                return "_" + $1.toLowerCase();
+            });
+    }
+
+    isObject(o) {
+        return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
+    }
+
+    doNotConvert = fieldName => {
+        return fieldName === "externalUuids" || fieldName === "headers";
+    };
+
+    snakeToCamel(o) {
+        if (this.isObject(o)) {
+            const n = {};
+
+            Object.keys(o).forEach(k => {
+                if (this.doNotConvert(k)) {
+                    n[this.toCamelCase(k)] = o[k];
+                } else {
+                    n[this.toCamelCase(k)] = this.snakeToCamel(o[k]);
+                }
+            });
+
+            return n;
+        } else if (Array.isArray(o)) {
+            return o.map(i => {
+                return this.snakeToCamel(i);
+            });
+        }
+
+        return o;
+    }
+
+    camelToSnake(o) {
+        if (this.isObject(o)) {
+            const n = {};
+
+            Object.keys(o).forEach(k => {
+                if (this.doNotConvert(k)) {
+                    n[this.toSnakeCase(k)] = o[k];
+                } else {
+                    n[this.toSnakeCase(k)] = this.camelToSnake(o[k]);
+                }
+            });
+
+            return n;
+        } else if (Array.isArray(o)) {
+            return o.map(i => {
+                return this.camelToSnake(i);
+            });
+        }
+
+        return o;
+    }
+
     makeRequest(
         endpoint,
         requestType = RequestType.GET,
@@ -45,7 +111,7 @@ class OopCore extends EventEmitter {
             requestType === RequestType.PUT
         ) {
             options.headers["Content-Type"] = "application/json";
-            options.body = JSON.stringify(data);
+            options.body = JSON.stringify(this.camelToSnake(data));
         }
 
         return fetch(this.apiBase + endpoint, options)
@@ -61,7 +127,9 @@ class OopCore extends EventEmitter {
                     throw new Error(response.statusText);
                 }
 
-                return response.json();
+                return response.json().then(res => {
+                    return this.snakeToCamel(res);
+                });
             })
             .catch(error => {
                 throw error;
@@ -108,9 +176,13 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/devices/${deviceId}`);
     }
 
-    updateDevice(device) {
-        const data = { device: device };
-        return this.makeRequest(`/devices/${device.id}`, RequestType.PUT, data);
+    updateDevice(data) {
+        const payload = { device: data };
+        return this.makeRequest(
+            `/devices/${data.id}`,
+            RequestType.PUT,
+            payload,
+        );
     }
 
     createDevice(device) {
@@ -268,22 +340,33 @@ class OopCore extends EventEmitter {
     }
 
     createDeviceTemprObject = data => {
-        const result = {};
-        result.device_id = data.deviceId;
-        result.tempr_id = data.temprId;
-        result.endpoint_type = data.endpointType;
-        result.queue_response = data.queueResponse;
-        const {
+        const result = (({
+            deviceId,
+            temprId,
+            endpointType,
+            queueResponse,
+        }) => ({
+            deviceId,
+            temprId,
+            endpointType,
+            queueResponse,
+        }))(data);
+
+        result.options = (({
             headers,
             host,
             path,
             port,
             protocol,
             requestMethod,
-            // eslint-disable-next-line no-unused-vars
-            ...rest
-        } = data.template;
-        result.options = { headers, host, path, port, protocol, requestMethod };
+        }) => ({
+            headers,
+            host,
+            path,
+            port,
+            protocol,
+            requestMethod,
+        }))(data.template);
         return result;
     };
 

@@ -32,15 +32,15 @@ const Device = props => {
         return blankDevice
             ? Promise.resolve({
                   active: false,
-                  authentication_headers: [],
-                  authentication_path: "",
-                  authentication_query: [],
-                  device_group_id: "",
+                  authenticationHeaders: [],
+                  authenticationPath: "",
+                  authenticationQuery: [],
+                  deviceGroupId: "",
                   latitude: "",
                   longitude: "",
                   name: "",
-                  site_id: "",
-                  time_zone: "",
+                  siteId: "",
+                  timeZone: "",
               })
             : OopCore.getDevice(props.match.params.deviceId);
     };
@@ -72,8 +72,8 @@ const Device = props => {
         const copy = {};
         Object.keys(response).map(key => {
             if (
-                key === "authentication_headers" ||
-                key === "authentication_query"
+                key === "authenticationHeaders" ||
+                key === "authenticationQuery"
             ) {
                 return (copy[key] = copyOfArray(response[key]));
             } else {
@@ -95,7 +95,7 @@ const Device = props => {
         if (blankDevice) {
             return Promise.resolve(true);
         } else {
-            return OopCore.getDeviceTemprs(updatedDevice.device_group_id, {
+            return OopCore.getDeviceTemprs(updatedDevice.deviceGroupId, {
                 deviceId: updatedDevice.id,
             }).then(response => {
                 if (response.data.length) {
@@ -114,13 +114,13 @@ const Device = props => {
 
     const noAuthentication = () => {
         return (
-            !updatedDevice.authentication_path &&
-            (updatedDevice.authentication_query &&
-                !updatedDevice.authentication_query.find(
+            !updatedDevice.authenticationPath &&
+            (updatedDevice.authenticationQuery &&
+                !updatedDevice.authenticationQuery.find(
                     item => item[0] && item[1],
                 )) &&
-            (updatedDevice.authentication_headers &&
-                !updatedDevice.authentication_headers.find(
+            (updatedDevice.authenticationHeaders &&
+                !updatedDevice.authenticationHeaders.find(
                     item => item[0] && item[1],
                 ))
         );
@@ -148,23 +148,19 @@ const Device = props => {
     };
 
     const saveDisabled = () => {
+        const { authenticationHeaders, authenticationQuery, ...rest } = device;
         const {
-            authentication_headers,
-            authentication_query,
-            ...rest
-        } = device;
-        const {
-            authentication_headers: updated_headers,
-            authentication_query: updated_query,
+            authenticationHeaders: updatedHeaders,
+            authenticationQuery: updatedQuery,
             ...updatedRest
         } = updatedDevice;
         return (
             noAuthentication() ||
             !updatedDevice.name ||
-            !updatedDevice.device_group_id ||
-            !updatedDevice.site_id ||
-            (identicalArray(authentication_headers, updated_headers) &&
-                identicalArray(authentication_query, updated_query) &&
+            !updatedDevice.deviceGroupId ||
+            !updatedDevice.siteId ||
+            (identicalArray(authenticationHeaders, updatedHeaders) &&
+                identicalArray(authenticationQuery, updatedQuery) &&
                 identicalObject(rest, updatedRest))
         );
     };
@@ -208,10 +204,10 @@ const Device = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event =>
-                                    setValue("site_id", event.value[0].id)
+                                    setValue("siteId", event.value[0].id)
                                 }
                                 value={sites.find(
-                                    item => item.id === updatedDevice.site_id,
+                                    item => item.id === updatedDevice.siteId,
                                 )}
                             />
                         </FormControl>
@@ -231,7 +227,7 @@ const Device = props => {
                                     canMoveDevice().then(canMove => {
                                         if (canMove) {
                                             setValue(
-                                                "device_group_id",
+                                                "deviceGroupId",
                                                 event.value[0].id,
                                             );
                                         } else {
@@ -243,8 +239,7 @@ const Device = props => {
                                 }}
                                 value={groups.find(
                                     item =>
-                                        item.id ===
-                                        updatedDevice.device_group_id,
+                                        item.id === updatedDevice.deviceGroupId,
                                 )}
                             />
                         </FormControl>
@@ -267,10 +262,10 @@ const Device = props => {
                                 valueKey="id"
                                 searchable={true}
                                 onChange={event =>
-                                    setValue("time_zone", event.value[0].id)
+                                    setValue("timeZone", event.value[0].id)
                                 }
                                 value={timezones.find(
-                                    item => item.id === updatedDevice.time_zone,
+                                    item => item.id === updatedDevice.timeZone,
                                 )}
                             />
                         </FormControl>
@@ -319,12 +314,12 @@ const Device = props => {
                                         <Input
                                             id={`input-authentication-path`}
                                             value={
-                                                updatedDevice.authentication_path ||
+                                                updatedDevice.authenticationPath ||
                                                 ""
                                             }
                                             onChange={event =>
                                                 setValue(
-                                                    "authentication_path",
+                                                    "authenticationPath",
                                                     event.currentTarget.value ||
                                                         null,
                                                 )
@@ -342,11 +337,11 @@ const Device = props => {
                                     >
                                         <PairInput
                                             data={
-                                                updatedDevice.authentication_headers
+                                                updatedDevice.authenticationHeaders
                                             }
                                             updateData={data =>
                                                 setValue(
-                                                    "authentication_headers",
+                                                    "authenticationHeaders",
                                                     data,
                                                 )
                                             }
@@ -363,11 +358,11 @@ const Device = props => {
                                     >
                                         <PairInput
                                             data={
-                                                updatedDevice.authentication_query
+                                                updatedDevice.authenticationQuery
                                             }
                                             updateData={data =>
                                                 setValue(
-                                                    "authentication_query",
+                                                    "authenticationQuery",
                                                     data,
                                                 )
                                             }
@@ -383,7 +378,7 @@ const Device = props => {
                             >
                                 <Button
                                     $as={Link}
-                                    to={`/device-groups/${updatedDevice.device_group_id}/device-temprs/?deviceId=${updatedDevice.id}`}
+                                    to={`/device-groups/${updatedDevice.deviceGroupId}/device-temprs/?deviceId=${updatedDevice.id}`}
                                 >
                                     Device Temprs
                                 </Button>

@@ -47,7 +47,7 @@ const Transmission = props => {
                             <Input
                                 disabled
                                 id={`input-transmission-uuid`}
-                                value={transmission.transmission_uuid || ""}
+                                value={transmission.transmissionUuid || ""}
                                 onChange={event =>
                                     setValue(
                                         "transmission-uuid",
@@ -63,7 +63,7 @@ const Transmission = props => {
                             <Input
                                 disabled
                                 id={`input-message-uuid`}
-                                value={transmission.message_uuid || ""}
+                                value={transmission.messageUuid || ""}
                                 onChange={event =>
                                     setValue(
                                         "message-uuid",
@@ -76,7 +76,7 @@ const Transmission = props => {
                             <Input
                                 disabled
                                 id={`input-device`}
-                                value={transmission.device_id || ""}
+                                value={transmission.deviceId || ""}
                             />
                         </FormControl>
                         <FormControl
@@ -86,7 +86,7 @@ const Transmission = props => {
                             <Input
                                 disabled
                                 id={`input-device-tempr-id`}
-                                value={transmission.device_tempr_id || ""}
+                                value={transmission.deviceTemprId || ""}
                             />
                         </FormControl>
                         <FormControl label="Status" key={`form-control-status`}>
@@ -104,7 +104,7 @@ const Transmission = props => {
                                 disabled
                                 type="datetime-local"
                                 id={`input-transmitted-at`}
-                                value={transmission.transmitted_at || ""}
+                                value={transmission.transmittedAt || ""}
                             />
                         </FormControl>
                         {transmission.body && (
