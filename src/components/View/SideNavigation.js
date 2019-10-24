@@ -109,7 +109,9 @@ const SideNavigation = props => {
             {devicesSubNavigation()}
             <NavigationGroup
                 isActive={
-                    pathIncludes("/users") || pathIncludes("/device-groups")
+                    pathIncludes("/users") ||
+                    pathIncludes("/sites") ||
+                    pathIncludes("/device-groups")
                 }
                 pathName="Settings"
                 isOpen={settingsAccordionOpen}
@@ -119,6 +121,11 @@ const SideNavigation = props => {
                     path="/users"
                     pathName="Users"
                     isActive={pathIncludes("/users")}
+                />
+                <NavigationItem
+                    path="/sites"
+                    pathName="Sites"
+                    isActive={pathIncludes("/sites")}
                 />
                 <NavigationItem
                     path="/device-groups"

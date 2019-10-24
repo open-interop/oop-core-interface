@@ -148,8 +148,14 @@ class OopCore extends EventEmitter {
         });
     }
 
-    getDevices() {
-        return this.makeRequest("/devices");
+    getDevices(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/devices`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     getDevice(deviceId) {
@@ -163,6 +169,11 @@ class OopCore extends EventEmitter {
             RequestType.PUT,
             payload,
         );
+    }
+
+    createDevice(device) {
+        const data = { device: device };
+        return this.makeRequest(`/devices`, RequestType.POST, data);
     }
 
     updateDeviceGroup(deviceGroup) {
@@ -221,7 +232,7 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
         let path = `/devices/${deviceId}/transmissions`;
         if (parameters) {
-            path += "/?" + parameters;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
@@ -233,15 +244,34 @@ class OopCore extends EventEmitter {
         );
     }
 
-    getSites() {
-        return this.makeRequest("/sites");
+    getSites(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/sites`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getSite(siteId) {
+        return this.makeRequest(`/sites/${siteId}`);
+    }
+
+    createSite(data) {
+        return this.makeRequest(`/sites`, RequestType.POST, data);
+    }
+
+    updateSite(siteId, data) {
+        const payload = { site: data };
+        return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
     }
 
     getDeviceGroups(queryParameters) {
         const parameters = this.getParameters(queryParameters);
         let path = `/device_groups`;
         if (parameters) {
-            path += "/?" + parameters;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
@@ -251,7 +281,7 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
         let path = `/device_groups/${deviceGroupId}/temprs`;
         if (parameters) {
-            path += "/?" + parameters;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
@@ -283,7 +313,7 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
         let path = `/device_groups/${deviceGroupId}/device_temprs`;
         if (parameters) {
-            path += "/?" + parameters;
+            path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
@@ -346,8 +376,14 @@ class OopCore extends EventEmitter {
         );
     }
 
-    getUsers() {
-        return this.makeRequest("/users");
+    getUsers(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/users`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     getUser(userId) {

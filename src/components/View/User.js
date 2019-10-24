@@ -6,7 +6,7 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider, Error } from "../Universal";
-import { Timezones } from "./Timezones";
+import { Timezones } from "../../resources/Timezones";
 import OopCore from "../../OopCore";
 
 const User = props => {
