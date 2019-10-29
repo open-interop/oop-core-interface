@@ -100,7 +100,6 @@ const DeviceTempr = props => {
             ...restOfUpdatedOptions
         } = updatedOptions;
 
-        console.log(updatedDeviceTempr);
         return (
             !updatedDeviceTempr.name ||
             !updatedDeviceTempr.deviceId ||
