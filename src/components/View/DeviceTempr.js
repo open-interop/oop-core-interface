@@ -6,8 +6,9 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider, Error } from "../Universal";
+import { DataProvider } from "../Universal";
 import { HttpTemprTemplate } from "../Global";
+import toastr from "toastr";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
@@ -16,13 +17,13 @@ const DeviceTempr = props => {
     const [devices, setDevices] = useState([]);
     const [temprs, setTemprs] = useState([]);
     const blankDeviceTempr = props.match.params.deviceTemprId === "new";
-    const [error, setError] = useState("");
 
     const getDeviceTempr = () => {
         return blankDeviceTempr
             ? Promise.resolve({
                   name: "",
                   deviceId: null,
+                  queueResponse: false,
                   endpointType: "http",
                   temprId: null,
                   options: {
@@ -99,15 +100,21 @@ const DeviceTempr = props => {
             ...restOfUpdatedOptions
         } = updatedOptions;
 
-        if (blankDeviceTempr) {
-            return false;
-        } else {
-            return (
-                identical(headers, updatedHeaders) &&
+        console.log(updatedDeviceTempr);
+        return (
+            !updatedDeviceTempr.name ||
+            !updatedDeviceTempr.deviceId ||
+            !updatedDeviceTempr.temprId ||
+            !updatedDeviceTempr.endpointType ||
+            !updatedDeviceTempr.options.host ||
+            !updatedDeviceTempr.options.path ||
+            !updatedDeviceTempr.options.port ||
+            !updatedDeviceTempr.options.protocol ||
+            !updatedDeviceTempr.options.requestMethod ||
+            (identical(headers, updatedHeaders) &&
                 identical(restOfOptions, restOfUpdatedOptions) &&
-                identical(restOfTempr, updatedRestOfTempr)
-            );
-        }
+                identical(restOfTempr, updatedRestOfTempr))
+        );
     };
 
     return (
@@ -127,6 +134,7 @@ const DeviceTempr = props => {
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
+                            required
                         >
                             <Input
                                 id={"input-name"}
@@ -223,13 +231,18 @@ const DeviceTempr = props => {
                         </FormControl>
                         <Button
                             onClick={() => {
-                                setError("");
+                                toastr.clear();
                                 if (blankDeviceTempr) {
                                     return OopCore.createDeviceTempr(
                                         props.match.params.deviceGroupId,
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
+                                            toastr.success(
+                                                "Created new device tempr",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshDeviceTempr(response);
                                             props.history.replace(
                                                 `${allDeviceTemprsPath}/${response.id}`,
@@ -237,8 +250,10 @@ const DeviceTempr = props => {
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while saving device tempr",
+                                            toastr.error(
+                                                "Something went wrong while creating device tempr",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -248,12 +263,19 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
+                                            toastr.success(
+                                                "Updated device tempr",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshDeviceTempr(response);
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while saving device tempr",
+                                            toastr.error(
+                                                "Something went wrong while updating device tempr",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
@@ -262,7 +284,6 @@ const DeviceTempr = props => {
                         >
                             {blankDeviceTempr ? "Create" : "Save"}
                         </Button>
-                        <Error message={error} />
                     </>
                 )}
             />

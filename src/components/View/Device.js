@@ -8,8 +8,9 @@ import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { Accordion, Panel } from "baseui/accordion";
 import { PairInput } from "../Global";
-import { DataProvider, Error } from "../Universal";
+import { DataProvider } from "../Universal";
 import OopCore from "../../OopCore";
+import toastr from "toastr";
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
@@ -17,7 +18,6 @@ const Device = props => {
     const [updatedDevice, setUpdatedDevice] = useState({});
     const [sites, setSites] = useState([]);
     const [groups, setGroups] = useState([]);
-    const [error, setError] = useState("");
     const [moveGroupError, setMoveGroupError] = useState("");
     const timezones = Timezones.map(timezone => {
         return {
@@ -311,76 +311,85 @@ const Device = props => {
                         </FormControl>
                         <Accordion>
                             <Panel title="Authentication">
-                                <div className="content-wrapper">
-                                    <FormControl
-                                        label="Authentication path"
-                                        key={`form-control-authentication-path`}
-                                        error={
-                                            noAuthentication()
-                                                ? "Please provide at least one form of authentication"
-                                                : ""
-                                        }
-                                    >
-                                        <Input
-                                            id={`input-authentication-path`}
-                                            value={
-                                                updatedDevice.authenticationPath ||
-                                                ""
+                                <FormControl
+                                    label="Longitude"
+                                    key={`form-control-longitude`}
+                                >
+                                    <div className="content-wrapper">
+                                        <FormControl
+                                            label="Authentication path"
+                                            key={`form-control-authentication-path`}
+                                            error={
+                                                noAuthentication()
+                                                    ? "Please provide at least one form of authentication"
+                                                    : ""
                                             }
-                                            onChange={event =>
-                                                setValue(
-                                                    "authenticationPath",
-                                                    event.currentTarget.value ||
-                                                        null,
-                                                )
+                                        >
+                                            <Input
+                                                id={`input-authentication-path`}
+                                                value={
+                                                    updatedDevice.authenticationPath ||
+                                                    ""
+                                                }
+                                                onChange={event =>
+                                                    setValue(
+                                                        "authenticationPath",
+                                                        event.currentTarget
+                                                            .value || null,
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormControl
+                                            label="Authentication headers"
+                                            key={`form-control-authentication-headers`}
+                                            error={
+                                                noAuthentication()
+                                                    ? "Please provide at least one form of authentication"
+                                                    : ""
                                             }
-                                        />
-                                    </FormControl>
-                                    <FormControl
-                                        label="Authentication headers"
-                                        key={`form-control-authentication-headers`}
-                                        error={
-                                            noAuthentication()
-                                                ? "Please provide at least one form of authentication"
-                                                : ""
-                                        }
-                                    >
-                                        <PairInput
-                                            data={
-                                                updatedDevice.authenticationHeaders
+                                        >
+                                            <PairInput
+                                                data={
+                                                    updatedDevice.authenticationHeaders
+                                                }
+                                                updateData={data =>
+                                                    setValue(
+                                                        "authenticationHeaders",
+                                                        data,
+                                                    )
+                                                }
+                                                refreshKey={
+                                                    updatedDevice.updatedAt
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormControl
+                                            label="Authentication query"
+                                            key={`form-control-authentication-query`}
+                                            error={
+                                                noAuthentication()
+                                                    ? "Please provide at least one form of authentication"
+                                                    : ""
                                             }
-                                            updateData={data =>
-                                                setValue(
-                                                    "authenticationHeaders",
-                                                    data,
-                                                )
-                                            }
-                                            refreshKey={updatedDevice.updatedAt}
-                                        />
-                                    </FormControl>
-                                    <FormControl
-                                        label="Authentication query"
-                                        key={`form-control-authentication-query`}
-                                        error={
-                                            noAuthentication()
-                                                ? "Please provide at least one form of authentication"
-                                                : ""
-                                        }
-                                    >
-                                        <PairInput
-                                            data={
-                                                updatedDevice.authenticationQuery
-                                            }
-                                            updateData={data =>
-                                                setValue(
-                                                    "authenticationQuery",
-                                                    data,
-                                                )
-                                            }
-                                            refreshKey={updatedDevice.updatedAt}
-                                        />
-                                    </FormControl>
-                                </div>
+                                        >
+                                            <PairInput
+                                                data={
+                                                    updatedDevice.authenticationQuery
+                                                }
+                                                updateData={data =>
+                                                    setValue(
+                                                        "authenticationQuery",
+                                                        data,
+                                                    )
+                                                }
+                                                refreshKey={
+                                                    updatedDevice.updatedAt
+                                                }
+                                            />
+                                        </FormControl>
+                                    </div>
+                                </FormControl>
                             </Panel>
                         </Accordion>
                         {!blankDevice && (
@@ -398,11 +407,16 @@ const Device = props => {
                         )}
                         <Button
                             onClick={() => {
-                                setError("");
+                                toastr.clear();
                                 setMoveGroupError("");
                                 if (blankDevice) {
                                     return OopCore.createDevice(updatedDevice)
                                         .then(response => {
+                                            toastr.success(
+                                                "Created new device",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshDevice(response);
                                             props.history.replace(
                                                 `${allDevicesPath}/${response.id}`,
@@ -410,19 +424,28 @@ const Device = props => {
                                         })
                                         .catch(error => {
                                             console.error(error);
-                                            setError(
-                                                "Something went wrong while attepting to save device details",
+                                            toastr.error(
+                                                "Something went wrong while trying to create device",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
                                     return OopCore.updateDevice(updatedDevice)
-                                        .then(response =>
-                                            refreshDevice(response),
-                                        )
+                                        .then(response => {
+                                            toastr.success(
+                                                "Saved device details",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
+                                            refreshDevice(response);
+                                        })
                                         .catch(error => {
                                             console.error(error);
-                                            setError(
-                                                "Something went wrong while attepting to save device details",
+                                            toastr.error(
+                                                "Something went wrong while trying to save device",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
@@ -431,7 +454,6 @@ const Device = props => {
                         >
                             {blankDevice ? "Create" : "Save"}
                         </Button>
-                        <Error message={error} />
                     </>
                 )}
             />

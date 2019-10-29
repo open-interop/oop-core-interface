@@ -4,14 +4,14 @@ import { Button } from "baseui/button";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
+import toastr from "toastr";
 import OopCore from "../../OopCore";
-import { DataProvider, Error } from "../Universal";
+import { DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
     const [deviceGroup, setDeviceGroup] = useState({});
     const [updatedDeviceGroup, setUpdatedDeviceGroup] = useState({});
     const blankDeviceGroup = props.match.params.deviceGroupId === "new";
-    const [error, setError] = useState("");
 
     const allDeviceGroupsPath = props.location.pathname.substr(
         0,
@@ -83,12 +83,17 @@ const DeviceGroup = props => {
 
                         <Button
                             onClick={() => {
-                                setError("");
+                                toastr.clear();
                                 if (blankDeviceGroup) {
                                     OopCore.createDeviceGroup(
                                         updatedDeviceGroup,
                                     )
                                         .then(response => {
+                                            toastr.success(
+                                                "Created new device group",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             props.history.replace(
                                                 `${allDeviceGroupsPath}/${response.id}`,
                                             );
@@ -96,19 +101,30 @@ const DeviceGroup = props => {
                                         })
                                         .catch(error => {
                                             console.error(error);
-                                            setError(
-                                                "Something went wrong while attepting to save device group",
+                                            toastr.error(
+                                                "Something went wrong while creating device group",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
                                     OopCore.updateDeviceGroup(
                                         updatedDeviceGroup,
                                     )
-                                        .then(response => updateState(response))
+                                        .then(response => {
+                                            toastr.success(
+                                                "Updated device group",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
+                                            updateState(response);
+                                        })
                                         .catch(error => {
                                             console.error(error);
-                                            setError(
-                                                "Something went wrong while attepting to save device group",
+                                            toastr.error(
+                                                "Something went wrong while updating device group",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
@@ -124,7 +140,6 @@ const DeviceGroup = props => {
                         >
                             {blankDeviceGroup ? "Create" : "Save"}
                         </Button>
-                        <Error message={error} />
                     </>
                 )}
             />
