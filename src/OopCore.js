@@ -341,11 +341,13 @@ class OopCore extends EventEmitter {
 
     createDeviceTemprObject = data => {
         const result = (({
+            name,
             deviceId,
             temprId,
             endpointType,
             queueResponse,
         }) => ({
+            name,
             deviceId,
             temprId,
             endpointType,
@@ -366,7 +368,7 @@ class OopCore extends EventEmitter {
             port,
             protocol,
             requestMethod,
-        }))(data.template);
+        }))(data.options);
         return result;
     };
 

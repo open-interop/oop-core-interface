@@ -21,10 +21,11 @@ const DeviceTempr = props => {
     const getDeviceTempr = () => {
         return blankDeviceTempr
             ? Promise.resolve({
+                  name: "",
                   deviceId: null,
                   endpointType: "http",
                   temprId: null,
-                  template: {
+                  options: {
                       headers: {},
                       host: "",
                       path: "",
@@ -86,24 +87,24 @@ const DeviceTempr = props => {
     };
 
     const saveButtonDisabled = () => {
-        const { template, ...restOfTempr } = deviceTempr;
+        const { options, ...restOfTempr } = deviceTempr;
         const {
-            template: updatedTemplate,
+            options: updatedOptions,
             ...updatedRestOfTempr
         } = updatedDeviceTempr;
 
-        const { headers, ...restOfTemplate } = template;
+        const { headers, ...restOfOptions } = options;
         const {
             headers: updatedHeaders,
-            ...restOfUpdatedTemplate
-        } = updatedTemplate;
+            ...restOfUpdatedOptions
+        } = updatedOptions;
 
         if (blankDeviceTempr) {
             return false;
         } else {
             return (
                 identical(headers, updatedHeaders) &&
-                identical(restOfTemplate, restOfUpdatedTemplate) &&
+                identical(restOfOptions, restOfUpdatedOptions) &&
                 identical(restOfTempr, updatedRestOfTempr)
             );
         }
@@ -123,6 +124,18 @@ const DeviceTempr = props => {
                 }}
                 renderData={() => (
                     <>
+                        <FormControl
+                            label="Name"
+                            key={"form-control-group-name"}
+                        >
+                            <Input
+                                id={"input-name"}
+                                value={updatedDeviceTempr.name || ""}
+                                onChange={event =>
+                                    setValue("name", event.currentTarget.value)
+                                }
+                            />
+                        </FormControl>
                         <FormControl
                             label="Device"
                             key={"form-control-group-device"}
@@ -202,9 +215,9 @@ const DeviceTempr = props => {
                         <FormControl>
                             <HttpTemprTemplate
                                 endpointType={updatedDeviceTempr.endpointType}
-                                template={updatedDeviceTempr.template}
-                                updateTemplate={template =>
-                                    setValue("template", template)
+                                template={updatedDeviceTempr.options}
+                                updateTemplate={options =>
+                                    setValue("options", options)
                                 }
                             />
                         </FormControl>
