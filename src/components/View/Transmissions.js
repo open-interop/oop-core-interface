@@ -128,6 +128,12 @@ const Transmissions = props => {
                                     hasFilter: true,
                                 },
                                 {
+                                    id: "transmittedAt",
+                                    name: "Transmitted at",
+                                    type: "text",
+                                    hasFilter: false,
+                                },
+                                {
                                     id: "action",
                                     name: "Action",
                                     type: "action",
