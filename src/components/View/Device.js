@@ -390,7 +390,7 @@ const Device = props => {
                             >
                                 <Button
                                     $as={Link}
-                                    to={`/device-groups/${updatedDevice.deviceGroupId}/device-temprs/?deviceId=${updatedDevice.id}`}
+                                    to={`/device-groups/${updatedDevice.deviceGroupId}/device-temprs?deviceId=${updatedDevice.id}`}
                                 >
                                     Device Temprs
                                 </Button>
