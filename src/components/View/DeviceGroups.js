@@ -52,7 +52,7 @@ const DeviceGroups = props => {
                                             </Link>
                                             <Button
                                                 $as={Link}
-                                                to={`devices?deviceGroup=${content}`}
+                                                to={`devices?deviceGroupId=${content}`}
                                             >
                                                 Devices
                                             </Button>

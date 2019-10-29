@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam } from "use-query-params";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import Show from "baseui/icon/show";
 import Menu from "baseui/icon/menu";
 import { Button } from "baseui/button";
@@ -11,6 +11,10 @@ const Devices = props => {
     const [devices, setDevices] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [deviceGroupId, setDeviceGroupId] = useQueryParam(
+        "deviceGroupId",
+        StringParam,
+    );
 
     // reset page number when the search query is changed
     useEffect(() => {
@@ -28,10 +32,12 @@ const Devices = props => {
             </div>
             <DataProvider
                 getData={() =>
-                    OopCore.getDevices({ page, pageSize }).then(response => {
-                        setDevices(response);
-                        return response;
-                    })
+                    OopCore.getDevices({ page, pageSize, deviceGroupId }).then(
+                        response => {
+                            setDevices(response);
+                            return response;
+                        },
+                    )
                 }
                 renderKey={props.location.search}
                 renderData={() => (
@@ -59,7 +65,12 @@ const Devices = props => {
                             columns={[
                                 { id: "id", name: "ID" },
                                 { id: "name", name: "Name" },
-                                { id: "deviceGroupId", name: "Group" },
+                                {
+                                    id: "deviceGroupId",
+                                    name: "Group",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 { id: "siteId", name: "Site" },
                                 { id: "action", name: "Action" },
                             ]}
@@ -68,6 +79,15 @@ const Devices = props => {
                                     return "id";
                                 }
                                 return columnName;
+                            }}
+                            filters={{ deviceGroupId }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "deviceGroupId":
+                                        return setDeviceGroupId(value);
+                                    default:
+                                        return null;
+                                }
                             }}
                         />
                         <Pagination
