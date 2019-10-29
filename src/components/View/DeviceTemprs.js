@@ -103,6 +103,12 @@ const DeviceTemprs = props => {
                             }}
                             columns={[
                                 {
+                                    id: "name",
+                                    name: "Name",
+                                    type: "text",
+                                    hasFilter: false,
+                                },
+                                {
                                     id: "deviceId",
                                     name: "Device Id",
                                     type: "text",
