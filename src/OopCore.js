@@ -215,7 +215,7 @@ class OopCore extends EventEmitter {
             case "page":
                 return "page[number]";
             default:
-                return `filter[${key}]`;
+                return `filter[${this.toSnakeCase(key)}]`;
         }
     }
 
