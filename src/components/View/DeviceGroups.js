@@ -52,13 +52,19 @@ const DeviceGroups = props => {
                                             </Link>
                                             <Button
                                                 $as={Link}
+                                                to={`devices?deviceGroup=${content}`}
+                                            >
+                                                Devices
+                                            </Button>
+                                            <Button
+                                                $as={Link}
                                                 to={`${props.location.pathname}/${content}/temprs`}
                                             >
                                                 View temprs
                                             </Button>
                                             <Button
                                                 $as={Link}
-                                                to={`/device-groups/${content}/device-temprs/?deviceId=${content}`}
+                                                to={`/device-groups/${content}/device-temprs?deviceId=${content}`}
                                             >
                                                 Device Temprs
                                             </Button>
