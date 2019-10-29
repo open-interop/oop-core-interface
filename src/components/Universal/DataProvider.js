@@ -37,7 +37,7 @@ const DataProvider = props => {
             );
         }
     } else {
-        return <Spinner />;
+        return props.loadingFallback ? props.loadingFallback : <Spinner />;
     }
 };
 
