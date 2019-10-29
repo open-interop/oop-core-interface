@@ -22,6 +22,20 @@ const Devices = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize]);
 
+    const getData = () => {
+        return Promise.all([
+            OopCore.getDevices({ page, pageSize, deviceGroupId }),
+            OopCore.getDeviceGroups(),
+        ]).then(([devices, groups]) => {
+            devices.data.forEach(device => {
+                return (device.deviceGroupName =
+                    groups.data.find(group => group.id === device.deviceGroupId)
+                        .name || "");
+            });
+            setDevices(devices);
+            return devices;
+        });
+    };
     return (
         <div className="content-wrapper">
             <div className="space-between">
@@ -31,14 +45,7 @@ const Devices = props => {
                 </Button>
             </div>
             <DataProvider
-                getData={() =>
-                    OopCore.getDevices({ page, pageSize, deviceGroupId }).then(
-                        response => {
-                            setDevices(response);
-                            return response;
-                        },
-                    )
-                }
+                getData={() => getData()}
                 renderKey={props.location.search}
                 renderData={() => (
                     <>
@@ -67,9 +74,13 @@ const Devices = props => {
                                 { id: "name", name: "Name" },
                                 {
                                     id: "deviceGroupId",
-                                    name: "Group",
+                                    name: "Group ID",
                                     type: "text",
                                     hasFilter: true,
+                                },
+                                {
+                                    id: "deviceGroupName",
+                                    name: "Group",
                                 },
                                 { id: "siteId", name: "Site" },
                                 { id: "action", name: "Action" },
