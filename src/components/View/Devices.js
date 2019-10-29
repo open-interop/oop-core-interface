@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+import { useQueryParam, NumberParam } from "use-query-params";
 import Show from "baseui/icon/show";
 import Menu from "baseui/icon/menu";
 import { Button } from "baseui/button";
@@ -13,7 +13,7 @@ const Devices = props => {
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
     const [deviceGroupId, setDeviceGroupId] = useQueryParam(
         "deviceGroupId",
-        StringParam,
+        NumberParam,
     );
 
     // reset page number when the search query is changed
