@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQueryParam, NumberParam } from "use-query-params";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
@@ -26,6 +27,7 @@ const Device = props => {
         };
     });
     const blankDevice = props.match.params.deviceId === "new";
+    const queryParam = useQueryParam("deviceGroupId", NumberParam)[0];
 
     const getDevice = () => {
         return blankDevice
@@ -34,7 +36,7 @@ const Device = props => {
                   authenticationHeaders: [],
                   authenticationPath: "",
                   authenticationQuery: [],
-                  deviceGroupId: "",
+                  deviceGroupId: queryParam,
                   latitude: "",
                   longitude: "",
                   name: "",

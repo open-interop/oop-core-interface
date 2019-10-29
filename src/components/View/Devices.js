@@ -40,7 +40,12 @@ const Devices = props => {
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Devices</h2>
-                <Button $as={Link} to={`/devices/new`}>
+                <Button
+                    $as={Link}
+                    to={`/devices/new${
+                        deviceGroupId ? "?deviceGroupId=" + deviceGroupId : ""
+                    }`}
+                >
                     New
                 </Button>
             </div>
