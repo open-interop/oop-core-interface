@@ -76,6 +76,9 @@ const DeviceTempr = props => {
     };
 
     const identical = (oldObject, updatedObject) => {
+        if (!oldObject || !updatedObject) {
+            return false;
+        }
         if (
             Object.keys(oldObject).length !== Object.keys(updatedObject).length
         ) {

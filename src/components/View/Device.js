@@ -125,9 +125,12 @@ const Device = props => {
         );
     };
 
-    const identicalObject = (oldObject, newObject) => {
+    const identicalObject = (oldObject, updatedObject) => {
+        if (!oldObject || !updatedObject) {
+            return false;
+        }
         return Object.keys(oldObject).every(
-            key => oldObject[key] === newObject[key],
+            key => oldObject[key] === updatedObject[key],
         );
     };
 
