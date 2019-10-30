@@ -328,7 +328,7 @@ const Site = props => {
                                         .catch(error => {
                                             setSiteErrors(error);
                                             toastr.error(
-                                                "Something went wrong while creating site",
+                                                "Failed to create site",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );
@@ -349,7 +349,7 @@ const Site = props => {
                                         .catch(error => {
                                             setSiteErrors(error);
                                             toastr.error(
-                                                "Something went wrong while updating site",
+                                                "Failed to update site",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );

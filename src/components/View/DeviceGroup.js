@@ -109,7 +109,7 @@ const DeviceGroup = props => {
                                         .catch(error => {
                                             setDeviceGroupErrors(error);
                                             toastr.error(
-                                                "Something went wrong while creating device group",
+                                                "Failed to create device group",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );
@@ -129,7 +129,7 @@ const DeviceGroup = props => {
                                         .catch(error => {
                                             setDeviceGroupErrors(error);
                                             toastr.error(
-                                                "Something went wrong while updating device group",
+                                                "Failed to update device group",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );

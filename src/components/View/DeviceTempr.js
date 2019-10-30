@@ -250,7 +250,7 @@ const DeviceTempr = props => {
                                         .catch(err => {
                                             console.error(err);
                                             toastr.error(
-                                                "Something went wrong while creating device tempr",
+                                                "Failed to create device tempr",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );
@@ -272,7 +272,7 @@ const DeviceTempr = props => {
                                         .catch(err => {
                                             console.error(err);
                                             toastr.error(
-                                                "Something went wrong while updating device tempr",
+                                                "Failed to update device tempr",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );
