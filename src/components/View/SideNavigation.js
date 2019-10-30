@@ -52,52 +52,41 @@ const SideNavigation = props => {
                         isActive={pathIncludes("/devices")}
                         isOpen={devicesAccordionOpen}
                         setOpen={setDevicesAccordionOpen}
-                        render={callback => {
-                            return (
-                                <>
-                                    {deviceGroups.map((group, index) => (
-                                        <React.Fragment
-                                            key={`device-group-${index}`}
-                                        >
+                    >
+                        {deviceGroups.map((group, index) => (
+                            <React.Fragment key={`device-group-${index}`}>
+                                <NavigationItem
+                                    pathName={group.name}
+                                    path="/devices"
+                                    className="group-name"
+                                />
+                                {group.devices.length ? (
+                                    group.devices
+                                        .slice(0, 3)
+                                        .map(device => (
                                             <NavigationItem
-                                                pathName={group.name}
-                                                path="/devices"
-                                                className="group-name"
-                                                onClick={callback}
+                                                className="device-name"
+                                                key={`device-${device.id}-navigation-item`}
+                                                path={`/devices/${device.id}`}
+                                                pathName={device.name}
+                                                isActive={pathIncludes(
+                                                    `/devices/${device.id}`,
+                                                )}
                                             />
-                                            {group.devices.length ? (
-                                                group.devices
-                                                    .slice(0, 3)
-                                                    .map(device => (
-                                                        <NavigationItem
-                                                            className="device-name"
-                                                            key={`device-${device.id}-navigation-item`}
-                                                            path={`/devices/${device.id}`}
-                                                            pathName={
-                                                                device.name
-                                                            }
-                                                            isActive={pathIncludes(
-                                                                `/devices/${device.id}`,
-                                                            )}
-                                                            onClick={callback}
-                                                        />
-                                                    ))
-                                            ) : (
-                                                <div className="navigation-item">
-                                                    No devices
-                                                </div>
-                                            )}
-                                        </React.Fragment>
-                                    ))}
-                                    <NavigationItem
-                                        className="bottom"
-                                        path={`/devices`}
-                                        pathName="View All"
-                                    />
-                                </>
-                            );
-                        }}
-                    />
+                                        ))
+                                ) : (
+                                    <div className="navigation-item">
+                                        No devices
+                                    </div>
+                                )}
+                            </React.Fragment>
+                        ))}
+                        <NavigationItem
+                            className="bottom"
+                            path={`/devices`}
+                            pathName="View All"
+                        />
+                    </NavigationGroup>
                 )}
                 dataFallback={
                     <NavigationItem
@@ -133,32 +122,24 @@ const SideNavigation = props => {
                 }
                 pathName="Settings"
                 isOpen={settingsAccordionOpen}
-                render={callback => {
-                    return (
-                        <>
-                            <NavigationItem
-                                path="/users"
-                                pathName="Users"
-                                isActive={pathIncludes("/users")}
-                                onClick={callback}
-                            />
-                            <NavigationItem
-                                path="/sites"
-                                pathName="Sites"
-                                isActive={pathIncludes("/sites")}
-                                onClick={callback}
-                            />
-                            <NavigationItem
-                                path="/device-groups"
-                                pathName="Device Groups"
-                                isActive={pathIncludes("/device-groups")}
-                                onClick={callback}
-                            />
-                        </>
-                    );
-                }}
                 setOpen={setSettingsAccordionOpen}
-            />
+            >
+                <NavigationItem
+                    path="/users"
+                    pathName="Users"
+                    isActive={pathIncludes("/users")}
+                />
+                <NavigationItem
+                    path="/sites"
+                    pathName="Sites"
+                    isActive={pathIncludes("/sites")}
+                />
+                <NavigationItem
+                    path="/device-groups"
+                    pathName="Device Groups"
+                    isActive={pathIncludes("/device-groups")}
+                />
+            </NavigationGroup>
             <div className="filler" />
         </div>
     );
