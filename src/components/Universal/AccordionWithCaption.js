@@ -3,7 +3,7 @@ import { Accordion, Panel } from "baseui/accordion";
 
 const AccordionWithCaption = props => {
     return (
-        <div className={`accordion ${props.error && "error"}`}>
+        <div className={`accordion ${props.error ? "error" : ""}`}>
             <Accordion>
                 <Panel title={props.title}>
                     <div className="subtitle">{props.subtitle}</div>
