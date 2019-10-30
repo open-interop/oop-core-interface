@@ -290,7 +290,10 @@ const Device = props => {
                                 searchable={true}
                                 onChange={event => {
                                     event.value.length
-                                        ? setValue("timeZone", event.value)
+                                        ? setValue(
+                                              "timeZone",
+                                              event.value[0].id,
+                                          )
                                         : setValue("timeZone", null);
                                 }}
                                 value={timezones.filter(
