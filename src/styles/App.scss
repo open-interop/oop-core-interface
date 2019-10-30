@@ -6,6 +6,7 @@ $color-white: #fff;
 body {
     margin: 0;
     height: 100vh;
+    background-color: $color-grey;
 }
 
 div {
@@ -13,12 +14,13 @@ div {
         position: relative;
 
         .header {
-            height: 4rem;
             width: 100%;
-
+            height: 5rem;
+            position: fixed;
             img {
                 width: 7rem;
             }
+            background-color: white;
 
             nav {
                 display: flex;
@@ -32,104 +34,108 @@ div {
             }
         }
 
-        .below-header {
+        .side-navigation {
             display: flex;
-            flex-direction: row;
 
-            .side-navigation {
-                display: flex;
-                flex-direction: column;
-                height: calc(100vh - 4rem);
-                position: relative;
-                width: 5rem;
-                z-index: 100;
+            flex-direction: column;
 
-                .filler {
-                    background: white;
-                    flex-grow: 1;
+            position: fixed;
+
+            width: 5rem;
+
+            z-index: 100;
+
+            bottom: 0;
+
+            top: 4rem;
+
+            .filler {
+                background: white;
+                flex-grow: 1;
+            }
+
+            .navigation-item {
+                padding: 1rem;
+                background: white;
+
+                &.active {
+                    color: blue;
+                    a {
+                        color: blue;
+                    }
                 }
 
+                a {
+                    text-decoration: none;
+                    color: black;
+                }
+
+                span {
+                    cursor: pointer;
+                }
+            }
+
+            .nested-navigation {
+                overflow-y: auto;
+                min-width: 10rem;
+                background-color: white;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: -5rem;
+                transition: 1s;
+                z-index: -1;
+
                 .navigation-item {
+                    height: auto;
                     padding: 1rem;
-                    background: white;
+                    position: relative;
+                    z-index: -1;
+                    cursor: pointer;
 
                     &.active {
-                        color: blue;
                         a {
                             color: blue;
                         }
                     }
 
-                    a {
-                        text-decoration: none;
-                        color: black;
+                    &.group-name {
+                        background-color: lightblue;
                     }
 
-                    span {
-                        cursor: pointer;
+                    &.device-name {
                     }
                 }
 
-                .nested-navigation {
-                    overflow-y: auto;
-                    min-width: 10rem;
+                &.open {
                     background-color: white;
-                    height: calc(100vh - 4rem);
                     position: absolute;
                     top: 0;
-                    left: -5rem;
+                    left: 5rem;
+                    height: 100%;
                     transition: 1s;
                     z-index: -1;
+                }
 
-                    .navigation-item {
-                        height: auto;
-                        padding: 1rem;
-                        position: relative;
-                        z-index: -1;
-                        cursor: pointer;
-
-                        &.active {
-                            a {
-                                color: blue;
-                            }
-                        }
-
-                        &.group-name {
-                            background-color: lightblue;
-                        }
-
-                        &.device-name {
-                        }
-                    }
-
-                    &.open {
-                        background-color: white;
-                        position: absolute;
-                        top: 0;
-                        left: 5rem;
-                        height: calc(100vh - 4rem);
-                        transition: 1s;
-                        z-index: -1;
-                    }
-
-                    .bottom {
-                        margin: 0.5rem;
-                        position: relative;
-                        right: 0;
-                        bottom: 0;
-                    }
+                .bottom {
+                    margin: 0.5rem;
+                    position: relative;
+                    right: 0;
+                    bottom: 0;
                 }
             }
+        }
 
-            .content {
-                flex: 1;
-                padding: 2rem;
-                background-color: $color-grey;
+        .content {
+            flex: 1;
+            padding: 2rem;
+            background-color: $color-grey;
+            margin-left: 5rem;
+            padding-top: 7rem;
 
-                .content-wrapper {
-                    background-color: $color-white;
-                    padding: 1rem;
-                }
+            .content-wrapper {
+                background-color: $color-white;
+                padding: 1rem;
             }
         }
     }
@@ -203,6 +209,7 @@ div {
     justify-content: center;
     height: 100vh;
     width: 100%;
+    background-color: $color-white;
 
     .login-form {
         width: 25%;
