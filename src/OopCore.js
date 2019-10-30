@@ -123,13 +123,20 @@ class OopCore extends EventEmitter {
                         this.onLoggedOutFunc();
                     }
                 }
-                if (response.status !== 200 && response.status !== 201) {
-                    throw new Error(response.statusText);
-                }
 
-                return response.json().then(res => {
-                    return this.snakeToCamel(res);
-                });
+                return response
+                    .json()
+                    .then(body => this.snakeToCamel(body))
+                    .then(body => {
+                        if (
+                            response.status === 200 ||
+                            response.status === 201
+                        ) {
+                            return body;
+                        } else {
+                            throw body;
+                        }
+                    });
             })
             .catch(error => {
                 throw error;
