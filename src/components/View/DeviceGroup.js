@@ -11,6 +11,7 @@ import { DataProvider } from "../Universal";
 const DeviceGroup = props => {
     const [deviceGroup, setDeviceGroup] = useState({});
     const [updatedDeviceGroup, setUpdatedDeviceGroup] = useState({});
+    const [deviceGroupErrors, setDeviceGroupErrors] = useState({});
     const blankDeviceGroup = props.match.params.deviceGroupId === "new";
 
     const allDeviceGroupsPath = props.location.pathname.substr(
@@ -55,14 +56,19 @@ const DeviceGroup = props => {
                             label="Name"
                             key={`form-control-name`}
                             caption="required"
+                            error={
+                                deviceGroupErrors.name
+                                    ? `Name ${deviceGroupErrors.name}`
+                                    : ""
+                            }
                         >
                             <Input
-                                required
                                 id={`input-name`}
                                 value={updatedDeviceGroup.name || ""}
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
+                                error={deviceGroupErrors.name}
                             />
                         </FormControl>
                         <FormControl
@@ -84,6 +90,7 @@ const DeviceGroup = props => {
                         <Button
                             onClick={() => {
                                 toastr.clear();
+                                setDeviceGroupErrors({});
                                 if (blankDeviceGroup) {
                                     OopCore.createDeviceGroup(
                                         updatedDeviceGroup,
@@ -100,7 +107,7 @@ const DeviceGroup = props => {
                                             updateState(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setDeviceGroupErrors(error);
                                             toastr.error(
                                                 "Something went wrong while creating device group",
                                                 "Error",
@@ -120,7 +127,7 @@ const DeviceGroup = props => {
                                             updateState(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setDeviceGroupErrors(error);
                                             toastr.error(
                                                 "Something went wrong while updating device group",
                                                 "Error",
@@ -129,14 +136,11 @@ const DeviceGroup = props => {
                                         });
                                 }
                             }}
-                            disabled={
-                                !updatedDeviceGroup.name ||
-                                Object.keys(deviceGroup).every(
-                                    key =>
-                                        deviceGroup[key] ===
-                                        updatedDeviceGroup[key],
-                                )
-                            }
+                            disabled={Object.keys(deviceGroup).every(
+                                key =>
+                                    deviceGroup[key] ===
+                                    updatedDeviceGroup[key],
+                            )}
                         >
                             {blankDeviceGroup ? "Create" : "Save"}
                         </Button>
