@@ -91,7 +91,6 @@ const DeviceGroup = props => {
 
                         <Button
                             onClick={() => {
-
                                 clearToast();
                                 setDeviceGroupErrors({});
                                 if (blankDeviceGroup) {
@@ -111,7 +110,6 @@ const DeviceGroup = props => {
                                         .catch(error => {
                                             setDeviceGroupErrors(error);
                                             ErrorToast(
-                                            toastr.error(
                                                 "Failed to create device group",
                                                 "Error",
                                             );

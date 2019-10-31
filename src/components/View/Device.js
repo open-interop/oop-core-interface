@@ -5,7 +5,6 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { PairInput } from "../Global";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
@@ -426,7 +425,6 @@ const Device = props => {
                                         .catch(error => {
                                             setDeviceErrors(error);
                                             ErrorToast(
-                                            toastr.error(
                                                 "Failed to update device",
                                                 "Error",
                                             );
