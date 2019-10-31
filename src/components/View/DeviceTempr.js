@@ -6,8 +6,9 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider, Error } from "../Universal";
+import { DataProvider } from "../Universal";
 import { HttpTemprTemplate } from "../Global";
+import toastr from "toastr";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
@@ -16,15 +17,16 @@ const DeviceTempr = props => {
     const [devices, setDevices] = useState([]);
     const [temprs, setTemprs] = useState([]);
     const blankDeviceTempr = props.match.params.deviceTemprId === "new";
-    const [error, setError] = useState("");
 
     const getDeviceTempr = () => {
         return blankDeviceTempr
             ? Promise.resolve({
+                  name: "",
                   deviceId: null,
+                  queueResponse: false,
                   endpointType: "http",
                   temprId: null,
-                  template: {
+                  options: {
                       headers: {},
                       host: "",
                       path: "",
@@ -75,6 +77,9 @@ const DeviceTempr = props => {
     };
 
     const identical = (oldObject, updatedObject) => {
+        if (!oldObject || !updatedObject) {
+            return false;
+        }
         if (
             Object.keys(oldObject).length !== Object.keys(updatedObject).length
         ) {
@@ -86,27 +91,32 @@ const DeviceTempr = props => {
     };
 
     const saveButtonDisabled = () => {
-        const { template, ...restOfTempr } = deviceTempr;
+        const { options, ...restOfTempr } = deviceTempr;
         const {
-            template: updatedTemplate,
+            options: updatedOptions,
             ...updatedRestOfTempr
         } = updatedDeviceTempr;
 
-        const { headers, ...restOfTemplate } = template;
+        const { headers, ...restOfOptions } = options;
         const {
             headers: updatedHeaders,
-            ...restOfUpdatedTemplate
-        } = updatedTemplate;
+            ...restOfUpdatedOptions
+        } = updatedOptions;
 
-        if (blankDeviceTempr) {
-            return false;
-        } else {
-            return (
-                identical(headers, updatedHeaders) &&
-                identical(restOfTemplate, restOfUpdatedTemplate) &&
-                identical(restOfTempr, updatedRestOfTempr)
-            );
-        }
+        return (
+            !updatedDeviceTempr.name ||
+            !updatedDeviceTempr.deviceId ||
+            !updatedDeviceTempr.temprId ||
+            !updatedDeviceTempr.endpointType ||
+            !updatedDeviceTempr.options.host ||
+            !updatedDeviceTempr.options.path ||
+            !updatedDeviceTempr.options.port ||
+            !updatedDeviceTempr.options.protocol ||
+            !updatedDeviceTempr.options.requestMethod ||
+            (identical(headers, updatedHeaders) &&
+                identical(restOfOptions, restOfUpdatedOptions) &&
+                identical(restOfTempr, updatedRestOfTempr))
+        );
     };
 
     return (
@@ -123,6 +133,19 @@ const DeviceTempr = props => {
                 }}
                 renderData={() => (
                     <>
+                        <FormControl
+                            label="Name"
+                            key={"form-control-group-name"}
+                            required
+                        >
+                            <Input
+                                id={"input-name"}
+                                value={updatedDeviceTempr.name || ""}
+                                onChange={event =>
+                                    setValue("name", event.currentTarget.value)
+                                }
+                            />
+                        </FormControl>
                         <FormControl
                             label="Device"
                             key={"form-control-group-device"}
@@ -202,21 +225,26 @@ const DeviceTempr = props => {
                         <FormControl>
                             <HttpTemprTemplate
                                 endpointType={updatedDeviceTempr.endpointType}
-                                template={updatedDeviceTempr.template}
-                                updateTemplate={template =>
-                                    setValue("template", template)
+                                template={updatedDeviceTempr.options}
+                                updateTemplate={options =>
+                                    setValue("options", options)
                                 }
                             />
                         </FormControl>
                         <Button
                             onClick={() => {
-                                setError("");
+                                toastr.clear();
                                 if (blankDeviceTempr) {
                                     return OopCore.createDeviceTempr(
                                         props.match.params.deviceGroupId,
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
+                                            toastr.success(
+                                                "Created new device tempr",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshDeviceTempr(response);
                                             props.history.replace(
                                                 `${allDeviceTemprsPath}/${response.id}`,
@@ -224,8 +252,10 @@ const DeviceTempr = props => {
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while saving device tempr",
+                                            toastr.error(
+                                                "Something went wrong while creating device tempr",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -235,12 +265,19 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
+                                            toastr.success(
+                                                "Updated device tempr",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshDeviceTempr(response);
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while saving device tempr",
+                                            toastr.error(
+                                                "Something went wrong while updating device tempr",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
@@ -249,7 +286,6 @@ const DeviceTempr = props => {
                         >
                             {blankDeviceTempr ? "Create" : "Save"}
                         </Button>
-                        <Error message={error} />
                     </>
                 )}
             />

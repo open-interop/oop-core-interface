@@ -219,7 +219,7 @@ class OopCore extends EventEmitter {
             case "page":
                 return "page[number]";
             default:
-                return `filter[${key}]`;
+                return `filter[${this.toSnakeCase(key)}]`;
         }
     }
 
@@ -345,11 +345,13 @@ class OopCore extends EventEmitter {
 
     createDeviceTemprObject = data => {
         const result = (({
+            name,
             deviceId,
             temprId,
             endpointType,
             queueResponse,
         }) => ({
+            name,
             deviceId,
             temprId,
             endpointType,
@@ -370,7 +372,7 @@ class OopCore extends EventEmitter {
             port,
             protocol,
             requestMethod,
-        }))(data.template);
+        }))(data.options);
         return result;
     };
 
@@ -378,7 +380,7 @@ class OopCore extends EventEmitter {
         const result = {};
         result.email = data.email;
         result.password = data.newPassword;
-        result.confirm_password = data.confirmPassword;
+        result.password_confirmation = data.confirmPassword;
         result.time_zone = data.time_zone;
         return result;
     };

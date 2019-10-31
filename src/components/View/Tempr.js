@@ -7,6 +7,7 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
+import toastr from "toastr";
 import OopCore from "../../OopCore";
 
 import "brace/mode/json";
@@ -168,7 +169,7 @@ const Tempr = props => {
                             >
                                 <Button
                                     $as={Link}
-                                    to={`/device-groups/${updatedTempr.deviceGroupId}/device-temprs/?temprId=${updatedTempr.id}`}
+                                    to={`/device-groups/${updatedTempr.deviceGroupId}/device-temprs?temprId=${updatedTempr.id}`}
                                 >
                                     Device Temprs
                                 </Button>
@@ -229,6 +230,7 @@ const Tempr = props => {
                         </FormControl>
                         <Button
                             onClick={() => {
+                                toastr.clear();
                                 const { groups, ...tempr } = updatedTempr;
                                 if (blankTempr) {
                                     return OopCore.createTempr(
@@ -236,6 +238,11 @@ const Tempr = props => {
                                         tempr,
                                     )
                                         .then(response => {
+                                            toastr.success(
+                                                "Created new tempr",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshTempr(response);
                                             props.history.replace(
                                                 `${allTemprsPath}/${response.id}`,
@@ -243,6 +250,11 @@ const Tempr = props => {
                                         })
                                         .catch(error => {
                                             console.error(error);
+                                            toastr.error(
+                                                "Something went wrong while creating tempr",
+                                                "Error",
+                                                { timeOut: 5000 },
+                                            );
                                         });
                                 } else {
                                     OopCore.updateTempr(
@@ -250,11 +262,21 @@ const Tempr = props => {
                                         props.match.params.temprId,
                                         tempr,
                                     )
-                                        .then(response =>
-                                            refreshTempr(response),
-                                        )
+                                        .then(response => {
+                                            refreshTempr(response);
+                                            toastr.success(
+                                                "Updated tempr",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
+                                        })
                                         .catch(error => {
                                             console.error(error);
+                                            toastr.error(
+                                                "Something went wrong while updating tempr",
+                                                "Error",
+                                                { timeOut: 5000 },
+                                            );
                                         });
                                 }
                             }}

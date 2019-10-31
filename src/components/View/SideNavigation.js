@@ -57,7 +57,7 @@ const SideNavigation = props => {
                             <React.Fragment key={`device-group-${index}`}>
                                 <NavigationItem
                                     pathName={group.name}
-                                    path="/devices"
+                                    path={`/devices?deviceGroupId=${group.id}`}
                                     className="group-name"
                                 />
                                 {group.devices.length ? (
@@ -89,6 +89,13 @@ const SideNavigation = props => {
                     </NavigationGroup>
                 )}
                 dataFallback={
+                    <NavigationItem
+                        path="/devices"
+                        pathName="Devices"
+                        isActive={pathMatch("/devices")}
+                    />
+                }
+                loadingFallback={
                     <NavigationItem
                         path="/devices"
                         pathName="Devices"

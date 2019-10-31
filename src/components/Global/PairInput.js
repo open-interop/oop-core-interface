@@ -7,18 +7,20 @@ const PairInput = props => {
     const dataIsArray = Array.isArray(props.data);
 
     const getArrayFromObject = () => {
-        return Object.keys(props.data).length
+        return props.data && Object.keys(props.data).length
             ? Object.entries(props.data)
             : [["", ""]];
     };
 
-    const getInitialArray = array => {
-        return array.length ? array : [["", ""]];
+    const getDataArray = () => {
+        return dataIsArray
+            ? props.data.length
+                ? props.data
+                : [["", ""]]
+            : getArrayFromObject();
     };
 
-    const [dataArray, setDataArray] = useState(
-        dataIsArray ? getInitialArray(props.data) : getArrayFromObject(),
-    );
+    const [dataArray, setDataArray] = useState(getDataArray());
 
     const updateDataArray = array => {
         dataChanged.current = true;
@@ -48,6 +50,12 @@ const PairInput = props => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataArray]);
+
+    useEffect(() => {
+        const updatedArray = getDataArray();
+        setDataArray(updatedArray);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.refreshKey]);
 
     const removeRow = index => {
         const updatedArray = [...dataArray];
@@ -82,6 +90,7 @@ const PairInput = props => {
             <div className="one-row space-between mb" key={`row-${index}`}>
                 <div className="half left-margin">
                     <Input
+                        error={!key && value}
                         placeholder="Key"
                         id={`input-header-key-${key || "new"}`}
                         value={key || ""}
@@ -90,6 +99,7 @@ const PairInput = props => {
                 </div>
                 <div className="half left-margin">
                     <Input
+                        error={key && !value}
                         placeholder="Value"
                         id={`input-header-value-${value || "new"}`}
                         value={value || ""}
@@ -108,7 +118,9 @@ const PairInput = props => {
 
     return (
         <>
-            {dataArray.map((row, index) => InputRow(index, row[0], row[1]))}
+            {dataArray.map((row, index) => {
+                return InputRow(index, row[0], row[1]);
+            })}
             <Button onClick={addRow}>+</Button>
         </>
     );

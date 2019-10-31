@@ -6,8 +6,9 @@ import { FormControl } from "baseui/form-control";
 import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider, Error } from "../Universal";
+import { DataProvider } from "../Universal";
 import { PairInput } from "../Global";
+import toastr from "toastr";
 import OopCore from "../../OopCore";
 import { Timezones } from "../../resources/Timezones";
 
@@ -16,7 +17,6 @@ const Site = props => {
     const [updatedSite, setUpdatedSite] = useState({});
     const [sites, setSites] = useState([]);
     const blankSite = props.match.params.siteId === "new";
-    const [error, setError] = useState("");
     const timezones = Timezones.map(timezone => {
         return {
             id: timezone,
@@ -62,6 +62,9 @@ const Site = props => {
     };
 
     const identical = (oldObject, updatedObject) => {
+        if (!oldObject || !updatedObject) {
+            return false;
+        }
         return Object.keys(oldObject).every(
             key => oldObject[key] === updatedObject[key],
         );
@@ -300,10 +303,15 @@ const Site = props => {
 
                         <Button
                             onClick={() => {
-                                setError("");
+                                toastr.clear();
                                 if (blankSite) {
                                     return OopCore.createSite(updatedSite)
                                         .then(response => {
+                                            toastr.success(
+                                                "Created new site",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshSite(response);
                                             props.history.replace(
                                                 `${allSitesPath}/${response.id}`,
@@ -311,8 +319,10 @@ const Site = props => {
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while creating the site",
+                                            toastr.error(
+                                                "Something went wrong while creating site",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -321,12 +331,19 @@ const Site = props => {
                                         updatedSite,
                                     )
                                         .then(response => {
+                                            toastr.success(
+                                                "Updated site",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshSite(response);
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while saving site details ",
+                                            toastr.error(
+                                                "Something went wrong while updating site",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
@@ -335,7 +352,6 @@ const Site = props => {
                         >
                             {blankSite ? "Create" : "Save"}
                         </Button>
-                        <Error message={error} />
                     </>
                 )}
             />
