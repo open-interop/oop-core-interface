@@ -90,7 +90,7 @@ const PairInput = props => {
             <div className="one-row space-between mb" key={`row-${index}`}>
                 <div className="half left-margin">
                     <Input
-                        error={!key && value}
+                        error={props.error || (!key && value)}
                         placeholder="Key"
                         id={`input-header-key-${key || "new"}`}
                         value={key || ""}
@@ -99,7 +99,7 @@ const PairInput = props => {
                 </div>
                 <div className="half left-margin">
                     <Input
-                        error={key && !value}
+                        error={props.error || (key && !value)}
                         placeholder="Value"
                         id={`input-header-value-${value || "new"}`}
                         value={value || ""}
