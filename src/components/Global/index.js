@@ -3,4 +3,5 @@ export * from "./NavigationItem";
 export * from "./NavigationGroup";
 export * from "./PairInput";
 export * from "./TableFilter";
+export * from "./Toast";
 export * from "./TrueFalseCheckboxes";

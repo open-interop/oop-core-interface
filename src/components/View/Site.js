@@ -7,8 +7,7 @@ import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import { PairInput } from "../Global";
-import toastr from "toastr";
+import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 import { Timezones } from "../../resources/Timezones";
 
@@ -303,26 +302,24 @@ const Site = props => {
 
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 if (blankSite) {
                                     return OopCore.createSite(updatedSite)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new site",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshSite(response);
                                             props.history.replace(
                                                 `${allSitesPath}/${response.id}`,
                                             );
                                         })
-                                        .catch(err => {
-                                            console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while creating site",
+                                        .catch(error => {
+                                            console.error(error);
+                                            ErrorToast(
+                                                "Failed to create site",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -331,19 +328,17 @@ const Site = props => {
                                         updatedSite,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated site",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshSite(response);
                                         })
-                                        .catch(err => {
-                                            console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while updating site",
+                                        .catch(error => {
+                                            console.error(error);
+                                            ErrorToast(
+                                                "Failed to update site",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }

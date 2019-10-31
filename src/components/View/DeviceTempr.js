@@ -7,8 +7,12 @@ import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import { HttpTemprTemplate } from "../Global";
-import toastr from "toastr";
+import {
+    clearToast,
+    ErrorToast,
+    HttpTemprTemplate,
+    SuccessToast,
+} from "../Global";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
@@ -233,17 +237,16 @@ const DeviceTempr = props => {
                         </FormControl>
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 if (blankDeviceTempr) {
                                     return OopCore.createDeviceTempr(
                                         props.match.params.deviceGroupId,
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                             props.history.replace(
@@ -252,10 +255,9 @@ const DeviceTempr = props => {
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while creating device tempr",
+                                            ErrorToast(
+                                                "Failed to create device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -265,19 +267,17 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while updating device tempr",
+                                            ErrorToast(
+                                                "Failed to update device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }

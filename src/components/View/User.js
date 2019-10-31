@@ -7,7 +7,7 @@ import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
-import toastr from "toastr";
+import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 
 const User = props => {
@@ -167,26 +167,24 @@ const User = props => {
 
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 if (blankUser) {
                                     return OopCore.createUser(updatedUser)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new user",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshUser(response);
                                             props.history.replace(
                                                 `${allUsersPath}/${response.id}`,
                                             );
                                         })
-                                        .catch(err => {
-                                            console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while creating user",
+                                        .catch(error => {
+                                            console.error(error);
+                                            ErrorToast(
+                                                "Failed to create device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -196,18 +194,16 @@ const User = props => {
                                     )
                                         .then(response => {
                                             refreshUser(response);
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated user",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                         })
-                                        .catch(err => {
-                                            console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while updating user",
+                                        .catch(error => {
+                                            console.error(error);
+                                            ErrorToast(
+                                                "Failed to update device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
