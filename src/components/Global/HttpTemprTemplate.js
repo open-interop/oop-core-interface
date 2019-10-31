@@ -1,9 +1,9 @@
 import React from "react";
-import { Accordion, Panel } from "baseui/accordion";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { PairInput } from ".";
+import { identicalArray } from "../../Utilities";
 
 const protocolOptions = [{ id: "http" }, { id: "https" }];
 const requestMethodOptions = [
@@ -22,112 +22,104 @@ const HttpTemprTemplate = props => {
     };
 
     return (
-        <Accordion>
-            <Panel title="Template">
-                <div className="content-wrapper">
-                    {props.endpointType === "http" && (
-                        <>
-                            <FormControl
-                                label="Host"
-                                key={"form-control-group-host"}
-                            >
-                                <Input
-                                    id={"input-host"}
-                                    value={props.template.host || ""}
-                                    onChange={event =>
-                                        setValue(
-                                            "host",
-                                            event.currentTarget.value,
-                                        )
-                                    }
-                                />
-                            </FormControl>
-                            <FormControl
-                                label="Port"
-                                key={"form-control-group-port"}
-                            >
-                                <Input
-                                    id={"input-port"}
-                                    value={props.template.port}
-                                    onChange={event =>
-                                        setValue(
-                                            "port",
-                                            Number(event.currentTarget.value),
-                                        )
-                                    }
-                                />
-                            </FormControl>
-                            <FormControl
-                                label="Path"
-                                key={"form-control-group-path"}
-                            >
-                                <Input
-                                    id={"input-path"}
-                                    value={props.template.path}
-                                    onChange={event =>
-                                        setValue(
-                                            "path",
-                                            event.currentTarget.value,
-                                        )
-                                    }
-                                />
-                            </FormControl>
-                            <FormControl
-                                label="Protocol"
-                                key={"form-control-group-protocol"}
-                            >
-                                <Select
-                                    options={protocolOptions}
-                                    labelKey="id"
-                                    valueKey="id"
-                                    searchable={false}
-                                    onChange={event => {
-                                        setValue("protocol", event.option.id);
-                                    }}
-                                    value={protocolOptions.find(
-                                        item =>
-                                            item.id === props.template.protocol,
-                                    )}
-                                />
-                            </FormControl>
-                            <FormControl
-                                label="Request Method"
-                                key={"form-control-group-request-method"}
-                            >
-                                <Select
-                                    options={requestMethodOptions}
-                                    labelKey="id"
-                                    valueKey="id"
-                                    searchable={false}
-                                    onChange={event => {
-                                        setValue(
-                                            "requestMethod",
-                                            event.option.id,
-                                        );
-                                    }}
-                                    value={requestMethodOptions.find(
-                                        item =>
-                                            item.id ===
-                                            props.template.requestMethod,
-                                    )}
-                                />
-                            </FormControl>
-                            <FormControl
-                                label="Headers"
-                                key={"form-control-group-headers"}
-                            >
-                                <PairInput
-                                    data={props.template.headers}
-                                    updateData={value =>
-                                        setValue("headers", value)
-                                    }
-                                />
-                            </FormControl>
-                        </>
+        <>
+            <FormControl
+                label="Host"
+                key={"form-control-group-host"}
+                caption="required"
+            >
+                <Input
+                    id={"input-host"}
+                    value={props.template.host || ""}
+                    onChange={event =>
+                        setValue("host", event.currentTarget.value)
+                    }
+                    error={props.error}
+                />
+            </FormControl>
+            <FormControl
+                label="Port"
+                key={"form-control-group-port"}
+                caption="required"
+            >
+                <Input
+                    id={"input-port"}
+                    value={props.template.port}
+                    onChange={event =>
+                        setValue("port", Number(event.currentTarget.value))
+                    }
+                    error={props.error}
+                />
+            </FormControl>
+            <FormControl
+                label="Path"
+                key={"form-control-group-path"}
+                caption="required"
+            >
+                <Input
+                    id={"input-path"}
+                    value={props.template.path}
+                    onChange={event =>
+                        setValue("path", event.currentTarget.value)
+                    }
+                    error={props.error}
+                />
+            </FormControl>
+            <FormControl
+                label="Protocol"
+                key={"form-control-group-protocol"}
+                caption="required"
+            >
+                <Select
+                    options={protocolOptions}
+                    labelKey="id"
+                    valueKey="id"
+                    searchable={false}
+                    onChange={event => {
+                        setValue("protocol", event.option.id);
+                    }}
+                    value={protocolOptions.find(
+                        item => item.id === props.template.protocol,
                     )}
-                </div>
-            </Panel>
-        </Accordion>
+                    error={props.error}
+                />
+            </FormControl>
+            <FormControl
+                label="Request Method"
+                key={"form-control-group-request-method"}
+                caption="required"
+            >
+                <Select
+                    options={requestMethodOptions}
+                    labelKey="id"
+                    valueKey="id"
+                    searchable={false}
+                    onChange={event => {
+                        setValue("requestMethod", event.option.id);
+                    }}
+                    value={requestMethodOptions.find(
+                        item => item.id === props.template.requestMethod,
+                    )}
+                    error={props.error}
+                />
+            </FormControl>
+            <FormControl label="Headers" key={"form-control-group-headers"}>
+                <PairInput
+                    data={
+                        props.template.headers.length < 1
+                            ? [["", ""]]
+                            : props.template.headers
+                    }
+                    updateData={data => {
+                        if (identicalArray(data, [["", ""]])) {
+                            setValue("headers", []);
+                        } else {
+                            setValue("headers", data);
+                        }
+                    }}
+                />
+            </FormControl>
+        </>
     );
 };
 

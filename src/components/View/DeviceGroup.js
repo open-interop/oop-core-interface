@@ -5,12 +5,15 @@ import ArrowLeft from "baseui/icon/arrow-left";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
+
 import { DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
     const [deviceGroup, setDeviceGroup] = useState({});
     const [updatedDeviceGroup, setUpdatedDeviceGroup] = useState({});
+    const [deviceGroupErrors, setDeviceGroupErrors] = useState({});
     const blankDeviceGroup = props.match.params.deviceGroupId === "new";
 
     const allDeviceGroupsPath = props.location.pathname.substr(
@@ -55,14 +58,19 @@ const DeviceGroup = props => {
                             label="Name"
                             key={`form-control-name`}
                             caption="required"
+                            error={
+                                deviceGroupErrors.name
+                                    ? `Name ${deviceGroupErrors.name}`
+                                    : ""
+                            }
                         >
                             <Input
-                                required
                                 id={`input-name`}
                                 value={updatedDeviceGroup.name || ""}
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
+                                error={deviceGroupErrors.name}
                             />
                         </FormControl>
                         <FormControl
@@ -83,8 +91,9 @@ const DeviceGroup = props => {
 
                         <Button
                             onClick={() => {
-                                clearToast();
 
+                                clearToast();
+                                setDeviceGroupErrors({});
                                 if (blankDeviceGroup) {
                                     OopCore.createDeviceGroup(
                                         updatedDeviceGroup,
@@ -100,8 +109,9 @@ const DeviceGroup = props => {
                                             updateState(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setDeviceGroupErrors(error);
                                             ErrorToast(
+                                            toastr.error(
                                                 "Failed to create device group",
                                                 "Error",
                                             );
@@ -118,7 +128,7 @@ const DeviceGroup = props => {
                                             updateState(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setDeviceGroupErrors(error);
                                             ErrorToast(
                                                 "Failed to update device group",
                                                 "Error",
@@ -126,14 +136,10 @@ const DeviceGroup = props => {
                                         });
                                 }
                             }}
-                            disabled={
-                                !updatedDeviceGroup.name ||
-                                Object.keys(deviceGroup).every(
-                                    key =>
-                                        deviceGroup[key] ===
-                                        updatedDeviceGroup[key],
-                                )
-                            }
+                            disabled={identicalObject(
+                                deviceGroup,
+                                updatedDeviceGroup,
+                            )}
                         >
                             {blankDeviceGroup ? "Create" : "Save"}
                         </Button>

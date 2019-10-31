@@ -8,11 +8,13 @@ import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 const User = props => {
     const [user, setUser] = useState({});
     const [updatedUser, setUpdatedUser] = useState({});
+    const [userErrors, setUserErrors] = useState({});
     const blankUser = props.match.params.userId === "new";
     const timezones = Timezones.map(timezone => {
         return {
@@ -47,33 +49,18 @@ const User = props => {
         setUpdatedUser(updatedData);
     };
 
-    const identical = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
+    const passwordMismatch = () => {
+        return (
+            updatedUser.passwordConfirmation &&
+            updatedUser.password !== updatedUser.passwordConfirmation &&
+            "The passwords do not match"
         );
     };
 
-    const passwordMismatch =
-        updatedUser.confirmPassword &&
-        updatedUser.newPassword !== updatedUser.confirmPassword &&
-        "The passwords do not match";
-
-    const passwordComplete =
-        updatedUser.newPassword &&
-        updatedUser.confirmPassword &&
-        !passwordMismatch;
-
-    const saveButtonDisabled = () => {
-        if (blankUser) {
-            return (
-                !updatedUser.email || !updatedUser.timeZone || !passwordComplete
-            );
-        } else {
-            return identical(user, updatedUser) && !passwordComplete;
-        }
+    const passwordTooShort = password => {
+        return (
+            password && password.length < 6 && "Minimum length is 6 characters"
+        );
     };
 
     return (
@@ -94,6 +81,11 @@ const User = props => {
                         <FormControl
                             label="Email"
                             key={"form-control-group-email"}
+                            error={
+                                userErrors.email
+                                    ? `Email ${userErrors.email}`
+                                    : ""
+                            }
                         >
                             <Input
                                 id={"input-email"}
@@ -101,54 +93,63 @@ const User = props => {
                                 onChange={event =>
                                     setValue("email", event.currentTarget.value)
                                 }
+                                error={userErrors.email}
                             />
                         </FormControl>
                         <FormControl
                             label={blankUser ? "Password" : "New password"}
                             key={"form-control-group-new-password"}
                             error={
-                                updatedUser.newPassword &&
-                                updatedUser.newPassword.length < 6 &&
-                                "Minimum length is 6 characters"
+                                userErrors.password
+                                    ? `Password ${userErrors.password}`
+                                    : passwordTooShort(updatedUser.password)
                             }
                         >
                             <Input
                                 type="password"
                                 id={"input-new-password"}
-                                value={updatedUser.newPassword || ""}
+                                value={updatedUser.password || ""}
                                 onChange={event =>
                                     setValue(
-                                        "newPassword",
+                                        "password",
                                         event.currentTarget.value,
                                     )
                                 }
+                                error={userErrors.password}
                             />
                         </FormControl>
                         <FormControl
                             label="Confirm password"
                             key={"form-control-group-confirm-password"}
                             error={
-                                passwordMismatch ||
-                                (updatedUser.confirmPassword &&
-                                    updatedUser.confirmPassword.length < 6 &&
-                                    "Minimum length is 6 characters")
+                                userErrors.passwordConfirmation
+                                    ? `Password confirmation ${userErrors.passwordConfirmation}`
+                                    : passwordTooShort(
+                                          updatedUser.passwordConfirmation,
+                                      ) || passwordMismatch()
                             }
                         >
                             <Input
                                 type="password"
                                 id={"input-confirm-password"}
-                                value={updatedUser.confirmPassword || ""}
+                                value={updatedUser.passwordConfirmation || ""}
                                 onChange={event =>
                                     setValue(
-                                        "confirmPassword",
+                                        "passwordConfirmation",
                                         event.currentTarget.value,
                                     )
                                 }
+                                error={userErrors.passwordConfirmation}
                             />
                         </FormControl>
                         <FormControl
                             label="Timezone"
                             key={`form-control-timezone`}
+                            error={
+                                userErrors.timeZone
+                                    ? `Time zone  ${userErrors.timeZone}`
+                                    : ""
+                            }
                         >
                             <Select
                                 id="select-id"
@@ -156,18 +157,25 @@ const User = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={true}
-                                onChange={event =>
-                                    setValue("timeZone", event.value[0].id)
-                                }
-                                value={timezones.find(
+                                onChange={event => {
+                                    event.value.length
+                                        ? setValue(
+                                              "timeZone",
+                                              event.value[0].id,
+                                          )
+                                        : setValue("timeZone", null);
+                                }}
+                                value={timezones.filter(
                                     item => item.id === updatedUser.timeZone,
                                 )}
+                                error={userErrors.timeZone}
                             />
                         </FormControl>
 
                         <Button
                             onClick={() => {
                                 clearToast();
+                                setUserErrors({});
                                 if (blankUser) {
                                     return OopCore.createUser(updatedUser)
                                         .then(response => {
@@ -181,7 +189,7 @@ const User = props => {
                                             );
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setUserErrors(error);
                                             ErrorToast(
                                                 "Failed to create user",
                                                 "Error",
@@ -200,7 +208,7 @@ const User = props => {
                                             );
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setUserErrors(error);
                                             ErrorToast(
                                                 "Failed to update user",
                                                 "Error",
@@ -208,7 +216,7 @@ const User = props => {
                                         });
                                 }
                             }}
-                            disabled={saveButtonDisabled()}
+                            disabled={identicalObject(user, updatedUser)}
                         >
                             {blankUser ? "Create" : "Save"}
                         </Button>

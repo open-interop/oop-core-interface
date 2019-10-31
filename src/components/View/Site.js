@@ -9,11 +9,13 @@ import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
+import { identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
 
 const Site = props => {
     const [site, setSite] = useState({});
     const [updatedSite, setUpdatedSite] = useState({});
+    const [siteErrors, setSiteErrors] = useState({});
     const [sites, setSites] = useState([]);
     const blankSite = props.match.params.siteId === "new";
     const timezones = Timezones.map(timezone => {
@@ -60,19 +62,6 @@ const Site = props => {
         setUpdatedSite(updatedData);
     };
 
-    const identical = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
-    const saveButtonDisabled = () => {
-        return identical(site, updatedSite);
-    };
-
     const getData = () => {
         return Promise.all([getSite(), OopCore.getSites()]).then(
             ([site, sites]) => {
@@ -100,6 +89,10 @@ const Site = props => {
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
+                            error={
+                                siteErrors.name ? `Name ${siteErrors.name}` : ""
+                            }
+                            caption="required"
                         >
                             <Input
                                 id={"input-name"}
@@ -107,6 +100,7 @@ const Site = props => {
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
+                                error={siteErrors.name}
                             />
                         </FormControl>
                         <FormControl
@@ -133,12 +127,16 @@ const Site = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
-                                onChange={event =>
-                                    setValue("timeZone", event.value[0].id)
-                                }
-                                value={timezones.find(
-                                    timezone =>
-                                        timezone.id === updatedSite.timeZone,
+                                onChange={event => {
+                                    event.value.length
+                                        ? setValue(
+                                              "timeZone",
+                                              event.value[0].id,
+                                          )
+                                        : setValue("timeZone", null);
+                                }}
+                                value={timezones.filter(
+                                    item => item.id === updatedSite.timeZone,
                                 )}
                             />
                         </FormControl>
@@ -151,13 +149,13 @@ const Site = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 onChange={event => {
-                                    setValue("siteId", event.value[0].id);
+                                    event.value.length
+                                        ? setValue("siteId", event.value[0].id)
+                                        : setValue("siteId", null);
                                 }}
-                                value={
-                                    sites.find(
-                                        site => site.id === updatedSite.siteId,
-                                    ) || null
-                                }
+                                value={sites.filter(
+                                    item => item.id === updatedSite.siteId,
+                                )}
                             />
                         </FormControl>
 
@@ -303,6 +301,7 @@ const Site = props => {
                         <Button
                             onClick={() => {
                                 clearToast();
+                                setSiteErrors({});
                                 if (blankSite) {
                                     return OopCore.createSite(updatedSite)
                                         .then(response => {
@@ -316,7 +315,7 @@ const Site = props => {
                                             );
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setSiteErrors(error);
                                             ErrorToast(
                                                 "Failed to create site",
                                                 "Error",
@@ -335,7 +334,7 @@ const Site = props => {
                                             refreshSite(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
+                                            setSiteErrors(error);
                                             ErrorToast(
                                                 "Failed to update site",
                                                 "Error",
@@ -343,7 +342,7 @@ const Site = props => {
                                         });
                                 }
                             }}
-                            disabled={saveButtonDisabled()}
+                            disabled={identicalObject(site, updatedSite)}
                         >
                             {blankSite ? "Create" : "Save"}
                         </Button>
