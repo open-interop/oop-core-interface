@@ -63,6 +63,9 @@ const Site = props => {
     };
 
     const identical = (oldObject, updatedObject) => {
+        if (!oldObject || !updatedObject) {
+            return false;
+        }
         return Object.keys(oldObject).every(
             key => oldObject[key] === updatedObject[key],
         );
