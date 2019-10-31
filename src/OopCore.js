@@ -156,8 +156,14 @@ class OopCore extends EventEmitter {
         });
     }
 
-    resetPassword(email) {
-        return Promise.resolve("check your email");
+    resetPassword(user) {
+        const data = { user: user };
+        return this.makeRequest(
+            `/passwords/reset`,
+            RequestType.POST,
+            data,
+            false,
+        );
     }
 
     logout() {
