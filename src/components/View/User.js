@@ -181,7 +181,7 @@ const User = props => {
                                         .catch(err => {
                                             console.error(err);
                                             toastr.error(
-                                                "Something went wrong while creating device",
+                                                "Something went wrong while creating user",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );
@@ -202,7 +202,7 @@ const User = props => {
                                         .catch(err => {
                                             console.error(err);
                                             toastr.error(
-                                                "Something went wrong while updating device",
+                                                "Something went wrong while updating user",
                                                 "Error",
                                                 { timeOut: 5000 },
                                             );
