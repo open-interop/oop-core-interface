@@ -5,15 +5,15 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider, Error } from "../Universal";
+import { DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
+import toastr from "toastr";
 import OopCore from "../../OopCore";
 
 const User = props => {
     const [user, setUser] = useState({});
     const [updatedUser, setUpdatedUser] = useState({});
     const blankUser = props.match.params.userId === "new";
-    const [error, setError] = useState("");
     const timezones = Timezones.map(timezone => {
         return {
             id: timezone,
@@ -164,10 +164,15 @@ const User = props => {
 
                         <Button
                             onClick={() => {
-                                setError("");
+                                toastr.clear();
                                 if (blankUser) {
                                     return OopCore.createUser(updatedUser)
                                         .then(response => {
+                                            toastr.success(
+                                                "Created new user",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                             refreshUser(response);
                                             props.history.replace(
                                                 `${allUsersPath}/${response.id}`,
@@ -175,8 +180,10 @@ const User = props => {
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while creating the user",
+                                            toastr.error(
+                                                "Something went wrong while creating user",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -186,11 +193,18 @@ const User = props => {
                                     )
                                         .then(response => {
                                             refreshUser(response);
+                                            toastr.success(
+                                                "Updated user",
+                                                "Success",
+                                                { timeOut: 5000 },
+                                            );
                                         })
                                         .catch(err => {
                                             console.error(err);
-                                            setError(
-                                                "Something went wrong while saving user details ",
+                                            toastr.error(
+                                                "Something went wrong while updating user",
+                                                "Error",
+                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
@@ -199,7 +213,6 @@ const User = props => {
                         >
                             {blankUser ? "Create" : "Save"}
                         </Button>
-                        <Error message={error} />
                     </>
                 )}
             />

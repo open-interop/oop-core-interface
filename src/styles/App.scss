@@ -1,3 +1,4 @@
+@import "toastr";
 $color-grey: #eee;
 $color-dark-grey: lightgrey;
 $color-white: #fff;
@@ -81,7 +82,7 @@ div {
                     z-index: -1;
 
                     .navigation-item {
-                        heigth: auto;
+                        height: auto;
                         padding: 1rem;
                         position: relative;
                         z-index: -1;
