@@ -118,7 +118,7 @@ const Device = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
-    const saveDisabled = () => {
+    const saveButtonDisabled = () => {
         const { authenticationHeaders, authenticationQuery, ...rest } = device;
         const {
             authenticationHeaders: updatedHeaders,
@@ -436,7 +436,7 @@ const Device = props => {
                                         });
                                 }
                             }}
-                            disabled={saveDisabled()}
+                            disabled={saveButtonDisabled()}
                         >
                             {blankDevice ? "Create" : "Save"}
                         </Button>

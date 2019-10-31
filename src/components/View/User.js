@@ -62,7 +62,6 @@ const User = props => {
             password && password.length < 6 && "Minimum length is 6 characters"
         );
     };
-    const saveButtonDisabled = () => identicalObject(user, updatedUser);
 
     return (
         <div className="content-wrapper">
@@ -221,7 +220,7 @@ const User = props => {
                                         });
                                 }
                             }}
-                            disabled={saveButtonDisabled()}
+                            disabled={identicalObject(user, updatedUser)}
                         >
                             {blankUser ? "Create" : "Save"}
                         </Button>

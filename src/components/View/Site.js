@@ -63,10 +63,6 @@ const Site = props => {
         setUpdatedSite(updatedData);
     };
 
-    const saveButtonDisabled = () => {
-        return identicalObject(site, updatedSite);
-    };
-
     const getData = () => {
         return Promise.all([getSite(), OopCore.getSites()]).then(
             ([site, sites]) => {
@@ -351,7 +347,7 @@ const Site = props => {
                                         });
                                 }
                             }}
-                            disabled={saveButtonDisabled()}
+                            disabled={identicalObject(site, updatedSite)}
                         >
                             {blankSite ? "Create" : "Save"}
                         </Button>
