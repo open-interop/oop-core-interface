@@ -3,6 +3,7 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { PairInput } from ".";
+import { identicalArray } from "../../Utilities";
 
 const protocolOptions = [{ id: "http" }, { id: "https" }];
 const requestMethodOptions = [
@@ -20,31 +21,6 @@ const HttpTemprTemplate = props => {
         props.updateTemplate(updatedTemplate);
     };
 
-    const identicalArray = (oldArray, updatedArray) => {
-        if (oldArray.length !== updatedArray.length) {
-            return false;
-        }
-
-        var i = 0;
-        var foundDifferentValue = false;
-        while (i < oldArray.length && !foundDifferentValue) {
-            if (Array.isArray(oldArray[i])) {
-                if (identicalArray(oldArray[i], updatedArray[i])) {
-                    i++;
-                } else {
-                    foundDifferentValue = true;
-                }
-            } else {
-                if (oldArray[i] !== updatedArray[i]) {
-                    foundDifferentValue = true;
-                } else {
-                }
-                i++;
-            }
-        }
-
-        return !foundDifferentValue;
-    };
     return (
         props.endpointType === "http" && (
             <>

@@ -8,6 +8,7 @@ import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
 import toastr from "toastr";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 const User = props => {
@@ -48,15 +49,6 @@ const User = props => {
         setUpdatedUser(updatedData);
     };
 
-    const identical = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
     const passwordMismatch = () => {
         return (
             updatedUser.passwordConfirmation &&
@@ -70,7 +62,7 @@ const User = props => {
             password && password.length < 6 && "Minimum length is 6 characters"
         );
     };
-    const saveButtonDisabled = () => identical(user, updatedUser);
+    const saveButtonDisabled = () => identicalObject(user, updatedUser);
 
     return (
         <div className="content-wrapper">

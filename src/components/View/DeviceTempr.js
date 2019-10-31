@@ -9,6 +9,7 @@ import ArrowLeft from "baseui/icon/arrow-left";
 import { AccordionWithCaption, DataProvider } from "../Universal";
 import { HttpTemprTemplate } from "../Global";
 import toastr from "toastr";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
@@ -77,20 +78,6 @@ const DeviceTempr = props => {
         setUpdatedDeviceTempr(updatedData);
     };
 
-    const identical = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        if (
-            Object.keys(oldObject).length !== Object.keys(updatedObject).length
-        ) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
     const saveButtonDisabled = () => {
         const { options, ...restOfTempr } = deviceTempr;
         const {
@@ -105,9 +92,9 @@ const DeviceTempr = props => {
         } = updatedOptions;
 
         return (
-            identical(headers, updatedHeaders) &&
-            identical(restOfOptions, restOfUpdatedOptions) &&
-            identical(restOfTempr, updatedRestOfTempr)
+            identicalObject(headers, updatedHeaders) &&
+            identicalObject(restOfOptions, restOfUpdatedOptions) &&
+            identicalObject(restOfTempr, updatedRestOfTempr)
         );
     };
 

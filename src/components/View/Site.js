@@ -10,6 +10,7 @@ import { DataProvider } from "../Universal";
 import { PairInput } from "../Global";
 import toastr from "toastr";
 import OopCore from "../../OopCore";
+import { identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
 
 const Site = props => {
@@ -62,17 +63,8 @@ const Site = props => {
         setUpdatedSite(updatedData);
     };
 
-    const identical = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
     const saveButtonDisabled = () => {
-        return identical(site, updatedSite);
+        return identicalObject(site, updatedSite);
     };
 
     const getData = () => {

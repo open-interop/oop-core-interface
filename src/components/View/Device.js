@@ -10,6 +10,7 @@ import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { AccordionWithCaption, DataProvider } from "../Universal";
 import OopCore from "../../OopCore";
+import { identicalArray, identicalObject } from "../../Utilities";
 import toastr from "toastr";
 import { Timezones } from "../../resources/Timezones";
 
@@ -116,41 +117,6 @@ const Device = props => {
         0,
         props.location.pathname.lastIndexOf("/"),
     );
-
-    const identicalObject = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
-    const identicalArray = (oldArray, updatedArray) => {
-        if (oldArray.length !== updatedArray.length) {
-            return false;
-        }
-
-        var i = 0;
-        var foundDifferentValue = false;
-        while (i < oldArray.length && !foundDifferentValue) {
-            if (Array.isArray(oldArray[i])) {
-                if (identicalArray(oldArray[i], updatedArray[i])) {
-                    i++;
-                } else {
-                    foundDifferentValue = true;
-                }
-            } else {
-                if (oldArray[i] !== updatedArray[i]) {
-                    foundDifferentValue = true;
-                } else {
-                }
-                i++;
-            }
-        }
-
-        return !foundDifferentValue;
-    };
 
     const saveDisabled = () => {
         const { authenticationHeaders, authenticationQuery, ...rest } = device;
