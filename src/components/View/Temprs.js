@@ -73,7 +73,7 @@ const Temprs = props => {
                                             </Button>
                                             <Button
                                                 $as={Link}
-                                                to={`/device-groups/${props.match.params.deviceGroupId}/device-temprs/?temprId=${content}`}
+                                                to={`/device-groups/${props.match.params.deviceGroupId}/device-temprs?temprId=${content}`}
                                             >
                                                 Device Temprs
                                             </Button>
