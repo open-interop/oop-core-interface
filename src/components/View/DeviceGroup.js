@@ -5,7 +5,9 @@ import ArrowLeft from "baseui/icon/arrow-left";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import toastr from "toastr";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
+
 import { DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
@@ -136,10 +138,9 @@ const DeviceGroup = props => {
                                         });
                                 }
                             }}
-                            disabled={Object.keys(deviceGroup).every(
-                                key =>
-                                    deviceGroup[key] ===
-                                    updatedDeviceGroup[key],
+                            disabled={identicalObject(
+                                deviceGroup,
+                                updatedDeviceGroup,
                             )}
                         >
                             {blankDeviceGroup ? "Create" : "Save"}

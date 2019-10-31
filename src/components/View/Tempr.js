@@ -8,6 +8,7 @@ import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
 import toastr from "toastr";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 import "brace/mode/json";
@@ -278,14 +279,7 @@ const Tempr = props => {
                                         });
                                 }
                             }}
-                            disabled={
-                                blankTempr
-                                    ? false
-                                    : Object.keys(tempr).every(
-                                          key =>
-                                              tempr[key] === updatedTempr[key],
-                                      )
-                            }
+                            disabled={identicalObject(tempr, updatedTempr)}
                         >
                             {blankTempr ? "Create" : "Save"}
                         </Button>
