@@ -6,9 +6,13 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
+import {
+    clearToast,
+    ErrorToast,
+    HttpTemprTemplate,
+    SuccessToast,
+} from "../Global";
 import { AccordionWithCaption, DataProvider } from "../Universal";
-import { HttpTemprTemplate } from "../Global";
-import toastr from "toastr";
 import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
@@ -239,7 +243,7 @@ const DeviceTempr = props => {
                         </AccordionWithCaption>
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 setDeviceTemprErrors({});
                                 if (blankDeviceTempr) {
                                     return OopCore.createDeviceTempr(
@@ -247,10 +251,9 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                             props.history.replace(
@@ -259,10 +262,9 @@ const DeviceTempr = props => {
                                         })
                                         .catch(err => {
                                             setDeviceTemprErrors(err);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to create device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -272,19 +274,17 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                         })
                                         .catch(err => {
                                             setDeviceTemprErrors(err);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to update device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }

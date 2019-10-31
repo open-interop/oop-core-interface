@@ -7,7 +7,7 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import toastr from "toastr";
+import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
@@ -226,7 +226,7 @@ const Tempr = props => {
                         </FormControl>
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 setTemprErrors({});
                                 if (blankTempr) {
                                     return OopCore.createTempr(
@@ -234,10 +234,9 @@ const Tempr = props => {
                                         updatedTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshTempr(response);
                                             props.history.replace(
@@ -246,10 +245,9 @@ const Tempr = props => {
                                         })
                                         .catch(error => {
                                             setTemprErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to create tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -260,10 +258,9 @@ const Tempr = props => {
                                     )
                                         .then(response => {
                                             refreshTempr(response);
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             props.history.replace(
                                                 `/device-groups/${response.deviceGroupId}/temprs/${response.id}`,
@@ -271,10 +268,9 @@ const Tempr = props => {
                                         })
                                         .catch(error => {
                                             setTemprErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to update tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }

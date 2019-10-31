@@ -5,13 +5,12 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { PairInput } from "../Global";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
+import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import { AccordionWithCaption, DataProvider } from "../Universal";
 import OopCore from "../../OopCore";
 import { identicalArray, identicalObject } from "../../Utilities";
-import toastr from "toastr";
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
@@ -393,15 +392,14 @@ const Device = props => {
                         </AccordionWithCaption>
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 setDeviceErrors({});
                                 if (blankDevice) {
                                     return OopCore.createDevice(updatedDevice)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDevice(response);
                                             props.history.replace(
@@ -410,28 +408,25 @@ const Device = props => {
                                         })
                                         .catch(error => {
                                             setDeviceErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to create device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
                                     return OopCore.updateDevice(updatedDevice)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Saved device details",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDevice(response);
                                         })
                                         .catch(error => {
                                             setDeviceErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to update device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }

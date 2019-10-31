@@ -7,8 +7,7 @@ import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import { PairInput } from "../Global";
-import toastr from "toastr";
+import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
@@ -301,15 +300,14 @@ const Site = props => {
 
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 setSiteErrors({});
                                 if (blankSite) {
                                     return OopCore.createSite(updatedSite)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new site",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshSite(response);
                                             props.history.replace(
@@ -318,10 +316,9 @@ const Site = props => {
                                         })
                                         .catch(error => {
                                             setSiteErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to create site",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -330,19 +327,17 @@ const Site = props => {
                                         updatedSite,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated site",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshSite(response);
                                         })
                                         .catch(error => {
                                             setSiteErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to update site",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
