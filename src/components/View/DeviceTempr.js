@@ -226,16 +226,15 @@ const DeviceTempr = props => {
                             subtitle="Please provide a host, port, path, protocol and request method"
                         >
                             <div className="content-wrapper">
-                                <HttpTemprTemplate
-                                    endpointType={
-                                        updatedDeviceTempr.endpointType
-                                    }
-                                    template={updatedDeviceTempr.options}
-                                    updateTemplate={options =>
-                                        setValue("options", options)
-                                    }
-                                    error={deviceTemprErrors.base}
-                                />
+                                {updatedDeviceTempr.endpointType === "http" && (
+                                    <HttpTemprTemplate
+                                        template={updatedDeviceTempr.options}
+                                        updateTemplate={options =>
+                                            setValue("options", options)
+                                        }
+                                        error={deviceTemprErrors.base}
+                                    />
+                                )}
                             </div>
                         </AccordionWithCaption>
                         <Button
