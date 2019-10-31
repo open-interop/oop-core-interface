@@ -6,9 +6,14 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
+import {
+    clearToast,
+    ErrorToast,
+    HttpTemprTemplate,
+    SuccessToast,
+} from "../Global";
 import { AccordionWithCaption, DataProvider } from "../Universal";
-import { HttpTemprTemplate } from "../Global";
-import toastr from "toastr";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
@@ -77,17 +82,6 @@ const DeviceTempr = props => {
         setUpdatedDeviceTempr(updatedData);
     };
 
-    const identical = (oldObject, updatedObject) => {
-        if (
-            Object.keys(oldObject).length !== Object.keys(updatedObject).length
-        ) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
     const saveButtonDisabled = () => {
         const { options, ...restOfTempr } = deviceTempr;
         const {
@@ -102,9 +96,9 @@ const DeviceTempr = props => {
         } = updatedOptions;
 
         return (
-            identical(headers, updatedHeaders) &&
-            identical(restOfOptions, restOfUpdatedOptions) &&
-            identical(restOfTempr, updatedRestOfTempr)
+            identicalObject(headers, updatedHeaders) &&
+            identicalObject(restOfOptions, restOfUpdatedOptions) &&
+            identicalObject(restOfTempr, updatedRestOfTempr)
         );
     };
 
@@ -236,21 +230,20 @@ const DeviceTempr = props => {
                             subtitle="Please provide a host, port, path, protocol and request method"
                         >
                             <div className="content-wrapper">
-                                <HttpTemprTemplate
-                                    endpointType={
-                                        updatedDeviceTempr.endpointType
-                                    }
-                                    template={updatedDeviceTempr.options}
-                                    updateTemplate={options =>
-                                        setValue("options", options)
-                                    }
-                                    error={deviceTemprErrors.base}
-                                />
+                                {updatedDeviceTempr.endpointType === "http" && (
+                                    <HttpTemprTemplate
+                                        template={updatedDeviceTempr.options}
+                                        updateTemplate={options =>
+                                            setValue("options", options)
+                                        }
+                                        error={deviceTemprErrors.base}
+                                    />
+                                )}
                             </div>
                         </AccordionWithCaption>
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 setDeviceTemprErrors({});
                                 if (blankDeviceTempr) {
                                     return OopCore.createDeviceTempr(
@@ -258,10 +251,9 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                             props.history.replace(
@@ -270,10 +262,9 @@ const DeviceTempr = props => {
                                         })
                                         .catch(err => {
                                             setDeviceTemprErrors(err);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to create device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -283,19 +274,17 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                         })
                                         .catch(err => {
                                             setDeviceTemprErrors(err);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to update device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }

@@ -57,7 +57,7 @@ const SideNavigation = props => {
                             <React.Fragment key={`device-group-${index}`}>
                                 <NavigationItem
                                     pathName={group.name}
-                                    path="/devices"
+                                    path={`/devices?deviceGroupId=${group.id}`}
                                     className="group-name"
                                 />
                                 {group.devices.length ? (

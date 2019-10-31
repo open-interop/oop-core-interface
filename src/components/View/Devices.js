@@ -11,6 +11,10 @@ const Devices = props => {
     const [devices, setDevices] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [deviceGroupId, setDeviceGroupId] = useQueryParam(
+        "deviceGroupId",
+        NumberParam,
+    );
 
     // reset page number when the search query is changed
     useEffect(() => {
@@ -18,21 +22,35 @@ const Devices = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize]);
 
+    const getData = () => {
+        return Promise.all([
+            OopCore.getDevices({ page, pageSize, deviceGroupId }),
+            OopCore.getDeviceGroups(),
+        ]).then(([devices, groups]) => {
+            devices.data.forEach(device => {
+                return (device.deviceGroupName =
+                    groups.data.find(group => group.id === device.deviceGroupId)
+                        .name || "");
+            });
+            setDevices(devices);
+            return devices;
+        });
+    };
     return (
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Devices</h2>
-                <Button $as={Link} to={`/devices/new`}>
+                <Button
+                    $as={Link}
+                    to={`/devices/new${
+                        deviceGroupId ? "?deviceGroupId=" + deviceGroupId : ""
+                    }`}
+                >
                     New
                 </Button>
             </div>
             <DataProvider
-                getData={() =>
-                    OopCore.getDevices({ page, pageSize }).then(response => {
-                        setDevices(response);
-                        return response;
-                    })
-                }
+                getData={() => getData()}
                 renderKey={props.location.search}
                 renderData={() => (
                     <>
@@ -59,7 +77,16 @@ const Devices = props => {
                             columns={[
                                 { id: "id", name: "ID" },
                                 { id: "name", name: "Name" },
-                                { id: "deviceGroupId", name: "Group" },
+                                {
+                                    id: "deviceGroupId",
+                                    name: "Group ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "deviceGroupName",
+                                    name: "Group",
+                                },
                                 { id: "siteId", name: "Site" },
                                 { id: "action", name: "Action" },
                             ]}
@@ -68,6 +95,15 @@ const Devices = props => {
                                     return "id";
                                 }
                                 return columnName;
+                            }}
+                            filters={{ deviceGroupId }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "deviceGroupId":
+                                        return setDeviceGroupId(value);
+                                    default:
+                                        return null;
+                                }
                             }}
                         />
                         <Pagination

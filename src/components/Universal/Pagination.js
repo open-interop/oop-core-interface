@@ -27,7 +27,7 @@ const Pagination = props => {
                     pageSizeOptions.find(
                         option => option.id === props.currentPageSize,
                     ) || {
-                        id: 10,
+                        id: 20,
                     }
                 }
             />

@@ -7,7 +7,7 @@ const PairInput = props => {
     const dataIsArray = Array.isArray(props.data);
 
     const getArrayFromObject = () => {
-        return Object.keys(props.data).length
+        return props.data && Object.keys(props.data).length
             ? Object.entries(props.data)
             : [["", ""]];
     };

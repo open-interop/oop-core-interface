@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQueryParam, NumberParam } from "use-query-params";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { PairInput } from "../Global";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
+import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import { AccordionWithCaption, DataProvider } from "../Universal";
 import OopCore from "../../OopCore";
-import toastr from "toastr";
+import { identicalArray, identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
@@ -25,6 +26,7 @@ const Device = props => {
         };
     });
     const blankDevice = props.match.params.deviceId === "new";
+    const queryParam = useQueryParam("deviceGroupId", NumberParam)[0];
 
     const getDevice = () => {
         return blankDevice
@@ -33,7 +35,7 @@ const Device = props => {
                   authenticationHeaders: [],
                   authenticationPath: "",
                   authenticationQuery: [],
-                  deviceGroupId: "",
+                  deviceGroupId: queryParam,
                   latitude: "",
                   longitude: "",
                   name: "",
@@ -115,39 +117,7 @@ const Device = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
-    const identicalObject = (oldObject, newObject) => {
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === newObject[key],
-        );
-    };
-
-    const identicalArray = (oldArray, updatedArray) => {
-        if (oldArray.length !== updatedArray.length) {
-            return false;
-        }
-
-        var i = 0;
-        var foundDifferentValue = false;
-        while (i < oldArray.length && !foundDifferentValue) {
-            if (Array.isArray(oldArray[i])) {
-                if (identicalArray(oldArray[i], updatedArray[i])) {
-                    i++;
-                } else {
-                    foundDifferentValue = true;
-                }
-            } else {
-                if (oldArray[i] !== updatedArray[i]) {
-                    foundDifferentValue = true;
-                } else {
-                }
-                i++;
-            }
-        }
-
-        return !foundDifferentValue;
-    };
-
-    const saveDisabled = () => {
+    const saveButtonDisabled = () => {
         const { authenticationHeaders, authenticationQuery, ...rest } = device;
         const {
             authenticationHeaders: updatedHeaders,
@@ -422,15 +392,14 @@ const Device = props => {
                         </AccordionWithCaption>
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
                                 setDeviceErrors({});
                                 if (blankDevice) {
                                     return OopCore.createDevice(updatedDevice)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDevice(response);
                                             props.history.replace(
@@ -439,33 +408,30 @@ const Device = props => {
                                         })
                                         .catch(error => {
                                             setDeviceErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to create device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
                                     return OopCore.updateDevice(updatedDevice)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Saved device details",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDevice(response);
                                         })
                                         .catch(error => {
                                             setDeviceErrors(error);
-                                            toastr.error(
+                                            ErrorToast(
                                                 "Failed to update device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
                             }}
-                            disabled={saveDisabled()}
+                            disabled={saveButtonDisabled()}
                         >
                             {blankDevice ? "Create" : "Save"}
                         </Button>
