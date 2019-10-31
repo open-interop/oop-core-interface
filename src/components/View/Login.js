@@ -4,7 +4,7 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Error, LineWrapper } from "../Universal";
-import logo from "../../resources/open_interop_logo_wide.png";
+import logo from "../../resources/open-interop-white.svg";
 import OopCore from "../../OopCore";
 
 const Login = () => {
