@@ -6,14 +6,20 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider } from "../Universal";
-import { HttpTemprTemplate } from "../Global";
-import toastr from "toastr";
+import {
+    clearToast,
+    ErrorToast,
+    HttpTemprTemplate,
+    SuccessToast,
+} from "../Global";
+import { AccordionWithCaption, DataProvider } from "../Universal";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 const DeviceTempr = props => {
     const [deviceTempr, setDeviceTempr] = useState({});
     const [updatedDeviceTempr, setUpdatedDeviceTempr] = useState({});
+    const [deviceTemprErrors, setDeviceTemprErrors] = useState({});
     const [devices, setDevices] = useState([]);
     const [temprs, setTemprs] = useState([]);
     const blankDeviceTempr = props.match.params.deviceTemprId === "new";
@@ -76,20 +82,6 @@ const DeviceTempr = props => {
         setUpdatedDeviceTempr(updatedData);
     };
 
-    const identical = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        if (
-            Object.keys(oldObject).length !== Object.keys(updatedObject).length
-        ) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
     const saveButtonDisabled = () => {
         const { options, ...restOfTempr } = deviceTempr;
         const {
@@ -104,18 +96,9 @@ const DeviceTempr = props => {
         } = updatedOptions;
 
         return (
-            !updatedDeviceTempr.name ||
-            !updatedDeviceTempr.deviceId ||
-            !updatedDeviceTempr.temprId ||
-            !updatedDeviceTempr.endpointType ||
-            !updatedDeviceTempr.options.host ||
-            !updatedDeviceTempr.options.path ||
-            !updatedDeviceTempr.options.port ||
-            !updatedDeviceTempr.options.protocol ||
-            !updatedDeviceTempr.options.requestMethod ||
-            (identical(headers, updatedHeaders) &&
-                identical(restOfOptions, restOfUpdatedOptions) &&
-                identical(restOfTempr, updatedRestOfTempr))
+            identicalObject(headers, updatedHeaders) &&
+            identicalObject(restOfOptions, restOfUpdatedOptions) &&
+            identicalObject(restOfTempr, updatedRestOfTempr)
         );
     };
 
@@ -136,7 +119,12 @@ const DeviceTempr = props => {
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
-                            required
+                            caption="required"
+                            error={
+                                deviceTemprErrors.name
+                                    ? `Name ${deviceTemprErrors.name}`
+                                    : ""
+                            }
                         >
                             <Input
                                 id={"input-name"}
@@ -144,11 +132,13 @@ const DeviceTempr = props => {
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
+                                error={deviceTemprErrors.name}
                             />
                         </FormControl>
                         <FormControl
                             label="Device"
                             key={"form-control-group-device"}
+                            caption="required"
                         >
                             <Select
                                 options={devices}
@@ -156,17 +146,24 @@ const DeviceTempr = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event => {
-                                    setValue("deviceId", event.value[0].id);
+                                    event.value.length
+                                        ? setValue(
+                                              "deviceId",
+                                              event.value[0].id,
+                                          )
+                                        : setValue("deviceId", null);
                                 }}
-                                value={devices.find(
+                                value={devices.filter(
                                     item =>
                                         item.id === updatedDeviceTempr.deviceId,
                                 )}
+                                clearable={false}
                             />
                         </FormControl>
                         <FormControl
                             label="Tempr"
                             key={"form-control-group-tempr"}
+                            caption="required"
                         >
                             <Select
                                 options={temprs}
@@ -174,17 +171,21 @@ const DeviceTempr = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event => {
-                                    setValue("temprId", event.value[0].id);
+                                    event.value.length
+                                        ? setValue("temprId", event.value[0].id)
+                                        : setValue("temprId", null);
                                 }}
-                                value={temprs.find(
+                                value={temprs.filter(
                                     item =>
                                         item.id === updatedDeviceTempr.temprId,
                                 )}
+                                clearable={false}
                             />
                         </FormControl>
                         <FormControl
                             label="Endpoint type"
                             key={"form-control-group-endpoint-type"}
+                            caption="required"
                         >
                             <Input
                                 id={"input-endpoint-type"}
@@ -222,28 +223,37 @@ const DeviceTempr = props => {
                                 />
                             </FormControl>
                         )}
-                        <FormControl>
-                            <HttpTemprTemplate
-                                endpointType={updatedDeviceTempr.endpointType}
-                                template={updatedDeviceTempr.options}
-                                updateTemplate={options =>
-                                    setValue("options", options)
-                                }
-                            />
-                        </FormControl>
+                        <AccordionWithCaption
+                            title="Options"
+                            caption="required"
+                            error={deviceTemprErrors.base}
+                            subtitle="Please provide a host, port, path, protocol and request method"
+                        >
+                            <div className="content-wrapper">
+                                {updatedDeviceTempr.endpointType === "http" && (
+                                    <HttpTemprTemplate
+                                        template={updatedDeviceTempr.options}
+                                        updateTemplate={options =>
+                                            setValue("options", options)
+                                        }
+                                        error={deviceTemprErrors.base}
+                                    />
+                                )}
+                            </div>
+                        </AccordionWithCaption>
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
+                                setDeviceTemprErrors({});
                                 if (blankDeviceTempr) {
                                     return OopCore.createDeviceTempr(
                                         props.match.params.deviceGroupId,
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                             props.history.replace(
@@ -251,11 +261,10 @@ const DeviceTempr = props => {
                                             );
                                         })
                                         .catch(err => {
-                                            console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while creating device tempr",
+                                            setDeviceTemprErrors(err);
+                                            ErrorToast(
+                                                "Failed to create device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -265,19 +274,17 @@ const DeviceTempr = props => {
                                         updatedDeviceTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated device tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDeviceTempr(response);
                                         })
                                         .catch(err => {
-                                            console.error(err);
-                                            toastr.error(
-                                                "Something went wrong while updating device tempr",
+                                            setDeviceTemprErrors(err);
+                                            ErrorToast(
+                                                "Failed to update device tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }

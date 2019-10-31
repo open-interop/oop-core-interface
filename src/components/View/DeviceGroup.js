@@ -4,13 +4,16 @@ import { Button } from "baseui/button";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
-import toastr from "toastr";
+import { clearToast, ErrorToast, SuccessToast } from "../Global";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
+
 import { DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
     const [deviceGroup, setDeviceGroup] = useState({});
     const [updatedDeviceGroup, setUpdatedDeviceGroup] = useState({});
+    const [deviceGroupErrors, setDeviceGroupErrors] = useState({});
     const blankDeviceGroup = props.match.params.deviceGroupId === "new";
 
     const allDeviceGroupsPath = props.location.pathname.substr(
@@ -55,14 +58,19 @@ const DeviceGroup = props => {
                             label="Name"
                             key={`form-control-name`}
                             caption="required"
+                            error={
+                                deviceGroupErrors.name
+                                    ? `Name ${deviceGroupErrors.name}`
+                                    : ""
+                            }
                         >
                             <Input
-                                required
                                 id={`input-name`}
                                 value={updatedDeviceGroup.name || ""}
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
+                                error={deviceGroupErrors.name}
                             />
                         </FormControl>
                         <FormControl
@@ -83,16 +91,16 @@ const DeviceGroup = props => {
 
                         <Button
                             onClick={() => {
-                                toastr.clear();
+                                clearToast();
+                                setDeviceGroupErrors({});
                                 if (blankDeviceGroup) {
                                     OopCore.createDeviceGroup(
                                         updatedDeviceGroup,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device group",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             props.history.replace(
                                                 `${allDeviceGroupsPath}/${response.id}`,
@@ -100,11 +108,10 @@ const DeviceGroup = props => {
                                             updateState(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
-                                            toastr.error(
-                                                "Something went wrong while creating device group",
+                                            setDeviceGroupErrors(error);
+                                            ErrorToast(
+                                                "Failed to create device group",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
@@ -112,31 +119,25 @@ const DeviceGroup = props => {
                                         updatedDeviceGroup,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated device group",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             updateState(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
-                                            toastr.error(
-                                                "Something went wrong while updating device group",
+                                            setDeviceGroupErrors(error);
+                                            ErrorToast(
+                                                "Failed to update device group",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
                             }}
-                            disabled={
-                                !updatedDeviceGroup.name ||
-                                Object.keys(deviceGroup).every(
-                                    key =>
-                                        deviceGroup[key] ===
-                                        updatedDeviceGroup[key],
-                                )
-                            }
+                            disabled={identicalObject(
+                                deviceGroup,
+                                updatedDeviceGroup,
+                            )}
                         >
                             {blankDeviceGroup ? "Create" : "Save"}
                         </Button>

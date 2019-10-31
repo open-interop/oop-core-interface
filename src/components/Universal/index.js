@@ -1,3 +1,4 @@
+export * from "./AccordionWithCaption";
 export * from "./Error";
 export * from "./DataProvider";
 export * from "./LineWrapper";

@@ -7,7 +7,8 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
-import toastr from "toastr";
+import { clearToast, ErrorToast, SuccessToast } from "../Global";
+import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 import "brace/mode/json";
@@ -16,8 +17,8 @@ import "brace/theme/github";
 const Tempr = props => {
     const [tempr, setTempr] = useState({});
     const [updatedTempr, setUpdatedTempr] = useState({});
-    const [stateGroups, setGroups] = useState([]);
-    const [moveGroupError, setMoveGroupError] = useState("");
+    const [temprErrors, setTemprErrors] = useState({});
+    const [groups, setGroups] = useState([]);
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -26,7 +27,7 @@ const Tempr = props => {
             ? Promise.resolve({
                   name: "",
                   description: "",
-                  deviceGroupId: null,
+                  deviceGroupId: Number(props.match.params.deviceGroupId),
                   body: {
                       language: "js",
                       script: "",
@@ -38,24 +39,19 @@ const Tempr = props => {
               );
     };
 
-    const getFormData = (temprDetails, groups) => {
-        temprDetails.groups = groups.data;
-        return temprDetails;
-    };
-
     const getData = () => {
         return Promise.all([getTempr(), OopCore.getDeviceGroups()]).then(
             ([tempr, groups]) => {
-                setGroups(groups);
-                return getFormData(tempr, groups);
+                setGroups(groups.data);
+                refreshTempr(tempr);
+                return tempr;
             },
         );
     };
 
     const refreshTempr = response => {
-        const freshData = getFormData(response, stateGroups);
-        setTempr(freshData);
-        setUpdatedTempr(freshData);
+        setTempr(response);
+        setUpdatedTempr(response);
     };
 
     const allTemprsPath = props.location.pathname.substr(
@@ -70,37 +66,59 @@ const Tempr = props => {
     };
 
     const canMoveTempr = () => {
-        setMoveGroupError("");
-        return OopCore.getDeviceTemprs(updatedTempr.deviceGroupId, {
-            temprId: updatedTempr.id,
-        }).then(response => {
-            if (response.data.length) {
-                return false;
-            } else {
-                return true;
-            }
-        });
+        setTemprErrors({ ...temprErrors, moveGroupError: "" });
+        if (blankTempr) {
+            return Promise.resolve(true);
+        } else {
+            return OopCore.getDeviceTemprs(updatedTempr.deviceGroupId, {
+                temprId: updatedTempr.id,
+            }).then(response => {
+                if (response.data.length) {
+                    setTemprErrors({
+                        moveGroupError:
+                            "This tempr can't be moved to another group because it's currently used in a device tempr",
+                    });
+                    return false;
+                } else {
+                    setTemprErrors({ ...temprErrors, moveGroupError: "" });
+                    return true;
+                }
+            });
+        }
     };
 
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allTemprsPath}>
-                <ArrowLeft size={24} />
-            </Button>
+            <div className="space-between">
+                <Button $as={Link} to={allTemprsPath}>
+                    <ArrowLeft size={24} />
+                </Button>
+                {!blankTempr && (
+                    <Button
+                        $as={Link}
+                        to={`/device-groups/${updatedTempr.deviceGroupId}/device-temprs/?temprId=${updatedTempr.id}`}
+                    >
+                        Device Temprs
+                    </Button>
+                )}
+            </div>
+
             <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
                 getData={() => {
-                    return getData().then(response => {
-                        setTempr(response);
-                        setUpdatedTempr(response);
-                        return response;
-                    });
+                    return getData();
                 }}
                 renderData={() => (
                     <>
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
+                            error={
+                                temprErrors.name
+                                    ? `Name ${temprErrors.name}`
+                                    : ""
+                            }
+                            caption="required"
                         >
                             <Input
                                 id={"input-name"}
@@ -108,40 +126,32 @@ const Tempr = props => {
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
+                                error={temprErrors.name}
                             />
                         </FormControl>
                         <FormControl
                             label="Group"
                             key={"form-control-group-group"}
-                            error={moveGroupError}
+                            error={temprErrors.moveGroupError}
+                            caption="required"
                         >
                             <Select
-                                options={updatedTempr.groups}
+                                options={groups}
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
+                                clearable={false}
                                 onChange={event => {
-                                    if (blankTempr) {
-                                        setValue(
-                                            "deviceGroupId",
-                                            event.value[0].id,
-                                        );
-                                    } else {
-                                        canMoveTempr().then(result => {
-                                            if (result) {
-                                                setValue(
-                                                    "deviceGroupId",
-                                                    event.value[0].id,
-                                                );
-                                            } else {
-                                                setMoveGroupError(
-                                                    "This tempr can't be moved to another group because it's currently used in a device tempr",
-                                                );
-                                            }
-                                        });
-                                    }
+                                    canMoveTempr().then(canMove => {
+                                        if (canMove && event.value.length) {
+                                            setValue(
+                                                "deviceGroupId",
+                                                event.value[0].id,
+                                            );
+                                        }
+                                    });
                                 }}
-                                value={updatedTempr.groups.find(
+                                value={groups.filter(
                                     item =>
                                         item.id === updatedTempr.deviceGroupId,
                                 )}
@@ -162,20 +172,6 @@ const Tempr = props => {
                                 }
                             />
                         </FormControl>
-                        {!blankTempr && (
-                            <FormControl
-                                label="Device Temprs"
-                                key={"form-control-device-temprs"}
-                            >
-                                <Button
-                                    $as={Link}
-                                    to={`/device-groups/${updatedTempr.deviceGroupId}/device-temprs?temprId=${updatedTempr.id}`}
-                                >
-                                    Device Temprs
-                                </Button>
-                            </FormControl>
-                        )}
-
                         <FormControl
                             label="Body"
                             key={"form-control-group-body-example"}
@@ -230,64 +226,56 @@ const Tempr = props => {
                         </FormControl>
                         <Button
                             onClick={() => {
-                                toastr.clear();
-                                const { groups, ...tempr } = updatedTempr;
+                                clearToast();
+                                setTemprErrors({});
                                 if (blankTempr) {
                                     return OopCore.createTempr(
                                         props.match.params.deviceGroupId,
-                                        tempr,
+                                        updatedTempr,
                                     )
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshTempr(response);
                                             props.history.replace(
-                                                `${allTemprsPath}/${response.id}`,
+                                                `/device-groups/${response.deviceGroupId}/temprs/${response.id}`,
                                             );
                                         })
                                         .catch(error => {
-                                            console.error(error);
-                                            toastr.error(
-                                                "Something went wrong while creating tempr",
+                                            setTemprErrors(error);
+                                            ErrorToast(
+                                                "Failed to create tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
                                     OopCore.updateTempr(
                                         props.match.params.deviceGroupId,
                                         props.match.params.temprId,
-                                        tempr,
+                                        updatedTempr,
                                     )
                                         .then(response => {
                                             refreshTempr(response);
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Updated tempr",
                                                 "Success",
-                                                { timeOut: 5000 },
+                                            );
+                                            props.history.replace(
+                                                `/device-groups/${response.deviceGroupId}/temprs/${response.id}`,
                                             );
                                         })
                                         .catch(error => {
-                                            console.error(error);
-                                            toastr.error(
-                                                "Something went wrong while updating tempr",
+                                            setTemprErrors(error);
+                                            ErrorToast(
+                                                "Failed to update tempr",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
                             }}
-                            disabled={
-                                blankTempr
-                                    ? false
-                                    : Object.keys(tempr).every(
-                                          key =>
-                                              tempr[key] === updatedTempr[key],
-                                      )
-                            }
+                            disabled={identicalObject(tempr, updatedTempr)}
                         >
                             {blankTempr ? "Create" : "Save"}
                         </Button>

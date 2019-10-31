@@ -7,19 +7,18 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { Accordion, Panel } from "baseui/accordion";
-import { PairInput } from "../Global";
-import { DataProvider } from "../Universal";
+import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
+import { AccordionWithCaption, DataProvider } from "../Universal";
 import OopCore from "../../OopCore";
-import toastr from "toastr";
+import { identicalArray, identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
     const [device, setDevice] = useState({});
     const [updatedDevice, setUpdatedDevice] = useState({});
+    const [deviceErrors, setDeviceErrors] = useState({});
     const [sites, setSites] = useState([]);
     const [groups, setGroups] = useState([]);
-    const [moveGroupError, setMoveGroupError] = useState("");
     const timezones = Timezones.map(timezone => {
         return {
             id: timezone,
@@ -92,7 +91,7 @@ const Device = props => {
     };
 
     const canMoveDevice = () => {
-        setMoveGroupError("");
+        setDeviceErrors({ ...deviceErrors, moveGroupError: "" });
         if (blankDevice) {
             return Promise.resolve(true);
         } else {
@@ -100,8 +99,13 @@ const Device = props => {
                 deviceId: updatedDevice.id,
             }).then(response => {
                 if (response.data.length) {
+                    setDeviceErrors({
+                        moveGroupError:
+                            "This device can't be moved to another group because it's currently used in a device tempr",
+                    });
                     return false;
                 } else {
+                    setDeviceErrors({ ...deviceErrors, moveGroupError: "" });
                     return true;
                 }
             });
@@ -113,56 +117,7 @@ const Device = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
-    const noAuthentication = () => {
-        return (
-            !updatedDevice.authenticationPath &&
-            (updatedDevice.authenticationQuery &&
-                !updatedDevice.authenticationQuery.find(
-                    item => item[0] && item[1],
-                )) &&
-            (updatedDevice.authenticationHeaders &&
-                !updatedDevice.authenticationHeaders.find(
-                    item => item[0] && item[1],
-                ))
-        );
-    };
-
-    const identicalObject = (oldObject, updatedObject) => {
-        if (!oldObject || !updatedObject) {
-            return false;
-        }
-        return Object.keys(oldObject).every(
-            key => oldObject[key] === updatedObject[key],
-        );
-    };
-
-    const identicalArray = (oldArray, updatedArray) => {
-        if (oldArray.length !== updatedArray.length) {
-            return false;
-        }
-
-        var i = 0;
-        var foundDifferentValue = false;
-        while (i < oldArray.length && !foundDifferentValue) {
-            if (Array.isArray(oldArray[i])) {
-                if (identicalArray(oldArray[i], updatedArray[i])) {
-                    i++;
-                } else {
-                    foundDifferentValue = true;
-                }
-            } else {
-                if (oldArray[i] !== updatedArray[i]) {
-                    foundDifferentValue = true;
-                } else {
-                }
-                i++;
-            }
-        }
-
-        return !foundDifferentValue;
-    };
-
-    const saveDisabled = () => {
+    const saveButtonDisabled = () => {
         const { authenticationHeaders, authenticationQuery, ...rest } = device;
         const {
             authenticationHeaders: updatedHeaders,
@@ -170,22 +125,29 @@ const Device = props => {
             ...updatedRest
         } = updatedDevice;
         return (
-            noAuthentication() ||
-            !updatedDevice.name ||
-            !updatedDevice.deviceGroupId ||
-            !updatedDevice.siteId ||
-            (identicalArray(authenticationHeaders, updatedHeaders) &&
-                identicalArray(authenticationQuery, updatedQuery) &&
-                identicalObject(rest, updatedRest))
+            identicalArray(authenticationHeaders, updatedHeaders) &&
+            identicalArray(authenticationQuery, updatedQuery) &&
+            identicalObject(rest, updatedRest)
         );
     };
 
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allDevicesPath}>
-                <ArrowLeft size={24} />
-            </Button>
-            <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>
+            <div className="space-between">
+                <Button $as={Link} to={allDevicesPath}>
+                    <ArrowLeft size={24} />
+                </Button>
+
+                {!blankDevice && (
+                    <Button
+                        $as={Link}
+                        to={`/device-groups/${updatedDevice.deviceGroupId}/device-temprs/?deviceId=${updatedDevice.id}`}
+                    >
+                        Device Temprs
+                    </Button>
+                )}
+            </div>
+            <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>{" "}
             <DataProvider
                 getData={() => {
                     return getData();
@@ -197,20 +159,30 @@ const Device = props => {
                             label="Name"
                             key={`form-control-name`}
                             caption="required"
+                            error={
+                                deviceErrors.name
+                                    ? `Name ${deviceErrors.name}`
+                                    : ""
+                            }
                         >
                             <Input
-                                required
                                 id={`input-name`}
                                 value={updatedDevice.name}
                                 onChange={event =>
                                     setValue("name", event.currentTarget.value)
                                 }
+                                error={deviceErrors.name}
                             />
                         </FormControl>
                         <FormControl
                             label="Site"
                             key={`form-control-site`}
                             caption="required"
+                            error={
+                                deviceErrors.site
+                                    ? `Site ${deviceErrors.site}`
+                                    : ""
+                            }
                         >
                             <Select
                                 required
@@ -218,18 +190,26 @@ const Device = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
-                                onChange={event =>
-                                    setValue("siteId", event.value[0].id)
-                                }
-                                value={sites.find(
+                                onChange={event => {
+                                    event.value.length
+                                        ? setValue("siteId", event.value[0].id)
+                                        : setValue("siteId", null);
+                                }}
+                                value={sites.filter(
                                     item => item.id === updatedDevice.siteId,
                                 )}
+                                error={deviceErrors.site}
                             />
                         </FormControl>
                         <FormControl
                             label="Group"
                             key={`form-control-group`}
-                            error={moveGroupError}
+                            error={
+                                deviceErrors.moveGroupError ||
+                                (deviceErrors.deviceGroup
+                                    ? `Group ${deviceErrors.deviceGroup}`
+                                    : "")
+                            }
                             caption="required"
                         >
                             <Select
@@ -241,21 +221,23 @@ const Device = props => {
                                 onChange={event => {
                                     canMoveDevice().then(canMove => {
                                         if (canMove) {
-                                            setValue(
-                                                "deviceGroupId",
-                                                event.value[0].id,
-                                            );
-                                        } else {
-                                            setMoveGroupError(
-                                                "This device can't be moved to another group because it's currently used in a device tempr",
-                                            );
+                                            event.value.length
+                                                ? setValue(
+                                                      "deviceGroupId",
+                                                      event.value[0].id,
+                                                  )
+                                                : setValue(
+                                                      "deviceGroupId",
+                                                      null,
+                                                  );
                                         }
                                     });
                                 }}
-                                value={groups.find(
+                                value={groups.filter(
                                     item =>
                                         item.id === updatedDevice.deviceGroupId,
                                 )}
+                                error={deviceErrors.deviceGroup}
                             />
                         </FormControl>
                         <FormControl label="Active" key={`form-control-active`}>
@@ -276,10 +258,15 @@ const Device = props => {
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={true}
-                                onChange={event =>
-                                    setValue("timeZone", event.value[0].id)
-                                }
-                                value={timezones.find(
+                                onChange={event => {
+                                    event.value.length
+                                        ? setValue(
+                                              "timeZone",
+                                              event.value[0].id,
+                                          )
+                                        : setValue("timeZone", null);
+                                }}
+                                value={timezones.filter(
                                     item => item.id === updatedDevice.timeZone,
                                 )}
                             />
@@ -314,113 +301,105 @@ const Device = props => {
                                 }
                             />
                         </FormControl>
-                        <Accordion>
-                            <Panel title="Authentication">
+                        <AccordionWithCaption
+                            title="Authentication"
+                            subtitle="Please provide at least one form of authentication"
+                            error={deviceErrors.base}
+                            caption="required"
+                        >
+                            <div className="content-wrapper">
                                 <FormControl
-                                    label="Longitude"
-                                    key={`form-control-longitude`}
+                                    label="Authentication path"
+                                    key={`form-control-authentication-path`}
                                 >
-                                    <div className="content-wrapper">
-                                        <FormControl
-                                            label="Authentication path"
-                                            key={`form-control-authentication-path`}
-                                            error={
-                                                noAuthentication()
-                                                    ? "Please provide at least one form of authentication"
-                                                    : ""
-                                            }
-                                        >
-                                            <Input
-                                                id={`input-authentication-path`}
-                                                value={
-                                                    updatedDevice.authenticationPath ||
-                                                    ""
-                                                }
-                                                onChange={event =>
-                                                    setValue(
-                                                        "authenticationPath",
-                                                        event.currentTarget
-                                                            .value || null,
-                                                    )
-                                                }
-                                            />
-                                        </FormControl>
-                                        <FormControl
-                                            label="Authentication headers"
-                                            key={`form-control-authentication-headers`}
-                                            error={
-                                                noAuthentication()
-                                                    ? "Please provide at least one form of authentication"
-                                                    : ""
-                                            }
-                                        >
-                                            <PairInput
-                                                data={
-                                                    updatedDevice.authenticationHeaders
-                                                }
-                                                updateData={data =>
-                                                    setValue(
-                                                        "authenticationHeaders",
-                                                        data,
-                                                    )
-                                                }
-                                                refreshKey={
-                                                    updatedDevice.updatedAt
-                                                }
-                                            />
-                                        </FormControl>
-                                        <FormControl
-                                            label="Authentication query"
-                                            key={`form-control-authentication-query`}
-                                            error={
-                                                noAuthentication()
-                                                    ? "Please provide at least one form of authentication"
-                                                    : ""
-                                            }
-                                        >
-                                            <PairInput
-                                                data={
-                                                    updatedDevice.authenticationQuery
-                                                }
-                                                updateData={data =>
-                                                    setValue(
-                                                        "authenticationQuery",
-                                                        data,
-                                                    )
-                                                }
-                                                refreshKey={
-                                                    updatedDevice.updatedAt
-                                                }
-                                            />
-                                        </FormControl>
-                                    </div>
+                                    <Input
+                                        id={`input-authentication-path`}
+                                        value={
+                                            updatedDevice.authenticationPath ||
+                                            ""
+                                        }
+                                        onChange={event =>
+                                            setValue(
+                                                "authenticationPath",
+                                                event.currentTarget.value ||
+                                                    null,
+                                            )
+                                        }
+                                        error={deviceErrors.base}
+                                    />
                                 </FormControl>
-                            </Panel>
-                        </Accordion>
-                        {!blankDevice && (
-                            <FormControl
-                                label="Device Temprs"
-                                key={`form-control-device-temprs`}
-                            >
-                                <Button
-                                    $as={Link}
-                                    to={`/device-groups/${updatedDevice.deviceGroupId}/device-temprs?deviceId=${updatedDevice.id}`}
+                                <FormControl
+                                    label="Authentication headers"
+                                    key={`form-control-authentication-headers`}
                                 >
-                                    Device Temprs
-                                </Button>
-                            </FormControl>
-                        )}
+                                    <PairInput
+                                        data={
+                                            updatedDevice.authenticationHeaders
+                                                .length < 1
+                                                ? [["", ""]]
+                                                : updatedDevice.authenticationHeaders
+                                        }
+                                        updateData={data => {
+                                            if (
+                                                identicalArray(data, [["", ""]])
+                                            ) {
+                                                setValue(
+                                                    "authenticationHeaders",
+                                                    [],
+                                                );
+                                            } else {
+                                                setValue(
+                                                    "authenticationHeaders",
+                                                    data,
+                                                );
+                                            }
+                                        }}
+                                        refreshKey={updatedDevice.updatedAt}
+                                        error={deviceErrors.base}
+                                    />
+                                </FormControl>
+                                <FormControl
+                                    label="Authentication query"
+                                    key={`form-control-authentication-query`}
+                                >
+                                    <PairInput
+                                        data={
+                                            updatedDevice.authenticationQuery
+                                                .length < 1
+                                                ? [["", ""]]
+                                                : updatedDevice.authenticationHeaders
+                                        }
+                                        updateData={data => {
+                                            if (
+                                                identicalArray(data, [["", ""]])
+                                            ) {
+                                                setValue(
+                                                    "authenticationQuery",
+                                                    [],
+                                                );
+                                            } else {
+                                                setValue(
+                                                    "authenticationQuery",
+                                                    data,
+                                                );
+                                            }
+                                        }}
+                                        refreshKey={updatedDevice.updatedAt}
+                                        error={deviceErrors.base}
+                                    />
+                                </FormControl>
+                            </div>
+                        </AccordionWithCaption>
                         <Button
                             onClick={() => {
-                                toastr.clear();
-                                setMoveGroupError("");
+                                clearToast();
+                                setDeviceErrors({});
                                 if (blankDevice) {
                                     return OopCore.createDevice(updatedDevice)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Created new device",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDevice(response);
                                             props.history.replace(
@@ -428,34 +407,31 @@ const Device = props => {
                                             );
                                         })
                                         .catch(error => {
-                                            console.error(error);
-                                            toastr.error(
-                                                "Something went wrong while trying to create device",
+                                            setDeviceErrors(error);
+                                            ErrorToast(
+                                                "Failed to create device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 } else {
                                     return OopCore.updateDevice(updatedDevice)
                                         .then(response => {
-                                            toastr.success(
+                                            SuccessToast(
                                                 "Saved device details",
                                                 "Success",
-                                                { timeOut: 5000 },
                                             );
                                             refreshDevice(response);
                                         })
                                         .catch(error => {
-                                            console.error(error);
-                                            toastr.error(
-                                                "Something went wrong while trying to save device",
+                                            setDeviceErrors(error);
+                                            ErrorToast(
+                                                "Failed to update device",
                                                 "Error",
-                                                { timeOut: 5000 },
                                             );
                                         });
                                 }
                             }}
-                            disabled={saveDisabled()}
+                            disabled={saveButtonDisabled()}
                         >
                             {blankDevice ? "Create" : "Save"}
                         </Button>

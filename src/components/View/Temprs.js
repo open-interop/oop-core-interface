@@ -46,7 +46,7 @@ const Temprs = props => {
             <div className="space-between">
                 <h2>Temprs</h2>
                 <Button $as={Link} to={`${props.location.pathname}/new`}>
-                    New tempr
+                    New
                 </Button>
             </div>
             <DataProvider
