@@ -183,7 +183,7 @@ const User = props => {
                                         .catch(error => {
                                             console.error(error);
                                             ErrorToast(
-                                                "Failed to create device",
+                                                "Failed to create user",
                                                 "Error",
                                             );
                                         });
@@ -202,7 +202,7 @@ const User = props => {
                                         .catch(error => {
                                             console.error(error);
                                             ErrorToast(
-                                                "Failed to update device",
+                                                "Failed to update user",
                                                 "Error",
                                             );
                                         });
