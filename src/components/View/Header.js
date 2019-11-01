@@ -15,11 +15,12 @@ import { DataProvider } from "../Universal";
 
 const Header = props => {
     const [sites, setSites] = useState([]);
-    const [selectOpen, setSelectOpen] = useState(false);
+    const [children, setChildren] = useState([]);
+    const [dropdownStatus, setDropdownStatus] = useState(false);
     const [searchValue, setSearchValue] = useState("");
 
-    const toggleOpen = () => {
-        return setSelectOpen(!selectOpen);
+    const toggleDropdownStatus = () => {
+        return setDropdownStatus(!dropdownStatus);
     };
 
     const getSites = () => {
@@ -32,6 +33,14 @@ const Header = props => {
         }
     };
 
+    const selectedSite = sites.filter(item => item.id === props.siteId);
+
+    const getSiteChildren = siteId => {
+        return OopCore.getSites({
+            siteId: siteId,
+        });
+    };
+
     return (
         <div className="header">
             <HeaderNavigation>
@@ -40,51 +49,92 @@ const Header = props => {
                         <img src={logo} alt="logo" />
                     </NavigationItem>
                     <NavigationItem>
-                        <DataProvider
-                            getData={() => {
-                                return getSites().then(response => {
-                                    setSites(response.data);
-                                    return response;
-                                });
-                            }}
-                            renderKey={String(selectOpen) + searchValue}
-                            renderData={() => {
-                                return (
-                                    <>
-                                        <div className="site-selector">
-                                            <Select
-                                                options={sites}
-                                                labelKey="name"
-                                                valueKey="id"
-                                                onChange={event => {
-                                                    event.value.length
-                                                        ? props.selectSiteId(
-                                                              event.value[0].id,
-                                                          )
-                                                        : props.selectSiteId(
-                                                              null,
-                                                          );
-                                                }}
-                                                onInputChange={event =>
-                                                    setSearchValue(
-                                                        event.currentTarget
-                                                            .value,
-                                                    )
-                                                }
-                                                value={sites.filter(
-                                                    item =>
-                                                        item.id ===
-                                                        props.siteId,
-                                                )}
-                                                placeholder="All sites"
-                                                onOpen={toggleOpen}
-                                            />
-                                        </div>
-                                    </>
-                                );
-                            }}
-                        />
+                        <div className="site-selector">
+                            <DataProvider
+                                getData={() => {
+                                    return getSites().then(response => {
+                                        setSites(response.data);
+                                        return response;
+                                    });
+                                }}
+                                renderKey={dropdownStatus + searchValue}
+                                renderData={() => {
+                                    return (
+                                        <Select
+                                            options={sites}
+                                            labelKey="name"
+                                            valueKey="id"
+                                            onChange={event => {
+                                                event.value.length
+                                                    ? props.selectSiteId(
+                                                          event.value[0].id,
+                                                      )
+                                                    : props.selectSiteId(null);
+                                            }}
+                                            onInputChange={event =>
+                                                setSearchValue(
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                            value={selectedSite}
+                                            placeholder="All sites"
+                                            onOpen={toggleDropdownStatus}
+                                        />
+                                    );
+                                }}
+                            />
+                        </div>
                     </NavigationItem>
+                    {selectedSite.length > 0 && (
+                        <NavigationItem>
+                            <div className="site-selector">
+                                <DataProvider
+                                    getData={() => {
+                                        return getSiteChildren(
+                                            selectedSite.id,
+                                        ).then(response => {
+                                            setChildren(response.data);
+                                            return response;
+                                        });
+                                    }}
+                                    renderKey={dropdownStatus + searchValue}
+                                    allowUpdate={selectedSite}
+                                    renderData={() => {
+                                        if (children.length) {
+                                            return (
+                                                <Select
+                                                    options={children}
+                                                    labelKey="name"
+                                                    valueKey="id"
+                                                    onChange={event => {
+                                                        event.value.length
+                                                            ? props.selectSiteId(
+                                                                  event.value[0]
+                                                                      .id,
+                                                              )
+                                                            : props.selectSiteId(
+                                                                  null,
+                                                              );
+                                                    }}
+                                                    onInputChange={event =>
+                                                        setSearchValue(
+                                                            event.currentTarget
+                                                                .value,
+                                                        )
+                                                    }
+                                                    value={null}
+                                                    placeholder="All site children"
+                                                    onOpen={
+                                                        toggleDropdownStatus
+                                                    }
+                                                />
+                                            );
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </NavigationItem>
+                    )}
                 </NavigationList>
                 <NavigationList $align={ALIGN.right}>
                     <NavigationItem>

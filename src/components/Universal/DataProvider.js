@@ -7,16 +7,18 @@ const DataProvider = props => {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        props
-            .getData()
-            .then(data => {
-                setData(data);
-                setLoaded(true);
-            })
-            .catch(err => {
-                console.error(err);
-                setError(err);
-            });
+        if (props.allowUpdate === undefined || props.allowUpdate) {
+            props
+                .getData()
+                .then(data => {
+                    setData(data);
+                    setLoaded(true);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setError(err);
+                });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.renderKey]);
 
