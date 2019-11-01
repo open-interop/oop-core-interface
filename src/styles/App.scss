@@ -39,7 +39,9 @@ a {
   }
 }
 
-@import "generic";
+@import "general";
 
 @import "layouts/header";
 @import "layouts/side-navigation";
+@import "layouts/login";
+@import "layouts/accordian";
