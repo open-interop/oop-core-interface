@@ -15,16 +15,16 @@ const NavigationItem = props => {
         );
     } else {
         return (
-            <div
+            <Link
+                onClick={props.onClick}
+                to={props.path}
                 className={`navigation-item${props.isActive ? " active" : ""} ${
                     props.className
                 }`}
             >
-                <Link onClick={props.onClick} to={props.path}>
-                    {props.symbol}
-                    {props.pathName}
-                </Link>
-            </div>
+                {props.symbol}
+                {props.pathName}
+            </Link>
         );
     }
 };

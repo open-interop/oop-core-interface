@@ -9,7 +9,7 @@ import {
     StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
 import { StyledLink } from "baseui/link";
-import logo from "../../resources/open_interop_logo_wide.png";
+import logo from "../../resources/open-interop-white.svg";
 import OopCore from "../../OopCore";
 import { DataProvider } from "../Universal";
 
