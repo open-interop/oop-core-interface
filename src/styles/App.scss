@@ -5,17 +5,17 @@ $color-grey: #eee;
 $color-dark-grey: lightgrey;
 $color-white: #fff;
 
-$oop-dark-blue: rgba(42, 54, 77, 1.0);
+$oop-dark-blue: rgba(42, 54, 77, 1);
 
-$oop-teal: rgba(50, 117, 144, 1.0);
-$oop-dark-teal: rgba(42, 102, 128, 1.0);
-$oop-darker-teal: rgba(36, 89, 112, 1.0);
+$oop-teal: rgba(50, 117, 144, 1);
+$oop-dark-teal: rgba(42, 102, 128, 1);
+$oop-darker-teal: rgba(36, 89, 112, 1);
 
-$body-font-family: system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$body-font-family: system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
 $header-font-family: $body-font-family;
 
 html {
-  background-color: $color-grey;
+    background-color: $color-grey;
 }
 
 body {
@@ -27,21 +27,22 @@ body {
 }
 
 a {
-  color: $color-black;
-  text-decoration: none;
+    color: $color-black;
+    text-decoration: none;
 
-  &:hover {
-    color: $oop-teal;
-  }
+    &:hover {
+        color: $oop-teal;
+    }
 
-  a:active, a:visited {
-    color: inherit;
-  }
+    a:active,
+    a:visited {
+        color: inherit;
+    }
 }
 
 @import "general";
-
 @import "layouts/header";
 @import "layouts/side-navigation";
 @import "layouts/login";
-@import "layouts/accordian";
+@import "layouts/accordion";
+@import "layouts/site-selector";

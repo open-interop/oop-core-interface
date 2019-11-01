@@ -15,7 +15,7 @@ div[id="root"] {
         }
 
         a {
-          color: $color-white;
+            color: $color-white;
         }
 
         .navigation-item {
@@ -27,12 +27,11 @@ div[id="root"] {
                 background-color: $oop-dark-teal;
 
                 a {
-
                 }
             }
 
             &:hover {
-              background-color: $oop-dark-teal;
+                background-color: $oop-dark-teal;
             }
 
             a {
@@ -41,7 +40,6 @@ div[id="root"] {
             }
 
             span {
-
             }
         }
 
@@ -76,20 +74,18 @@ div[id="root"] {
 
                 &.active {
                     a {
-
                     }
                 }
 
-                  &:hover {
-                      background-color: $oop-darker-teal;
-                  }
+                &:hover {
+                    background-color: $oop-darker-teal;
+                }
 
                 &.group-name {
                     background-color: $oop-darker-teal;
                 }
 
                 &.device-name {
-
                 }
             }
 

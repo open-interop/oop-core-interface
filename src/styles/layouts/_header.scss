@@ -6,15 +6,15 @@ div[id="root"] .header {
     width: 100%;
 
     nav {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: row;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
 
-      img {
-        border-right: 1px solid $oop-teal;
-        padding-right: 1rem;
-        width: 7rem;
-      }
+        img {
+            border-right: 1px solid $oop-teal;
+            padding-right: 1rem;
+            width: 7rem;
+        }
     }
 
     &[data-baseweb="header-navigation"] {
