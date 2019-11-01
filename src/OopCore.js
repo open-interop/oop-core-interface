@@ -24,6 +24,10 @@ class OopCore extends EventEmitter {
         });
     }
 
+    removeCookie(name) {
+        cookie.remove(name, { path: "/" });
+    }
+
     toCamelCase(s) {
         return s.replace(/[-_]([a-z])/gi, ($0, $1) => {
             return $1.toUpperCase();
@@ -167,10 +171,23 @@ class OopCore extends EventEmitter {
     }
 
     logout() {
-        cookie.remove("token", { path: "/" });
+        this.removeCookie("token");
         this.token = null;
         this.emit("loggedout");
         return Promise.resolve();
+    }
+
+    getSelectedSite() {
+        return cookie.load("siteId");
+    }
+
+    selectSite(siteId) {
+        this.siteId = siteId;
+        if (siteId) {
+            this.saveCookie("siteId", siteId);
+        } else {
+            this.removeCookie("siteId");
+        }
     }
 
     getLoggedInUser() {

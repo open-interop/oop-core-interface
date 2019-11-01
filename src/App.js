@@ -38,21 +38,33 @@ class App extends Component {
         this.state = {
             isLoading: true,
             user: false,
+            siteId: null,
         };
 
-        const setUser = user => {
-            return this.setState({ isLoading: false, user: user });
-        };
+        OopCore.getLoggedInUser().catch(() => this.setNoUser());
 
-        const setNoUser = () => {
-            return this.setState({ isLoading: false, user: false });
-        };
-
-        OopCore.getLoggedInUser().catch(() => setNoUser());
-
-        OopCore.on("loggedin", user => setUser(user));
-        OopCore.on("loggedout", () => setNoUser());
+        OopCore.on("loggedin", user => this.setUser(user));
+        OopCore.on("loggedout", () => this.setNoUser());
     }
+
+    componentDidMount() {
+        OopCore.getLoggedInUser().catch(() => this.setNoUser());
+        const currentCookie = OopCore.getSelectedSite();
+        this.setState({ siteId: currentCookie });
+    }
+
+    setUser = user => {
+        return this.setState({ isLoading: false, user: user });
+    };
+
+    setNoUser = () => {
+        return this.setState({ isLoading: false, user: false });
+    };
+
+    selectSiteId = siteId => {
+        OopCore.selectSite(siteId);
+        return this.setState({ siteId: siteId });
+    };
 
     HeaderWithRouter = withRouter(Header);
 
@@ -106,10 +118,18 @@ class App extends Component {
                         }
                     />
                     {hasUser && (
-                        <this.HeaderWithRouter user={this.state.user} />
+                        <this.HeaderWithRouter
+                            user={this.state.user}
+                            siteId={this.state.siteId}
+                            selectSiteId={this.selectSiteId}
+                        />
                     )}
                     <div className="below-header">
-                        {hasUser && <this.SideNavigationWithRouter />}
+                        {hasUser && (
+                            <this.SideNavigationWithRouter
+                                selectSiteId={this.state.siteId}
+                            />
+                        )}
                         <Route
                             path="/"
                             exact
