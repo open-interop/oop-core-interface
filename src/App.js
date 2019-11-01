@@ -126,7 +126,7 @@ class App extends Component {
                     )}
                     {hasUser && (
                         <this.SideNavigationWithRouter
-                            selectSiteId={this.state.siteId}
+                            siteId={this.state.siteId}
                         />
                     )}
                     <Route

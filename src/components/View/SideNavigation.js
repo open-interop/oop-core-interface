@@ -27,12 +27,18 @@ const SideNavigation = props => {
         });
     };
 
+    const getDevices = () => {
+        if (props.siteId) {
+            return OopCore.getDevices({ filters: { siteId: props.siteId } });
+        } else {
+            return OopCore.getDevices();
+        }
+    };
+
     const getDeviceGroups = () => {
-        return Promise.all([
-            OopCore.getDeviceGroups(),
-            OopCore.getDevices(),
-        ]).then(([deviceGroups, devices]) =>
-            createDevicesAccordion(deviceGroups.data, devices.data),
+        return Promise.all([OopCore.getDeviceGroups(), getDevices()]).then(
+            ([deviceGroups, devices]) =>
+                createDevicesAccordion(deviceGroups.data, devices.data),
         );
     };
 
