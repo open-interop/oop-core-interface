@@ -108,130 +108,124 @@ class App extends Component {
                     {hasUser && (
                         <this.HeaderWithRouter user={this.state.user} />
                     )}
-                    <div className="below-header">
-                        {hasUser && <this.SideNavigationWithRouter />}
-                        <Route
-                            path="/"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Home, props)
-                            }
-                        />
-                        <Route
-                            path="/devices"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Devices, props)
-                            }
-                        />
-                        <Route
-                            path="/devices/:deviceId"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Device, props)
-                            }
-                        />
-                        <Route
-                            path="/devices/:deviceId/transmissions"
-                            exact
-                            render={props =>
-                                this.getComponent(
-                                    !hasUser,
-                                    Transmissions,
-                                    props,
-                                )
-                            }
-                        />
-                        <Route
-                            path="/devices/:deviceId/transmissions/:transmissionId"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Transmission, props)
-                            }
-                        />
-                        <Route
-                            path="/device-groups"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, DeviceGroups, props)
-                            }
-                        />
-                        <Route
-                            path="/device-groups/:deviceGroupId"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, DeviceGroup, props)
-                            }
-                        />
-                        <Route
-                            path="/device-groups/:deviceGroupId/temprs"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Temprs, props)
-                            }
-                        />
-                        <Route
-                            path="/device-groups/:deviceGroupId/temprs/:temprId"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Tempr, props)
-                            }
-                        />
-                        <Route
-                            path="/device-groups/:deviceGroupId/device-temprs"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, DeviceTemprs, props)
-                            }
-                        />{" "}
-                        <Route
-                            path="/device-groups/:deviceGroupId/device-temprs/:deviceTemprId"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, DeviceTempr, props)
-                            }
-                        />
-                        <Route
-                            path="/users"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Users, props)
-                            }
-                        />
-                        <Route
-                            path="/users/:userId"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, User, props)
-                            }
-                        />
-                        <Route
-                            path="/profile"
-                            exact
-                            render={props => {
-                                const user = this.state.user;
+                    {hasUser && <this.SideNavigationWithRouter />}
+                    <Route
+                        path="/"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Home, props)
+                        }
+                    />
+                    <Route
+                        path="/devices"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Devices, props)
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Device, props)
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId/transmissions"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Transmissions, props)
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId/transmissions/:transmissionId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Transmission, props)
+                        }
+                    />
+                    <Route
+                        path="/device-groups"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, DeviceGroups, props)
+                        }
+                    />
+                    <Route
+                        path="/device-groups/:deviceGroupId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, DeviceGroup, props)
+                        }
+                    />
+                    <Route
+                        path="/device-groups/:deviceGroupId/temprs"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Temprs, props)
+                        }
+                    />
+                    <Route
+                        path="/device-groups/:deviceGroupId/temprs/:temprId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Tempr, props)
+                        }
+                    />
+                    <Route
+                        path="/device-groups/:deviceGroupId/device-temprs"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, DeviceTemprs, props)
+                        }
+                    />{" "}
+                    <Route
+                        path="/device-groups/:deviceGroupId/device-temprs/:deviceTemprId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, DeviceTempr, props)
+                        }
+                    />
+                    <Route
+                        path="/users"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Users, props)
+                        }
+                    />
+                    <Route
+                        path="/users/:userId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, User, props)
+                        }
+                    />
+                    <Route
+                        path="/profile"
+                        exact
+                        render={props => {
+                            const user = this.state.user;
 
-                                return this.getComponent(!hasUser, Profile, {
-                                    ...props,
-                                    user,
-                                });
-                            }}
-                        />
-                        <Route
-                            path="/sites"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Sites, props)
-                            }
-                        />
-                        <Route
-                            path="/sites/:siteId"
-                            exact
-                            render={props =>
-                                this.getComponent(!hasUser, Site, props)
-                            }
-                        />
-                    </div>
+                            return this.getComponent(!hasUser, Profile, {
+                                ...props,
+                                user,
+                            });
+                        }}
+                    />
+                    <Route
+                        path="/sites"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Sites, props)
+                        }
+                    />
+                    <Route
+                        path="/sites/:siteId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Site, props)
+                        }
+                    />
                 </QueryParamProvider>
             </BrowserRouter>
         );
