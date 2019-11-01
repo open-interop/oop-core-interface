@@ -25,9 +25,6 @@ div[id="root"] {
 
             &.active {
                 background-color: $oop-dark-teal;
-
-                a {
-                }
             }
 
             &:hover {
@@ -37,9 +34,6 @@ div[id="root"] {
             a {
                 color: $color-white;
                 text-decoration: none;
-            }
-
-            span {
             }
         }
 
@@ -72,20 +66,12 @@ div[id="root"] {
                 position: relative;
                 z-index: -1;
 
-                &.active {
-                    a {
-                    }
-                }
-
                 &:hover {
                     background-color: $oop-darker-teal;
                 }
 
                 &.group-name {
                     background-color: $oop-darker-teal;
-                }
-
-                &.device-name {
                 }
             }
 
