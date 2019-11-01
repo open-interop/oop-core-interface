@@ -16,9 +16,20 @@ import { DataProvider } from "../Universal";
 const Header = props => {
     const [sites, setSites] = useState([]);
     const [selectOpen, setSelectOpen] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
 
     const toggleOpen = () => {
         return setSelectOpen(!selectOpen);
+    };
+
+    const getSites = () => {
+        if (searchValue) {
+            return OopCore.getSites({
+                name: searchValue,
+            });
+        } else {
+            return OopCore.getSites();
+        }
     };
 
     return (
@@ -31,36 +42,47 @@ const Header = props => {
                     <NavigationItem>
                         <DataProvider
                             getData={() => {
-                                return OopCore.getSites().then(response => {
+                                return getSites().then(response => {
                                     setSites(response.data);
                                     return response;
                                 });
                             }}
-                            renderKey={selectOpen}
-                            renderData={() => (
-                                <>
-                                    <div className="site-selector">
-                                        <Select
-                                            options={sites}
-                                            labelKey="name"
-                                            valueKey="id"
-                                            onChange={event => {
-                                                event.value.length
-                                                    ? props.selectSiteId(
-                                                          event.value[0].id,
-                                                      )
-                                                    : props.selectSiteId(null);
-                                            }}
-                                            value={sites.filter(
-                                                item =>
-                                                    item.id === props.siteId,
-                                            )}
-                                            placeholder="All sites"
-                                            onOpen={toggleOpen}
-                                        />
-                                    </div>
-                                </>
-                            )}
+                            renderKey={String(selectOpen) + searchValue}
+                            renderData={() => {
+                                return (
+                                    <>
+                                        <div className="site-selector">
+                                            <Select
+                                                options={sites}
+                                                labelKey="name"
+                                                valueKey="id"
+                                                onChange={event => {
+                                                    event.value.length
+                                                        ? props.selectSiteId(
+                                                              event.value[0].id,
+                                                          )
+                                                        : props.selectSiteId(
+                                                              null,
+                                                          );
+                                                }}
+                                                onInputChange={event =>
+                                                    setSearchValue(
+                                                        event.currentTarget
+                                                            .value,
+                                                    )
+                                                }
+                                                value={sites.filter(
+                                                    item =>
+                                                        item.id ===
+                                                        props.siteId,
+                                                )}
+                                                placeholder="All sites"
+                                                onOpen={toggleOpen}
+                                            />
+                                        </div>
+                                    </>
+                                );
+                            }}
                         />
                     </NavigationItem>
                 </NavigationList>

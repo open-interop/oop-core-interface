@@ -178,7 +178,8 @@ class OopCore extends EventEmitter {
     }
 
     getSelectedSite() {
-        return cookie.load("siteId");
+        const currentCookie = cookie.load("siteId");
+        return currentCookie ? Number(currentCookie) : null;
     }
 
     selectSite(siteId) {
@@ -293,7 +294,7 @@ class OopCore extends EventEmitter {
     }
 
     getSites(queryParameters) {
-        const parameters = this.getParameters(queryParameters);
+        const parameters = this.getParameters({ filters: queryParameters });
         let path = `/sites`;
         if (parameters) {
             path += `?${parameters}`;
