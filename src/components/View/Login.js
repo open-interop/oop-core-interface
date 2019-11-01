@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
-import { LineWrapper } from "../Universal";
+import { Error, LineWrapper } from "../Universal";
 import logo from "../../resources/open_interop_logo_wide.png";
 import OopCore from "../../OopCore";
 
@@ -12,14 +13,14 @@ const Login = () => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
-    function handleSubmit() {
+    const handleSubmit = () => {
         setLoading(true);
         setErrorMessage("");
         OopCore.login(email, password).catch(error => {
             setErrorMessage(error.message);
             setLoading(false);
         });
-    }
+    };
 
     return (
         <>
@@ -55,10 +56,18 @@ const Login = () => {
                             placeholder="Password"
                         />
                     </FormControl>
-                    <Button type="submit" onClick={handleSubmit}>
-                        login
-                    </Button>
-                    <div> {errorMessage && "Error: " + errorMessage}</div>
+                    <div className="space-between">
+                        <Button type="submit" onClick={handleSubmit}>
+                            login
+                        </Button>
+                        <Button $as={Link} to={"/password-reset"}>
+                            Forgot Password
+                        </Button>
+                    </div>
+                    <div>
+                        {" "}
+                        <Error message={errorMessage} />
+                    </div>
                     <div> {loading && "loading"}</div>
                 </LineWrapper>
             </div>

@@ -156,6 +156,16 @@ class OopCore extends EventEmitter {
         });
     }
 
+    resetPassword(user) {
+        const data = { user: user };
+        return this.makeRequest(
+            `/passwords/reset`,
+            RequestType.POST,
+            data,
+            false,
+        );
+    }
+
     logout() {
         cookie.remove("token", { path: "/" });
         this.token = null;
