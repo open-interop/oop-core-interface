@@ -33,10 +33,7 @@ const Tempr = props => {
                       script: "",
                   },
               })
-            : OopCore.getTempr(
-                  props.match.params.deviceGroupId,
-                  props.match.params.temprId,
-              );
+            : OopCore.getTempr(props.match.params.temprId);
     };
 
     const getData = () => {
@@ -70,7 +67,7 @@ const Tempr = props => {
         if (blankTempr) {
             return Promise.resolve(true);
         } else {
-            return OopCore.getDeviceTemprs(updatedTempr.deviceGroupId, {
+            return OopCore.getDeviceTemprs({
                 temprId: updatedTempr.id,
             }).then(response => {
                 if (response.data.length) {
@@ -229,10 +226,7 @@ const Tempr = props => {
                                 clearToast();
                                 setTemprErrors({});
                                 if (blankTempr) {
-                                    return OopCore.createTempr(
-                                        props.match.params.deviceGroupId,
-                                        updatedTempr,
-                                    )
+                                    return OopCore.createTempr(updatedTempr)
                                         .then(response => {
                                             SuccessToast(
                                                 "Created new tempr",
@@ -252,7 +246,6 @@ const Tempr = props => {
                                         });
                                 } else {
                                     OopCore.updateTempr(
-                                        props.match.params.deviceGroupId,
                                         props.match.params.temprId,
                                         updatedTempr,
                                     )

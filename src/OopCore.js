@@ -326,9 +326,9 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    getTemprs(deviceGroupId, queryParameters) {
+    getTemprs(queryParameters) {
         const parameters = this.getParameters(queryParameters);
-        let path = `/device_groups/${deviceGroupId}/temprs`;
+        let path = `/temprs`;
         if (parameters) {
             path += `?${parameters}`;
         }
@@ -336,26 +336,16 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    getTempr(deviceGroupId, temprId) {
-        return this.makeRequest(
-            `/device_groups/${deviceGroupId}/temprs/${temprId}`,
-        );
+    getTempr(temprId) {
+        return this.makeRequest(`/temprs/${temprId}`);
     }
 
-    updateTempr(deviceGroupId, temprId, data) {
-        return this.makeRequest(
-            `/device_groups/${deviceGroupId}/temprs/${temprId}`,
-            RequestType.PUT,
-            data,
-        );
+    updateTempr(temprId, data) {
+        return this.makeRequest(`/temprs/${temprId}`, RequestType.PUT, data);
     }
 
-    createTempr(deviceGroupId, data) {
-        return this.makeRequest(
-            `/device_groups/${deviceGroupId}/temprs`,
-            RequestType.POST,
-            data,
-        );
+    createTempr(data) {
+        return this.makeRequest(`/temprs`, RequestType.POST, data);
     }
 
     getDeviceTemprs(deviceGroupId, queryParameters) {
