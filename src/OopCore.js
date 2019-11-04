@@ -178,16 +178,16 @@ class OopCore extends EventEmitter {
     }
 
     getSelectedSite() {
-        const currentCookie = cookie.load("siteId");
-        return currentCookie ? Number(currentCookie) : null;
+        const currentCookie = cookie.load("site");
+        const cookieObject = currentCookie || null;
+        return cookieObject;
     }
 
-    selectSite(siteId) {
-        this.siteId = siteId;
-        if (siteId) {
-            this.saveCookie("siteId", siteId);
+    selectSite(site) {
+        if (site) {
+            this.saveCookie("site", JSON.stringify(site));
         } else {
-            this.removeCookie("siteId");
+            this.removeCookie("site");
         }
     }
 

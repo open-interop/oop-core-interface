@@ -38,7 +38,7 @@ class App extends Component {
         this.state = {
             isLoading: true,
             user: false,
-            siteId: null,
+            site: null,
         };
 
         OopCore.getLoggedInUser().catch(() => this.setNoUser());
@@ -50,7 +50,7 @@ class App extends Component {
     componentDidMount() {
         OopCore.getLoggedInUser().catch(() => this.setNoUser());
         const currentCookie = OopCore.getSelectedSite();
-        this.setState({ siteId: currentCookie });
+        this.setState({ site: currentCookie });
     }
 
     setUser = user => {
@@ -61,9 +61,9 @@ class App extends Component {
         return this.setState({ isLoading: false, user: false });
     };
 
-    selectSiteId = siteId => {
-        OopCore.selectSite(siteId);
-        return this.setState({ siteId: siteId });
+    selectSite = site => {
+        this.setState({ site: site });
+        return OopCore.selectSite(site);
     };
 
     HeaderWithRouter = withRouter(Header);
@@ -120,14 +120,12 @@ class App extends Component {
                     {hasUser && (
                         <this.HeaderWithRouter
                             user={this.state.user}
-                            siteId={this.state.siteId}
-                            selectSiteId={this.selectSiteId}
+                            site={this.state.site}
+                            selectSite={this.selectSite}
                         />
                     )}
                     {hasUser && (
-                        <this.SideNavigationWithRouter
-                            siteId={this.state.siteId}
-                        />
+                        <this.SideNavigationWithRouter site={this.state.site} />
                     )}
                     <Route
                         path="/"
