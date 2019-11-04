@@ -6,8 +6,13 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider } from "../Universal";
-import { clearToast, ErrorToast, SuccessToast } from "../Global";
+import { AccordionWithCaption, DataProvider } from "../Universal";
+import {
+    clearToast,
+    ErrorToast,
+    HttpTemprTemplate,
+    SuccessToast,
+} from "../Global";
 import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
@@ -169,6 +174,22 @@ const Tempr = props => {
                                 }
                             />
                         </FormControl>
+                        <AccordionWithCaption
+                            title="Options"
+                            caption="required"
+                            error={temprErrors.base}
+                            subtitle="Please provide a host, port, path, protocol and request method"
+                        >
+                            <div className="content-wrapper">
+                                <HttpTemprTemplate
+                                    template={updatedTempr.template}
+                                    updateTemplate={options =>
+                                        setValue("options", options)
+                                    }
+                                    error={updatedTempr.base}
+                                />
+                            </div>
+                        </AccordionWithCaption>
                         <FormControl
                             label="Body"
                             key={"form-control-group-body-example"}
