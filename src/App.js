@@ -6,8 +6,6 @@ import {
     DeviceGroup,
     DeviceGroups,
     Devices,
-    DeviceTempr,
-    DeviceTemprs,
     Transmission,
     Transmissions,
     Header,
@@ -177,31 +175,17 @@ class App extends Component {
                         }
                     />
                     <Route
-                        path="/device-groups/:deviceGroupId/temprs"
+                        path="/temprs"
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Temprs, props)
                         }
                     />
                     <Route
-                        path="/device-groups/:deviceGroupId/temprs/:temprId"
+                        path="/temprs/:temprId"
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Tempr, props)
-                        }
-                    />
-                    <Route
-                        path="/device-groups/:deviceGroupId/device-temprs"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, DeviceTemprs, props)
-                        }
-                    />{" "}
-                    <Route
-                        path="/device-groups/:deviceGroupId/device-temprs/:deviceTemprId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, DeviceTempr, props)
                         }
                     />
                     <Route
