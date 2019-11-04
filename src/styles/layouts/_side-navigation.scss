@@ -22,6 +22,7 @@ div[id="root"] {
             background-color: $oop-teal;
             padding: 1rem;
             cursor: pointer;
+            display: block;
 
             &.active {
                 background-color: $oop-dark-teal;
