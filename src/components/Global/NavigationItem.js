@@ -9,8 +9,9 @@ const NavigationItem = props => {
                     props.isActive ? " active" : ""
                 } ${props.className || ""}`}
                 onClick={props.onClick}
+                ref={props.refName}
             >
-                <span ref={props.refName}>{props.pathName}</span>
+                <span>{props.pathName}</span>
             </div>
         );
     } else {

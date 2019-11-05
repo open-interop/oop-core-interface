@@ -1,6 +1,7 @@
-import * as React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
+
 import {
     HeaderNavigation,
     ALIGN,
@@ -8,6 +9,7 @@ import {
     StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
 import { StyledLink } from "baseui/link";
+import { SiteSelector } from "../Global";
 import logo from "../../resources/open-interop-white.svg";
 import OopCore from "../../OopCore";
 
@@ -19,6 +21,11 @@ const Header = props => {
                     <NavigationItem>
                         <img src={logo} alt="logo" />
                     </NavigationItem>
+                    <SiteSelector
+                        selectedSite={props.site}
+                        selectSite={props.selectSite}
+                        wrapper={NavigationItem}
+                    />
                 </NavigationList>
                 <NavigationList $align={ALIGN.right}>
                     <NavigationItem>

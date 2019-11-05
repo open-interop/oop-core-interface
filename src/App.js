@@ -38,21 +38,33 @@ class App extends Component {
         this.state = {
             isLoading: true,
             user: false,
+            site: null,
         };
 
-        const setUser = user => {
-            return this.setState({ isLoading: false, user: user });
-        };
+        OopCore.getLoggedInUser().catch(() => this.setNoUser());
 
-        const setNoUser = () => {
-            return this.setState({ isLoading: false, user: false });
-        };
-
-        OopCore.getLoggedInUser().catch(() => setNoUser());
-
-        OopCore.on("loggedin", user => setUser(user));
-        OopCore.on("loggedout", () => setNoUser());
+        OopCore.on("loggedin", user => this.setUser(user));
+        OopCore.on("loggedout", () => this.setNoUser());
     }
+
+    componentDidMount() {
+        OopCore.getLoggedInUser().catch(() => this.setNoUser());
+        const currentCookie = OopCore.getSelectedSite();
+        this.setState({ site: currentCookie });
+    }
+
+    setUser = user => {
+        return this.setState({ isLoading: false, user: user });
+    };
+
+    setNoUser = () => {
+        return this.setState({ isLoading: false, user: false });
+    };
+
+    selectSite = site => {
+        this.setState({ site: site });
+        return OopCore.selectSite(site);
+    };
 
     HeaderWithRouter = withRouter(Header);
 
@@ -106,9 +118,15 @@ class App extends Component {
                         }
                     />
                     {hasUser && (
-                        <this.HeaderWithRouter user={this.state.user} />
+                        <this.HeaderWithRouter
+                            user={this.state.user}
+                            site={this.state.site}
+                            selectSite={this.selectSite}
+                        />
                     )}
-                    {hasUser && <this.SideNavigationWithRouter />}
+                    {hasUser && (
+                        <this.SideNavigationWithRouter site={this.state.site} />
+                    )}
                     <Route
                         path="/"
                         exact

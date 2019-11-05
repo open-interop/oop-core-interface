@@ -24,6 +24,10 @@ class OopCore extends EventEmitter {
         });
     }
 
+    removeCookie(name) {
+        cookie.remove(name, { path: "/" });
+    }
+
     toCamelCase(s) {
         return s.replace(/[-_]([a-z])/gi, ($0, $1) => {
             return $1.toUpperCase();
@@ -167,10 +171,24 @@ class OopCore extends EventEmitter {
     }
 
     logout() {
-        cookie.remove("token", { path: "/" });
+        this.removeCookie("token");
         this.token = null;
         this.emit("loggedout");
         return Promise.resolve();
+    }
+
+    getSelectedSite() {
+        const currentCookie = cookie.load("site");
+        const cookieObject = currentCookie || null;
+        return cookieObject;
+    }
+
+    selectSite(site) {
+        if (site) {
+            this.saveCookie("site", JSON.stringify(site));
+        } else {
+            this.removeCookie("site");
+        }
     }
 
     getLoggedInUser() {
@@ -276,7 +294,7 @@ class OopCore extends EventEmitter {
     }
 
     getSites(queryParameters) {
-        const parameters = this.getParameters(queryParameters);
+        const parameters = this.getParameters({ filters: queryParameters });
         let path = `/sites`;
         if (parameters) {
             path += `?${parameters}`;

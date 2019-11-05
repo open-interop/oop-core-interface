@@ -15,33 +15,26 @@ div[id="root"] {
         }
 
         a {
-          color: $color-white;
+            color: $color-white;
         }
 
         .navigation-item {
             background-color: $oop-teal;
             padding: 1rem;
             cursor: pointer;
+            display: block;
 
             &.active {
                 background-color: $oop-dark-teal;
-
-                a {
-
-                }
             }
 
             &:hover {
-              background-color: $oop-dark-teal;
+                background-color: $oop-dark-teal;
             }
 
             a {
                 color: $color-white;
                 text-decoration: none;
-            }
-
-            span {
-
             }
         }
 
@@ -74,22 +67,12 @@ div[id="root"] {
                 position: relative;
                 z-index: -1;
 
-                &.active {
-                    a {
-
-                    }
-                }
-
-                  &:hover {
-                      background-color: $oop-darker-teal;
-                  }
-
-                &.group-name {
+                &:hover {
                     background-color: $oop-darker-teal;
                 }
 
-                &.device-name {
-
+                &.group-name {
+                    background-color: $oop-darker-teal;
                 }
             }
 

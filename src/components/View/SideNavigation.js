@@ -15,24 +15,41 @@ const SideNavigation = props => {
         return props.history.location.pathname.includes(path);
     };
 
-    const createDevicesAccordion = (deviceGroups, devices) => {
+    const createDevicesAccordion = (deviceGroups, devices, site) => {
         return deviceGroups.map(deviceGroup => {
             return {
                 id: deviceGroup.id,
                 name: deviceGroup.name,
-                devices: devices.filter(
-                    device => device.deviceGroupId === deviceGroup.id,
-                ),
+                devices: devices.filter(device => {
+                    if (site) {
+                        return (
+                            device.deviceGroupId === deviceGroup.id &&
+                            device.siteId === site.id
+                        );
+                    }
+                    return device.deviceGroupId === deviceGroup.id;
+                }),
             };
         });
     };
 
+    const getDevices = () => {
+        if (props.site && props.site.id) {
+            return OopCore.getDevices({ filters: { siteId: props.site.id } });
+        } else {
+            return OopCore.getDevices();
+        }
+    };
+
     const getDeviceGroups = () => {
-        return Promise.all([
-            OopCore.getDeviceGroups(),
-            OopCore.getDevices(),
-        ]).then(([deviceGroups, devices]) =>
-            createDevicesAccordion(deviceGroups.data, devices.data),
+        return Promise.all([OopCore.getDeviceGroups(), getDevices()]).then(
+            ([deviceGroups, devices]) => {
+                return createDevicesAccordion(
+                    deviceGroups.data,
+                    devices.data,
+                    props.site,
+                );
+            },
         );
     };
 
@@ -42,7 +59,6 @@ const SideNavigation = props => {
                 getData={() => {
                     return getDeviceGroups().then(response => {
                         setDeviceGroups(response);
-                        return response;
                     });
                 }}
                 renderKey={devicesAccordionOpen}

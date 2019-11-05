@@ -17,6 +17,7 @@ const DataProvider = props => {
                 console.error(err);
                 setError(err);
             });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.renderKey]);
 
@@ -37,7 +38,11 @@ const DataProvider = props => {
             );
         }
     } else {
-        return props.loadingFallback ? props.loadingFallback : <Spinner />;
+        return props.loadingFallback !== undefined ? (
+            props.loadingFallback
+        ) : (
+            <Spinner />
+        );
     }
 };
 
