@@ -27,24 +27,24 @@ const DeviceTempr = props => {
     const getDeviceTempr = () => {
         return blankDeviceTempr
             ? Promise.resolve({
-                name: "",
+                  name: "",
                   deviceId: null,
                   queueResponse: false,
                   endpointType: "http",
-                temprId: null,
+                  temprId: null,
                   options: {
                       headers: {},
-                    host: "",
+                      host: "",
                       path: "",
                       port: 0,
-                    protocol: "",
+                      protocol: "",
                       requestMethod: "",
-                },
+                  },
               })
             : OopCore.getDeviceTempr(
                   props.match.params.deviceGroupId,
                   props.match.params.deviceTemprId,
-            );
+              );
     };
 
     const getData = () => {
@@ -148,7 +148,7 @@ const DeviceTempr = props => {
                                 onChange={event => {
                                     event.value.length
                                         ? setValue(
-                                            "deviceId",
+                                              "deviceId",
                                               event.value[0].id,
                                           )
                                         : setValue("deviceId", null);
