@@ -91,19 +91,9 @@ const Tempr = props => {
 
     return (
         <div className="content-wrapper">
-            <div className="space-between">
-                <Button $as={Link} to={allTemprsPath}>
-                    <ArrowLeft size={24} />
-                </Button>
-                {!blankTempr && (
-                    <Button
-                        $as={Link}
-                        to={`/device-groups/${updatedTempr.deviceGroupId}/device-temprs/?temprId=${updatedTempr.id}`}
-                    >
-                        Device Temprs
-                    </Button>
-                )}
-            </div>
+            <Button $as={Link} to={allTemprsPath}>
+                <ArrowLeft size={24} />
+            </Button>
 
             <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
