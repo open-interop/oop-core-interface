@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam } from "use-query-params";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { Button } from "baseui/button";
 import Show from "baseui/icon/show";
 import { DataProvider, Pagination, Table } from "../Universal";
@@ -10,6 +10,8 @@ const Sites = props => {
     const [sites, setSites] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [id, setId] = useQueryParam("id", StringParam);
+    const [name, setName] = useQueryParam("name", StringParam);
 
     return (
         <div className="content-wrapper">
@@ -21,10 +23,12 @@ const Sites = props => {
             </div>
             <DataProvider
                 getData={() =>
-                    OopCore.getSites({ page, pageSize }).then(response => {
-                        setSites(response);
-                        return response;
-                    })
+                    OopCore.getSites({ page, pageSize, id, name }).then(
+                        response => {
+                            setSites(response);
+                            return response;
+                        },
+                    )
                 }
                 renderKey={props.location.search}
                 renderData={() => (
@@ -45,8 +49,18 @@ const Sites = props => {
                                 }
                             }}
                             columns={[
-                                { id: "id", name: "ID" },
-                                { id: "name", name: "Name" },
+                                {
+                                    id: "id",
+                                    name: "ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "name",
+                                    name: "Name",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 { id: "action", name: "Action" },
                             ]}
                             columnContent={columnName => {
@@ -54,6 +68,17 @@ const Sites = props => {
                                     return "id";
                                 }
                                 return columnName;
+                            }}
+                            filters={{ id, name }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
+                                    case "name":
+                                        return setName(value);
+                                    default:
+                                        return null;
+                                }
                             }}
                         />
                         <Pagination
