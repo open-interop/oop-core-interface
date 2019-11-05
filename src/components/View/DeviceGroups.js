@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import Show from "baseui/icon/show";
-import { useQueryParam, NumberParam } from "use-query-params";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -10,7 +10,8 @@ const DeviceGroups = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-    const [id, setId] = useQueryParam("id", NumberParam);
+    const [id, setId] = useQueryParam("id", StringParam);
+    const [name, setName] = useQueryParam("name", StringParam);
 
     // reset page number when the search query is changed
     useEffect(() => {
@@ -29,12 +30,15 @@ const DeviceGroups = props => {
 
             <DataProvider
                 getData={() => {
-                    return OopCore.getDeviceGroups({ page, pageSize }).then(
-                        response => {
-                            setDeviceGroups(response);
-                            return response;
-                        },
-                    );
+                    return OopCore.getDeviceGroups({
+                        page,
+                        pageSize,
+                        id,
+                        name,
+                    }).then(response => {
+                        setDeviceGroups(response);
+                        return response;
+                    });
                 }}
                 renderKey={props.location.search}
                 renderData={() => (
@@ -85,13 +89,13 @@ const DeviceGroups = props => {
                                     id: "id",
                                     name: "Id",
                                     type: "text",
-                                    hasFilter: false,
+                                    hasFilter: true,
                                 },
                                 {
                                     id: "name",
                                     name: "Name",
                                     type: "text",
-                                    hasFilter: false,
+                                    hasFilter: true,
                                 },
                                 {
                                     id: "action",
@@ -100,12 +104,14 @@ const DeviceGroups = props => {
                                     hasFilter: false,
                                 },
                             ]}
-                            filters={{ id }}
+                            filters={{ id, name }}
                             updateFilters={(key, value) => {
                                 switch (key) {
-                                case "id":
+                                    case "id":
                                         return setId(value);
-                                default:
+                                    case "name":
+                                        return setName(value);
+                                    default:
                                         return null;
                                 }
                             }}

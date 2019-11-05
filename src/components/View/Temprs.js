@@ -33,7 +33,7 @@ const Temprs = props => {
                     group => group.id === tempr.deviceGroupId,
                 )
                     ? groups.data.find(
-                        group => group.id === tempr.deviceGroupId,
+                          group => group.id === tempr.deviceGroupId,
                       ).name
                     : "No group name provided",
             }));
@@ -121,10 +121,10 @@ const Temprs = props => {
                                     case "id":
                                         return setId(value);
                                     case "name":
-                                    return setName(value);
-                                case "group":
+                                        return setName(value);
+                                    case "group":
                                         return setGroup(value);
-                                default:
+                                    default:
                                         return null;
                                 }
                             }}

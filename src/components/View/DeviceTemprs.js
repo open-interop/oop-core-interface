@@ -145,11 +145,11 @@ const DeviceTemprs = props => {
                             }}
                             updateFilters={(key, value) => {
                                 switch (key) {
-                                case "deviceId":
+                                    case "deviceId":
                                         return setDeviceId(value);
                                     case "temprId":
                                         return setTemprId(value);
-                                default:
+                                    default:
                                         return null;
                                 }
                             }}
