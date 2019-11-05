@@ -12,6 +12,7 @@ const Sites = props => {
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
     const [id, setId] = useQueryParam("id", StringParam);
     const [name, setName] = useQueryParam("name", StringParam);
+    const [fullName, setFullName] = useQueryParam("fullName", StringParam);
 
     return (
         <div className="content-wrapper">
@@ -23,12 +24,16 @@ const Sites = props => {
             </div>
             <DataProvider
                 getData={() =>
-                    OopCore.getSites({ page, pageSize, id, name }).then(
-                        response => {
-                            setSites(response);
-                            return response;
-                        },
-                    )
+                    OopCore.getSites({
+                        page,
+                        pageSize,
+                        id,
+                        name,
+                        fullName,
+                    }).then(response => {
+                        setSites(response);
+                        return response;
+                    })
                 }
                 renderKey={props.location.search}
                 renderData={() => (
@@ -61,6 +66,12 @@ const Sites = props => {
                                     type: "text",
                                     hasFilter: true,
                                 },
+                                {
+                                    id: "fullName",
+                                    name: "Full Name",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 { id: "action", name: "Action" },
                             ]}
                             columnContent={columnName => {
@@ -69,13 +80,15 @@ const Sites = props => {
                                 }
                                 return columnName;
                             }}
-                            filters={{ id, name }}
+                            filters={{ id, name, fullName }}
                             updateFilters={(key, value) => {
                                 switch (key) {
                                     case "id":
                                         return setId(value);
                                     case "name":
                                         return setName(value);
+                                    case "fullName":
+                                        return setFullName(value);
                                     default:
                                         return null;
                                 }
