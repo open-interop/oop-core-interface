@@ -99,7 +99,7 @@ const DeviceGroups = props => {
                                 switch (key) {
                                     case "id":
                                         return setId(value);
-                                    default:
+                                default:
                                         return null;
                                 }
                             }}

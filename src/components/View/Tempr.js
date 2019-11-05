@@ -31,21 +31,21 @@ const Tempr = props => {
         return blankTempr
             ? Promise.resolve({
                   name: "",
-                  description: "",
+                description: "",
                   deviceGroupId: Number(props.match.params.deviceGroupId),
                   body: {
-                      language: "js",
-                      script: "",
+                    language: "js",
+                    script: "",
                   },
-                  template: {
+                template: {
                       headers: {},
                       host: "",
                       path: "",
-                      port: 0,
+                    port: 0,
                       protocol: "",
                       requestMethod: "",
                   },
-              })
+            })
             : OopCore.getTempr(props.match.params.temprId);
     };
 
