@@ -4,7 +4,7 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Error, LineWrapper } from "../Universal";
-import logo from "../../resources/open_interop_logo_wide.png";
+import logo from "../../resources/open-interop-white.svg";
 import OopCore from "../../OopCore";
 
 const PasswordReset = () => {
@@ -50,15 +50,15 @@ const PasswordReset = () => {
                                 placeholder="E-mail address"
                             />
                         </FormControl>
-                        <div>
+                        <div className="password-reset-text">
                             Enter your email address and we'll send you a link
                             to reset your password
                         </div>
                         <div className="space-between">
-                            <Button type="submit" onClick={handleSubmit}>
+                            <Button type="submit"  className="login-button" onClick={handleSubmit}>
                                 Submit
                             </Button>
-                            <Button $as={Link} to={"/login"}>
+                            <Button $as={Link}  className="reset-button" to={"/login"}>
                                 Go back
                             </Button>
                         </div>
