@@ -21,7 +21,7 @@ const Temprs = props => {
 
     const getData = () => {
         return Promise.all([
-            OopCore.getTemprs(props.match.params.deviceGroupId, {
+            OopCore.getTemprs({
                 page,
                 pageSize,
             }),
