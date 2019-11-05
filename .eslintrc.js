@@ -18,6 +18,7 @@ module.exports = {
         indent: [1, 4],
         curly: ["error", "all"],
         "comma-dangle": ["error", "always-multiline"],
-        "prettier/prettier": "error"
+        "prettier/prettier": "error",
+        "linebreak-style": ["error", "unix"]
     }
 };
