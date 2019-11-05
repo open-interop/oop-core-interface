@@ -57,10 +57,18 @@ const Login = () => {
                         />
                     </FormControl>
                     <div className="space-between">
-                        <Button type="submit" className="login-button" onClick={handleSubmit}>
+                        <Button
+                            type="submit"
+                            className="login-button"
+                            onClick={handleSubmit}
+                        >
                             Login
                         </Button>
-                        <Button $as={Link} className="reset-button" to={"/password-reset"}>
+                        <Button
+                            $as={Link}
+                            className="reset-button"
+                            to={"/password-reset"}
+                        >
                             Forgot Password
                         </Button>
                     </div>

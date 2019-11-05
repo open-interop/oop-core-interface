@@ -124,15 +124,15 @@ const Devices = props => {
                             filters={{ deviceGroupId, id, name, siteId }}
                             updateFilters={(key, value) => {
                                 switch (key) {
-                                    case "deviceGroupId":
+                                case "deviceGroupId":
                                         return setDeviceGroupId(value);
                                     case "id":
                                         return setId(value);
                                     case "name":
-                                        return setName(value);
-                                    case "siteId":
+                                    return setName(value);
+                                case "siteId":
                                         return setSiteId(value);
-                                    default:
+                                default:
                                         return null;
                                 }
                             }}

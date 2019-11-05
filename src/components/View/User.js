@@ -26,7 +26,7 @@ const User = props => {
     const getUser = () => {
         return blankUser
             ? Promise.resolve({
-                  id: "",
+                id: "",
                   email: "",
                   timeZone: "",
               })
@@ -125,7 +125,7 @@ const User = props => {
                                 userErrors.passwordConfirmation
                                     ? `Password confirmation ${userErrors.passwordConfirmation}`
                                     : passwordTooShort(
-                                          updatedUser.passwordConfirmation,
+                                        updatedUser.passwordConfirmation,
                                       ) || passwordMismatch()
                             }
                         >
