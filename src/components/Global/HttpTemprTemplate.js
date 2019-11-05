@@ -14,11 +14,8 @@ const requestMethodOptions = [
 ];
 
 const HttpTemprTemplate = props => {
-    const template = props.template;
-    console.log(template);
-
     const setValue = (key, value) => {
-        const updatedTemplate = { ...template };
+        const updatedTemplate = { ...props.template };
         updatedTemplate[key] = value;
         props.updateTemplate(updatedTemplate);
     };
@@ -32,7 +29,7 @@ const HttpTemprTemplate = props => {
             >
                 <Input
                     id={"input-host"}
-                    value={template.host || ""}
+                    value={props.template.host || ""}
                     onChange={event =>
                         setValue("host", event.currentTarget.value)
                     }
@@ -46,7 +43,7 @@ const HttpTemprTemplate = props => {
             >
                 <Input
                     id={"input-port"}
-                    value={template.port}
+                    value={props.template.port}
                     onChange={event =>
                         setValue("port", Number(event.currentTarget.value))
                     }
@@ -60,7 +57,7 @@ const HttpTemprTemplate = props => {
             >
                 <Input
                     id={"input-path"}
-                    value={template.path}
+                    value={props.template.path}
                     onChange={event =>
                         setValue("path", event.currentTarget.value)
                     }
@@ -81,7 +78,7 @@ const HttpTemprTemplate = props => {
                         setValue("protocol", event.option.id);
                     }}
                     value={protocolOptions.find(
-                        item => item.id === template.protocol,
+                        item => item.id === props.template.protocol,
                     )}
                     error={props.error}
                 />
@@ -100,14 +97,14 @@ const HttpTemprTemplate = props => {
                         setValue("requestMethod", event.option.id);
                     }}
                     value={requestMethodOptions.find(
-                        item => item.id === template.requestMethod,
+                        item => item.id === props.template.requestMethod,
                     )}
                     error={props.error}
                 />
             </FormControl>
             <FormControl label="Headers" key={"form-control-group-headers"}>
                 <PairInput
-                    data={template.headers || {}}
+                    data={props.template.headers || {}}
                     updateData={data => {
                         setValue("headers", data);
                     }}

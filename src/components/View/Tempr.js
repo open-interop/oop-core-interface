@@ -97,6 +97,21 @@ const Tempr = props => {
         }
     };
 
+    const saveButtonDisabled = () => {
+        const { body, template, ...restOfTempr } = tempr;
+        const {
+            body: updatedBody,
+            template: updatedTemplate,
+            ...restOfUpdatedTempr
+        } = updatedTempr;
+
+        return (
+            identicalObject(body, updatedBody) &&
+            identicalObject(template, updatedTemplate) &&
+            identicalObject(restOfTempr, restOfUpdatedTempr)
+        );
+    };
+
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allTemprsPath}>
@@ -288,7 +303,7 @@ const Tempr = props => {
                                         });
                                 }
                             }}
-                            disabled={identicalObject(tempr, updatedTempr)}
+                            disabled={saveButtonDisabled()}
                         >
                             {blankTempr ? "Create" : "Save"}
                         </Button>
