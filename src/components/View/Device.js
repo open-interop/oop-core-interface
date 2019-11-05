@@ -31,16 +31,16 @@ const Device = props => {
     const getDevice = () => {
         return blankDevice
             ? Promise.resolve({
-                  active: false,
+                active: false,
                   authenticationHeaders: [],
                   authenticationPath: "",
-                  authenticationQuery: [],
+                authenticationQuery: [],
                   deviceGroupId: queryParam,
                   latitude: "",
-                  longitude: "",
-                  name: "",
+                longitude: "",
+                name: "",
                   siteId: "",
-                  timeZone: "",
+                timeZone: "",
               })
             : OopCore.getDevice(props.match.params.deviceId);
     };
@@ -223,12 +223,12 @@ const Device = props => {
                                         if (canMove) {
                                             event.value.length
                                                 ? setValue(
-                                                      "deviceGroupId",
+                                                    "deviceGroupId",
                                                       event.value[0].id,
                                                   )
                                                 : setValue(
-                                                      "deviceGroupId",
-                                                      null,
+                                                    "deviceGroupId",
+                                                    null,
                                                   );
                                         }
                                     });
@@ -261,7 +261,7 @@ const Device = props => {
                                 onChange={event => {
                                     event.value.length
                                         ? setValue(
-                                              "timeZone",
+                                            "timeZone",
                                               event.value[0].id,
                                           )
                                         : setValue("timeZone", null);

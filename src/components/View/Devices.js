@@ -99,9 +99,9 @@ const Devices = props => {
                             filters={{ deviceGroupId }}
                             updateFilters={(key, value) => {
                                 switch (key) {
-                                    case "deviceGroupId":
+                                case "deviceGroupId":
                                         return setDeviceGroupId(value);
-                                    default:
+                                default:
                                         return null;
                                 }
                             }}

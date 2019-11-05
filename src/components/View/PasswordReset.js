@@ -55,10 +55,18 @@ const PasswordReset = () => {
                             to reset your password
                         </div>
                         <div className="space-between">
-                            <Button type="submit"  className="login-button" onClick={handleSubmit}>
+                            <Button
+                                type="submit"
+                                className="login-button"
+                                onClick={handleSubmit}
+                            >
                                 Submit
                             </Button>
-                            <Button $as={Link}  className="reset-button" to={"/login"}>
+                            <Button
+                                $as={Link}
+                                className="reset-button"
+                                to={"/login"}
+                            >
                                 Go back
                             </Button>
                         </div>

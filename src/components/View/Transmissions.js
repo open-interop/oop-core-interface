@@ -149,17 +149,17 @@ const Transmissions = props => {
                             }}
                             updateFilters={(key, value) => {
                                 switch (key) {
-                                    case "id":
+                                case "id":
                                         return setId(value);
                                     case "transmissionUuid":
                                         return setTransmissionUuid(value);
-                                    case "messageUuid":
+                                case "messageUuid":
                                         return setMessageUuid(value);
                                     case "status":
-                                        return setStatus(value);
+                                    return setStatus(value);
                                     case "success":
                                         return setSuccess(value);
-                                    default:
+                                default:
                                         return null;
                                 }
                             }}
