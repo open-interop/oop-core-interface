@@ -28,21 +28,21 @@ const Site = props => {
     const getSite = () => {
         return blankSite
             ? Promise.resolve({
-                  accountId: "",
-                  address: "",
+                accountId: "",
+                address: "",
                   city: "",
                   country: "",
-                  description: "",
+                description: "",
                   externalUuids: {},
                   latitude: "",
-                  longitude: "",
+                longitude: "",
                   name: "",
                   region: "",
                   siteId: "",
-                  state: "",
+                state: "",
                   timeZone: "",
                   zipCode: "",
-              })
+            })
             : OopCore.getSite(props.match.params.siteId);
     };
 
@@ -130,7 +130,7 @@ const Site = props => {
                                 onChange={event => {
                                     event.value.length
                                         ? setValue(
-                                              "timeZone",
+                                            "timeZone",
                                               event.value[0].id,
                                           )
                                         : setValue("timeZone", null);
