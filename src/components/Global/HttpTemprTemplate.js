@@ -3,7 +3,6 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { PairInput } from ".";
-import { identicalArray } from "../../Utilities";
 
 const protocolOptions = [{ id: "http" }, { id: "https" }];
 const requestMethodOptions = [
@@ -15,8 +14,11 @@ const requestMethodOptions = [
 ];
 
 const HttpTemprTemplate = props => {
+    const template = props.template;
+    console.log(template);
+
     const setValue = (key, value) => {
-        const updatedTemplate = { ...props.template };
+        const updatedTemplate = { ...template };
         updatedTemplate[key] = value;
         props.updateTemplate(updatedTemplate);
     };
@@ -30,7 +32,7 @@ const HttpTemprTemplate = props => {
             >
                 <Input
                     id={"input-host"}
-                    value={props.template.host || ""}
+                    value={template.host || ""}
                     onChange={event =>
                         setValue("host", event.currentTarget.value)
                     }
@@ -44,7 +46,7 @@ const HttpTemprTemplate = props => {
             >
                 <Input
                     id={"input-port"}
-                    value={props.template.port}
+                    value={template.port}
                     onChange={event =>
                         setValue("port", Number(event.currentTarget.value))
                     }
@@ -58,7 +60,7 @@ const HttpTemprTemplate = props => {
             >
                 <Input
                     id={"input-path"}
-                    value={props.template.path}
+                    value={template.path}
                     onChange={event =>
                         setValue("path", event.currentTarget.value)
                     }
@@ -79,7 +81,7 @@ const HttpTemprTemplate = props => {
                         setValue("protocol", event.option.id);
                     }}
                     value={protocolOptions.find(
-                        item => item.id === props.template.protocol,
+                        item => item.id === template.protocol,
                     )}
                     error={props.error}
                 />
@@ -98,24 +100,16 @@ const HttpTemprTemplate = props => {
                         setValue("requestMethod", event.option.id);
                     }}
                     value={requestMethodOptions.find(
-                        item => item.id === props.template.requestMethod,
+                        item => item.id === template.requestMethod,
                     )}
                     error={props.error}
                 />
             </FormControl>
             <FormControl label="Headers" key={"form-control-group-headers"}>
                 <PairInput
-                    data={
-                        props.template.headers.length < 1
-                            ? [["", ""]]
-                            : props.template.headers
-                    }
+                    data={template.headers || {}}
                     updateData={data => {
-                        if (identicalArray(data, [["", ""]])) {
-                            setValue("headers", []);
-                        } else {
-                            setValue("headers", data);
-                        }
+                        setValue("headers", data);
                     }}
                 />
             </FormControl>

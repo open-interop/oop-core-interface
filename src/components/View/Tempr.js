@@ -37,6 +37,14 @@ const Tempr = props => {
                       language: "js",
                       script: "",
                   },
+                  template: {
+                      headers: {},
+                      host: "",
+                      path: "",
+                      port: 0,
+                      protocol: "",
+                      requestMethod: "",
+                  },
               })
             : OopCore.getTempr(props.match.params.temprId);
     };
@@ -124,7 +132,10 @@ const Tempr = props => {
                         <FormControl
                             label="Group"
                             key={"form-control-group-group"}
-                            error={temprErrors.moveGroupError}
+                            error={
+                                temprErrors.moveGroupError ||
+                                temprErrors.deviceGroup
+                            }
                             caption="required"
                         >
                             <Select
@@ -147,6 +158,7 @@ const Tempr = props => {
                                     item =>
                                         item.id === updatedTempr.deviceGroupId,
                                 )}
+                                error={temprErrors.deviceGroup}
                             />
                         </FormControl>
                         <FormControl
@@ -165,7 +177,7 @@ const Tempr = props => {
                             />
                         </FormControl>
                         <AccordionWithCaption
-                            title="Options"
+                            title="Template"
                             caption="required"
                             error={temprErrors.base}
                             subtitle="Please provide a host, port, path, protocol and request method"
@@ -173,10 +185,10 @@ const Tempr = props => {
                             <div className="content-wrapper">
                                 <HttpTemprTemplate
                                     template={updatedTempr.template}
-                                    updateTemplate={options =>
-                                        setValue("options", options)
+                                    updateTemplate={value =>
+                                        setValue("template", value)
                                     }
-                                    error={updatedTempr.base}
+                                    error={temprErrors.base}
                                 />
                             </div>
                         </AccordionWithCaption>
@@ -245,7 +257,7 @@ const Tempr = props => {
                                             );
                                             refreshTempr(response);
                                             props.history.replace(
-                                                `/device-groups/${response.deviceGroupId}/temprs/${response.id}`,
+                                                `/temprs/${response.id}`,
                                             );
                                         })
                                         .catch(error => {
@@ -265,9 +277,6 @@ const Tempr = props => {
                                             SuccessToast(
                                                 "Updated tempr",
                                                 "Success",
-                                            );
-                                            props.history.replace(
-                                                `/device-groups/${response.deviceGroupId}/temprs/${response.id}`,
                                             );
                                         })
                                         .catch(error => {
