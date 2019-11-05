@@ -183,6 +183,15 @@ class OopCore extends EventEmitter {
         return cookieObject;
     }
 
+    getCurrentSite() {
+        const currentCookie = this.getSelectedSite();
+        if (currentCookie) {
+            return this.getSite(currentCookie.id);
+        } else {
+            return Promise.resolve(null);
+        }
+    }
+
     selectSite(site) {
         if (site) {
             this.saveCookie("site", JSON.stringify(site));

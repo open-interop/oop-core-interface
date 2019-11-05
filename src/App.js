@@ -49,8 +49,9 @@ class App extends Component {
 
     componentDidMount() {
         OopCore.getLoggedInUser().catch(() => this.setNoUser());
-        const currentCookie = OopCore.getSelectedSite();
-        this.setState({ site: currentCookie });
+        OopCore.getCurrentSite().then(result => {
+            this.setState({ site: result });
+        });
     }
 
     setUser = user => {

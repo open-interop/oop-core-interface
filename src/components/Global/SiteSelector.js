@@ -6,7 +6,6 @@ import OopCore from "../../OopCore";
 import { DataProvider } from "../Universal";
 
 const SiteSelector = props => {
-    const [currentSiteName, setCurrentSiteName] = useState("");
     const [parentDropdownOpen, setParentDropdownOpen] = useState(false);
     const [childDropdownOpen, setChildDropdownOpen] = useState(false);
     const [parentSites, setParentSites] = useState([]);
@@ -37,10 +36,8 @@ const SiteSelector = props => {
     };
 
     const selectedParentSites = props.selectedSite
-        ? props.selectedSite.parentId
-            ? parentSites.filter(
-                  site => site.id === props.selectedSite.parentId,
-              )
+        ? props.selectedSite.siteId
+            ? parentSites.filter(site => site.id === props.selectedSite.siteId)
             : parentSites.filter(site => site.id === props.selectedSite.id)
         : null;
 
@@ -48,32 +45,17 @@ const SiteSelector = props => {
         ? childSites.filter(site => site.id === props.selectedSite.id)
         : null;
 
-    const selectSite = (siteId, parentId) => {
-        if (parentId) {
-            return props.selectSite({
-                id: siteId,
-                parentId: parentId,
-            });
-        }
-
-        if (siteId) {
-            return props.selectSite({
-                id: siteId,
-            });
+    const selectSite = site => {
+        if (site) {
+            return props.selectSite(site);
         }
 
         return props.selectSite(null);
     };
 
-    const getCurrentSiteName = () => {
-        if (props.selectedSite) {
-            return OopCore.getSite(props.selectedSite.id).then(
-                response => response.fullName,
-            );
-        } else {
-            return Promise.resolve("All sites");
-        }
-    };
+    const currentSiteName = props.selectedSite
+        ? props.selectedSite.fullName
+        : "All sites";
 
     if (isEditing) {
         return (
@@ -96,13 +78,13 @@ const SiteSelector = props => {
                                             autoFocus={
                                                 !(
                                                     props.selectedSite &&
-                                                    props.selectedSite.parentId
+                                                    props.selectedSite.siteId
                                                 )
                                             }
                                             startOpen={
                                                 !(
                                                     props.selectedSite &&
-                                                    props.selectedSite.parentId
+                                                    props.selectedSite.siteId
                                                 )
                                             }
                                             labelKey="name"
@@ -114,9 +96,7 @@ const SiteSelector = props => {
                                             }
                                             onChange={event => {
                                                 event.value.length
-                                                    ? selectSite(
-                                                          event.value[0].id,
-                                                      )
+                                                    ? selectSite(event.value[0])
                                                     : selectSite(null);
                                             }}
                                             onInputChange={event =>
@@ -158,13 +138,13 @@ const SiteSelector = props => {
                                                     autoFocus={
                                                         (props.selectedSite &&
                                                             props.selectedSite
-                                                                .parentId) ||
+                                                                .siteId) ||
                                                         childSites.length
                                                     }
                                                     startOpen={
                                                         (props.selectedSite &&
                                                             props.selectedSite
-                                                                .parentId) ||
+                                                                .siteId) ||
                                                         childSites.length
                                                     }
                                                     labelKey="name"
@@ -172,14 +152,11 @@ const SiteSelector = props => {
                                                     onChange={event => {
                                                         event.value.length
                                                             ? selectSite(
-                                                                  event.value[0]
-                                                                      .id,
-                                                                  selectedParentSites[0]
-                                                                      .id,
+                                                                  event
+                                                                      .value[0],
                                                               )
                                                             : selectSite(
-                                                                  selectedParentSites[0]
-                                                                      .id,
+                                                                  selectedParentSites[0],
                                                               );
                                                     }}
                                                     onInputChange={event =>
@@ -214,28 +191,15 @@ const SiteSelector = props => {
         );
     } else {
         return (
-            <DataProvider
-                getData={() =>
-                    getCurrentSiteName().then(name => setCurrentSiteName(name))
-                }
-                renderKey={isEditing}
-                renderData={() => {
-                    return (
-                        <props.wrapper>
-                            <div className="selected-site">
-                                {currentSiteName}
-                                <span
-                                    className="icon"
-                                    onClick={() => setIsEditing(true)}
-                                >
-                                    {" "}
-                                    <FontAwesomeIcon icon={faEdit} />
-                                </span>
-                            </div>
-                        </props.wrapper>
-                    );
-                }}
-            />
+            <props.wrapper>
+                <div className="selected-site">
+                    {currentSiteName}
+                    <span className="icon" onClick={() => setIsEditing(true)}>
+                        {" "}
+                        <FontAwesomeIcon icon={faEdit} />
+                    </span>
+                </div>
+            </props.wrapper>
         );
     }
 };
