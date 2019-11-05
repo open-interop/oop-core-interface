@@ -1,17 +1,19 @@
 .login {
-    display: flex;
     align-items: center;
-    justify-content: center;
+    background-color: $oop-dark-blue;
+    color: $oop-grey;
+    display: flex;
     height: 100vh;
+    justify-content: center;
     width: 100%;
 
     .login-form {
-        width: 25%;
-        padding-bottom: 10rem;
+        align-items: center;
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
+        padding-bottom: 10rem;
+        width: 25%;
 
         img {
             width: 75%;
@@ -20,6 +22,46 @@
 
         .form-wrapper {
             width: 100%;
+        }
+
+        .password-reset-text {
+          padding-bottom: 16px;
+        }
+
+        .space-between {
+          .bp {
+            font-size: .8rem;
+          }
+
+          .bu {
+            padding-right: 20px;
+          }
+
+          .bt {
+            padding-left: 20px;
+          }
+
+          .br {
+            padding-top: 6px;
+          }
+
+          .bs {
+            padding-bottom: 6px;
+          }
+
+          .login-button {
+            background-color: $oop-teal;
+          }
+
+          .reset-button {
+            background-color: transparent;
+            text-align: right;
+            padding-right: 0;
+
+            &:hover {
+              color: $oop-grey;
+            }
+          }
         }
     }
 }

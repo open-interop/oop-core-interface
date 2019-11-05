@@ -1,24 +1,13 @@
 @import "toastr";
 
-$color-black: #303030;
-$color-grey: #eee;
-$color-dark-grey: lightgrey;
-$color-white: #fff;
-
-$oop-dark-blue: rgba(42, 54, 77, 1);
-
-$oop-teal: rgba(50, 117, 144, 1);
-$oop-dark-teal: rgba(42, 102, 128, 1);
-$oop-darker-teal: rgba(36, 89, 112, 1);
-
-$body-font-family: system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-$header-font-family: $body-font-family;
+@import "variables";
 
 html {
-    background-color: $color-grey;
+    background-color: $oop-grey;
 }
 
 body {
+    color: $oop-dark-blue;
     font-family: $body-font-family;
     font-size: 12px;
     font-weight: normal;
@@ -41,6 +30,7 @@ a {
 }
 
 @import "general";
+@import "layouts/loading-overlay";
 @import "layouts/header";
 @import "layouts/side-navigation";
 @import "layouts/login";

@@ -28,14 +28,14 @@ const Tempr = props => {
                   name: "",
                   description: "",
                   deviceGroupId: Number(props.match.params.deviceGroupId),
-                  body: {
+                body: {
                       language: "js",
-                      script: "",
+                    script: "",
                   },
               })
             : OopCore.getTempr(
                   props.match.params.deviceGroupId,
-                  props.match.params.temprId,
+                props.match.params.temprId,
               );
     };
 

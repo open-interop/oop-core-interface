@@ -25,11 +25,11 @@ div[id="root"] {
             display: block;
 
             &.active {
-                background-color: $oop-dark-teal;
+                background-color: $oop-active-teal;
             }
 
             &:hover {
-                background-color: $oop-dark-teal;
+                background-color: $oop-active-teal;
             }
 
             a {
