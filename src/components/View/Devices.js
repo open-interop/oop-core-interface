@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam } from "use-query-params";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import Show from "baseui/icon/show";
 import Menu from "baseui/icon/menu";
 import { Button } from "baseui/button";
@@ -11,10 +11,13 @@ const Devices = props => {
     const [devices, setDevices] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [id, setId] = useQueryParam("id", StringParam);
+    const [name, setName] = useQueryParam("name", StringParam);
     const [deviceGroupId, setDeviceGroupId] = useQueryParam(
         "deviceGroupId",
-        NumberParam,
+        StringParam,
     );
+    const [siteId, setSiteId] = useQueryParam("siteId", StringParam);
 
     // reset page number when the search query is changed
     useEffect(() => {
@@ -24,7 +27,14 @@ const Devices = props => {
 
     const getData = () => {
         return Promise.all([
-            OopCore.getDevices({ page, pageSize, deviceGroupId }),
+            OopCore.getDevices({
+                page,
+                pageSize,
+                id,
+                name,
+                deviceGroupId,
+                siteId,
+            }),
             OopCore.getDeviceGroups(),
         ]).then(([devices, groups]) => {
             devices.data.forEach(device => {
@@ -75,8 +85,18 @@ const Devices = props => {
                                 }
                             }}
                             columns={[
-                                { id: "id", name: "ID" },
-                                { id: "name", name: "Name" },
+                                {
+                                    id: "id",
+                                    name: "ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "name",
+                                    name: "Name",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 {
                                     id: "deviceGroupId",
                                     name: "Group ID",
@@ -87,7 +107,12 @@ const Devices = props => {
                                     id: "deviceGroupName",
                                     name: "Group",
                                 },
-                                { id: "siteId", name: "Site" },
+                                {
+                                    id: "siteId",
+                                    name: "Site",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 { id: "action", name: "Action" },
                             ]}
                             columnContent={columnName => {
@@ -96,12 +121,18 @@ const Devices = props => {
                                 }
                                 return columnName;
                             }}
-                            filters={{ deviceGroupId }}
+                            filters={{ deviceGroupId, id, name, siteId }}
                             updateFilters={(key, value) => {
                                 switch (key) {
-                                case "deviceGroupId":
+                                    case "deviceGroupId":
                                         return setDeviceGroupId(value);
-                                default:
+                                    case "id":
+                                        return setId(value);
+                                    case "name":
+                                        return setName(value);
+                                    case "siteId":
+                                        return setSiteId(value);
+                                    default:
                                         return null;
                                 }
                             }}

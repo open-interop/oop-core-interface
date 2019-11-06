@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam } from "use-query-params";
+import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { Button } from "baseui/button";
 import Show from "baseui/icon/show";
 import { DataProvider, Pagination, Table } from "../Universal";
@@ -10,6 +10,8 @@ const Users = props => {
     const [users, setUsers] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
+    const [id, setId] = useQueryParam("id", StringParam);
+    const [email, setEmail] = useQueryParam("email", StringParam);
 
     // reset page number when the search query is changed
     useEffect(() => {
@@ -27,10 +29,12 @@ const Users = props => {
             </div>
             <DataProvider
                 getData={() =>
-                    OopCore.getUsers({ page, pageSize }).then(response => {
-                        setUsers(response);
-                        return response;
-                    })
+                    OopCore.getUsers({ page, pageSize, id, email }).then(
+                        response => {
+                            setUsers(response);
+                            return response;
+                        },
+                    )
                 }
                 renderKey={props.location.search}
                 renderData={() => (
@@ -51,8 +55,18 @@ const Users = props => {
                                 }
                             }}
                             columns={[
-                                { id: "id", name: "ID" },
-                                { id: "email", name: "Email" },
+                                {
+                                    id: "id",
+                                    name: "ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "email",
+                                    name: "Email",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
                                 { id: "createdAt", name: "Created At" },
                                 { id: "updatedAt", name: "Updated At" },
                                 { id: "action", name: "Action" },
@@ -62,6 +76,17 @@ const Users = props => {
                                     return "id";
                                 }
                                 return columnName;
+                            }}
+                            filters={{ id, email }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
+                                    case "email":
+                                        return setEmail(value);
+                                    default:
+                                        return null;
+                                }
                             }}
                         />
                         <Pagination

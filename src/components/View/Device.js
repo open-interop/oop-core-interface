@@ -31,14 +31,14 @@ const Device = props => {
     const getDevice = () => {
         return blankDevice
             ? Promise.resolve({
-                active: false,
+                  active: false,
                   authenticationHeaders: [],
                   authenticationPath: "",
                   authenticationQuery: [],
-                deviceGroupId: queryParam,
+                  deviceGroupId: queryParam,
                   latitude: "",
                   longitude: "",
-                name: "",
+                  name: "",
                   siteId: "",
                   timeZone: "",
               })
@@ -212,12 +212,12 @@ const Device = props => {
                                         if (canMove) {
                                             event.value.length
                                                 ? setValue(
-                                                    "deviceGroupId",
+                                                      "deviceGroupId",
                                                       event.value[0].id,
                                                   )
                                                 : setValue(
-                                                    "deviceGroupId",
-                                                    null,
+                                                      "deviceGroupId",
+                                                      null,
                                                   );
                                         }
                                     });
@@ -250,7 +250,7 @@ const Device = props => {
                                 onChange={event => {
                                     event.value.length
                                         ? setValue(
-                                            "timeZone",
+                                              "timeZone",
                                               event.value[0].id,
                                           )
                                         : setValue("timeZone", null);

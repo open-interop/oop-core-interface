@@ -4,19 +4,19 @@ import { Checkbox } from "baseui/checkbox";
 const TrueFalseCheckboxes = props => {
     const getValuesFromProps = () => {
         switch (props.value) {
-        case "":
-            return [true, true];
+            case "":
+                return [true, true];
 
-        case "true":
-        case true:
+            case "true":
+            case true:
                 return [true, false];
 
             case "false":
             case false:
-            return [false, true];
+                return [false, true];
 
-        default:
-            return [false, false];
+            default:
+                return [false, false];
         }
     };
     const [checkboxes, setCheckboxes] = useState(getValuesFromProps());

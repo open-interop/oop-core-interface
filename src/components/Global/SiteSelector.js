@@ -115,7 +115,7 @@ const SiteSelector = props => {
                                             onChange={event => {
                                                 event.value.length
                                                     ? selectSite(
-                                                        event.value[0].id,
+                                                          event.value[0].id,
                                                       )
                                                     : selectSite(null);
                                             }}
@@ -172,14 +172,14 @@ const SiteSelector = props => {
                                                     onChange={event => {
                                                         event.value.length
                                                             ? selectSite(
-                                                                event.value[0]
+                                                                  event.value[0]
                                                                       .id,
-                                                                selectedParentSites[0]
+                                                                  selectedParentSites[0]
                                                                       .id,
-                                                            )
+                                                              )
                                                             : selectSite(
                                                                   selectedParentSites[0]
-                                                                    .id,
+                                                                      .id,
                                                               );
                                                     }}
                                                     onInputChange={event =>
