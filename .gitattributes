@@ -3,3 +3,4 @@
 *.png -text
 *.gif -text
 *.svg -text
+*.lock -text
