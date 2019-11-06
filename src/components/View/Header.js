@@ -21,11 +21,18 @@ const Header = props => {
                     <NavigationItem>
                         <img src={logo} alt="logo" />
                     </NavigationItem>
-                    <SiteSelector
-                        selectedSite={props.site}
-                        selectSite={props.selectSite}
-                        wrapper={NavigationItem}
-                    />
+                    {!props.history.location.pathname.includes("/sites") &&
+                        !props.history.location.pathname.includes("/temprs") &&
+                        !props.history.location.pathname.includes("/users") &&
+                        !props.history.location.pathname.includes(
+                            "/device-groups",
+                        ) && (
+                            <SiteSelector
+                                selectedSite={props.site}
+                                selectSite={props.selectSite}
+                                wrapper={NavigationItem}
+                            />
+                        )}
                 </NavigationList>
                 <NavigationList $align={ALIGN.right}>
                     <NavigationItem>
