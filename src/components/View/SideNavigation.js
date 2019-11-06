@@ -158,6 +158,7 @@ const SideNavigation = props => {
                 isActive={
                     pathIncludes("/users") ||
                     pathIncludes("/sites") ||
+                    pathIncludes("/temprs") ||
                     pathIncludes("/device-groups")
                 }
                 pathName="Settings"
@@ -173,6 +174,11 @@ const SideNavigation = props => {
                     path="/sites"
                     pathName="Sites"
                     isActive={pathIncludes("/sites")}
+                />
+                <NavigationItem
+                    path="/temprs"
+                    pathName="Temprs"
+                    isActive={pathIncludes("/temprs")}
                 />
                 <NavigationItem
                     path="/device-groups"

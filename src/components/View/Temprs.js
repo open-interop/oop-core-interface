@@ -9,21 +9,27 @@ const Temprs = props => {
     const [temprs, setTemprs] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
-    const [id, setId] = useQueryParam("id", NumberParam);
+    const [id, setId] = useQueryParam("id", StringParam);
     const [name, setName] = useQueryParam("name", StringParam);
-    const [group, setGroup] = useQueryParam("group", StringParam);
+    const [deviceGroupId, setDeviceGroupId] = useQueryParam(
+        "deviceGroupId",
+        StringParam,
+    );
 
     // reset page number when the search query is changed
     useEffect(() => {
         setPage(null);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageSize, id, name, group]);
+    }, [pageSize, id, name, deviceGroupId]);
 
     const getData = () => {
         return Promise.all([
-            OopCore.getTemprs(props.match.params.deviceGroupId, {
+            OopCore.getTemprs({
                 page,
                 pageSize,
+                id,
+                name,
+                deviceGroupId,
             }),
             OopCore.getDeviceGroups(),
         ]).then(([temprs, groups]) => {
@@ -71,12 +77,6 @@ const Temprs = props => {
                                             >
                                                 Edit
                                             </Button>
-                                            <Button
-                                                $as={Link}
-                                                to={`/device-groups/${props.match.params.deviceGroupId}/device-temprs?temprId=${content}`}
-                                            >
-                                                Device Temprs
-                                            </Button>
                                         </>
                                     );
                                 }
@@ -94,13 +94,13 @@ const Temprs = props => {
                                     id: "id",
                                     name: "Id",
                                     type: "text",
-                                    hasFilter: false,
+                                    hasFilter: true,
                                 },
                                 {
                                     id: "name",
                                     name: "Name",
                                     type: "text",
-                                    hasFilter: false,
+                                    hasFilter: true,
                                 },
                                 {
                                     id: "group",
@@ -109,21 +109,27 @@ const Temprs = props => {
                                     hasFilter: false,
                                 },
                                 {
+                                    id: "deviceGroupId",
+                                    name: "Group ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
                                     id: "action",
                                     name: "Action",
                                     type: "action",
                                     hasFilter: false,
                                 },
                             ]}
-                            filters={{ id, name, group }}
+                            filters={{ id, name, deviceGroupId }}
                             updateFilters={(key, value) => {
                                 switch (key) {
                                     case "id":
                                         return setId(value);
                                     case "name":
                                         return setName(value);
-                                    case "group":
-                                        return setGroup(value);
+                                    case "deviceGroupId":
+                                        return setDeviceGroupId(value);
                                     default:
                                         return null;
                                 }

@@ -133,20 +133,9 @@ const Device = props => {
 
     return (
         <div className="content-wrapper">
-            <div className="space-between">
-                <Button $as={Link} to={allDevicesPath}>
-                    <ArrowLeft size={24} />
-                </Button>
-
-                {!blankDevice && (
-                    <Button
-                        $as={Link}
-                        to={`/device-groups/${updatedDevice.deviceGroupId}/device-temprs/?deviceId=${updatedDevice.id}`}
-                    >
-                        Device Temprs
-                    </Button>
-                )}
-            </div>
+            <Button $as={Link} to={allDevicesPath}>
+                <ArrowLeft size={24} />
+            </Button>
             <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>{" "}
             <DataProvider
                 getData={() => {

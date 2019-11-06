@@ -2,6 +2,11 @@ export function identicalObject(oldObject, updatedObject) {
     if (!oldObject || !updatedObject) {
         return false;
     }
+
+    if (Object.keys(oldObject).length !== Object.keys(updatedObject)) {
+        return false;
+    }
+
     return Object.keys(oldObject).every(
         key => oldObject[key] === updatedObject[key],
     );

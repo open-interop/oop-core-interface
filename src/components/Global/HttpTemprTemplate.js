@@ -3,7 +3,6 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { PairInput } from ".";
-import { identicalArray } from "../../Utilities";
 
 const protocolOptions = [{ id: "http" }, { id: "https" }];
 const requestMethodOptions = [
@@ -105,17 +104,9 @@ const HttpTemprTemplate = props => {
             </FormControl>
             <FormControl label="Headers" key={"form-control-group-headers"}>
                 <PairInput
-                    data={
-                        props.template.headers.length < 1
-                            ? [["", ""]]
-                            : props.template.headers
-                    }
+                    data={props.template.headers || {}}
                     updateData={data => {
-                        if (identicalArray(data, [["", ""]])) {
-                            setValue("headers", []);
-                        } else {
-                            setValue("headers", data);
-                        }
+                        setValue("headers", data);
                     }}
                 />
             </FormControl>

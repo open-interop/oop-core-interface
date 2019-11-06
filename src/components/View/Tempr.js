@@ -6,8 +6,13 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { DataProvider } from "../Universal";
-import { clearToast, ErrorToast, SuccessToast } from "../Global";
+import { AccordionWithCaption, DataProvider } from "../Universal";
+import {
+    clearToast,
+    ErrorToast,
+    HttpTemprTemplate,
+    SuccessToast,
+} from "../Global";
 import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
@@ -32,11 +37,16 @@ const Tempr = props => {
                       language: "js",
                       script: "",
                   },
+                  template: {
+                      headers: {},
+                      host: "",
+                      path: "",
+                      port: 0,
+                      protocol: "",
+                      requestMethod: "",
+                  },
               })
-            : OopCore.getTempr(
-                  props.match.params.deviceGroupId,
-                  props.match.params.temprId,
-              );
+            : OopCore.getTempr(props.match.params.temprId);
     };
 
     const getData = () => {
@@ -70,7 +80,7 @@ const Tempr = props => {
         if (blankTempr) {
             return Promise.resolve(true);
         } else {
-            return OopCore.getDeviceTemprs(updatedTempr.deviceGroupId, {
+            return OopCore.getDeviceTemprs({
                 temprId: updatedTempr.id,
             }).then(response => {
                 if (response.data.length) {
@@ -87,21 +97,26 @@ const Tempr = props => {
         }
     };
 
+    const saveButtonDisabled = () => {
+        const { body, template, ...restOfTempr } = tempr;
+        const {
+            body: updatedBody,
+            template: updatedTemplate,
+            ...restOfUpdatedTempr
+        } = updatedTempr;
+
+        return (
+            identicalObject(body, updatedBody) &&
+            identicalObject(template, updatedTemplate) &&
+            identicalObject(restOfTempr, restOfUpdatedTempr)
+        );
+    };
+
     return (
         <div className="content-wrapper">
-            <div className="space-between">
-                <Button $as={Link} to={allTemprsPath}>
-                    <ArrowLeft size={24} />
-                </Button>
-                {!blankTempr && (
-                    <Button
-                        $as={Link}
-                        to={`/device-groups/${updatedTempr.deviceGroupId}/device-temprs/?temprId=${updatedTempr.id}`}
-                    >
-                        Device Temprs
-                    </Button>
-                )}
-            </div>
+            <Button $as={Link} to={allTemprsPath}>
+                <ArrowLeft size={24} />
+            </Button>
 
             <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
@@ -132,7 +147,10 @@ const Tempr = props => {
                         <FormControl
                             label="Group"
                             key={"form-control-group-group"}
-                            error={temprErrors.moveGroupError}
+                            error={
+                                temprErrors.moveGroupError ||
+                                temprErrors.deviceGroup
+                            }
                             caption="required"
                         >
                             <Select
@@ -155,6 +173,7 @@ const Tempr = props => {
                                     item =>
                                         item.id === updatedTempr.deviceGroupId,
                                 )}
+                                error={temprErrors.deviceGroup}
                             />
                         </FormControl>
                         <FormControl
@@ -172,6 +191,22 @@ const Tempr = props => {
                                 }
                             />
                         </FormControl>
+                        <AccordionWithCaption
+                            title="Template"
+                            caption="required"
+                            error={temprErrors.base}
+                            subtitle="Please provide a host, port, path, protocol and request method"
+                        >
+                            <div className="content-wrapper">
+                                <HttpTemprTemplate
+                                    template={updatedTempr.template}
+                                    updateTemplate={value =>
+                                        setValue("template", value)
+                                    }
+                                    error={temprErrors.base}
+                                />
+                            </div>
+                        </AccordionWithCaption>
                         <FormControl
                             label="Body"
                             key={"form-control-group-body-example"}
@@ -229,10 +264,7 @@ const Tempr = props => {
                                 clearToast();
                                 setTemprErrors({});
                                 if (blankTempr) {
-                                    return OopCore.createTempr(
-                                        props.match.params.deviceGroupId,
-                                        updatedTempr,
-                                    )
+                                    return OopCore.createTempr(updatedTempr)
                                         .then(response => {
                                             SuccessToast(
                                                 "Created new tempr",
@@ -240,7 +272,7 @@ const Tempr = props => {
                                             );
                                             refreshTempr(response);
                                             props.history.replace(
-                                                `/device-groups/${response.deviceGroupId}/temprs/${response.id}`,
+                                                `/temprs/${response.id}`,
                                             );
                                         })
                                         .catch(error => {
@@ -252,7 +284,6 @@ const Tempr = props => {
                                         });
                                 } else {
                                     OopCore.updateTempr(
-                                        props.match.params.deviceGroupId,
                                         props.match.params.temprId,
                                         updatedTempr,
                                     )
@@ -261,9 +292,6 @@ const Tempr = props => {
                                             SuccessToast(
                                                 "Updated tempr",
                                                 "Success",
-                                            );
-                                            props.history.replace(
-                                                `/device-groups/${response.deviceGroupId}/temprs/${response.id}`,
                                             );
                                         })
                                         .catch(error => {
@@ -275,7 +303,7 @@ const Tempr = props => {
                                         });
                                 }
                             }}
-                            disabled={identicalObject(tempr, updatedTempr)}
+                            disabled={saveButtonDisabled()}
                         >
                             {blankTempr ? "Create" : "Save"}
                         </Button>
