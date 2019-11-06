@@ -72,6 +72,8 @@ const Table = props => {
                                 setFilterValue={newValue =>
                                     props.updateFilters(column.id, newValue)
                                 }
+                                trueText={props.trueText}
+                                falseText={props.falseText}
                             />
                         )}
                     </SortableHeadCell>

@@ -1,3 +1,4 @@
+export * from "./DeviceTemprPicker";
 export * from "./HttpTemprTemplate";
 export * from "./NavigationItem";
 export * from "./NavigationGroup";

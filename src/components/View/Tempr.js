@@ -8,6 +8,7 @@ import { Select } from "baseui/select";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { AccordionWithCaption, DataProvider } from "../Universal";
 import {
+    DeviceTemprPicker,
     clearToast,
     ErrorToast,
     HttpTemprTemplate,
@@ -24,6 +25,15 @@ const Tempr = props => {
     const [updatedTempr, setUpdatedTempr] = useState({});
     const [temprErrors, setTemprErrors] = useState({});
     const [groups, setGroups] = useState([]);
+    const [availableDevices, setAvailableDevices] = useState([]);
+    const [deviceTemprs, setDeviceTemprs] = useState([]);
+    const [devicesPage, setDevicesPage] = useState(1);
+    const [devicesPageSize, setDevicesPageSize] = useState(10);
+    const [latestChanged, setLatestChanged] = useState(false);
+
+    const [deviceFilterId, setDeviceFilterId] = useState("");
+    const [deviceFilterName, setDeviceFilterName] = useState("");
+    const [deviceFilterSelected, setDeviceFilterSelected] = useState("");
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -52,8 +62,8 @@ const Tempr = props => {
     const getData = () => {
         return Promise.all([getTempr(), OopCore.getDeviceGroups()]).then(
             ([tempr, groups]) => {
-                setGroups(groups.data);
                 refreshTempr(tempr);
+                setGroups(groups.data);
                 return tempr;
             },
         );
@@ -75,28 +85,6 @@ const Tempr = props => {
         setUpdatedTempr(updatedData);
     };
 
-    const canMoveTempr = () => {
-        setTemprErrors({ ...temprErrors, moveGroupError: "" });
-        if (blankTempr) {
-            return Promise.resolve(true);
-        } else {
-            return OopCore.getDeviceTemprs({
-                temprId: updatedTempr.id,
-            }).then(response => {
-                if (response.data.length) {
-                    setTemprErrors({
-                        moveGroupError:
-                            "This tempr can't be moved to another group because it's currently used in a device tempr",
-                    });
-                    return false;
-                } else {
-                    setTemprErrors({ ...temprErrors, moveGroupError: "" });
-                    return true;
-                }
-            });
-        }
-    };
-
     const saveButtonDisabled = () => {
         const { body, template, ...restOfTempr } = tempr;
         const {
@@ -110,6 +98,60 @@ const Tempr = props => {
             identicalObject(template, updatedTemplate) &&
             identicalObject(restOfTempr, restOfUpdatedTempr)
         );
+    };
+
+    const toggleDeviceTempr = deviceId => {
+        const deviceTempr = deviceTemprs.data.find(
+            deviceTempr => deviceTempr.deviceId === deviceId,
+        );
+        if (deviceTempr) {
+            setLatestChanged(deviceId, false);
+            return OopCore.deleteDeviceTempr(deviceTempr.id, {
+                deviceId: deviceId,
+                temprId: updatedTempr.id,
+            }).then(() => getDeviceTemprData());
+        } else {
+            setLatestChanged(deviceId, true);
+            return OopCore.createDeviceTempr({
+                deviceId: deviceId,
+                temprId: updatedTempr.id,
+            }).then(() => getDeviceTemprData());
+        }
+    };
+
+    const getDeviceTemprData = () => {
+        return Promise.all([
+            OopCore.getDevices({
+                groupId: updatedTempr.groupId,
+                pageSize: devicesPageSize,
+                page: devicesPage,
+                id: deviceFilterId,
+                name: deviceFilterName,
+            }),
+            OopCore.getDeviceTemprs({ temprId: props.match.params.temprId }),
+        ]).then(([availableDevices, deviceTemprs]) => {
+            availableDevices.data.forEach(
+                device =>
+                    (device.selected =
+                        deviceTemprs.data.find(
+                            deviceTempr => deviceTempr.deviceId === device.id,
+                        ) !== undefined),
+            );
+            if (deviceFilterSelected === true) {
+                availableDevices.data = availableDevices.data.filter(
+                    device => device.selected,
+                );
+                setAvailableDevices(availableDevices);
+            } else if (deviceFilterSelected === false) {
+                availableDevices.data = availableDevices.data.filter(
+                    device => !device.selected,
+                );
+                setAvailableDevices(availableDevices);
+            } else {
+                setAvailableDevices(availableDevices);
+            }
+            setDeviceTemprs(deviceTemprs);
+        });
     };
 
     return (
@@ -147,11 +189,8 @@ const Tempr = props => {
                         <FormControl
                             label="Group"
                             key={"form-control-group-group"}
-                            error={
-                                temprErrors.moveGroupError ||
-                                temprErrors.deviceGroup
-                            }
-                            caption="required"
+                            error={temprErrors.deviceGroup}
+                            caption={temprErrors.moveGroupError || "required"}
                         >
                             <Select
                                 options={groups}
@@ -160,19 +199,16 @@ const Tempr = props => {
                                 searchable={false}
                                 clearable={false}
                                 onChange={event => {
-                                    canMoveTempr().then(canMove => {
-                                        if (canMove && event.value.length) {
-                                            setValue(
-                                                "deviceGroupId",
-                                                event.value[0].id,
-                                            );
-                                        }
-                                    });
+                                    setValue(
+                                        "deviceGroupId",
+                                        event.value[0].id,
+                                    );
                                 }}
                                 value={groups.filter(
                                     item =>
                                         item.id === updatedTempr.deviceGroupId,
                                 )}
+                                disabled={temprErrors.moveGroupError}
                                 error={temprErrors.deviceGroup}
                             />
                         </FormControl>
@@ -207,10 +243,7 @@ const Tempr = props => {
                                 />
                             </div>
                         </AccordionWithCaption>
-                        <FormControl
-                            label="Body"
-                            key={"form-control-group-body-example"}
-                        >
+                        <AccordionWithCaption title="Body">
                             <div className="one-row">
                                 <div>
                                     <label>Example</label>
@@ -218,12 +251,12 @@ const Tempr = props => {
                                         name="test"
                                         mode="json"
                                         theme="github"
-                                        onChange={value =>
+                                        onChange={value => {
                                             setValue(
                                                 "exampleTransmissionBody",
                                                 value,
-                                            )
-                                        }
+                                            );
+                                        }}
                                         editorProps={{ $blockScrolling: true }}
                                         value={
                                             updatedTempr.exampleTransmissionBody
@@ -258,7 +291,65 @@ const Tempr = props => {
                                     />
                                 </div>
                             </div>
-                        </FormControl>
+                        </AccordionWithCaption>
+                        <AccordionWithCaption
+                            title="Device associations "
+                            subtitle="Select devices to associate"
+                        >
+                            <DataProvider
+                                getData={() => {
+                                    return getDeviceTemprData();
+                                }}
+                                renderKey={
+                                    devicesPage +
+                                    devicesPageSize +
+                                    latestChanged +
+                                    deviceFilterId +
+                                    deviceFilterName +
+                                    deviceFilterSelected
+                                }
+                                renderData={() => (
+                                    <DeviceTemprPicker
+                                        items={availableDevices}
+                                        selectedItems={deviceTemprs}
+                                        toggleItem={toggleDeviceTempr}
+                                        page={devicesPage}
+                                        setPage={setDevicesPage}
+                                        pageSize={devicesPageSize}
+                                        setPageSize={setDevicesPageSize}
+                                        filters={{
+                                            id: deviceFilterId,
+                                            name: deviceFilterName,
+                                            selected: deviceFilterSelected,
+                                        }}
+                                        updateFilters={(key, value) => {
+                                            switch (key) {
+                                                case "id":
+                                                    return setDeviceFilterId(
+                                                        value,
+                                                    );
+                                                case "name":
+                                                    return setDeviceFilterName(
+                                                        value,
+                                                    );
+                                                case "selected":
+                                                    if (value === null) {
+                                                        return setDeviceFilterSelected(
+                                                            "",
+                                                        );
+                                                    }
+                                                    return setDeviceFilterSelected(
+                                                        value,
+                                                    );
+
+                                                default:
+                                                    return null;
+                                            }
+                                        }}
+                                    />
+                                )}
+                            />
+                        </AccordionWithCaption>
                         <Button
                             onClick={() => {
                                 clearToast();
