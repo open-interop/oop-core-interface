@@ -23,8 +23,11 @@ const NavigationItem = props => {
                     props.className
                 }`}
             >
-                {props.symbol}
+                {props.symbolLeft}
+                {props.symbolLeft ? " " : ""}
                 {props.pathName}
+                {props.symbolRight ? " " : ""}
+                {props.symbolRight}
             </Link>
         );
     }

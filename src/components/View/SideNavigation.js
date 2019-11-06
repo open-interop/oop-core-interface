@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { DataProvider } from "../Universal";
 import { NavigationGroup, NavigationItem } from "../Global";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faCaretRight,
+    faCircle,
+    faFilter,
+} from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const SideNavigation = props => {
@@ -16,21 +22,21 @@ const SideNavigation = props => {
     };
 
     const createDevicesAccordion = (deviceGroups, devices, site) => {
-        return deviceGroups.map(deviceGroup => {
+        const filteredDevices = devices.filter(
+            device => !site || device.siteId === site.id,
+        );
+
+        const accordion = deviceGroups.map(deviceGroup => {
             return {
                 id: deviceGroup.id,
                 name: deviceGroup.name,
-                devices: devices.filter(device => {
-                    if (site) {
-                        return (
-                            device.deviceGroupId === deviceGroup.id &&
-                            device.siteId === site.id
-                        );
-                    }
-                    return device.deviceGroupId === deviceGroup.id;
-                }),
+                devices: filteredDevices.filter(
+                    device => device.deviceGroupId === deviceGroup.id,
+                ),
             };
         });
+
+        return accordion;
     };
 
     const getDevices = () => {
@@ -69,12 +75,25 @@ const SideNavigation = props => {
                         isOpen={devicesAccordionOpen}
                         setOpen={setDevicesAccordionOpen}
                     >
+                        <div className="site-name">
+                            <FontAwesomeIcon className="mr-1" icon={faCircle} />
+                            {props.site && props.site.fullName
+                                ? props.site.fullName
+                                : "All sites"}
+                        </div>
+
                         {deviceGroups.map((group, index) => (
                             <React.Fragment key={`device-group-${index}`}>
                                 <NavigationItem
                                     pathName={group.name}
                                     path={`/devices?deviceGroupId=${group.id}`}
                                     className="group-name"
+                                    symbolRight={
+                                        <FontAwesomeIcon
+                                            className="align-right"
+                                            icon={faFilter}
+                                        />
+                                    }
                                 />
                                 {group.devices.length ? (
                                     group.devices
@@ -84,6 +103,11 @@ const SideNavigation = props => {
                                                 className="device-name"
                                                 key={`device-${device.id}-navigation-item`}
                                                 path={`/devices/${device.id}`}
+                                                symbolLeft={
+                                                    <FontAwesomeIcon
+                                                        icon={faCaretRight}
+                                                    />
+                                                }
                                                 pathName={device.name}
                                                 isActive={pathIncludes(
                                                     `/devices/${device.id}`,
