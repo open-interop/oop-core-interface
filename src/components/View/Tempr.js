@@ -25,7 +25,7 @@ import {
     HttpTemprTemplate,
     SuccessToast,
 } from "../Global";
-import { identicalObject } from "../../Utilities";
+import { arrayToObject, identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
 
 import "brace/mode/json";
@@ -37,13 +37,13 @@ const Tempr = props => {
     const [temprErrors, setTemprErrors] = useState({});
     const [groups, setGroups] = useState([]);
     const [availableDevices, setAvailableDevices] = useState([]);
-    const [deviceTemprs, setDeviceTemprs] = useState([]);
     const [devicesPage, setDevicesPage] = useState(1);
     const [devicesPageSize, setDevicesPageSize] = useState(10);
     const [latestChanged, setLatestChanged] = useState(false);
 
     const [deviceFilterId, setDeviceFilterId] = useState("");
     const [deviceFilterName, setDeviceFilterName] = useState("");
+    const [deviceFilterSite, setDeviceFilterSite] = useState("");
     const [deviceFilterSelected, setDeviceFilterSelected] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -52,7 +52,13 @@ const Tempr = props => {
     useEffect(() => {
         setDevicesPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [devicesPageSize]);
+    }, [
+        devicesPageSize,
+        deviceFilterId,
+        deviceFilterName,
+        deviceFilterSite,
+        deviceFilterSelected,
+    ]);
 
     const getTempr = () => {
         return blankTempr
@@ -117,33 +123,37 @@ const Tempr = props => {
         );
     };
 
-    const toggleRow = rowId => {
-        setLoading(rowId);
-        return toggleDeviceTempr(rowId)
-            .then(response => {
-                setLoading(false);
+    const toggleDeviceTempr = device => {
+        setLoading(device.id);
+        temprErrors.deviceTemprs = "";
+        if (device.selected) {
+            setLatestChanged(device.id, false);
+            return OopCore.deleteDeviceTempr(device.selected.id, {
+                deviceId: device.id,
+                temprId: updatedTempr.id,
             })
-            .catch(response => {
-                setLoading(false);
-            });
-    };
-
-    const toggleDeviceTempr = deviceId => {
-        const deviceTempr = deviceTemprs.data.find(
-            deviceTempr => deviceTempr.deviceId === deviceId,
-        );
-        if (deviceTempr) {
-            setLatestChanged(deviceId, false);
-            return OopCore.deleteDeviceTempr(deviceTempr.id, {
-                deviceId: deviceId,
-                temprId: updatedTempr.id,
-            }).then(() => getDeviceTemprData());
+                .then(() => {
+                    setLoading(false);
+                    getDeviceTemprData();
+                })
+                .catch(error => {
+                    setLoading(false);
+                    temprErrors.deviceTemprs = error.errors;
+                });
         } else {
-            setLatestChanged(deviceId, true);
+            setLatestChanged(device.id, true);
             return OopCore.createDeviceTempr({
-                deviceId: deviceId,
+                deviceId: device.id,
                 temprId: updatedTempr.id,
-            }).then(() => getDeviceTemprData());
+            })
+                .then(() => {
+                    setLoading(false);
+                    getDeviceTemprData();
+                })
+                .catch(error => {
+                    setLoading(false);
+                    temprErrors.deviceTemprs = error.errors;
+                });
         }
     };
 
@@ -155,19 +165,27 @@ const Tempr = props => {
                 page: devicesPage,
                 id: deviceFilterId,
                 name: deviceFilterName,
+                siteId: deviceFilterSite,
             }),
             OopCore.getDeviceTemprs({
                 temprId: props.match.params.temprId,
                 pageSize: -1,
             }),
-        ]).then(([availableDevices, deviceTemprs]) => {
-            availableDevices.data.forEach(
-                device =>
-                    (device.selected =
-                        deviceTemprs.data.find(
-                            deviceTempr => deviceTempr.deviceId === device.id,
-                        ) !== undefined),
+            OopCore.getSites({ pageSize: -1 }),
+        ]).then(([availableDevices, deviceTemprs, sites]) => {
+            const deviceTemprsObject = arrayToObject(
+                deviceTemprs.data,
+                "deviceId",
             );
+
+            const sitesObject = arrayToObject(sites.data, "id");
+
+            availableDevices.data.forEach(device => {
+                device.selected = deviceTemprsObject[device.id];
+                device.siteName = sitesObject[device.siteId]
+                    ? sitesObject[device.siteId].fullName
+                    : "";
+            });
 
             if (deviceFilterSelected === true) {
                 availableDevices.data = availableDevices.data.filter(
@@ -182,7 +200,6 @@ const Tempr = props => {
             } else {
                 setAvailableDevices(availableDevices);
             }
-            setDeviceTemprs(deviceTemprs);
         });
     };
 
@@ -332,6 +349,7 @@ const Tempr = props => {
                         <AccordionWithCaption
                             title="Device associations "
                             subtitle="Select devices to associate with this tempr"
+                            error={temprErrors.deviceTemprs}
                         >
                             <DataProvider
                                 getData={() => {
@@ -343,6 +361,7 @@ const Tempr = props => {
                                     latestChanged +
                                     deviceFilterId +
                                     deviceFilterName +
+                                    deviceFilterSite +
                                     deviceFilterSelected
                                 }
                                 renderData={() => (
@@ -429,6 +448,18 @@ const Tempr = props => {
                                                     type: "text",
                                                     hasFilter: true,
                                                 },
+                                                {
+                                                    id: "siteId",
+                                                    name: "Site ID",
+                                                    type: "text",
+                                                    hasFilter: true,
+                                                },
+                                                {
+                                                    id: "siteName",
+                                                    name: "Site",
+                                                    type: "text",
+                                                    hasFilter: false,
+                                                },
 
                                                 {
                                                     id: "action",
@@ -441,6 +472,7 @@ const Tempr = props => {
                                             filters={{
                                                 id: deviceFilterId,
                                                 name: deviceFilterName,
+                                                siteId: deviceFilterSite,
                                                 selected: deviceFilterSelected,
                                             }}
                                             updateFilters={(key, value) => {
@@ -451,6 +483,10 @@ const Tempr = props => {
                                                         );
                                                     case "name":
                                                         return setDeviceFilterName(
+                                                            value,
+                                                        );
+                                                    case "siteId":
+                                                        return setDeviceFilterSite(
                                                             value,
                                                         );
                                                     case "selected":
@@ -468,9 +504,11 @@ const Tempr = props => {
                                             }}
                                             trueText="Selected"
                                             falseText="Not selected"
-                                            onRowClick={rowId => {
+                                            onRowClick={device => {
                                                 if (!loading) {
-                                                    return toggleRow(rowId);
+                                                    return toggleDeviceTempr(
+                                                        device,
+                                                    );
                                                 }
                                             }}
                                         />

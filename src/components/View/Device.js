@@ -16,7 +16,11 @@ import {
     Table,
 } from "../Universal";
 import OopCore from "../../OopCore";
-import { identicalArray, identicalObject } from "../../Utilities";
+import {
+    arrayToObject,
+    identicalArray,
+    identicalObject,
+} from "../../Utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faExternalLinkAlt,
@@ -40,7 +44,6 @@ const Device = props => {
     const blankDevice = props.match.params.deviceId === "new";
     const queryParam = useQueryParam("deviceGroupId", NumberParam)[0];
     const [availableTemprs, setAvailableTemprs] = useState([]);
-    const [deviceTemprs, setDeviceTemprs] = useState([]);
     const [temprsPage, setTemprsPage] = useState(1);
     const [temprsPageSize, setTemprsPageSize] = useState(10);
     const [latestChanged, setLatestChanged] = useState(false);
@@ -53,7 +56,7 @@ const Device = props => {
     useEffect(() => {
         setTemprsPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [temprsPageSize]);
+    }, [temprsPageSize, temprFilterId, temprFilterName, temprFilterSelected]);
 
     const getDevice = () => {
         return blankDevice
@@ -136,34 +139,37 @@ const Device = props => {
         );
     };
 
-    const toggleRow = rowId => {
-        setLoading(rowId);
-        return toggleDeviceTempr(rowId)
-            .then(response => {
-                setLoading(false);
-            })
-            .catch(response => {
-                setLoading(false);
-            });
-    };
-
-    const toggleDeviceTempr = temprId => {
-        const deviceTempr = deviceTemprs.data.find(
-            deviceTempr => deviceTempr.temprId === temprId,
-        );
-
-        if (deviceTempr) {
-            setLatestChanged(temprId, false);
-            return OopCore.deleteDeviceTempr(deviceTempr.id, {
+    const toggleDeviceTempr = tempr => {
+        setLoading(tempr.id);
+        deviceErrors.deviceTemprs = "";
+        if (tempr.selected) {
+            setLatestChanged(tempr.id, false);
+            return OopCore.deleteDeviceTempr(tempr.selected.id, {
                 deviceId: updatedDevice.id,
-                temprId: temprId,
-            }).then(() => getDeviceTemprData());
+                temprId: tempr.id,
+            })
+                .then(() => {
+                    setLoading(false);
+                    getDeviceTemprData();
+                })
+                .catch(error => {
+                    setLoading(false);
+                    deviceErrors.deviceTemprs = error.errors;
+                });
         } else {
-            setLatestChanged(temprId, true);
+            setLatestChanged(tempr.id, true);
             return OopCore.createDeviceTempr({
                 deviceId: updatedDevice.id,
-                temprId: temprId,
-            }).then(() => getDeviceTemprData());
+                temprId: tempr.id,
+            })
+                .then(() => {
+                    setLoading(false);
+                    getDeviceTemprData();
+                })
+                .catch(error => {
+                    setLoading(false);
+                    deviceErrors.deviceTemprs = error.errors;
+                });
         }
     };
 
@@ -181,13 +187,13 @@ const Device = props => {
                 pageSize: -1,
             }),
         ]).then(([availableTemprs, deviceTemprs]) => {
-            availableTemprs.data.forEach(
-                tempr =>
-                    (tempr.selected =
-                        deviceTemprs.data.find(
-                            deviceTempr => deviceTempr.temprId === tempr.id,
-                        ) !== undefined),
+            const deviceTemprsObject = arrayToObject(
+                deviceTemprs.data,
+                "temprId",
             );
+            availableTemprs.data.forEach(tempr => {
+                tempr.selected = deviceTemprsObject[tempr.id];
+            });
 
             if (temprFilterSelected === true) {
                 availableTemprs.data = availableTemprs.data.filter(
@@ -202,7 +208,6 @@ const Device = props => {
             } else {
                 setAvailableTemprs(availableTemprs);
             }
-            setDeviceTemprs(deviceTemprs);
         });
     };
 
@@ -451,6 +456,7 @@ const Device = props => {
                         <AccordionWithCaption
                             title="Tempr associations "
                             subtitle="Select temprs to associate with this device"
+                            error={deviceErrors.deviceTemprs}
                         >
                             <DataProvider
                                 getData={() => {
@@ -586,9 +592,11 @@ const Device = props => {
                                             }}
                                             trueText="Selected"
                                             falseText="Not selected"
-                                            onRowClick={rowId => {
+                                            onRowClick={tempr => {
                                                 if (!loading) {
-                                                    return toggleRow(rowId);
+                                                    return toggleDeviceTempr(
+                                                        tempr,
+                                                    );
                                                 }
                                             }}
                                         />

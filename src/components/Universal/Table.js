@@ -23,7 +23,7 @@ const Table = props => {
                                 key={index}
                                 onClick={() => {
                                     if (props.onRowClick) {
-                                        props.onRowClick(row.id);
+                                        props.onRowClick(row);
                                     }
                                 }}
                                 className={
