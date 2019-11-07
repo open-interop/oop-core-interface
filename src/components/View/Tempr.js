@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AceEditor from "react-ace";
 import { Button } from "baseui/button";
@@ -36,6 +36,11 @@ const Tempr = props => {
     const [deviceFilterSelected, setDeviceFilterSelected] = useState("");
 
     const blankTempr = props.match.params.temprId === "new";
+
+    useEffect(() => {
+        setDevicesPage(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [devicesPageSize]);
 
     const getTempr = () => {
         return blankTempr
@@ -137,6 +142,7 @@ const Tempr = props => {
                             deviceTempr => deviceTempr.deviceId === device.id,
                         ) !== undefined),
             );
+
             if (deviceFilterSelected === true) {
                 availableDevices.data = availableDevices.data.filter(
                     device => device.selected,
@@ -190,7 +196,7 @@ const Tempr = props => {
                             label="Group"
                             key={"form-control-group-group"}
                             error={temprErrors.deviceGroup}
-                            caption={temprErrors.moveGroupError || "required"}
+                            caption="required"
                         >
                             <Select
                                 options={groups}
@@ -208,7 +214,6 @@ const Tempr = props => {
                                     item =>
                                         item.id === updatedTempr.deviceGroupId,
                                 )}
-                                disabled={temprErrors.moveGroupError}
                                 error={temprErrors.deviceGroup}
                             />
                         </FormControl>
@@ -294,7 +299,7 @@ const Tempr = props => {
                         </AccordionWithCaption>
                         <AccordionWithCaption
                             title="Device associations "
-                            subtitle="Select devices to associate"
+                            subtitle="Select devices to associate with this tempr"
                         >
                             <DataProvider
                                 getData={() => {

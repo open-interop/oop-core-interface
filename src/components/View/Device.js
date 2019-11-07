@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
 import { Button } from "baseui/button";
@@ -7,7 +7,13 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
-import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
+import {
+    clearToast,
+    DeviceTemprPicker,
+    ErrorToast,
+    PairInput,
+    SuccessToast,
+} from "../Global";
 import { AccordionWithCaption, DataProvider } from "../Universal";
 import OopCore from "../../OopCore";
 import { identicalArray, identicalObject } from "../../Utilities";
@@ -27,6 +33,20 @@ const Device = props => {
     });
     const blankDevice = props.match.params.deviceId === "new";
     const queryParam = useQueryParam("deviceGroupId", NumberParam)[0];
+    const [availableTemprs, setAvailableTemprs] = useState([]);
+    const [deviceTemprs, setDeviceTemprs] = useState([]);
+    const [temprsPage, setTemprsPage] = useState(1);
+    const [temprsPageSize, setTemprsPageSize] = useState(10);
+    const [latestChanged, setLatestChanged] = useState(false);
+
+    const [temprFilterId, setTemprFilterId] = useState("");
+    const [temprFilterName, setTemprFilterName] = useState("");
+    const [temprFilterSelected, setTemprFilterSelected] = useState("");
+
+    useEffect(() => {
+        setTemprsPage(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [temprsPageSize]);
 
     const getDevice = () => {
         return blankDevice
@@ -90,28 +110,6 @@ const Device = props => {
         setUpdatedDevice(updatedData);
     };
 
-    const canMoveDevice = () => {
-        setDeviceErrors({ ...deviceErrors, moveGroupError: "" });
-        if (blankDevice) {
-            return Promise.resolve(true);
-        } else {
-            return OopCore.getDeviceTemprs(updatedDevice.deviceGroupId, {
-                deviceId: updatedDevice.id,
-            }).then(response => {
-                if (response.data.length) {
-                    setDeviceErrors({
-                        moveGroupError:
-                            "This device can't be moved to another group because it's currently used in a device tempr",
-                    });
-                    return false;
-                } else {
-                    setDeviceErrors({ ...deviceErrors, moveGroupError: "" });
-                    return true;
-                }
-            });
-        }
-    };
-
     const allDevicesPath = props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
@@ -129,6 +127,62 @@ const Device = props => {
             identicalArray(authenticationQuery, updatedQuery) &&
             identicalObject(rest, updatedRest)
         );
+    };
+
+    const toggleDeviceTempr = temprId => {
+        const deviceTempr = deviceTemprs.data.find(
+            deviceTempr => deviceTempr.temprId === temprId,
+        );
+
+        if (deviceTempr) {
+            setLatestChanged(temprId, false);
+            return OopCore.deleteDeviceTempr(deviceTempr.id, {
+                deviceId: updatedDevice.id,
+                temprId: temprId,
+            }).then(() => getDeviceTemprData());
+        } else {
+            setLatestChanged(temprId, true);
+            return OopCore.createDeviceTempr({
+                deviceId: updatedDevice.id,
+                temprId: temprId,
+            }).then(() => getDeviceTemprData());
+        }
+    };
+
+    const getDeviceTemprData = () => {
+        return Promise.all([
+            OopCore.getTemprs({
+                groupId: updatedDevice.groupId,
+                pageSize: temprsPageSize,
+                page: temprsPage,
+                id: temprFilterId,
+                name: temprFilterName,
+            }),
+            OopCore.getDeviceTemprs({ deviceId: props.match.params.deviceId }),
+        ]).then(([availableTemprs, deviceTemprs]) => {
+            availableTemprs.data.forEach(
+                tempr =>
+                    (tempr.selected =
+                        deviceTemprs.data.find(
+                            deviceTempr => deviceTempr.temprId === tempr.id,
+                        ) !== undefined),
+            );
+
+            if (temprFilterSelected === true) {
+                availableTemprs.data = availableTemprs.data.filter(
+                    device => device.selected,
+                );
+                setAvailableTemprs(availableTemprs);
+            } else if (temprFilterSelected === false) {
+                availableTemprs.data = availableTemprs.data.filter(
+                    device => !device.selected,
+                );
+                setAvailableTemprs(availableTemprs);
+            } else {
+                setAvailableTemprs(availableTemprs);
+            }
+            setDeviceTemprs(deviceTemprs);
+        });
     };
 
     return (
@@ -194,10 +248,9 @@ const Device = props => {
                             label="Group"
                             key={`form-control-group`}
                             error={
-                                deviceErrors.moveGroupError ||
-                                (deviceErrors.deviceGroup
+                                deviceErrors.deviceGroup
                                     ? `Group ${deviceErrors.deviceGroup}`
-                                    : "")
+                                    : ""
                             }
                             caption="required"
                         >
@@ -208,19 +261,14 @@ const Device = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event => {
-                                    canMoveDevice().then(canMove => {
-                                        if (canMove) {
-                                            event.value.length
-                                                ? setValue(
-                                                      "deviceGroupId",
-                                                      event.value[0].id,
-                                                  )
-                                                : setValue(
-                                                      "deviceGroupId",
-                                                      null,
-                                                  );
-                                        }
-                                    });
+                                    if (event.value.length) {
+                                        setValue(
+                                            "deviceGroupId",
+                                            event.value[0].id,
+                                        );
+                                    } else {
+                                        setValue("deviceGroupId", null);
+                                    }
                                 }}
                                 value={groups.filter(
                                     item =>
@@ -378,6 +426,64 @@ const Device = props => {
                                     />
                                 </FormControl>
                             </div>
+                        </AccordionWithCaption>
+                        <AccordionWithCaption
+                            title="Tempr associations "
+                            subtitle="Select temprs to associate with this device"
+                        >
+                            <DataProvider
+                                getData={() => {
+                                    return getDeviceTemprData();
+                                }}
+                                renderKey={
+                                    temprsPage +
+                                    temprsPageSize +
+                                    latestChanged +
+                                    temprFilterId +
+                                    temprFilterName +
+                                    temprFilterSelected
+                                }
+                                renderData={() => (
+                                    <DeviceTemprPicker
+                                        items={availableTemprs}
+                                        selectedItems={deviceTemprs}
+                                        toggleItem={toggleDeviceTempr}
+                                        page={temprsPage}
+                                        setPage={setTemprsPage}
+                                        pageSize={temprsPageSize}
+                                        setPageSize={setTemprsPageSize}
+                                        filters={{
+                                            id: temprFilterId,
+                                            name: temprFilterName,
+                                            selected: temprFilterSelected,
+                                        }}
+                                        updateFilters={(key, value) => {
+                                            switch (key) {
+                                                case "id":
+                                                    return setTemprFilterId(
+                                                        value,
+                                                    );
+                                                case "name":
+                                                    return setTemprFilterName(
+                                                        value,
+                                                    );
+                                                case "selected":
+                                                    if (value === null) {
+                                                        return setTemprFilterSelected(
+                                                            "",
+                                                        );
+                                                    }
+                                                    return setTemprFilterSelected(
+                                                        value,
+                                                    );
+
+                                                default:
+                                                    return null;
+                                            }
+                                        }}
+                                    />
+                                )}
+                            />
                         </AccordionWithCaption>
                         <Button
                             onClick={() => {
