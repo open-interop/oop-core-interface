@@ -15,8 +15,8 @@ import ArrowLeft from "baseui/icon/arrow-left";
 import {
     AccordionWithCaption,
     DataProvider,
+    InPlaceSpinner,
     Pagination,
-    Spinner,
     Table,
 } from "../Universal";
 import {
@@ -406,7 +406,9 @@ const Tempr = props => {
 
                                                 if (columnName === "selected") {
                                                     if (loading === row.id) {
-                                                        return <Spinner />;
+                                                        return (
+                                                            <InPlaceSpinner />
+                                                        );
                                                     }
                                                     return content ? (
                                                         <FontAwesomeIcon

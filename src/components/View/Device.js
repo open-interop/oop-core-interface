@@ -11,8 +11,8 @@ import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
     AccordionWithCaption,
     DataProvider,
+    InPlaceSpinner,
     Pagination,
-    Spinner,
     Table,
 } from "../Universal";
 import OopCore from "../../OopCore";
@@ -511,7 +511,9 @@ const Device = props => {
                                                 }
                                                 if (columnName === "selected") {
                                                     if (loading === row.id) {
-                                                        return <Spinner />;
+                                                        return (
+                                                            <InPlaceSpinner />
+                                                        );
                                                     }
                                                     return content ? (
                                                         <FontAwesomeIcon

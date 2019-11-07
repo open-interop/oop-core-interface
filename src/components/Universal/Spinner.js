@@ -8,4 +8,12 @@ const Spinner = () => {
     );
 };
 
-export { Spinner };
+const InPlaceSpinner = () => {
+    return (
+        <div className="icon">
+            <img alt="loading-spinner" src="loading.gif" />
+        </div>
+    );
+};
+
+export { Spinner, InPlaceSpinner };
