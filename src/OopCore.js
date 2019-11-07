@@ -135,7 +135,8 @@ class OopCore extends EventEmitter {
                     .then(body => {
                         if (
                             response.status === 200 ||
-                            response.status === 201
+                            response.status === 201 ||
+                            response.status === 204
                         ) {
                             return body;
                         } else {
