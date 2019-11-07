@@ -503,7 +503,6 @@ const Device = props => {
                                                         </>
                                                     );
                                                 }
-
                                                 if (columnName === "selected") {
                                                     if (loading === row.id) {
                                                         return <Spinner />;

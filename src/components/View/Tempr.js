@@ -186,7 +186,6 @@ const Tempr = props => {
         });
     };
 
-    console.log(availableDevices);
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allTemprsPath}>

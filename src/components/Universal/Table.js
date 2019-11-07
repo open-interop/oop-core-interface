@@ -47,7 +47,7 @@ const Table = props => {
                                                       )
                                                     : column.id
                                             ],
-                                            row.id,
+                                            row,
                                         )}
                                     </CustomWidthComponent>
                                 ))}
