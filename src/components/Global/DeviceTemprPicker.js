@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Pagination, Table } from "../Universal";
 import { Button } from "baseui/button";
 import { Check, Delete } from "baseui/icon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 
 const DeviceTemprPicker = props => {
     const [loading, setLoading] = useState(false);
@@ -30,6 +33,13 @@ const DeviceTemprPicker = props => {
                                     isLoading={loading === content}
                                 >
                                     Toggle
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    target="_blank"
+                                    to={props.path + "/" + content}
+                                >
+                                    <FontAwesomeIcon icon={faExternalLinkAlt} />
                                 </Button>
                             </>
                         );

@@ -322,6 +322,7 @@ const Tempr = props => {
                                         setPage={setDevicesPage}
                                         pageSize={devicesPageSize}
                                         setPageSize={setDevicesPageSize}
+                                        path="/devices"
                                         filters={{
                                             id: deviceFilterId,
                                             name: deviceFilterName,

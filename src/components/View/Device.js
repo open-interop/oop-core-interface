@@ -452,6 +452,7 @@ const Device = props => {
                                         setPage={setTemprsPage}
                                         pageSize={temprsPageSize}
                                         setPageSize={setTemprsPageSize}
+                                        path="/temprs"
                                         filters={{
                                             id: temprFilterId,
                                             name: temprFilterName,
