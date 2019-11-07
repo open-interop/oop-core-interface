@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AceEditor from "react-ace";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import ArrowLeft from "baseui/icon/arrow-left";
-import { AccordionWithCaption, DataProvider } from "../Universal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    DeviceTemprPicker,
+    faExternalLinkAlt,
+    faCheck,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+import ArrowLeft from "baseui/icon/arrow-left";
+import {
+    AccordionWithCaption,
+    DataProvider,
+    Pagination,
+    Spinner,
+    Table,
+} from "../Universal";
+import {
     clearToast,
     ErrorToast,
     HttpTemprTemplate,
@@ -34,6 +45,7 @@ const Tempr = props => {
     const [deviceFilterId, setDeviceFilterId] = useState("");
     const [deviceFilterName, setDeviceFilterName] = useState("");
     const [deviceFilterSelected, setDeviceFilterSelected] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -105,6 +117,17 @@ const Tempr = props => {
         );
     };
 
+    const toggleRow = rowId => {
+        setLoading(rowId);
+        return toggleDeviceTempr(rowId)
+            .then(response => {
+                setLoading(false);
+            })
+            .catch(response => {
+                setLoading(false);
+            });
+    };
+
     const toggleDeviceTempr = deviceId => {
         const deviceTempr = deviceTemprs.data.find(
             deviceTempr => deviceTempr.deviceId === deviceId,
@@ -163,6 +186,7 @@ const Tempr = props => {
         });
     };
 
+    console.log(availableDevices);
     return (
         <div className="content-wrapper">
             <Button $as={Link} to={allTemprsPath}>
@@ -265,7 +289,9 @@ const Tempr = props => {
                                                 value,
                                             );
                                         }}
-                                        editorProps={{ $blockScrolling: true }}
+                                        editorProps={{
+                                            $blockScrolling: true,
+                                        }}
                                         value={
                                             updatedTempr.exampleTransmissionBody
                                         }
@@ -282,7 +308,9 @@ const Tempr = props => {
                                                 script: value,
                                             })
                                         }
-                                        editorProps={{ $blockScrolling: true }}
+                                        editorProps={{
+                                            $blockScrolling: true,
+                                        }}
                                         value={updatedTempr.body.script}
                                     />
                                 </div>
@@ -291,7 +319,9 @@ const Tempr = props => {
                                     <AceEditor
                                         mode="json"
                                         theme="github"
-                                        editorProps={{ $blockScrolling: true }}
+                                        editorProps={{
+                                            $blockScrolling: true,
+                                        }}
                                         defaultValue={
                                             updatedTempr.outputTransmissionBody
                                         }
@@ -317,45 +347,151 @@ const Tempr = props => {
                                     deviceFilterSelected
                                 }
                                 renderData={() => (
-                                    <DeviceTemprPicker
-                                        items={availableDevices}
-                                        selectedItems={deviceTemprs}
-                                        toggleItem={toggleDeviceTempr}
-                                        page={devicesPage}
-                                        setPage={setDevicesPage}
-                                        pageSize={devicesPageSize}
-                                        setPageSize={setDevicesPageSize}
-                                        path="/devices"
-                                        filters={{
-                                            id: deviceFilterId,
-                                            name: deviceFilterName,
-                                            selected: deviceFilterSelected,
-                                        }}
-                                        updateFilters={(key, value) => {
-                                            switch (key) {
-                                                case "id":
-                                                    return setDeviceFilterId(
-                                                        value,
-                                                    );
-                                                case "name":
-                                                    return setDeviceFilterName(
-                                                        value,
-                                                    );
-                                                case "selected":
-                                                    if (value === null) {
-                                                        return setDeviceFilterSelected(
-                                                            "",
-                                                        );
-                                                    }
-                                                    return setDeviceFilterSelected(
-                                                        value,
-                                                    );
-
-                                                default:
-                                                    return null;
+                                    <>
+                                        <Table
+                                            data={availableDevices.data}
+                                            rowClassName={row =>
+                                                `device-tempr${
+                                                    row.selected
+                                                        ? " selected"
+                                                        : ""
+                                                }`
                                             }
-                                        }}
-                                    />
+                                            mapFunction={(
+                                                columnName,
+                                                content,
+                                                row,
+                                            ) => {
+                                                if (columnName === "action") {
+                                                    return (
+                                                        <>
+                                                            <Button
+                                                                kind={
+                                                                    KIND.minimal
+                                                                }
+                                                                $as={Link}
+                                                                target="_blank"
+                                                                to={
+                                                                    "/devices/" +
+                                                                    content
+                                                                }
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        faExternalLinkAlt
+                                                                    }
+                                                                />
+                                                            </Button>
+                                                        </>
+                                                    );
+                                                }
+
+                                                if (columnName === "selected") {
+                                                    if (loading === row.id) {
+                                                        return <Spinner />;
+                                                    }
+                                                    return content ? (
+                                                        <FontAwesomeIcon
+                                                            icon={faCheck}
+                                                        />
+                                                    ) : (
+                                                        <FontAwesomeIcon
+                                                            icon={faTimes}
+                                                        />
+                                                    );
+                                                }
+
+                                                return content;
+                                            }}
+                                            columnContent={columnName => {
+                                                if (columnName === "action") {
+                                                    return "id";
+                                                }
+
+                                                return columnName;
+                                            }}
+                                            columns={[
+                                                {
+                                                    id: "selected",
+                                                    name: "",
+                                                    type: "bool",
+                                                    hasFilter: true,
+                                                    width: "20px",
+                                                },
+                                                {
+                                                    id: "id",
+                                                    name: "Id",
+                                                    type: "text",
+                                                    hasFilter: true,
+                                                },
+                                                {
+                                                    id: "name",
+                                                    name: "Name",
+                                                    type: "text",
+                                                    hasFilter: true,
+                                                },
+
+                                                {
+                                                    id: "action",
+                                                    name: "",
+                                                    type: "action",
+                                                    hasFilter: false,
+                                                    width: "30px",
+                                                },
+                                            ]}
+                                            filters={{
+                                                id: deviceFilterId,
+                                                name: deviceFilterName,
+                                                selected: deviceFilterSelected,
+                                            }}
+                                            updateFilters={(key, value) => {
+                                                switch (key) {
+                                                    case "id":
+                                                        return setDeviceFilterId(
+                                                            value,
+                                                        );
+                                                    case "name":
+                                                        return setDeviceFilterName(
+                                                            value,
+                                                        );
+                                                    case "selected":
+                                                        if (value === null) {
+                                                            return setDeviceFilterSelected(
+                                                                "",
+                                                            );
+                                                        }
+                                                        return setDeviceFilterSelected(
+                                                            value,
+                                                        );
+                                                    default:
+                                                        return null;
+                                                }
+                                            }}
+                                            trueText="Selected"
+                                            falseText="Not selected"
+                                            onRowClick={rowId => {
+                                                if (!loading) {
+                                                    return toggleRow(rowId);
+                                                }
+                                            }}
+                                        />
+                                        <Pagination
+                                            updatePageSize={pageSize => {
+                                                setDevicesPageSize(pageSize);
+                                            }}
+                                            currentPageSize={devicesPageSize}
+                                            updatePageNumber={pageNumber =>
+                                                setDevicesPage(pageNumber)
+                                            }
+                                            totalRecords={
+                                                availableDevices.totalRecords
+                                            }
+                                            numberOfPages={
+                                                availableDevices.numberOfPages
+                                            }
+                                            currentPage={devicesPage || 1}
+                                        />
+                                    </>
                                 )}
                             />
                         </AccordionWithCaption>

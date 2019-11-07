@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
+import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
-    clearToast,
-    DeviceTemprPicker,
-    ErrorToast,
-    PairInput,
-    SuccessToast,
-} from "../Global";
-import { AccordionWithCaption, DataProvider } from "../Universal";
+    AccordionWithCaption,
+    DataProvider,
+    Pagination,
+    Spinner,
+    Table,
+} from "../Universal";
 import OopCore from "../../OopCore";
 import { identicalArray, identicalObject } from "../../Utilities";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faExternalLinkAlt,
+    faCheck,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
@@ -42,6 +48,7 @@ const Device = props => {
     const [temprFilterId, setTemprFilterId] = useState("");
     const [temprFilterName, setTemprFilterName] = useState("");
     const [temprFilterSelected, setTemprFilterSelected] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setTemprsPage(1);
@@ -127,6 +134,17 @@ const Device = props => {
             identicalArray(authenticationQuery, updatedQuery) &&
             identicalObject(rest, updatedRest)
         );
+    };
+
+    const toggleRow = rowId => {
+        setLoading(rowId);
+        return toggleDeviceTempr(rowId)
+            .then(response => {
+                setLoading(false);
+            })
+            .catch(response => {
+                setLoading(false);
+            });
     };
 
     const toggleDeviceTempr = temprId => {
@@ -447,45 +465,151 @@ const Device = props => {
                                     temprFilterSelected
                                 }
                                 renderData={() => (
-                                    <DeviceTemprPicker
-                                        items={availableTemprs}
-                                        selectedItems={deviceTemprs}
-                                        toggleItem={toggleDeviceTempr}
-                                        page={temprsPage}
-                                        setPage={setTemprsPage}
-                                        pageSize={temprsPageSize}
-                                        setPageSize={setTemprsPageSize}
-                                        path="/temprs"
-                                        filters={{
-                                            id: temprFilterId,
-                                            name: temprFilterName,
-                                            selected: temprFilterSelected,
-                                        }}
-                                        updateFilters={(key, value) => {
-                                            switch (key) {
-                                                case "id":
-                                                    return setTemprFilterId(
-                                                        value,
-                                                    );
-                                                case "name":
-                                                    return setTemprFilterName(
-                                                        value,
-                                                    );
-                                                case "selected":
-                                                    if (value === null) {
-                                                        return setTemprFilterSelected(
-                                                            "",
-                                                        );
-                                                    }
-                                                    return setTemprFilterSelected(
-                                                        value,
-                                                    );
-
-                                                default:
-                                                    return null;
+                                    <>
+                                        <Table
+                                            data={availableTemprs.data}
+                                            rowClassName={row =>
+                                                `device-tempr${
+                                                    row.selected
+                                                        ? " selected"
+                                                        : ""
+                                                }`
                                             }
-                                        }}
-                                    />
+                                            mapFunction={(
+                                                columnName,
+                                                content,
+                                                row,
+                                            ) => {
+                                                if (columnName === "action") {
+                                                    return (
+                                                        <>
+                                                            <Button
+                                                                kind={
+                                                                    KIND.minimal
+                                                                }
+                                                                $as={Link}
+                                                                target="_blank"
+                                                                to={
+                                                                    "/temprs/" +
+                                                                    content
+                                                                }
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        faExternalLinkAlt
+                                                                    }
+                                                                />
+                                                            </Button>
+                                                        </>
+                                                    );
+                                                }
+
+                                                if (columnName === "selected") {
+                                                    if (loading === row.id) {
+                                                        return <Spinner />;
+                                                    }
+                                                    return content ? (
+                                                        <FontAwesomeIcon
+                                                            icon={faCheck}
+                                                        />
+                                                    ) : (
+                                                        <FontAwesomeIcon
+                                                            icon={faTimes}
+                                                        />
+                                                    );
+                                                }
+
+                                                return content;
+                                            }}
+                                            columnContent={columnName => {
+                                                if (columnName === "action") {
+                                                    return "id";
+                                                }
+
+                                                return columnName;
+                                            }}
+                                            columns={[
+                                                {
+                                                    id: "selected",
+                                                    name: "",
+                                                    type: "bool",
+                                                    hasFilter: true,
+                                                    width: "20px",
+                                                },
+                                                {
+                                                    id: "id",
+                                                    name: "Id",
+                                                    type: "text",
+                                                    hasFilter: true,
+                                                },
+                                                {
+                                                    id: "name",
+                                                    name: "Name",
+                                                    type: "text",
+                                                    hasFilter: true,
+                                                },
+
+                                                {
+                                                    id: "action",
+                                                    name: "",
+                                                    type: "action",
+                                                    hasFilter: false,
+                                                    width: "30px",
+                                                },
+                                            ]}
+                                            filters={{
+                                                id: temprFilterId,
+                                                name: temprFilterName,
+                                                selected: temprFilterSelected,
+                                            }}
+                                            updateFilters={(key, value) => {
+                                                switch (key) {
+                                                    case "id":
+                                                        return setTemprFilterId(
+                                                            value,
+                                                        );
+                                                    case "name":
+                                                        return setTemprFilterName(
+                                                            value,
+                                                        );
+                                                    case "selected":
+                                                        if (value === null) {
+                                                            return setTemprFilterSelected(
+                                                                "",
+                                                            );
+                                                        }
+                                                        return setTemprFilterSelected(
+                                                            value,
+                                                        );
+                                                    default:
+                                                        return null;
+                                                }
+                                            }}
+                                            trueText="Selected"
+                                            falseText="Not selected"
+                                            onRowClick={rowId => {
+                                                if (!loading) {
+                                                    return toggleRow(rowId);
+                                                }
+                                            }}
+                                        />
+                                        <Pagination
+                                            updatePageSize={pageSize => {
+                                                setTemprsPageSize(pageSize);
+                                            }}
+                                            currentPageSize={temprsPageSize}
+                                            updatePageNumber={pageNumber =>
+                                                setTemprsPage(pageNumber)
+                                            }
+                                            totalRecords={
+                                                availableTemprs.totalRecords
+                                            }
+                                            numberOfPages={
+                                                availableTemprs.numberOfPages
+                                            }
+                                            currentPage={temprsPage || 1}
+                                        />
+                                    </>
                                 )}
                             />
                         </AccordionWithCaption>

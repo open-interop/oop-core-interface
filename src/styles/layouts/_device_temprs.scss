@@ -1,0 +1,7 @@
+.device-tempr {
+    cursor: pointer;
+
+    &.selected {
+        background-color: $oop-teal;
+    }
+}
