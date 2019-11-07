@@ -158,7 +158,10 @@ const Device = props => {
                 id: temprFilterId,
                 name: temprFilterName,
             }),
-            OopCore.getDeviceTemprs({ deviceId: props.match.params.deviceId }),
+            OopCore.getDeviceTemprs({
+                deviceId: props.match.params.deviceId,
+                pageSize: -1,
+            }),
         ]).then(([availableTemprs, deviceTemprs]) => {
             availableTemprs.data.forEach(
                 tempr =>
