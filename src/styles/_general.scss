@@ -9,7 +9,7 @@ div[id="root"] {
 
         .content-wrapper {
             background-color: $color-white;
-            padding: 1rem;
+            padding: 1.5rem;
         }
     }
 }
@@ -98,6 +98,10 @@ label {
     justify-content: space-between;
 }
 
+.flex-left {
+    display: flex;
+    justify-content: left;
+}
 .one-row {
     display: flex;
     flex-direction: row;

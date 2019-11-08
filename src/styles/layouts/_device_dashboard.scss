@@ -1,0 +1,13 @@
+.card-label {
+    p {
+        &[data-baseweb="typo-p3"] {
+            font-weight: bolder;
+        }
+    }
+}
+
+.map-component {
+    margin-left: auto;
+    height: 300px;
+    width: 100%;
+}

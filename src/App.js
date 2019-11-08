@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     Device,
+    DeviceDashboard,
     DeviceGroup,
     DeviceGroups,
     Devices,
@@ -140,8 +141,22 @@ class App extends Component {
                             this.getComponent(!hasUser, Devices, props)
                         }
                     />
+
                     <Route
                         path="/devices/:deviceId"
+                        exact
+                        render={props =>
+                            this.getComponent(
+                                !hasUser,
+                                props.match.params.deviceId === "new"
+                                    ? Device
+                                    : DeviceDashboard,
+                                props,
+                            )
+                        }
+                    />
+                    <Route
+                        path="/devices/:deviceId/edit"
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Device, props)

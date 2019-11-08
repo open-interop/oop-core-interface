@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
-import Show from "baseui/icon/show";
-import Menu from "baseui/icon/menu";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faChartPie,
+    faEdit,
+    faListUl,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Devices = props => {
     const [devices, setDevices] = useState([]);
@@ -55,6 +60,9 @@ const Devices = props => {
                     to={`/devices/new${
                         deviceGroupId ? "?deviceGroupId=" + deviceGroupId : ""
                     }`}
+                    kind={KIND.minimal}
+                    aria-label="Create new device"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
                 >
                     New
                 </Button>
@@ -70,14 +78,36 @@ const Devices = props => {
                                 if (columnName === "action") {
                                     return (
                                         <>
-                                            <Link to={`/devices/${content}`}>
-                                                <Show />
-                                            </Link>
-                                            <Link
-                                                to={`/devices/${content}/transmissions`}
+                                            <Button
+                                                $as={Link}
+                                                kind={KIND.minimal}
+                                                to={`/devices/${content}`}
+                                                aria-label="View device dashboard"
                                             >
-                                                <Menu />
-                                            </Link>
+                                                <FontAwesomeIcon
+                                                    icon={faChartPie}
+                                                />
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                kind={KIND.minimal}
+                                                to={`/devices/${content}/edit`}
+                                                aria-label="Edit device"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                />
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                kind={KIND.minimal}
+                                                to={`/devices/${content}/transmissions`}
+                                                aria-label="View device transmissions"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faListUl}
+                                                />
+                                            </Button>
                                         </>
                                     );
                                 } else {

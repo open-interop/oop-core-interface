@@ -10,7 +10,7 @@ div[id="root"] .header {
         display: flex;
         justify-content: space-between;
         flex-direction: row;
-
+        border-bottom: 0;
         img {
             border-right: 1px solid $oop-teal;
             padding-right: 1rem;

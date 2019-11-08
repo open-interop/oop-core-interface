@@ -6,7 +6,13 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
-import ArrowLeft from "baseui/icon/arrow-left";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faChevronLeft,
+    faExternalLinkAlt,
+    faCheck,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
     AccordionWithCaption,
@@ -21,12 +27,7 @@ import {
     identicalArray,
     identicalObject,
 } from "../../Utilities";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faExternalLinkAlt,
-    faCheck,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
@@ -213,10 +214,17 @@ const Device = props => {
 
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allDevicesPath}>
-                <ArrowLeft size={24} />
-            </Button>
-            <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>{" "}
+            <div className="flex-left">
+                <Button
+                    $as={Link}
+                    kind={KIND.minimal}
+                    to={allDevicesPath}
+                    aria-label="Go back to device dashboard"
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>{" "}
+            </div>
             <DataProvider
                 getData={() => {
                     return getData();
