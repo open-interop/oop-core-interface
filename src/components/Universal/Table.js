@@ -5,8 +5,9 @@ import {
     StyledBody,
     StyledRow,
     StyledCell,
-    SortableHeadCell,
+    StyledHeadCell,
 } from "baseui/table";
+import { withStyle } from "baseui";
 import { TableFilter } from "../Global";
 
 const Table = props => {
@@ -16,24 +17,43 @@ const Table = props => {
         if (props.data.length) {
             return (
                 <StyledBody>
-                    {data.map((row, index) => (
-                        <StyledRow key={index}>
-                            {props.columns.map(column => (
-                                <StyledCell
-                                    key={`table-cell-${index}-${column.id}`}
-                                >
-                                    {props.mapFunction(
-                                        column.id,
-                                        row[
-                                            props.columnContent
-                                                ? props.columnContent(column.id)
-                                                : column.id
-                                        ],
-                                    )}
-                                </StyledCell>
-                            ))}
-                        </StyledRow>
-                    ))}
+                    {data.map((row, index) => {
+                        return (
+                            <StyledRow
+                                key={index}
+                                onClick={() => {
+                                    if (props.onRowClick) {
+                                        props.onRowClick(row);
+                                    }
+                                }}
+                                className={
+                                    props.rowClassName
+                                        ? props.rowClassName(row)
+                                        : ""
+                                }
+                            >
+                                {props.columns.map(column => (
+                                    <CustomWidthComponent
+                                        component={StyledCell}
+                                        width={column.width}
+                                        key={`table-cell-${index}-${column.id}`}
+                                    >
+                                        {props.mapFunction(
+                                            column.id,
+                                            row[
+                                                props.columnContent
+                                                    ? props.columnContent(
+                                                          column.id,
+                                                      )
+                                                    : column.id
+                                            ],
+                                            row,
+                                        )}
+                                    </CustomWidthComponent>
+                                ))}
+                            </StyledRow>
+                        );
+                    })}
                 </StyledBody>
             );
         } else {
@@ -54,14 +74,26 @@ const Table = props => {
         return "";
     }
 
+    const CustomWidthComponent = props => {
+        var Head = props.component;
+        if (props.width) {
+            Head = withStyle(props.component, {
+                maxWidth: props.width,
+            });
+        }
+        return <Head {...props} />;
+    };
+
     return (
         <StyledTable>
             <StyledHead>
                 {props.columns.map(column => (
-                    <SortableHeadCell
+                    <CustomWidthComponent
+                        component={StyledHeadCell}
+                        width={column.width}
                         key={`table-head-${column.id}`}
-                        title={column.name}
                     >
+                        {column.name}
                         {column.hasFilter && (
                             <TableFilter
                                 contentType={column.type}
@@ -72,9 +104,11 @@ const Table = props => {
                                 setFilterValue={newValue =>
                                     props.updateFilters(column.id, newValue)
                                 }
+                                trueText={props.trueText}
+                                falseText={props.falseText}
                             />
                         )}
-                    </SortableHeadCell>
+                    </CustomWidthComponent>
                 ))}
             </StyledHead>
             {TableRows()}

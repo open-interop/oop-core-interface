@@ -19,8 +19,8 @@ const TableFilter = props => {
                     )}
                     {props.contentType === "bool" && (
                         <TrueFalseCheckboxes
-                            trueText="Successful"
-                            falseText="Unsuccessful"
+                            trueText={props.trueText || "Successful"}
+                            falseText={props.falseText || "Unsuccessful"}
                             value={props.filterValue}
                             setValue={value => props.setFilterValue(value)}
                         />

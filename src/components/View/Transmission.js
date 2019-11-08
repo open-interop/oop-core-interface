@@ -93,7 +93,7 @@ const Transmission = props => {
                             <Checkbox
                                 disabled
                                 checked={transmission.status}
-                                checkmarkType={STYLE_TYPE.toggle}
+                                checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
                         <FormControl

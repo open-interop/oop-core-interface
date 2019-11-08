@@ -6,6 +6,7 @@ const RequestType = {
     GET: "GET",
     POST: "POST",
     PUT: "PUT",
+    DELETE: "DELETE",
 };
 
 class OopCore extends EventEmitter {
@@ -134,7 +135,8 @@ class OopCore extends EventEmitter {
                     .then(body => {
                         if (
                             response.status === 200 ||
-                            response.status === 201
+                            response.status === 201 ||
+                            response.status === 204
                         ) {
                             return body;
                         } else {
@@ -357,9 +359,9 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/temprs`, RequestType.POST, data);
     }
 
-    getDeviceTemprs(deviceGroupId, queryParameters) {
+    getDeviceTemprs(queryParameters) {
         const parameters = this.getParameters(queryParameters);
-        let path = `/device_groups/${deviceGroupId}/device_temprs`;
+        let path = `/device_temprs`;
         if (parameters) {
             path += `?${parameters}`;
         }
@@ -367,65 +369,28 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    getDeviceTempr(deviceGroupId, deviceTemprId) {
-        return this.makeRequest(
-            `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
+    createDeviceTempr(queryParameters) {
+        const parameters = queryString.stringify(
+            this.camelToSnake(queryParameters),
         );
+        let path = `/device_temprs`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path, RequestType.POST);
     }
 
-    createDeviceTemprObject = data => {
-        const result = (({
-            name,
-            deviceId,
-            temprId,
-            endpointType,
-            queueResponse,
-        }) => ({
-            name,
-            deviceId,
-            temprId,
-            endpointType,
-            queueResponse,
-        }))(data);
-
-        result.options = (({
-            headers,
-            host,
-            path,
-            port,
-            protocol,
-            requestMethod,
-        }) => ({
-            headers,
-            host,
-            path,
-            port,
-            protocol,
-            requestMethod,
-        }))(data.options);
-        return result;
-    };
-
-    updateDeviceTempr(deviceGroupId, deviceTemprId, data) {
-        const payload = {
-            device_tempr: this.createDeviceTemprObject(data),
-        };
-        return this.makeRequest(
-            `/device_groups/${deviceGroupId}/device_temprs/${deviceTemprId}`,
-            RequestType.PUT,
-            payload,
+    deleteDeviceTempr(deviceTemprId, queryParameters) {
+        const parameters = queryString.stringify(
+            this.camelToSnake(queryParameters),
         );
-    }
+        let path = `/device_temprs/${deviceTemprId}`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
 
-    createDeviceTempr(deviceGroupId, data) {
-        const payload = {
-            device_tempr: this.createDeviceTemprObject(data),
-        };
-        return this.makeRequest(
-            `/device_groups/${deviceGroupId}/device_temprs`,
-            RequestType.POST,
-            payload,
-        );
+        return this.makeRequest(path, RequestType.DELETE);
     }
 
     getUsers(queryParameters) {

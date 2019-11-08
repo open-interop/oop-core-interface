@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import ArrowLeft from "baseui/icon/arrow-left";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
-import { AccordionWithCaption, DataProvider } from "../Universal";
+import {
+    AccordionWithCaption,
+    DataProvider,
+    InPlaceSpinner,
+    Pagination,
+    Table,
+} from "../Universal";
 import OopCore from "../../OopCore";
-import { identicalArray, identicalObject } from "../../Utilities";
+import {
+    arrayToObject,
+    identicalArray,
+    identicalObject,
+} from "../../Utilities";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faExternalLinkAlt,
+    faCheck,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
@@ -27,6 +43,20 @@ const Device = props => {
     });
     const blankDevice = props.match.params.deviceId === "new";
     const queryParam = useQueryParam("deviceGroupId", NumberParam)[0];
+    const [availableTemprs, setAvailableTemprs] = useState([]);
+    const [temprsPage, setTemprsPage] = useState(1);
+    const [temprsPageSize, setTemprsPageSize] = useState(10);
+    const [latestChanged, setLatestChanged] = useState(false);
+
+    const [temprFilterId, setTemprFilterId] = useState("");
+    const [temprFilterName, setTemprFilterName] = useState("");
+    const [temprFilterSelected, setTemprFilterSelected] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setTemprsPage(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [temprsPageSize, temprFilterId, temprFilterName, temprFilterSelected]);
 
     const getDevice = () => {
         return blankDevice
@@ -90,28 +120,6 @@ const Device = props => {
         setUpdatedDevice(updatedData);
     };
 
-    const canMoveDevice = () => {
-        setDeviceErrors({ ...deviceErrors, moveGroupError: "" });
-        if (blankDevice) {
-            return Promise.resolve(true);
-        } else {
-            return OopCore.getDeviceTemprs(updatedDevice.deviceGroupId, {
-                deviceId: updatedDevice.id,
-            }).then(response => {
-                if (response.data.length) {
-                    setDeviceErrors({
-                        moveGroupError:
-                            "This device can't be moved to another group because it's currently used in a device tempr",
-                    });
-                    return false;
-                } else {
-                    setDeviceErrors({ ...deviceErrors, moveGroupError: "" });
-                    return true;
-                }
-            });
-        }
-    };
-
     const allDevicesPath = props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
@@ -129,6 +137,78 @@ const Device = props => {
             identicalArray(authenticationQuery, updatedQuery) &&
             identicalObject(rest, updatedRest)
         );
+    };
+
+    const toggleDeviceTempr = tempr => {
+        setLoading(tempr.id);
+        deviceErrors.deviceTemprs = "";
+        if (tempr.selected) {
+            setLatestChanged(tempr.id, false);
+            return OopCore.deleteDeviceTempr(tempr.selected.id, {
+                deviceId: updatedDevice.id,
+                temprId: tempr.id,
+            })
+                .then(() => {
+                    setLoading(false);
+                    getDeviceTemprData();
+                })
+                .catch(error => {
+                    setLoading(false);
+                    deviceErrors.deviceTemprs = error.errors;
+                });
+        } else {
+            setLatestChanged(tempr.id, true);
+            return OopCore.createDeviceTempr({
+                deviceId: updatedDevice.id,
+                temprId: tempr.id,
+            })
+                .then(() => {
+                    setLoading(false);
+                    getDeviceTemprData();
+                })
+                .catch(error => {
+                    setLoading(false);
+                    deviceErrors.deviceTemprs = error.errors;
+                });
+        }
+    };
+
+    const getDeviceTemprData = () => {
+        return Promise.all([
+            OopCore.getTemprs({
+                groupId: updatedDevice.groupId,
+                pageSize: temprsPageSize,
+                page: temprsPage,
+                id: temprFilterId,
+                name: temprFilterName,
+            }),
+            OopCore.getDeviceTemprs({
+                deviceId: props.match.params.deviceId,
+                pageSize: -1,
+            }),
+        ]).then(([availableTemprs, deviceTemprs]) => {
+            const deviceTemprsObject = arrayToObject(
+                deviceTemprs.data,
+                "temprId",
+            );
+            availableTemprs.data.forEach(tempr => {
+                tempr.selected = deviceTemprsObject[tempr.id];
+            });
+
+            if (temprFilterSelected === true) {
+                availableTemprs.data = availableTemprs.data.filter(
+                    device => device.selected,
+                );
+                setAvailableTemprs(availableTemprs);
+            } else if (temprFilterSelected === false) {
+                availableTemprs.data = availableTemprs.data.filter(
+                    device => !device.selected,
+                );
+                setAvailableTemprs(availableTemprs);
+            } else {
+                setAvailableTemprs(availableTemprs);
+            }
+        });
     };
 
     return (
@@ -194,10 +274,9 @@ const Device = props => {
                             label="Group"
                             key={`form-control-group`}
                             error={
-                                deviceErrors.moveGroupError ||
-                                (deviceErrors.deviceGroup
+                                deviceErrors.deviceGroup
                                     ? `Group ${deviceErrors.deviceGroup}`
-                                    : "")
+                                    : ""
                             }
                             caption="required"
                         >
@@ -208,19 +287,14 @@ const Device = props => {
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event => {
-                                    canMoveDevice().then(canMove => {
-                                        if (canMove) {
-                                            event.value.length
-                                                ? setValue(
-                                                      "deviceGroupId",
-                                                      event.value[0].id,
-                                                  )
-                                                : setValue(
-                                                      "deviceGroupId",
-                                                      null,
-                                                  );
-                                        }
-                                    });
+                                    if (event.value.length) {
+                                        setValue(
+                                            "deviceGroupId",
+                                            event.value[0].id,
+                                        );
+                                    } else {
+                                        setValue("deviceGroupId", null);
+                                    }
                                 }}
                                 value={groups.filter(
                                     item =>
@@ -235,7 +309,7 @@ const Device = props => {
                                 onChange={() =>
                                     setValue("active", !updatedDevice.active)
                                 }
-                                checkmarkType={STYLE_TYPE.toggle}
+                                checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
                         <FormControl
@@ -378,6 +452,175 @@ const Device = props => {
                                     />
                                 </FormControl>
                             </div>
+                        </AccordionWithCaption>
+                        <AccordionWithCaption
+                            title="Tempr associations "
+                            subtitle="Select temprs to associate with this device"
+                            error={deviceErrors.deviceTemprs}
+                        >
+                            <DataProvider
+                                getData={() => {
+                                    return getDeviceTemprData();
+                                }}
+                                renderKey={
+                                    temprsPage +
+                                    temprsPageSize +
+                                    latestChanged +
+                                    temprFilterId +
+                                    temprFilterName +
+                                    temprFilterSelected
+                                }
+                                renderData={() => (
+                                    <>
+                                        <Table
+                                            data={availableTemprs.data}
+                                            rowClassName={row =>
+                                                `device-tempr${
+                                                    row.selected
+                                                        ? " selected"
+                                                        : ""
+                                                }`
+                                            }
+                                            mapFunction={(
+                                                columnName,
+                                                content,
+                                                row,
+                                            ) => {
+                                                if (columnName === "action") {
+                                                    return (
+                                                        <>
+                                                            <Button
+                                                                kind={
+                                                                    KIND.minimal
+                                                                }
+                                                                $as={Link}
+                                                                target="_blank"
+                                                                to={
+                                                                    "/temprs/" +
+                                                                    content
+                                                                }
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        faExternalLinkAlt
+                                                                    }
+                                                                />
+                                                            </Button>
+                                                        </>
+                                                    );
+                                                }
+                                                if (columnName === "selected") {
+                                                    if (loading === row.id) {
+                                                        return (
+                                                            <InPlaceSpinner />
+                                                        );
+                                                    }
+                                                    return content ? (
+                                                        <FontAwesomeIcon
+                                                            icon={faCheck}
+                                                        />
+                                                    ) : (
+                                                        <FontAwesomeIcon
+                                                            icon={faTimes}
+                                                        />
+                                                    );
+                                                }
+
+                                                return content;
+                                            }}
+                                            columnContent={columnName => {
+                                                if (columnName === "action") {
+                                                    return "id";
+                                                }
+
+                                                return columnName;
+                                            }}
+                                            columns={[
+                                                {
+                                                    id: "selected",
+                                                    name: "",
+                                                    type: "bool",
+                                                    hasFilter: true,
+                                                    width: "20px",
+                                                },
+                                                {
+                                                    id: "id",
+                                                    name: "Id",
+                                                    type: "text",
+                                                    hasFilter: true,
+                                                },
+                                                {
+                                                    id: "name",
+                                                    name: "Name",
+                                                    type: "text",
+                                                    hasFilter: true,
+                                                },
+
+                                                {
+                                                    id: "action",
+                                                    name: "",
+                                                    type: "action",
+                                                    hasFilter: false,
+                                                    width: "30px",
+                                                },
+                                            ]}
+                                            filters={{
+                                                id: temprFilterId,
+                                                name: temprFilterName,
+                                                selected: temprFilterSelected,
+                                            }}
+                                            updateFilters={(key, value) => {
+                                                switch (key) {
+                                                    case "id":
+                                                        return setTemprFilterId(
+                                                            value,
+                                                        );
+                                                    case "name":
+                                                        return setTemprFilterName(
+                                                            value,
+                                                        );
+                                                    case "selected":
+                                                        if (value === null) {
+                                                            return setTemprFilterSelected(
+                                                                "",
+                                                            );
+                                                        }
+                                                        return setTemprFilterSelected(
+                                                            value,
+                                                        );
+                                                    default:
+                                                        return null;
+                                                }
+                                            }}
+                                            trueText="Selected"
+                                            falseText="Not selected"
+                                            onRowClick={tempr => {
+                                                if (!loading) {
+                                                    return toggleDeviceTempr(
+                                                        tempr,
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                        <Pagination
+                                            updatePageSize={pageSize => {
+                                                setTemprsPageSize(pageSize);
+                                            }}
+                                            currentPageSize={temprsPageSize}
+                                            updatePageNumber={pageNumber =>
+                                                setTemprsPage(pageNumber)
+                                            }
+                                            totalRecords={
+                                                availableTemprs.totalRecords
+                                            }
+                                            numberOfPages={
+                                                availableTemprs.numberOfPages
+                                            }
+                                            currentPage={temprsPage || 1}
+                                        />
+                                    </>
+                                )}
+                            />
                         </AccordionWithCaption>
                         <Button
                             onClick={() => {
