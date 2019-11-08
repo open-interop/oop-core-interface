@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const Spinner = () => {
     return (
@@ -10,8 +12,8 @@ const Spinner = () => {
 
 const InPlaceSpinner = () => {
     return (
-        <div className="icon">
-            <img alt="loading-spinner" src="loading.gif" />
+        <div className="fa-spin">
+            <FontAwesomeIcon icon={faSpinner} />
         </div>
     );
 };

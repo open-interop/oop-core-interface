@@ -207,7 +207,7 @@ const DeviceTempr = props => {
                                         !updatedDeviceTempr.queueResponse,
                                     )
                                 }
-                                checkmarkType={STYLE_TYPE.toggle}
+                                checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
                         {!blankDeviceTempr && (

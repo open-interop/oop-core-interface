@@ -309,7 +309,7 @@ const Device = props => {
                                 onChange={() =>
                                     setValue("active", !updatedDevice.active)
                                 }
-                                checkmarkType={STYLE_TYPE.toggle}
+                                checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
                         <FormControl
