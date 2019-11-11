@@ -119,10 +119,23 @@ div {
     }
 }
 
-.half {
+.width-49 {
     width: 49%;
 }
 
-.mb {
+.width-60 {
+    width: 60%;
+}
+
+.wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mb-10 {
     margin-bottom: 10px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
 }
