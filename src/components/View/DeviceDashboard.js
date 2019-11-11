@@ -13,6 +13,7 @@ import { DataProvider, Table } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody, StyledAction } from "baseui/card";
 import { Map, TileLayer, Marker } from "react-leaflet";
+import { Doughnut } from "react-chartjs-2";
 import OopCore from "../../OopCore";
 
 const DeviceDashboard = props => {
@@ -168,6 +169,7 @@ const DeviceDashboard = props => {
                                         )}
                                     </Card>
                                 </div>
+
                                 <div className="width-60">
                                     {device.transmissions &&
                                     device.transmissions.length ? (
@@ -234,6 +236,28 @@ const DeviceDashboard = props => {
                                             <StyledAction></StyledAction>
                                         </Card>
                                     ) : null}
+                                </div>
+                                <div className="width-39">
+                                    <Card>
+                                        <Doughnut
+                                            data={{
+                                                labels: ["Success", "Failure"],
+                                                datasets: [
+                                                    {
+                                                        data: [300, 50],
+                                                        backgroundColor: [
+                                                            "#FF6384",
+                                                            "#36A2EB",
+                                                        ],
+                                                        hoverBackgroundColor: [
+                                                            "#FF6384",
+                                                            "#36A2EB",
+                                                        ],
+                                                    },
+                                                ],
+                                            }}
+                                        />
+                                    </Card>
                                 </div>
                             </div>
                         </>
