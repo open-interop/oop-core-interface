@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+    faCircle,
+    faCheck,
     faChevronLeft,
     faEdit,
-    faCheck,
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { DataProvider, Table } from "../Universal";
@@ -79,7 +80,28 @@ const DeviceDashboard = props => {
                                 <div className="width-49">
                                     <Card
                                         className="mb-20 fixed-height"
-                                        title="Details"
+                                        title={
+                                            <div className="space-between">
+                                                Details
+                                                {device.active ? (
+                                                    <div className="active-device smaller">
+                                                        <FontAwesomeIcon
+                                                            className="blink smaller"
+                                                            icon={faCircle}
+                                                        />{" "}
+                                                        ACTIVE
+                                                    </div>
+                                                ) : (
+                                                    <div className="inactive-device smaller">
+                                                        <FontAwesomeIcon
+                                                            className="smaller"
+                                                            icon={faCircle}
+                                                        />{" "}
+                                                        INACTIVE
+                                                    </div>
+                                                )}
+                                            </div>
+                                        }
                                     >
                                         <StyledBody>
                                             <ListItem>
@@ -140,7 +162,7 @@ const DeviceDashboard = props => {
                                                 ></Marker>
                                             </Map>
                                         ) : (
-                                            <div className="map-component">
+                                            <div className="map-component-placeholder">
                                                 No location data
                                             </div>
                                         )}
