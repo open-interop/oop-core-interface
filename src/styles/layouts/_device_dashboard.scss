@@ -1,3 +1,7 @@
+.fixed-height {
+    height: 370px;
+}
+
 .card-label {
     p {
         &[data-baseweb="typo-p3"] {
@@ -8,6 +12,6 @@
 
 .map-component {
     margin-left: auto;
-    height: 250px;
+    height: 286px;
     width: 100%;
 }

@@ -29,12 +29,17 @@ const DeviceDashboard = props => {
             OopCore.getTransmissions(props.match.params.deviceId, {
                 pageSize: 5,
             }),
-        ]).then(([device, sites, groups, transmissions]) => {
+            OopCore.getDeviceTemprs({
+                deviceId: props.match.params.deviceId,
+                pageSize: -1,
+            }),
+        ]).then(([device, sites, groups, transmissions, deviceTemprs]) => {
             device.site = sites.data.find(site => site.id === device.siteId);
             device.group = groups.data.find(
                 group => group.id === device.deviceGroupId,
             );
             device.transmissions = transmissions.data;
+            device.deviceTemprs = deviceTemprs.data.length;
             setDevice(device);
             return device;
         });
@@ -68,12 +73,14 @@ const DeviceDashboard = props => {
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => {
-                    console.log(device.transmissions);
                     return (
                         <>
                             <div className="space-between wrap">
                                 <div className="width-49">
-                                    <Card className="mb-20" title="Details">
+                                    <Card
+                                        className="mb-20 fixed-height"
+                                        title="Details"
+                                    >
                                         <StyledBody>
                                             <ListItem>
                                                 <div className="card-label">
@@ -96,13 +103,23 @@ const DeviceDashboard = props => {
                                                     </ListItemLabel>
                                                 </div>
                                             </ListItem>
+                                            <ListItem>
+                                                <div className="card-label">
+                                                    <ListItemLabel description="Device Temprs">
+                                                        {device.deviceTemprs
+                                                            ? device.deviceTemprs
+                                                            : "No"}{" "}
+                                                        device temprs associated
+                                                    </ListItemLabel>
+                                                </div>
+                                            </ListItem>
                                         </StyledBody>
                                     </Card>
                                 </div>
 
-                                <div className="width-49">
-                                    {device.longitude && device.latitude ? (
-                                        <Card>
+                                <div className="width-49 fixed-height">
+                                    <Card title="Location">
+                                        {device.longitude && device.latitude ? (
                                             <Map
                                                 center={[
                                                     device.longitude,
@@ -122,8 +139,12 @@ const DeviceDashboard = props => {
                                                     ]}
                                                 ></Marker>
                                             </Map>
-                                        </Card>
-                                    ) : null}
+                                        ) : (
+                                            <div className="map-component">
+                                                No location data
+                                            </div>
+                                        )}
+                                    </Card>
                                 </div>
                                 <div className="width-60">
                                     {device.transmissions &&
@@ -192,7 +213,6 @@ const DeviceDashboard = props => {
                                         </Card>
                                     ) : null}
                                 </div>
-                                <Card>graph card</Card>
                             </div>
                         </>
                     );
