@@ -369,7 +369,6 @@ const Device = props => {
                             subtitle="Please provide at least one form of authentication"
                             error={deviceErrors.base}
                             caption="required"
-                            startExpanded
                         >
                             <div className="content-wrapper">
                                 <FormControl
