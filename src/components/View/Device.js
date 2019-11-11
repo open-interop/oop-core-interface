@@ -177,7 +177,7 @@ const Device = props => {
     const getDeviceTemprData = () => {
         return Promise.all([
             OopCore.getTemprs({
-                groupId: updatedDevice.groupId,
+                deviceGroupId: updatedDevice.deviceGroupId,
                 pageSize: temprsPageSize,
                 page: temprsPage,
                 id: temprFilterId,
