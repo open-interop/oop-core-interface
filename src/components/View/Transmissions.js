@@ -4,9 +4,11 @@ import { Button, KIND } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import Check from "baseui/icon/check";
-import Delete from "baseui/icon/delete";
+import {
+    faChevronLeft,
+    faCheck,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
@@ -96,7 +98,11 @@ const Transmissions = props => {
                                 }
 
                                 if (columnName === "success") {
-                                    return content ? <Check /> : <Delete />;
+                                    return content ? (
+                                        <FontAwesomeIcon icon={faCheck} />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faTimes} />
+                                    );
                                 }
                                 return content;
                             }}
