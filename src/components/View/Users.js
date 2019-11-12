@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
-import { Button } from "baseui/button";
-import Show from "baseui/icon/show";
+import { Button, KIND } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const Users = props => {
@@ -23,7 +24,13 @@ const Users = props => {
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Users</h2>
-                <Button $as={Link} to={`/users/new`}>
+                <Button
+                    $as={Link}
+                    to={`/users/new`}
+                    kind={KIND.minimal}
+                    aria-label="Create new user"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
                     New
                 </Button>
             </div>
@@ -46,7 +53,9 @@ const Users = props => {
                                     return (
                                         <>
                                             <Link to={`/users/${content}`}>
-                                                <Show />
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                />
                                             </Link>
                                         </>
                                     );
@@ -60,6 +69,7 @@ const Users = props => {
                                     name: "ID",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "50px",
                                 },
                                 {
                                     id: "email",
@@ -69,7 +79,7 @@ const Users = props => {
                                 },
                                 { id: "createdAt", name: "Created At" },
                                 { id: "updatedAt", name: "Updated At" },
-                                { id: "action", name: "Action" },
+                                { id: "action", name: "", width: "50px" },
                             ]}
                             columnContent={columnName => {
                                 if (columnName === "action") {
