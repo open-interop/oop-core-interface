@@ -584,6 +584,9 @@ const Tempr = props => {
                                 }
                             }}
                             disabled={saveButtonDisabled()}
+                            aria-label={
+                                blankTempr ? "Create tempr" : "Update tempr"
+                            }
                         >
                             {blankTempr ? "Create" : "Save"}
                         </Button>

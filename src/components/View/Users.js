@@ -56,6 +56,7 @@ const Users = props => {
                                                 kind={KIND.tertiary}
                                                 $as={Link}
                                                 to={`/users/${content}`}
+                                                aria-label="Edit user"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faEdit}

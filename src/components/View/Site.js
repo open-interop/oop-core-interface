@@ -351,6 +351,9 @@ const Site = props => {
                                 }
                             }}
                             disabled={identicalObject(site, updatedSite)}
+                            aria-label={
+                                blankSite ? "Create site" : "Update site"
+                            }
                         >
                             {blankSite ? "Create" : "Save"}
                         </Button>

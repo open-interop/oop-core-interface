@@ -91,6 +91,7 @@ const Transmissions = props => {
                                             kind={KIND.tertiary}
                                             $as={Link}
                                             to={`${props.location.pathname}/${content}`}
+                                            aria-label="View transmission details"
                                         >
                                             View
                                         </Button>

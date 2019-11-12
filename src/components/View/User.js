@@ -225,6 +225,9 @@ const User = props => {
                                 }
                             }}
                             disabled={identicalObject(user, updatedUser)}
+                            aria-label={
+                                blankUser ? "Create user" : "Update user"
+                            }
                         >
                             {blankUser ? "Create" : "Save"}
                         </Button>

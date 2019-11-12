@@ -83,6 +83,7 @@ const Temprs = props => {
                                                 kind={KIND.tertiary}
                                                 $as={Link}
                                                 to={`${props.location.pathname}/${content}`}
+                                                aria-label="Edit tempr"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faEdit}

@@ -17,7 +17,9 @@ const Modal = props => {
 
     return (
         <>
-            <Button onClick={() => setIsOpen(true)}>{props.buttonText}</Button>
+            <Button aria-label="Open modal" onClick={() => setIsOpen(true)}>
+                {props.buttonText}
+            </Button>
             <ModalBase onClose={close} isOpen={isOpen}>
                 <FocusOnce>
                     <ModalHeader>{props.title}</ModalHeader>

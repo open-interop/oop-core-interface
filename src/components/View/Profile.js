@@ -9,7 +9,11 @@ const Profile = props => {
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Current User Profile</h2>
-                <Button $as={Link} to={`/users/${props.user.id}`}>
+                <Button
+                    $as={Link}
+                    to={`/users/${props.user.id}`}
+                    aria-label="Edit current user profile"
+                >
                     Edit
                 </Button>
             </div>

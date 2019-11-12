@@ -61,6 +61,7 @@ const Login = () => {
                             type="submit"
                             className="login-button"
                             onClick={handleSubmit}
+                            aria-label="Log in"
                         >
                             Login
                         </Button>
@@ -68,6 +69,7 @@ const Login = () => {
                             $as={Link}
                             className="reset-button"
                             to={"/password-reset"}
+                            aria-label="Forgot password"
                         >
                             Forgot Password
                         </Button>

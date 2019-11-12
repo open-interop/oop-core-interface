@@ -60,6 +60,7 @@ const DeviceGroups = props => {
                                                 kind={KIND.tertiary}
                                                 $as={Link}
                                                 to={`/device-groups/${content}`}
+                                                aria-label="Edit device group"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faEdit}
@@ -70,6 +71,7 @@ const DeviceGroups = props => {
                                                 $as={Link}
                                                 kind={KIND.tertiary}
                                                 to={`devices?deviceGroupId=${content}`}
+                                                aria-label="View devices for this group"
                                             >
                                                 Devices
                                             </Button>
@@ -77,6 +79,7 @@ const DeviceGroups = props => {
                                                 $as={Link}
                                                 kind={KIND.tertiary}
                                                 to={`/temprs?deviceGroupId=${content}`}
+                                                aria-label="View temprs for this group"
                                             >
                                                 Temprs
                                             </Button>

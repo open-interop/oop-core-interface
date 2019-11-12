@@ -47,6 +47,7 @@ const Header = props => {
                             onClick={() => {
                                 OopCore.logout();
                             }}
+                            aria-label="Log out"
                         >
                             Log out
                         </Button>
