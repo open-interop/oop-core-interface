@@ -11,6 +11,12 @@ div[id="root"] .header {
         justify-content: space-between;
         flex-direction: row;
 
+        a {
+            &[data-baseweb="link"] {
+                color: $color-white;
+            }
+        }
+
         img {
             border-right: 1px solid $oop-teal;
             padding-right: 1rem;
