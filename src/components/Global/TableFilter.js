@@ -1,5 +1,4 @@
 import React from "react";
-import Filter from "baseui/icon/filter";
 import { PopoverWithButton, SearchBar } from "../Universal";
 import { PLACEMENT } from "baseui/popover";
 import { TrueFalseCheckboxes } from ".";
@@ -28,7 +27,6 @@ const TableFilter = props => {
                 </>
             }
             contentClassName="filter-content"
-            ButtonComponent={Filter}
             buttonColour={props.filterValue !== "" ? "black" : "lightgrey"}
         />
     );

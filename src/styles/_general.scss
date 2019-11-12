@@ -143,3 +143,9 @@ div {
 .mb-20 {
     margin-bottom: 20px;
 }
+
+div {
+    &[role="gridcell"] {
+        overflow-wrap: anywhere;
+    }
+}

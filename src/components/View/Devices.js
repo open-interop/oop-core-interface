@@ -158,7 +158,7 @@ const Devices = props => {
                                     id: "siteName",
                                     name: "Site",
                                 },
-                                { id: "action", name: "", width: "100px" },
+                                { id: "action", name: "", width: "150px" },
                             ]}
                             columnContent={columnName => {
                                 if (columnName === "action") {
