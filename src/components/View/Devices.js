@@ -11,6 +11,7 @@ import {
     faListUl,
     faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { arrayToObject } from "../../Utilities";
 
 const Devices = props => {
     const [devices, setDevices] = useState([]);
@@ -41,11 +42,18 @@ const Devices = props => {
                 siteId,
             }),
             OopCore.getDeviceGroups(),
-        ]).then(([devices, groups]) => {
+            OopCore.getSites(),
+        ]).then(([devices, groups, sites]) => {
+            const groupsObject = arrayToObject(groups.data, "id");
+            const sitesObject = arrayToObject(sites.data, "id");
+
             devices.data.forEach(device => {
-                return (device.deviceGroupName =
-                    groups.data.find(group => group.id === device.deviceGroupId)
-                        .name || "");
+                device.deviceGroupName = groupsObject[device.deviceGroupId]
+                    ? groupsObject[device.deviceGroupId].name
+                    : "";
+                device.siteName = sitesObject[device.siteId]
+                    ? sitesObject[device.siteId].name
+                    : "";
             });
             setDevices(devices);
             return devices;
@@ -120,6 +128,7 @@ const Devices = props => {
                                     name: "ID",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "50px",
                                 },
                                 {
                                     id: "name",
@@ -132,6 +141,7 @@ const Devices = props => {
                                     name: "Group ID",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "100px",
                                 },
                                 {
                                     id: "deviceGroupName",
@@ -139,11 +149,16 @@ const Devices = props => {
                                 },
                                 {
                                     id: "siteId",
-                                    name: "Site",
+                                    name: "Site ID",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "100px",
                                 },
-                                { id: "action", name: "Action" },
+                                {
+                                    id: "siteName",
+                                    name: "Site",
+                                },
+                                { id: "action", name: "", width: "100px" },
                             ]}
                             columnContent={columnName => {
                                 if (columnName === "action") {

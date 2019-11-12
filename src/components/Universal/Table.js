@@ -75,13 +75,13 @@ const Table = props => {
     }
 
     const CustomWidthComponent = props => {
-        var Head = props.component;
+        var Component = props.component;
         if (props.width) {
-            Head = withStyle(props.component, {
+            Component = withStyle(props.component, {
                 maxWidth: props.width,
             });
         }
-        return <Head {...props} />;
+        return <Component {...props} />;
     };
 
     return (

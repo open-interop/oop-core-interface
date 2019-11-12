@@ -95,6 +95,7 @@ const Temprs = props => {
                                     name: "Id",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "50px",
                                 },
                                 {
                                     id: "name",
@@ -113,12 +114,14 @@ const Temprs = props => {
                                     name: "Group ID",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "100px",
                                 },
                                 {
                                     id: "action",
-                                    name: "Action",
+                                    name: "",
                                     type: "action",
                                     hasFilter: false,
+                                    width: "50px",
                                 },
                             ]}
                             filters={{ id, name, deviceGroupId }}

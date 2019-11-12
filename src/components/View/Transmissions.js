@@ -74,7 +74,7 @@ const Transmissions = props => {
                                             $as={Link}
                                             to={`${props.location.pathname}/${content}`}
                                         >
-                                            {content}
+                                            View
                                         </Button>
                                     );
                                 }
@@ -135,9 +135,10 @@ const Transmissions = props => {
                                 },
                                 {
                                     id: "action",
-                                    name: "Action",
+                                    name: "",
                                     type: "action",
                                     hasFilter: false,
+                                    width: "100px",
                                 },
                             ]}
                             filters={{

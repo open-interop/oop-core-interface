@@ -84,6 +84,7 @@ const DeviceGroups = props => {
                                     name: "Id",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "50px",
                                 },
                                 {
                                     id: "name",
@@ -93,7 +94,7 @@ const DeviceGroups = props => {
                                 },
                                 {
                                     id: "action",
-                                    name: "Action",
+                                    name: "",
                                     type: "action",
                                     hasFilter: false,
                                 },

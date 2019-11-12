@@ -59,6 +59,7 @@ const Sites = props => {
                                     name: "ID",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "50px",
                                 },
                                 {
                                     id: "name",
@@ -72,7 +73,11 @@ const Sites = props => {
                                     type: "text",
                                     hasFilter: true,
                                 },
-                                { id: "action", name: "Action" },
+                                {
+                                    id: "action",
+                                    name: "",
+                                    width: "100px",
+                                },
                             ]}
                             columnContent={columnName => {
                                 if (columnName === "action") {
