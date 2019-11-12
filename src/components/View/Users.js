@@ -52,11 +52,15 @@ const Users = props => {
                                 if (columnName === "action") {
                                     return (
                                         <>
-                                            <Link to={`/users/${content}`}>
+                                            <Button
+                                                kind={KIND.tertiary}
+                                                $as={Link}
+                                                to={`/users/${content}`}
+                                            >
                                                 <FontAwesomeIcon
                                                     icon={faEdit}
                                                 />
-                                            </Link>
+                                            </Button>
                                         </>
                                     );
                                 } else {

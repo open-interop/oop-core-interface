@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { Select } from "baseui/select";
 import { FormControl } from "baseui/form-control";
 import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
-import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Site = props => {
     const [site, setSite] = useState({});
@@ -76,10 +77,17 @@ const Site = props => {
 
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allSitesPath}>
-                <ArrowLeft size={24} />
-            </Button>
-            <h2>{blankSite ? "Create Site" : "Edit Site"}</h2>
+            <div className="flex-left">
+                <Button
+                    $as={Link}
+                    kind={KIND.minimal}
+                    to={allSitesPath}
+                    aria-label="Go back to all sites"
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <h2>{blankSite ? "Create Site" : "Edit Site"}</h2>
+            </div>
             <DataProvider
                 getData={() => {
                     return getData().then(response => refreshSite(response));

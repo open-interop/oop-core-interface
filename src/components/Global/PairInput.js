@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { Input } from "baseui/input";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 
 const PairInput = props => {
     const dataChanged = useRef(false);
@@ -107,10 +109,11 @@ const PairInput = props => {
                     />
                 </div>
                 <Button
+                    kind={KIND.tertiary}
                     className="left-margin"
                     onClick={() => removeRow(index)}
                 >
-                    -
+                    <FontAwesomeIcon icon={faMinus} />
                 </Button>
             </div>
         );
@@ -121,7 +124,9 @@ const PairInput = props => {
             {dataArray.map((row, index) => {
                 return InputRow(index, row[0], row[1]);
             })}
-            <Button onClick={addRow}>+</Button>
+            <Button kind={KIND.tertiary} onClick={addRow}>
+                <FontAwesomeIcon icon={faPlus} />
+            </Button>
         </>
     );
 };

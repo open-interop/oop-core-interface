@@ -66,15 +66,17 @@ const User = props => {
 
     return (
         <div className="content-wrapper">
-            <Button
-                $as={Link}
-                kind={KIND.minimal}
-                to={allUsersPath}
-                aria-label="Go back to all users"
-            >
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </Button>
-            <h2>{blankUser ? "Create User" : "Edit User"}</h2>
+            <div className="flex-left">
+                <Button
+                    $as={Link}
+                    kind={KIND.minimal}
+                    to={allUsersPath}
+                    aria-label="Go back to all users"
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <h2>{blankUser ? "Create User" : "Edit User"}</h2>
+            </div>
             <DataProvider
                 getData={() => {
                     return getUser().then(response => {
