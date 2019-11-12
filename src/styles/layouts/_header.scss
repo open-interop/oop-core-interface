@@ -4,12 +4,18 @@ div[id="root"] .header {
     padding-top: 0.5rem;
     position: fixed;
     width: 100%;
-    z-index: 1;
+    z-index: 10;
 
     nav {
         display: flex;
         justify-content: space-between;
         flex-direction: row;
+
+        a {
+            &[data-baseweb="link"] {
+                color: $color-white;
+            }
+        }
 
         img {
             border-right: 1px solid $oop-teal;
