@@ -111,6 +111,7 @@ const PairInput = props => {
                 <Button
                     kind={KIND.tertiary}
                     className="left-margin"
+                    aria-label="remove-input-row"
                     onClick={() => removeRow(index)}
                 >
                     <FontAwesomeIcon icon={faMinus} />
@@ -124,7 +125,11 @@ const PairInput = props => {
             {dataArray.map((row, index) => {
                 return InputRow(index, row[0], row[1]);
             })}
-            <Button kind={KIND.tertiary} onClick={addRow}>
+            <Button
+                kind={KIND.tertiary}
+                onClick={addRow}
+                aria-label="add-input-row"
+            >
                 <FontAwesomeIcon icon={faPlus} />
             </Button>
         </>
