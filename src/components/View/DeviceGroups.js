@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
-import Show from "baseui/icon/show";
+import { Button, KIND } from "baseui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
@@ -23,7 +24,13 @@ const DeviceGroups = props => {
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Device Groups</h2>
-                <Button $as={Link} to={`/device-groups/new`}>
+                <Button
+                    $as={Link}
+                    to={`/device-groups/new`}
+                    kind={KIND.minimal}
+                    aria-label="Create new tempr"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
                     New
                 </Button>
             </div>
@@ -49,22 +56,29 @@ const DeviceGroups = props => {
                                 if (columnName === "action") {
                                     return (
                                         <>
-                                            <Link
+                                            <Button
+                                                kind={KIND.tertiary}
+                                                $as={Link}
                                                 to={`/device-groups/${content}`}
                                             >
-                                                <Show />
-                                            </Link>
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                />
+                                            </Button>
+
                                             <Button
                                                 $as={Link}
+                                                kind={KIND.tertiary}
                                                 to={`devices?deviceGroupId=${content}`}
                                             >
                                                 Devices
                                             </Button>
                                             <Button
                                                 $as={Link}
+                                                kind={KIND.tertiary}
                                                 to={`/temprs?deviceGroupId=${content}`}
                                             >
-                                                View temprs
+                                                Temprs
                                             </Button>
                                         </>
                                     );
@@ -97,6 +111,7 @@ const DeviceGroups = props => {
                                     name: "",
                                     type: "action",
                                     hasFilter: false,
+                                    width: "250px",
                                 },
                             ]}
                             filters={{ id, name }}

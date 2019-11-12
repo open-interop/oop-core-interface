@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
@@ -51,7 +53,13 @@ const Temprs = props => {
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Temprs</h2>
-                <Button $as={Link} to={`${props.location.pathname}/new`}>
+                <Button
+                    $as={Link}
+                    to={`${props.location.pathname}/new`}
+                    kind={KIND.minimal}
+                    aria-label="Create new tempr"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
                     New
                 </Button>
             </div>
@@ -72,10 +80,13 @@ const Temprs = props => {
                                     return (
                                         <>
                                             <Button
+                                                kind={KIND.tertiary}
                                                 $as={Link}
                                                 to={`${props.location.pathname}/${content}`}
                                             >
-                                                Edit
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                />
                                             </Button>
                                         </>
                                     );
