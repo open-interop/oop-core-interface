@@ -136,6 +136,11 @@ const Devices = props => {
                                     type: "text",
                                     hasFilter: true,
                                 },
+
+                                {
+                                    id: "deviceGroupName",
+                                    name: "Group",
+                                },
                                 {
                                     id: "deviceGroupId",
                                     name: "Group ID",
@@ -143,9 +148,10 @@ const Devices = props => {
                                     hasFilter: true,
                                     width: "100px",
                                 },
+
                                 {
-                                    id: "deviceGroupName",
-                                    name: "Group",
+                                    id: "siteName",
+                                    name: "Site",
                                 },
                                 {
                                     id: "siteId",
@@ -153,10 +159,6 @@ const Devices = props => {
                                     type: "text",
                                     hasFilter: true,
                                     width: "100px",
-                                },
-                                {
-                                    id: "siteName",
-                                    name: "Site",
                                 },
                                 { id: "action", name: "", width: "150px" },
                             ]}
