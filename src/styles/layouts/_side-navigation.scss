@@ -25,6 +25,10 @@ div[id="root"] {
             display: block;
             text-align: center;
 
+            &:first-child {
+                padding-top: 40px;
+            }
+
             &.active {
                 background-color: $oop-active-teal;
             }
@@ -39,7 +43,7 @@ div[id="root"] {
             }
 
             .navigation-icon {
-                margin-bottom: 10px;
+                margin-bottom: 20px;
             }
         }
 
@@ -117,4 +121,8 @@ div[id="root"] {
 
 .size-xxxl {
     font-size: xxx-large;
+}
+
+.size-xxl {
+    font-size: xx-large;
 }

@@ -14,9 +14,7 @@ const NavigationItem = props => {
                 size={SIZE.compact}
             >
                 {props.icon && (
-                    <div className="size-xxxl navigation-icon">
-                        {props.icon}
-                    </div>
+                    <div className="size-xxl navigation-icon">{props.icon}</div>
                 )}
                 <span>{props.pathName}</span>
             </Button>
@@ -34,7 +32,7 @@ const NavigationItem = props => {
                     size={SIZE.compact}
                 >
                     {props.icon && (
-                        <div className="size-xxxl navigation-icon">
+                        <div className="size-xxl navigation-icon">
                             {props.icon}
                         </div>
                     )}
