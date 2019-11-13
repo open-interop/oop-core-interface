@@ -319,16 +319,25 @@ const Tempr = props => {
                                     <AceEditor
                                         mode="json"
                                         theme="github"
-                                        onChange={value =>
-                                            setValue("body", {
+                                        onChange={value => {
+                                            const updatedData = {
+                                                ...updatedTempr,
+                                            };
+                                            updatedData.template.body = {
                                                 language: "js",
                                                 script: value,
-                                            })
-                                        }
+                                            };
+                                            setUpdatedTempr(updatedData);
+                                        }}
                                         editorProps={{
                                             $blockScrolling: true,
                                         }}
-                                        value={updatedTempr.body.script}
+                                        value={
+                                            updatedTempr.template.body
+                                                ? updatedTempr.template.body
+                                                      .script
+                                                : ""
+                                        }
                                     />
                                 </div>
                                 <div>
