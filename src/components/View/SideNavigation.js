@@ -79,12 +79,23 @@ const SideNavigation = props => {
                         setOpen={setDevicesAccordionOpen}
                         icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     >
-                        <div className="site-name">
-                            <FontAwesomeIcon className="mr-1" icon={faCircle} />
-                            {props.site && props.site.fullName
-                                ? props.site.fullName
-                                : "All sites"}
-                        </div>
+                        {props.site && props.site.fullName ? (
+                            <>
+                                <div className="site-name">
+                                    <FontAwesomeIcon
+                                        className="mr-1"
+                                        icon={faCircle}
+                                    />
+                                    {props.site.fullName}
+                                </div>
+                            </>
+                        ) : (
+                            <NavigationItem
+                                className="bottom"
+                                path={`/devices`}
+                                pathName="View All"
+                            />
+                        )}
 
                         {deviceGroups.map((group, index) => (
                             <React.Fragment key={`device-group-${index}`}>
@@ -137,6 +148,7 @@ const SideNavigation = props => {
                         path="/devices"
                         pathName="Devices"
                         isActive={pathMatch("/devices")}
+                        icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     />
                 }
                 loadingFallback={
@@ -144,6 +156,7 @@ const SideNavigation = props => {
                         path="/devices"
                         pathName="Devices"
                         isActive={pathMatch("/devices")}
+                        icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     />
                 }
             />
@@ -175,21 +188,25 @@ const SideNavigation = props => {
                     path="/users"
                     pathName="Users"
                     isActive={pathIncludes("/users")}
+                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
                 <NavigationItem
                     path="/sites"
                     pathName="Sites"
                     isActive={pathIncludes("/sites")}
+                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
                 <NavigationItem
                     path="/temprs"
                     pathName="Temprs"
                     isActive={pathIncludes("/temprs")}
+                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
                 <NavigationItem
                     path="/device-groups"
                     pathName="Device Groups"
                     isActive={pathIncludes("/device-groups")}
+                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
             </NavigationGroup>
             <div className="filler" />

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
+import { Button, SIZE } from "baseui/button";
 
 const NavigationItem = props => {
     if (props.button) {
@@ -11,6 +11,7 @@ const NavigationItem = props => {
                 } ${props.className || ""}`}
                 onClick={props.onClick}
                 ref={props.refName}
+                size={SIZE.compact}
             >
                 <div className="size-xxxl navigation-icon">{props.icon}</div>
                 <span>{props.pathName}</span>
@@ -26,6 +27,7 @@ const NavigationItem = props => {
                     className={`navigation-item${
                         props.isActive ? " active" : ""
                     } ${props.className}`}
+                    size={SIZE.compact}
                 >
                     <div className="size-xxxl navigation-icon">
                         {props.icon}
