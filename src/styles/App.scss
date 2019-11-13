@@ -29,6 +29,10 @@ a {
     }
 }
 
+.title {
+    margin-bottom: 1rem;
+}
+
 @import "general";
 @import "layouts/loading-overlay";
 @import "layouts/header";
@@ -37,3 +41,4 @@ a {
 @import "layouts/accordion";
 @import "layouts/site-selector";
 @import "layouts/device_temprs";
+@import "layouts/device_dashboard";

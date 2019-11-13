@@ -9,7 +9,7 @@ div[id="root"] {
 
         .content-wrapper {
             background-color: $color-white;
-            padding: 1rem;
+            padding: 1.5rem;
         }
     }
 }
@@ -98,6 +98,10 @@ label {
     justify-content: space-between;
 }
 
+.flex-left {
+    display: flex;
+    justify-content: left;
+}
 .one-row {
     display: flex;
     flex-direction: row;
@@ -115,10 +119,27 @@ div {
     }
 }
 
-.half {
+.width-39 {
+    width: 39%;
+}
+
+.width-49 {
     width: 49%;
 }
 
-.mb {
+.width-60 {
+    width: 60%;
+}
+
+.wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mb-10 {
     margin-bottom: 10px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
 }

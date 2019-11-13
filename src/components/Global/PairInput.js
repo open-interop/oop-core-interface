@@ -87,8 +87,8 @@ const PairInput = props => {
 
     const InputRow = (index, key, value) => {
         return (
-            <div className="one-row space-between mb" key={`row-${index}`}>
-                <div className="half left-margin">
+            <div className="one-row space-between mb-10" key={`row-${index}`}>
+                <div className="width-49 left-margin">
                     <Input
                         error={props.error || (!key && value)}
                         placeholder="Key"
@@ -97,7 +97,7 @@ const PairInput = props => {
                         onChange={setData(index, 0)}
                     />
                 </div>
-                <div className="half left-margin">
+                <div className="width-49 left-margin">
                     <Input
                         error={props.error || (key && !value)}
                         placeholder="Value"
