@@ -130,7 +130,7 @@ const SideNavigation = props => {
                                             />
                                         ))
                                 ) : (
-                                    <div className="navigation-item">
+                                    <div className="navigation-item no-devices">
                                         No devices
                                     </div>
                                 )}

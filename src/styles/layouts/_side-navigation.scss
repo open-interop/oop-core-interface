@@ -72,6 +72,8 @@ div[id="root"] {
                 position: relative;
                 z-index: -1;
                 text-align: left;
+                font-weight: 500;
+                font-size: 16px;
 
                 &:hover {
                     background-color: $oop-darker-teal;
@@ -79,6 +81,14 @@ div[id="root"] {
 
                 &.group-name {
                     background-color: $oop-darker-teal;
+                }
+
+                &.no-devices {
+                    cursor: default;
+
+                    &:hover {
+                        background-color: initial;
+                    }
                 }
             }
 
