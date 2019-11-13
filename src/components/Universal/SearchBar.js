@@ -1,7 +1,8 @@
 import React from "react";
 import { useStyletron } from "baseui";
 import { Input } from "baseui/input";
-import Search from "baseui/icon/search";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function Before() {
     const [useCss, theme] = useStyletron();
@@ -13,7 +14,7 @@ function Before() {
                 paddingLeft: theme.sizing.scale500,
             })}
         >
-            <Search size="18px" />
+            <FontAwesomeIcon icon={faSearch} />
         </div>
     );
 }

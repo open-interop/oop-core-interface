@@ -32,25 +32,52 @@ const Table = props => {
                                         : ""
                                 }
                             >
-                                {props.columns.map(column => (
-                                    <CustomWidthComponent
-                                        component={StyledCell}
-                                        width={column.width}
-                                        key={`table-cell-${index}-${column.id}`}
-                                    >
-                                        {props.mapFunction(
-                                            column.id,
-                                            row[
-                                                props.columnContent
-                                                    ? props.columnContent(
-                                                          column.id,
-                                                      )
-                                                    : column.id
-                                            ],
-                                            row,
-                                        )}
-                                    </CustomWidthComponent>
-                                ))}
+                                {props.columns.map(column => {
+                                    if (column.width) {
+                                        const CustomWidthCell = withStyle(
+                                            StyledCell,
+                                            {
+                                                maxWidth: column.width,
+                                            },
+                                        );
+
+                                        return (
+                                            <CustomWidthCell
+                                                key={`table-cell-${index}-${column.id}`}
+                                            >
+                                                {props.mapFunction(
+                                                    column.id,
+                                                    row[
+                                                        props.columnContent
+                                                            ? props.columnContent(
+                                                                  column.id,
+                                                              )
+                                                            : column.id
+                                                    ],
+                                                    row,
+                                                )}
+                                            </CustomWidthCell>
+                                        );
+                                    } else {
+                                        return (
+                                            <StyledCell
+                                                key={`table-cell-${index}-${column.id}`}
+                                            >
+                                                {props.mapFunction(
+                                                    column.id,
+                                                    row[
+                                                        props.columnContent
+                                                            ? props.columnContent(
+                                                                  column.id,
+                                                              )
+                                                            : column.id
+                                                    ],
+                                                    row,
+                                                )}
+                                            </StyledCell>
+                                        );
+                                    }
+                                })}
                             </StyledRow>
                         );
                     })}
@@ -74,24 +101,14 @@ const Table = props => {
         return "";
     }
 
-    const CustomWidthComponent = props => {
-        var Head = props.component;
-        if (props.width) {
-            Head = withStyle(props.component, {
-                maxWidth: props.width,
-            });
-        }
-        return <Head {...props} />;
-    };
-
     return (
         <StyledTable>
             <StyledHead>
                 {props.columns.map(column => (
-                    <CustomWidthComponent
-                        component={StyledHeadCell}
+                    <StyledHeadCell
                         width={column.width}
                         key={`table-head-${column.id}`}
+                        className={`max-width-${column.width}`}
                     >
                         {column.name}
                         {column.hasFilter && (
@@ -108,7 +125,7 @@ const Table = props => {
                                 falseText={props.falseText}
                             />
                         )}
-                    </CustomWidthComponent>
+                    </StyledHeadCell>
                 ))}
             </StyledHead>
             {TableRows()}

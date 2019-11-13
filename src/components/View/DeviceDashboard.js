@@ -115,7 +115,10 @@ const DeviceDashboard = props => {
                                             <ListItem>
                                                 <div className="card-label">
                                                     <ListItemLabel description="Site">
-                                                        {device.site.fullName}
+                                                        {device.site
+                                                            ? device.site
+                                                                  .fullName
+                                                            : ""}
                                                     </ListItemLabel>
                                                 </div>
                                             </ListItem>
