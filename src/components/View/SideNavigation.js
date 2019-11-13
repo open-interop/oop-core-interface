@@ -103,12 +103,6 @@ const SideNavigation = props => {
                                     pathName={group.name}
                                     path={`/devices?deviceGroupId=${group.id}`}
                                     className="group-name"
-                                    symbolRight={
-                                        <FontAwesomeIcon
-                                            className="align-right"
-                                            icon={faFilter}
-                                        />
-                                    }
                                 />
                                 {group.devices.length ? (
                                     group.devices
@@ -118,11 +112,6 @@ const SideNavigation = props => {
                                                 className="device-name"
                                                 key={`device-${device.id}-navigation-item`}
                                                 path={`/devices/${device.id}`}
-                                                symbolLeft={
-                                                    <FontAwesomeIcon
-                                                        icon={faCaretRight}
-                                                    />
-                                                }
                                                 pathName={device.name}
                                                 isActive={pathIncludes(
                                                     `/devices/${device.id}`,
@@ -188,25 +177,21 @@ const SideNavigation = props => {
                     path="/users"
                     pathName="Users"
                     isActive={pathIncludes("/users")}
-                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
                 <NavigationItem
                     path="/sites"
                     pathName="Sites"
                     isActive={pathIncludes("/sites")}
-                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
                 <NavigationItem
                     path="/temprs"
                     pathName="Temprs"
                     isActive={pathIncludes("/temprs")}
-                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
                 <NavigationItem
                     path="/device-groups"
                     pathName="Device Groups"
                     isActive={pathIncludes("/device-groups")}
-                    symbolLeft={<FontAwesomeIcon icon={faCaretRight} />}
                 />
             </NavigationGroup>
             <div className="filler" />
