@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
+import { ErrorToast } from "../Global";
 import OopCore from "../../OopCore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -24,6 +25,15 @@ const Devices = props => {
         StringParam,
     );
     const [siteId, setSiteId] = useQueryParam("siteId", StringParam);
+
+    // site selected in header overrides table filter
+    if (
+        props.site &&
+        props.site.id &&
+        (!siteId || Number(siteId) !== props.site.id)
+    ) {
+        setSiteId(String(props.site.id));
+    }
 
     // reset page number when the search query is changed
     useEffect(() => {
@@ -176,7 +186,15 @@ const Devices = props => {
                                     case "name":
                                         return setName(value);
                                     case "siteId":
-                                        return setSiteId(value);
+                                        if (!props.site || !props.site.id) {
+                                            return setSiteId(value);
+                                        } else {
+                                            return ErrorToast(
+                                                "Please disable global site filtering (header) to allow table filter",
+                                                "Site selection",
+                                            );
+                                        }
+
                                     default:
                                         return null;
                                 }
