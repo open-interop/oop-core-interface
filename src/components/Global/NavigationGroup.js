@@ -6,7 +6,7 @@ const useOutsideClick = (ref, exception, callback) => {
         if (
             ref.current &&
             ref.current !== e.target &&
-            exception.current !== e.target
+            !exception.current.contains(e.target)
         ) {
             callback();
         }
