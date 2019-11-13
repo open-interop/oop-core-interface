@@ -58,20 +58,20 @@ const Login = () => {
                     </FormControl>
                     <div className="space-between">
                         <Button
-                            type="submit"
-                            className="login-button"
-                            onClick={handleSubmit}
-                            aria-label="Log in"
-                        >
-                            Login
-                        </Button>
-                        <Button
                             $as={Link}
                             className="reset-button"
                             to={"/password-reset"}
                             aria-label="Forgot password"
                         >
                             Forgot Password
+                        </Button>
+                        <Button
+                            type="submit"
+                            className="login-button"
+                            onClick={handleSubmit}
+                            aria-label="Log in"
+                        >
+                            Login
                         </Button>
                     </div>
                     <div>

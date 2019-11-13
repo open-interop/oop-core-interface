@@ -56,20 +56,20 @@ const PasswordReset = () => {
                         </div>
                         <div className="space-between">
                             <Button
-                                type="submit"
-                                className="login-button"
-                                onClick={handleSubmit}
-                                aria-label="Submit"
-                            >
-                                Submit
-                            </Button>
-                            <Button
                                 $as={Link}
                                 className="reset-button"
                                 to={"/login"}
                                 aria-label="Go back to login"
                             >
                                 Go back
+                            </Button>
+                            <Button
+                                type="submit"
+                                className="login-button"
+                                onClick={handleSubmit}
+                                aria-label="Submit"
+                            >
+                                Submit
                             </Button>
                         </div>
                         <div>
@@ -97,7 +97,6 @@ const PasswordReset = () => {
                             </Button>
                         </div>
                         <div>
-                            {" "}
                             <Error message={errorMessage} />
                         </div>
                         <div> {loading && "loading"}</div>
