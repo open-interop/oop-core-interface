@@ -59,6 +59,7 @@ const PasswordReset = () => {
                                 type="submit"
                                 className="login-button"
                                 onClick={handleSubmit}
+                                aria-label="Submit"
                             >
                                 Submit
                             </Button>
@@ -66,6 +67,7 @@ const PasswordReset = () => {
                                 $as={Link}
                                 className="reset-button"
                                 to={"/login"}
+                                aria-label="Go back to login"
                             >
                                 Go back
                             </Button>
@@ -86,7 +88,11 @@ const PasswordReset = () => {
                     <LineWrapper title="Success!">
                         <div>A password reset link has been emailed to you</div>
                         <div className="space-between">
-                            <Button $as={Link} to={"/login"}>
+                            <Button
+                                $as={Link}
+                                to={"/login"}
+                                aria-label="Go to login"
+                            >
                                 Login
                             </Button>
                         </div>

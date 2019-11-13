@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { Popover } from "baseui/popover";
 
 const useOutsideClick = (ref, callback) => {
@@ -42,7 +44,8 @@ const PopoverWithButton = props => {
             content={PopoverContent()}
         >
             <div>
-                <props.ButtonComponent
+                <FontAwesomeIcon
+                    icon={faFilter}
                     onClick={() => {
                         setPopoverOpen(!popoverOpen);
                     }}

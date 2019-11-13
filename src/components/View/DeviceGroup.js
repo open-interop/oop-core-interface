@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
-import ArrowLeft from "baseui/icon/arrow-left";
+import { Button, KIND } from "baseui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
@@ -41,12 +42,21 @@ const DeviceGroup = props => {
     };
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allDeviceGroupsPath}>
-                <ArrowLeft size={24} />
-            </Button>
-            <h2>
-                {blankDeviceGroup ? "Create device group" : "Edit device group"}
-            </h2>
+            <div className="flex-left">
+                <Button
+                    $as={Link}
+                    kind={KIND.minimal}
+                    to={allDeviceGroupsPath}
+                    aria-label="Go back to all device groups"
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <h2>
+                    {blankDeviceGroup
+                        ? "Create device group"
+                        : "Edit device group"}
+                </h2>
+            </div>
             <DataProvider
                 getData={() => {
                     return getDeviceGroup().then(data => updateState(data));

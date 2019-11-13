@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
-
-import Check from "baseui/icon/check";
-import Delete from "baseui/icon/delete";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faChevronLeft,
+    faCheck,
+    faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
@@ -42,23 +45,37 @@ const Transmissions = props => {
                 status,
                 success,
             }),
-            OopCore.getDevices(),
-        ]).then(([transmissions, devices]) => {
-            const device = devices.data.find(
-                device => device.id === Number(props.match.params.deviceId),
-            );
+            OopCore.getDevice(props.match.params.deviceId),
+        ]).then(([transmissions, device]) => {
             setTransmissions(transmissions);
             setDevice(device);
             return transmissions;
         });
     };
 
+    const deviceDashboardPath = props.location.pathname.substr(
+        0,
+        props.location.pathname.lastIndexOf("/"),
+    );
+
     return (
         <div className="content-wrapper">
-            <h2>
-                Transmissions -{" "}
-                {device ? device.name : `Device ${props.match.params.deviceId}`}
-            </h2>
+            <div className="flex-left">
+                <Button
+                    $as={Link}
+                    kind={KIND.minimal}
+                    to={deviceDashboardPath}
+                    aria-label="Go back to device dashboard"
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <h2>
+                    Transmissions -{" "}
+                    {device
+                        ? device.name
+                        : `Device ${props.match.params.deviceId}`}
+                </h2>
+            </div>
             <DataProvider
                 getData={() => {
                     return getData();
@@ -71,16 +88,22 @@ const Transmissions = props => {
                                 if (columnName === "action") {
                                     return (
                                         <Button
+                                            kind={KIND.tertiary}
                                             $as={Link}
                                             to={`${props.location.pathname}/${content}`}
+                                            aria-label="View transmission details"
                                         >
-                                            {content}
+                                            View
                                         </Button>
                                     );
                                 }
 
                                 if (columnName === "success") {
-                                    return content ? <Check /> : <Delete />;
+                                    return content ? (
+                                        <FontAwesomeIcon icon={faCheck} />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faTimes} />
+                                    );
                                 }
                                 return content;
                             }}
@@ -96,12 +119,6 @@ const Transmissions = props => {
                                     name: "Id",
                                     type: "text",
                                     hasFilter: true,
-                                },
-                                {
-                                    id: "deviceTemprId",
-                                    name: "Device Tempr Id",
-                                    type: "text",
-                                    hasFilter: false,
                                 },
                                 {
                                     id: "transmissionUuid",
@@ -120,6 +137,7 @@ const Transmissions = props => {
                                     name: "Status",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "100px",
                                 },
                                 {
                                     id: "success",
@@ -135,9 +153,10 @@ const Transmissions = props => {
                                 },
                                 {
                                     id: "action",
-                                    name: "Action",
+                                    name: "",
                                     type: "action",
                                     hasFilter: false,
+                                    width: "100px",
                                 },
                             ]}
                             filters={{

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FormControl } from "baseui/form-control";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { Input } from "baseui/input";
-import ArrowLeft from "baseui/icon/arrow-left";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { DataProvider, Modal } from "../Universal";
 import OopCore from "../../OopCore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 var JSONPretty = require("react-json-pretty");
 
 const Transmission = props => {
@@ -25,9 +26,15 @@ const Transmission = props => {
 
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allTransmissionsPath}>
-                <ArrowLeft size={24} />
+            <Button
+                $as={Link}
+                kind={KIND.minimal}
+                to={allTransmissionsPath}
+                aria-label="Go back to all transmissions"
+            >
+                <FontAwesomeIcon icon={faChevronLeft} />
             </Button>
+
             <DataProvider
                 getData={() => {
                     return OopCore.getTransmission(

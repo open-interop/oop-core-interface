@@ -10,8 +10,8 @@ import {
     faExternalLinkAlt,
     faCheck,
     faTimes,
+    faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import ArrowLeft from "baseui/icon/arrow-left";
 import {
     AccordionWithCaption,
     DataProvider,
@@ -205,8 +205,13 @@ const Tempr = props => {
 
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allTemprsPath}>
-                <ArrowLeft size={24} />
+            <Button
+                $as={Link}
+                kind={KIND.minimal}
+                to={allTemprsPath}
+                aria-label="Go back to all temprs"
+            >
+                <FontAwesomeIcon icon={faChevronLeft} />
             </Button>
 
             <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
@@ -579,6 +584,9 @@ const Tempr = props => {
                                 }
                             }}
                             disabled={saveButtonDisabled()}
+                            aria-label={
+                                blankTempr ? "Create tempr" : "Update tempr"
+                            }
                         >
                             {blankTempr ? "Create" : "Save"}
                         </Button>

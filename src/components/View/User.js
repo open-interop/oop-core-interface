@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import ArrowLeft from "baseui/icon/arrow-left";
 import { DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const User = props => {
@@ -65,10 +66,17 @@ const User = props => {
 
     return (
         <div className="content-wrapper">
-            <Button $as={Link} to={allUsersPath}>
-                <ArrowLeft size={24} />
-            </Button>
-            <h2>{blankUser ? "Create User" : "Edit User"}</h2>
+            <div className="flex-left">
+                <Button
+                    $as={Link}
+                    kind={KIND.minimal}
+                    to={allUsersPath}
+                    aria-label="Go back to all users"
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <h2>{blankUser ? "Create User" : "Edit User"}</h2>
+            </div>
             <DataProvider
                 getData={() => {
                     return getUser().then(response => {
@@ -217,6 +225,9 @@ const User = props => {
                                 }
                             }}
                             disabled={identicalObject(user, updatedUser)}
+                            aria-label={
+                                blankUser ? "Create user" : "Update user"
+                            }
                         >
                             {blankUser ? "Create" : "Save"}
                         </Button>

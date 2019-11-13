@@ -143,3 +143,33 @@ div {
 .mb-20 {
     margin-bottom: 20px;
 }
+
+div {
+    &[role="gridcell"] {
+        overflow-wrap: anywhere;
+    }
+}
+
+.max-width-20px {
+    max-width: 20px;
+}
+
+.max-width-30px {
+    max-width: 30px;
+}
+
+.max-width-50px {
+    max-width: 50px;
+}
+
+.max-width-100px {
+    max-width: 100px;
+}
+
+.max-width-150px {
+    max-width: 150px;
+}
+
+.max-width-250px {
+    max-width: 250px;
+}

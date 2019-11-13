@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
-import { Button } from "baseui/button";
-import Show from "baseui/icon/show";
+import { Button, KIND } from "baseui/button";
 import { DataProvider, Pagination, Table } from "../Universal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const Sites = props => {
@@ -18,7 +19,13 @@ const Sites = props => {
         <div className="content-wrapper">
             <div className="space-between">
                 <h2>Sites</h2>
-                <Button $as={Link} to={`/sites/new`}>
+                <Button
+                    $as={Link}
+                    to={`/users/new`}
+                    kind={KIND.minimal}
+                    aria-label="Create new site"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
                     New
                 </Button>
             </div>
@@ -44,9 +51,15 @@ const Sites = props => {
                                 if (columnName === "action") {
                                     return (
                                         <>
-                                            <Link to={`/sites/${content}`}>
-                                                <Show />
-                                            </Link>
+                                            <Button
+                                                kind={KIND.tertiary}
+                                                $as={Link}
+                                                to={`/sites/${content}`}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                />
+                                            </Button>
                                         </>
                                     );
                                 } else {
@@ -59,6 +72,7 @@ const Sites = props => {
                                     name: "ID",
                                     type: "text",
                                     hasFilter: true,
+                                    width: "50px",
                                 },
                                 {
                                     id: "name",
@@ -72,7 +86,11 @@ const Sites = props => {
                                     type: "text",
                                     hasFilter: true,
                                 },
-                                { id: "action", name: "Action" },
+                                {
+                                    id: "action",
+                                    name: "",
+                                    width: "100px",
+                                },
                             ]}
                             columnContent={columnName => {
                                 if (columnName === "action") {
