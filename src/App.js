@@ -138,7 +138,11 @@ class App extends Component {
                         path="/devices"
                         exact
                         render={props =>
-                            this.getComponent(!hasUser, Devices, props)
+                            this.getComponent(!hasUser, Devices, {
+                                ...props,
+                                site: this.state.site,
+                                selectSite: this.selectSite,
+                            })
                         }
                     />
 
