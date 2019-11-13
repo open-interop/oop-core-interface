@@ -3,11 +3,9 @@ import { DataProvider } from "../Universal";
 import { NavigationGroup, NavigationItem } from "../Global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faCaretRight,
     faChartPie,
     faCircle,
     faCogs,
-    faFilter,
     faNetworkWired,
 } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
