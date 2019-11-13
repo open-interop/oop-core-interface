@@ -300,16 +300,17 @@ const Tempr = props => {
                                         mode="json"
                                         theme="github"
                                         onChange={value => {
-                                            setValue(
-                                                "exampleTransmissionBody",
-                                                value,
-                                            );
+                                            setValue("exampleTransmission", {
+                                                language: "js",
+                                                script: value,
+                                            });
                                         }}
                                         editorProps={{
                                             $blockScrolling: true,
                                         }}
                                         value={
-                                            updatedTempr.exampleTransmissionBody
+                                            updatedTempr.exampleTransmission
+                                                .script
                                         }
                                     />
                                 </div>
