@@ -214,13 +214,12 @@ const Tempr = props => {
             },
         })
             .then(response => {
-                console.log(response);
                 setPreviewLoading(false);
-                updatedTempr.previewTempr = response;
+                setValue("previewTempr", JSON.stringify(response));
             })
             .catch(error => {
                 setPreviewLoading(false);
-                console.log(error);
+                console.error(error);
             });
     };
 
@@ -321,17 +320,17 @@ const Tempr = props => {
                                         mode="json"
                                         theme="github"
                                         onChange={value => {
-                                            setValue("exampleTransmission", {
-                                                language: "js",
-                                                script: value,
-                                            });
+                                            setValue(
+                                                "exampleTransmission",
+                                                value,
+                                            );
                                         }}
                                         editorProps={{
                                             $blockScrolling: true,
                                         }}
                                         value={
-                                            updatedTempr.exampleTransmission
-                                                .script
+                                            updatedTempr.exampleTransmission ||
+                                            ""
                                         }
                                     />
                                 </div>
@@ -369,7 +368,7 @@ const Tempr = props => {
                                         editorProps={{
                                             $blockScrolling: true,
                                         }}
-                                        defaultValue={updatedTempr.previewTempr}
+                                        value={updatedTempr.previewTempr}
                                         readOnly
                                     />
                                 </div>
