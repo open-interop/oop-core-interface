@@ -4,8 +4,11 @@ import { NavigationGroup, NavigationItem } from "../Global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCaretRight,
+    faChartPie,
     faCircle,
+    faCogs,
     faFilter,
+    faNetworkWired,
 } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
@@ -74,6 +77,7 @@ const SideNavigation = props => {
                         isActive={pathIncludes("/devices")}
                         isOpen={devicesAccordionOpen}
                         setOpen={setDevicesAccordionOpen}
+                        icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     >
                         <div className="site-name">
                             <FontAwesomeIcon className="mr-1" icon={faCircle} />
@@ -152,6 +156,7 @@ const SideNavigation = props => {
                 path="/"
                 pathName="Home"
                 isActive={pathMatch("/")}
+                icon={<FontAwesomeIcon icon={faChartPie} />}
             />
             {devicesSubNavigation()}
             <NavigationGroup
@@ -164,6 +169,7 @@ const SideNavigation = props => {
                 pathName="Settings"
                 isOpen={settingsAccordionOpen}
                 setOpen={setSettingsAccordionOpen}
+                icon={<FontAwesomeIcon icon={faCogs} />}
             >
                 <NavigationItem
                     path="/users"

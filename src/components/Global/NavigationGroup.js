@@ -39,6 +39,7 @@ const NavigationGroup = props => {
                     props.setOpen(!props.isOpen);
                 }}
                 refName={groupNameRef}
+                icon={props.icon}
             />
 
             <div
