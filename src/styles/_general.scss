@@ -102,6 +102,12 @@ label {
     display: flex;
     justify-content: left;
 }
+
+.flex-right {
+    display: flex;
+    justify-content: right;
+}
+
 .one-row {
     display: flex;
     flex-direction: row;

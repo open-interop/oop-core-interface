@@ -45,7 +45,9 @@ const Tempr = props => {
     const [deviceFilterName, setDeviceFilterName] = useState("");
     const [deviceFilterSite, setDeviceFilterSite] = useState("");
     const [deviceFilterSelected, setDeviceFilterSelected] = useState("");
-    const [loading, setLoading] = useState(false);
+
+    const [deviceTemprLoading, setDeviceTemprLoading] = useState(false);
+    const [previewLoading, setPreviewLoading] = useState(false);
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -124,7 +126,7 @@ const Tempr = props => {
     };
 
     const toggleDeviceTempr = device => {
-        setLoading(device.id);
+        setDeviceTemprLoading(device.id);
         temprErrors.deviceTemprs = "";
         if (device.selected) {
             setLatestChanged(device.id, false);
@@ -133,11 +135,11 @@ const Tempr = props => {
                 temprId: updatedTempr.id,
             })
                 .then(() => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     getDeviceTemprData();
                 })
                 .catch(error => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     temprErrors.deviceTemprs = error.errors;
                 });
         } else {
@@ -147,11 +149,11 @@ const Tempr = props => {
                 temprId: updatedTempr.id,
             })
                 .then(() => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     getDeviceTemprData();
                 })
                 .catch(error => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     temprErrors.deviceTemprs = error.errors;
                 });
         }
@@ -201,6 +203,25 @@ const Tempr = props => {
                 setAvailableDevices(availableDevices);
             }
         });
+    };
+
+    const calculateOutput = () => {
+        setPreviewLoading(true);
+        return OopCore.previewTempr(updatedTempr.id, {
+            tempr: {
+                exampleTransmission: updatedTempr.exampleTransmission,
+                template: updatedTempr.template,
+            },
+        })
+            .then(response => {
+                console.log(response);
+                setPreviewLoading(false);
+                updatedTempr.previewTempr = response;
+            })
+            .catch(error => {
+                setPreviewLoading(false);
+                console.log(error);
+            });
     };
 
     return (
@@ -292,7 +313,7 @@ const Tempr = props => {
                             </div>
                         </AccordionWithCaption>
                         <AccordionWithCaption title="Body">
-                            <div className="one-row">
+                            <div className="one-row mb-20">
                                 <div>
                                     <label>Example</label>
                                     <AceEditor
@@ -348,13 +369,19 @@ const Tempr = props => {
                                         editorProps={{
                                             $blockScrolling: true,
                                         }}
-                                        defaultValue={
-                                            updatedTempr.outputTransmissionBody
-                                        }
+                                        defaultValue={updatedTempr.previewTempr}
                                         readOnly
                                     />
                                 </div>
                             </div>
+
+                            <Button
+                                kind={KIND.secondary}
+                                onClick={calculateOutput}
+                                isLoading={previewLoading}
+                            >
+                                Calculate output
+                            </Button>
                         </AccordionWithCaption>
                         <AccordionWithCaption
                             title="Device associations "
@@ -415,7 +442,10 @@ const Tempr = props => {
                                                 }
 
                                                 if (columnName === "selected") {
-                                                    if (loading === row.id) {
+                                                    if (
+                                                        deviceTemprLoading ===
+                                                        row.id
+                                                    ) {
                                                         return (
                                                             <InPlaceSpinner />
                                                         );
@@ -517,7 +547,7 @@ const Tempr = props => {
                                             trueText="Selected"
                                             falseText="Not selected"
                                             onRowClick={device => {
-                                                if (!loading) {
+                                                if (!deviceTemprLoading) {
                                                     return toggleDeviceTempr(
                                                         device,
                                                     );
