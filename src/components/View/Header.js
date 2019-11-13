@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "baseui/button";
-
+import { Button, KIND } from "baseui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import {
     HeaderNavigation,
     ALIGN,
@@ -42,12 +43,16 @@ const Header = props => {
                     </NavigationItem>
                     <NavigationItem>
                         <Button
+                            kind={KIND.tertiary}
                             $as={Link}
                             to={"/"}
                             onClick={() => {
                                 OopCore.logout();
                             }}
                             aria-label="Log out"
+                            endEnhancer={() => (
+                                <FontAwesomeIcon icon={faSignOutAlt} />
+                            )}
                         >
                             Log out
                         </Button>
