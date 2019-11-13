@@ -359,6 +359,14 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/temprs`, RequestType.POST, data);
     }
 
+    previewTempr(temprId, data) {
+        return this.makeRequest(
+            `/temprs/${temprId}/preview`,
+            RequestType.POST,
+            data,
+        );
+    }
+
     getDeviceTemprs(queryParameters) {
         const parameters = this.getParameters(queryParameters);
         let path = `/device_temprs`;

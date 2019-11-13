@@ -45,7 +45,9 @@ const Tempr = props => {
     const [deviceFilterName, setDeviceFilterName] = useState("");
     const [deviceFilterSite, setDeviceFilterSite] = useState("");
     const [deviceFilterSelected, setDeviceFilterSelected] = useState("");
-    const [loading, setLoading] = useState(false);
+
+    const [deviceTemprLoading, setDeviceTemprLoading] = useState(false);
+    const [previewLoading, setPreviewLoading] = useState(false);
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -124,7 +126,7 @@ const Tempr = props => {
     };
 
     const toggleDeviceTempr = device => {
-        setLoading(device.id);
+        setDeviceTemprLoading(device.id);
         temprErrors.deviceTemprs = "";
         if (device.selected) {
             setLatestChanged(device.id, false);
@@ -133,11 +135,11 @@ const Tempr = props => {
                 temprId: updatedTempr.id,
             })
                 .then(() => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     getDeviceTemprData();
                 })
                 .catch(error => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     temprErrors.deviceTemprs = error.errors;
                 });
         } else {
@@ -147,11 +149,11 @@ const Tempr = props => {
                 temprId: updatedTempr.id,
             })
                 .then(() => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     getDeviceTemprData();
                 })
                 .catch(error => {
-                    setLoading(false);
+                    setDeviceTemprLoading(false);
                     temprErrors.deviceTemprs = error.errors;
                 });
         }
@@ -201,6 +203,24 @@ const Tempr = props => {
                 setAvailableDevices(availableDevices);
             }
         });
+    };
+
+    const calculateOutput = () => {
+        setPreviewLoading(true);
+        return OopCore.previewTempr(updatedTempr.id, {
+            tempr: {
+                exampleTransmission: updatedTempr.exampleTransmission,
+                template: updatedTempr.template,
+            },
+        })
+            .then(response => {
+                setPreviewLoading(false);
+                setValue("previewTempr", JSON.stringify(response));
+            })
+            .catch(error => {
+                setPreviewLoading(false);
+                console.error(error);
+            });
     };
 
     return (
@@ -297,7 +317,7 @@ const Tempr = props => {
                             </div>
                         </AccordionWithCaption>
                         <AccordionWithCaption title="Body">
-                            <div className="one-row">
+                            <div className="one-row mb-20">
                                 <div>
                                     <label>Example</label>
                                     <AceEditor
@@ -306,7 +326,7 @@ const Tempr = props => {
                                         theme="github"
                                         onChange={value => {
                                             setValue(
-                                                "exampleTransmissionBody",
+                                                "exampleTransmission",
                                                 value,
                                             );
                                         }}
@@ -314,7 +334,8 @@ const Tempr = props => {
                                             $blockScrolling: true,
                                         }}
                                         value={
-                                            updatedTempr.exampleTransmissionBody
+                                            updatedTempr.exampleTransmission ||
+                                            ""
                                         }
                                     />
                                 </div>
@@ -323,16 +344,25 @@ const Tempr = props => {
                                     <AceEditor
                                         mode="json"
                                         theme="github"
-                                        onChange={value =>
-                                            setValue("body", {
+                                        onChange={value => {
+                                            const updatedData = {
+                                                ...updatedTempr,
+                                            };
+                                            updatedData.template.body = {
                                                 language: "js",
                                                 script: value,
-                                            })
-                                        }
+                                            };
+                                            setUpdatedTempr(updatedData);
+                                        }}
                                         editorProps={{
                                             $blockScrolling: true,
                                         }}
-                                        value={updatedTempr.body.script}
+                                        value={
+                                            updatedTempr.template.body
+                                                ? updatedTempr.template.body
+                                                      .script
+                                                : ""
+                                        }
                                     />
                                 </div>
                                 <div>
@@ -343,13 +373,19 @@ const Tempr = props => {
                                         editorProps={{
                                             $blockScrolling: true,
                                         }}
-                                        defaultValue={
-                                            updatedTempr.outputTransmissionBody
-                                        }
+                                        value={updatedTempr.previewTempr}
                                         readOnly
                                     />
                                 </div>
                             </div>
+
+                            <Button
+                                kind={KIND.secondary}
+                                onClick={calculateOutput}
+                                isLoading={previewLoading}
+                            >
+                                Calculate output
+                            </Button>
                         </AccordionWithCaption>
                         <AccordionWithCaption
                             title="Device associations "
@@ -410,7 +446,10 @@ const Tempr = props => {
                                                 }
 
                                                 if (columnName === "selected") {
-                                                    if (loading === row.id) {
+                                                    if (
+                                                        deviceTemprLoading ===
+                                                        row.id
+                                                    ) {
                                                         return (
                                                             <InPlaceSpinner />
                                                         );
@@ -512,7 +551,7 @@ const Tempr = props => {
                                             trueText="Selected"
                                             falseText="Not selected"
                                             onRowClick={device => {
-                                                if (!loading) {
+                                                if (!deviceTemprLoading) {
                                                     return toggleDeviceTempr(
                                                         device,
                                                     );
