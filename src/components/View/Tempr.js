@@ -325,7 +325,7 @@ const Tempr = props => {
                                 <div>
                                     <label>Example</label>
                                     <AceEditor
-                                        mode="javascript"
+                                        mode="json"
                                         theme="github"
                                         onChange={value => {
                                             setValue(
@@ -371,7 +371,7 @@ const Tempr = props => {
                                 <div>
                                     <label>Output</label>
                                     <AceEditor
-                                        mode="javascript"
+                                        mode="json"
                                         theme="github"
                                         editorProps={{
                                             $blockScrolling: true,
