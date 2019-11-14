@@ -220,6 +220,10 @@ const Tempr = props => {
             .catch(error => {
                 setPreviewLoading(false);
                 console.error(error);
+                ErrorToast(
+                    "Could not preview example transmission with current mapping",
+                    "Error",
+                );
             });
     };
 
@@ -321,7 +325,6 @@ const Tempr = props => {
                                 <div>
                                     <label>Example</label>
                                     <AceEditor
-                                        name="test"
                                         mode="json"
                                         theme="github"
                                         onChange={value => {
@@ -342,7 +345,7 @@ const Tempr = props => {
                                 <div>
                                     <label>Mapping</label>
                                     <AceEditor
-                                        mode="json"
+                                        mode="javascript"
                                         theme="github"
                                         onChange={value => {
                                             const updatedData = {

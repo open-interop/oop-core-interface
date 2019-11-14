@@ -253,13 +253,14 @@ const DeviceDashboard = props => {
                                                     datasets: [
                                                         {
                                                             data: [300, 50],
-                                                            backgroundColor: [
-                                                                "#FF6384",
-                                                                "#36A2EB",
-                                                            ],
+
                                                             hoverBackgroundColor: [
-                                                                "#FF6384",
                                                                 "#36A2EB",
+                                                                "#FF6384",
+                                                            ],
+                                                            backgroundColor: [
+                                                                "#36A2EB",
+                                                                "#FF6384",
                                                             ],
                                                         },
                                                     ],
