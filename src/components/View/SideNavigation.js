@@ -3,9 +3,10 @@ import { DataProvider } from "../Universal";
 import { NavigationGroup, NavigationItem } from "../Global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faCaretRight,
+    faChartPie,
     faCircle,
-    faFilter,
+    faCogs,
+    faNetworkWired,
 } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
@@ -74,13 +75,25 @@ const SideNavigation = props => {
                         isActive={pathIncludes("/devices")}
                         isOpen={devicesAccordionOpen}
                         setOpen={setDevicesAccordionOpen}
+                        icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     >
-                        <div className="site-name">
-                            <FontAwesomeIcon className="mr-1" icon={faCircle} />
-                            {props.site && props.site.fullName
-                                ? props.site.fullName
-                                : "All sites"}
-                        </div>
+                        {props.site && props.site.fullName ? (
+                            <>
+                                <div className="site-name">
+                                    <FontAwesomeIcon
+                                        className="mr-1"
+                                        icon={faCircle}
+                                    />
+                                    {props.site.fullName}
+                                </div>
+                            </>
+                        ) : (
+                            <NavigationItem
+                                className="bottom"
+                                path={`/devices`}
+                                pathName="View All"
+                            />
+                        )}
 
                         {deviceGroups.map((group, index) => (
                             <React.Fragment key={`device-group-${index}`}>
@@ -88,12 +101,6 @@ const SideNavigation = props => {
                                     pathName={group.name}
                                     path={`/devices?deviceGroupId=${group.id}`}
                                     className="group-name"
-                                    symbolRight={
-                                        <FontAwesomeIcon
-                                            className="align-right"
-                                            icon={faFilter}
-                                        />
-                                    }
                                 />
                                 {group.devices.length ? (
                                     group.devices
@@ -103,11 +110,6 @@ const SideNavigation = props => {
                                                 className="device-name"
                                                 key={`device-${device.id}-navigation-item`}
                                                 path={`/devices/${device.id}`}
-                                                symbolLeft={
-                                                    <FontAwesomeIcon
-                                                        icon={faCaretRight}
-                                                    />
-                                                }
                                                 pathName={device.name}
                                                 isActive={pathIncludes(
                                                     `/devices/${device.id}`,
@@ -115,7 +117,7 @@ const SideNavigation = props => {
                                             />
                                         ))
                                 ) : (
-                                    <div className="navigation-item">
+                                    <div className="navigation-item no-devices">
                                         No devices
                                     </div>
                                 )}
@@ -133,6 +135,7 @@ const SideNavigation = props => {
                         path="/devices"
                         pathName="Devices"
                         isActive={pathMatch("/devices")}
+                        icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     />
                 }
                 loadingFallback={
@@ -140,6 +143,7 @@ const SideNavigation = props => {
                         path="/devices"
                         pathName="Devices"
                         isActive={pathMatch("/devices")}
+                        icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     />
                 }
             />
@@ -152,6 +156,7 @@ const SideNavigation = props => {
                 path="/"
                 pathName="Home"
                 isActive={pathMatch("/")}
+                icon={<FontAwesomeIcon icon={faChartPie} />}
             />
             {devicesSubNavigation()}
             <NavigationGroup
@@ -164,6 +169,7 @@ const SideNavigation = props => {
                 pathName="Settings"
                 isOpen={settingsAccordionOpen}
                 setOpen={setSettingsAccordionOpen}
+                icon={<FontAwesomeIcon icon={faCogs} />}
             >
                 <NavigationItem
                     path="/users"

@@ -15,6 +15,15 @@ div[id="root"] .header {
         a {
             &[data-baseweb="link"] {
                 color: $color-white;
+                border-right: 1px solid $oop-teal;
+                padding-right: 1rem;
+            }
+
+            &[data-baseweb="button"] {
+                color: $color-white;
+            }
+            &:hover {
+                background-color: initial;
             }
         }
 

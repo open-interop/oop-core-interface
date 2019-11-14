@@ -1,0 +1,14 @@
+div {
+    &[role="row"] {
+        &:nth-child(even) {
+            background-color: $oop-light-grey;
+        }
+        &:nth-child(odd) {
+            background-color: $oop-lighter-grey;
+        }
+    }
+
+    &[role="columnheader"] {
+        background-color: $color-white;
+    }
+}

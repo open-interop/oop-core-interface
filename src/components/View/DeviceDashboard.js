@@ -241,26 +241,32 @@ const DeviceDashboard = props => {
                                     ) : null}
                                 </div>
                                 <div className="width-39">
-                                    <Card>
-                                        <Doughnut
-                                            data={{
-                                                labels: ["Success", "Failure"],
-                                                datasets: [
-                                                    {
-                                                        data: [300, 50],
-                                                        backgroundColor: [
-                                                            "#FF6384",
-                                                            "#36A2EB",
-                                                        ],
-                                                        hoverBackgroundColor: [
-                                                            "#FF6384",
-                                                            "#36A2EB",
-                                                        ],
-                                                    },
-                                                ],
-                                            }}
-                                        />
-                                    </Card>
+                                    {device.transmissions &&
+                                    device.transmissions.length ? (
+                                        <Card>
+                                            <Doughnut
+                                                data={{
+                                                    labels: [
+                                                        "Success",
+                                                        "Failure",
+                                                    ],
+                                                    datasets: [
+                                                        {
+                                                            data: [300, 50],
+                                                            backgroundColor: [
+                                                                "#FF6384",
+                                                                "#36A2EB",
+                                                            ],
+                                                            hoverBackgroundColor: [
+                                                                "#FF6384",
+                                                                "#36A2EB",
+                                                            ],
+                                                        },
+                                                    ],
+                                                }}
+                                            />
+                                        </Card>
+                                    ) : null}
                                 </div>
                             </div>
                         </>

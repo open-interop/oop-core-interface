@@ -23,6 +23,11 @@ div[id="root"] {
             padding: 1rem;
             cursor: pointer;
             display: block;
+            text-align: center;
+
+            &:first-child {
+                padding-top: 40px;
+            }
 
             &.active {
                 background-color: $oop-active-teal;
@@ -36,13 +41,17 @@ div[id="root"] {
                 color: $color-white;
                 text-decoration: none;
             }
+
+            .navigation-icon {
+                margin-bottom: 20px;
+            }
         }
 
         .nested-navigation {
             background-color: $oop-dark-teal;
             height: 100%;
-            left: -5rem;
-            min-width: 13rem;
+            left: -12rem;
+            min-width: 20rem;
             overflow-y: auto;
             position: absolute;
             top: 0;
@@ -66,6 +75,9 @@ div[id="root"] {
                 padding: 1rem;
                 position: relative;
                 z-index: -1;
+                text-align: left;
+                font-weight: 500;
+                font-size: 16px;
 
                 &:hover {
                     background-color: $oop-darker-teal;
@@ -74,11 +86,18 @@ div[id="root"] {
                 &.group-name {
                     background-color: $oop-darker-teal;
                 }
+
+                &.no-devices {
+                    cursor: default;
+
+                    &:hover {
+                        background-color: initial;
+                    }
+                }
             }
 
             .bottom {
                 bottom: 0;
-                margin: 0.5rem;
                 position: relative;
                 right: 0;
             }
@@ -98,4 +117,12 @@ div[id="root"] {
             }
         }
     }
+}
+
+.size-xxxl {
+    font-size: xxx-large;
+}
+
+.size-xxl {
+    font-size: xx-large;
 }

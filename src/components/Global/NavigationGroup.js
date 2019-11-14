@@ -6,7 +6,7 @@ const useOutsideClick = (ref, exception, callback) => {
         if (
             ref.current &&
             ref.current !== e.target &&
-            exception.current !== e.target
+            !exception.current.contains(e.target)
         ) {
             callback();
         }
@@ -39,6 +39,7 @@ const NavigationGroup = props => {
                     props.setOpen(!props.isOpen);
                 }}
                 refName={groupNameRef}
+                icon={props.icon}
             />
 
             <div
