@@ -56,15 +56,7 @@ const Login = () => {
                             placeholder="Password"
                         />
                     </FormControl>
-                    <div className="space-between">
-                        <Button
-                            $as={Link}
-                            className="reset-button"
-                            to={"/password-reset"}
-                            aria-label="Forgot password"
-                        >
-                            Forgot Password
-                        </Button>
+                    <div className="bullshit">
                         <Button
                             type="submit"
                             className="login-button"
@@ -73,6 +65,15 @@ const Login = () => {
                         >
                             Login
                         </Button>
+                        <div className="reset-link">
+                            <Link
+                                className="reset-link"
+                                to={"/password-reset"}
+                                aria-label="Forgot password"
+                            >
+                                Forgotten your password?
+                            </Link>
+                        </div>
                     </div>
                     <div>
                         {" "}

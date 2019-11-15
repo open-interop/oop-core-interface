@@ -25,43 +25,42 @@
         }
 
         .password-reset-text {
-          padding-bottom: 16px;
+            padding-bottom: 16px;
         }
 
-        .space-between {
-          .bp {
-            font-size: .8rem;
-          }
+        .bp {
+            font-size: 0.8rem;
+        }
 
-          .bu {
+        .bu {
             padding-right: 20px;
-          }
+        }
 
-          .bt {
+        .bt {
             padding-left: 20px;
-          }
+        }
 
-          .br {
+        .br {
             padding-top: 6px;
-          }
+        }
 
-          .bs {
+        .bs {
             padding-bottom: 6px;
-          }
+        }
 
-          .login-button {
+        .login-button {
             background-color: $oop-teal;
-          }
+            width: 100%;
+        }
 
-          .reset-button {
-            background-color: transparent;
-            text-align: right;
-            padding-right: 0;
+        .reset-link {
+            color: $color-white;
+            margin-top: 1em;
+            text-align: center;
 
             &:hover {
-              color: $oop-grey;
+                color: $oop-grey;
             }
-          }
         }
     }
 }
