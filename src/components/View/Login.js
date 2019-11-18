@@ -56,26 +56,24 @@ const Login = () => {
                             placeholder="Password"
                         />
                     </FormControl>
-                    <div className="space-between">
-                        <Button
-                            $as={Link}
-                            className="reset-button"
+                    <Button
+                        type="submit"
+                        className="login-button"
+                        onClick={handleSubmit}
+                        aria-label="Log in"
+                    >
+                        Login
+                    </Button>
+                    <div className="reset-link">
+                        <Link
+                            className="reset-link"
                             to={"/password-reset"}
                             aria-label="Forgot password"
                         >
-                            Forgot Password
-                        </Button>
-                        <Button
-                            type="submit"
-                            className="login-button"
-                            onClick={handleSubmit}
-                            aria-label="Log in"
-                        >
-                            Login
-                        </Button>
+                            Forgotten your password?
+                        </Link>
                     </div>
                     <div>
-                        {" "}
                         <Error message={errorMessage} />
                     </div>
                     <div> {loading && "loading"}</div>

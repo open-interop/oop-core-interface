@@ -48,9 +48,11 @@ class App extends Component {
 
     componentDidMount() {
         OopCore.getLoggedInUser().catch(() => this.setNoUser());
-        OopCore.getCurrentSite().then(result => {
-            this.setState({ site: result });
-        });
+        OopCore.getCurrentSite()
+            .then(result => {
+                this.setState({ site: result });
+            })
+            .catch(() => this.setState({ site: null }));
     }
 
     setUser = user => {
