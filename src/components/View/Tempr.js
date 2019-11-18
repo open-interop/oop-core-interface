@@ -207,7 +207,7 @@ const Tempr = props => {
 
     const calculateOutput = () => {
         setPreviewLoading(true);
-        return OopCore.previewTempr(updatedTempr.id, {
+        return OopCore.previewTempr({
             tempr: {
                 exampleTransmission: updatedTempr.exampleTransmission,
                 template: updatedTempr.template,
