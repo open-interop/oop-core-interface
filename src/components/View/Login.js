@@ -56,27 +56,24 @@ const Login = () => {
                             placeholder="Password"
                         />
                     </FormControl>
-                    <div className="bullshit">
-                        <Button
-                            type="submit"
-                            className="login-button"
-                            onClick={handleSubmit}
-                            aria-label="Log in"
+                    <Button
+                        type="submit"
+                        className="login-button"
+                        onClick={handleSubmit}
+                        aria-label="Log in"
+                    >
+                        Login
+                    </Button>
+                    <div className="reset-link">
+                        <Link
+                            className="reset-link"
+                            to={"/password-reset"}
+                            aria-label="Forgot password"
                         >
-                            Login
-                        </Button>
-                        <div className="reset-link">
-                            <Link
-                                className="reset-link"
-                                to={"/password-reset"}
-                                aria-label="Forgot password"
-                            >
-                                Forgotten your password?
-                            </Link>
-                        </div>
+                            Forgotten your password?
+                        </Link>
                     </div>
                     <div>
-                        {" "}
                         <Error message={errorMessage} />
                     </div>
                     <div> {loading && "loading"}</div>
