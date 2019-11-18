@@ -31,6 +31,8 @@ import OopCore from "../../OopCore";
 import "brace/mode/json";
 import "brace/theme/github";
 
+const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
+
 const Tempr = props => {
     const [tempr, setTempr] = useState({});
     const [updatedTempr, setUpdatedTempr] = useState({});
@@ -68,6 +70,7 @@ const Tempr = props => {
                   name: "",
                   description: "",
                   deviceGroupId: Number(props.match.params.deviceGroupId),
+                  endpointType: "http",
                   body: {
                       language: "js",
                       script: "",
@@ -302,6 +305,29 @@ const Tempr = props => {
                                         event.currentTarget.value,
                                     )
                                 }
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Endpoint type"
+                            key={"form-control-group-endpoint-type"}
+                            caption="required"
+                        >
+                            <Select
+                                options={endpointTypeOptions}
+                                labelKey="id"
+                                valueKey="id"
+                                searchable={false}
+                                clearable={false}
+                                onChange={event => {
+                                    setValue("endpointType", event.option.id);
+                                }}
+                                value={endpointTypeOptions.find(
+                                    item =>
+                                        item.id === updatedTempr.endpointType ||
+                                        item.id === "http",
+                                )}
+                                error={props.error}
+                                disabled
                             />
                         </FormControl>
                         <AccordionWithCaption
