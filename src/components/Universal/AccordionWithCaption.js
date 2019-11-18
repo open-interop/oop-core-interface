@@ -4,7 +4,9 @@ import { Accordion, Panel } from "baseui/accordion";
 const AccordionWithCaption = props => {
     return (
         <div className={`accordion ${props.error ? "error" : ""}`}>
-            <Accordion>
+            <Accordion
+                initialState={props.startOpen ? { expanded: ["0"] } : null}
+            >
                 <Panel title={props.title}>
                     <div className="subtitle">{props.subtitle}</div>
                     {props.children}
