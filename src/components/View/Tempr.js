@@ -365,17 +365,13 @@ const Tempr = props => {
                                 checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
-                        <FormControl label="Notes" key={`form-control-notes`}>
-                            <Textarea
-                                value={updatedTempr.notes || ""}
-                                onChange={e => setValue(e.target.value)}
-                            />
-                        </FormControl>
+
                         <AccordionWithCaption
                             title="Template"
                             caption="required"
                             error={temprErrors.base}
                             subtitle="Please provide a host, port, path, protocol and request method"
+                            startOpen
                         >
                             <div className="content-wrapper">
                                 <HttpTemprTemplate
@@ -387,7 +383,7 @@ const Tempr = props => {
                                 />
                             </div>
                         </AccordionWithCaption>
-                        <AccordionWithCaption title="Body">
+                        <AccordionWithCaption title="Body" startOpen>
                             <div className="one-row mb-20">
                                 <div>
                                     <label>Example</label>
@@ -457,10 +453,17 @@ const Tempr = props => {
                                 Calculate output
                             </Button>
                         </AccordionWithCaption>
+                        <FormControl label="Notes" key={`form-control-notes`}>
+                            <Textarea
+                                value={updatedTempr.notes || ""}
+                                onChange={e => setValue(e.target.value)}
+                            />
+                        </FormControl>
                         <AccordionWithCaption
                             title="Device associations "
                             subtitle="Select devices to associate with this tempr"
                             error={temprErrors.deviceTemprs}
+                            startOpen
                         >
                             <DataProvider
                                 getData={() => {
