@@ -29,9 +29,9 @@ import {
 } from "../Global";
 import { arrayToObject, identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
-
 import "brace/mode/json";
 import "brace/theme/github";
+var JSONPretty = require("react-json-pretty");
 
 const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
 
@@ -235,6 +235,10 @@ const Tempr = props => {
             });
     };
 
+    const prettifiedPreview = (
+        <JSONPretty data={updatedTempr.previewTempr}></JSONPretty>
+    );
+
     return (
         <div className="content-wrapper">
             <Button
@@ -385,11 +389,13 @@ const Tempr = props => {
                         </AccordionWithCaption>
                         <AccordionWithCaption title="Body" startOpen>
                             <div className="one-row mb-20">
-                                <div>
+                                <div className="w-50">
                                     <label>Example</label>
                                     <AceEditor
                                         mode="json"
                                         theme="github"
+                                        width="100%"
+                                        showPrintMargin={false}
                                         onChange={value => {
                                             setValue(
                                                 "exampleTransmission",
@@ -405,11 +411,13 @@ const Tempr = props => {
                                         }
                                     />
                                 </div>
-                                <div>
+                                <div className="w-50">
                                     <label>Mapping</label>
                                     <AceEditor
                                         mode="javascript"
                                         theme="github"
+                                        width="100%"
+                                        showPrintMargin={false}
                                         onChange={value => {
                                             const updatedData = {
                                                 ...updatedTempr,
@@ -431,19 +439,8 @@ const Tempr = props => {
                                         }
                                     />
                                 </div>
-                                <div>
-                                    <label>Output</label>
-                                    <AceEditor
-                                        mode="json"
-                                        theme="github"
-                                        editorProps={{
-                                            $blockScrolling: true,
-                                        }}
-                                        value={updatedTempr.previewTempr}
-                                        readOnly
-                                    />
-                                </div>
                             </div>
+                            <div>{prettifiedPreview}</div>
 
                             <Button
                                 kind={KIND.secondary}
