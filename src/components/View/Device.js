@@ -223,7 +223,7 @@ const Device = props => {
                 >
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </Button>
-                <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>{" "}
+                <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>
             </div>
             <DataProvider
                 getData={() => {

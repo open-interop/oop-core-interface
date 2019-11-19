@@ -5,3 +5,10 @@
         background-color: $oop-teal;
     }
 }
+
+.tempr-preview {
+    margin: 1rem 0;
+    overflow-y: auto;
+    background-color: white;
+    max-height: 500px;
+}

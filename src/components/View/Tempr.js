@@ -440,8 +440,6 @@ const Tempr = props => {
                                     />
                                 </div>
                             </div>
-                            <div>{prettifiedPreview}</div>
-
                             <Button
                                 kind={KIND.secondary}
                                 onClick={calculateOutput}
@@ -449,6 +447,9 @@ const Tempr = props => {
                             >
                                 Calculate output
                             </Button>
+                            <div className="tempr-preview">
+                                {prettifiedPreview}
+                            </div>
                         </AccordionWithCaption>
                         <FormControl label="Notes" key={`form-control-notes`}>
                             <Textarea
