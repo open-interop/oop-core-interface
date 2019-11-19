@@ -5,6 +5,8 @@ import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
+import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
+import { Textarea } from "baseui/textarea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faExternalLinkAlt,
@@ -71,6 +73,9 @@ const Tempr = props => {
                   description: "",
                   deviceGroupId: Number(props.match.params.deviceGroupId),
                   endpointType: "http",
+                  queueResponse: false,
+                  queueRequest: false,
+                  notes: "",
                   body: {
                       language: "js",
                       script: "",
@@ -328,6 +333,42 @@ const Tempr = props => {
                                 )}
                                 error={props.error}
                                 disabled
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Queue Response"
+                            key={`form-control-queue-response`}
+                        >
+                            <Checkbox
+                                checked={updatedTempr.queueResponse}
+                                onChange={() =>
+                                    setValue(
+                                        "queueResponse",
+                                        !updatedTempr.queueResponse,
+                                    )
+                                }
+                                checkmarkType={STYLE_TYPE.toggle_round}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Queue Request"
+                            key={`form-control-queue-request`}
+                        >
+                            <Checkbox
+                                checked={updatedTempr.queueRequest}
+                                onChange={() =>
+                                    setValue(
+                                        "queueRequest",
+                                        !updatedTempr.queueRequest,
+                                    )
+                                }
+                                checkmarkType={STYLE_TYPE.toggle_round}
+                            />
+                        </FormControl>
+                        <FormControl label="Notes" key={`form-control-notes`}>
+                            <Textarea
+                                value={updatedTempr.notes || ""}
+                                onChange={e => setValue(e.target.value)}
                             />
                         </FormControl>
                         <AccordionWithCaption
