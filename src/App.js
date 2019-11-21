@@ -22,7 +22,7 @@ import {
     User,
     Users,
 } from "./components/View";
-import { Spinner } from "./components/Universal";
+import { GifSpinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 import { QueryParamProvider } from "use-query-params";
@@ -257,7 +257,7 @@ class App extends Component {
 
     render() {
         if (this.state.isLoading) {
-            return <Spinner />;
+            return <GifSpinner />;
         }
         if (!this.state.isLoading) {
             return this.renderRoutes();

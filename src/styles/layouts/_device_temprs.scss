@@ -8,7 +8,25 @@
 
 .tempr-preview {
     margin: 1rem 0;
-    overflow-y: auto;
-    background-color: white;
     max-height: 500px;
+    min-height: 100px;
+    display: flex;
+
+    div {
+        &[data-baseweb="tabs"] {
+            width: 100%;
+            height: 100%;
+
+            div {
+                &[role="tabpanel"] {
+                    overflow: auto;
+                }
+            }
+        }
+    }
+}
+
+.tempr-preview-content {
+    background-color: $color-white;
+    overflow-y: auto;
 }

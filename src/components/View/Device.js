@@ -17,7 +17,7 @@ import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
     AccordionWithCaption,
     DataProvider,
-    InPlaceSpinner,
+    IconSpinner,
     Pagination,
     Table,
 } from "../Universal";
@@ -529,7 +529,7 @@ const Device = props => {
                                                             loading === row.id
                                                         ) {
                                                             return (
-                                                                <InPlaceSpinner />
+                                                                <IconSpinner />
                                                             );
                                                         }
                                                         return content ? (

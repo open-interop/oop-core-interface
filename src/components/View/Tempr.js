@@ -16,8 +16,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {
     AccordionWithCaption,
+    BaseuiSpinner,
     DataProvider,
-    InPlaceSpinner,
+    IconSpinner,
     Pagination,
     Table,
 } from "../Universal";
@@ -28,6 +29,7 @@ import {
     SuccessToast,
 } from "../Global";
 import { arrayToObject, identicalObject } from "../../Utilities";
+import { StatefulTabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
 import "brace/theme/github";
@@ -52,6 +54,7 @@ const Tempr = props => {
 
     const [deviceTemprLoading, setDeviceTemprLoading] = useState(false);
     const [previewLoading, setPreviewLoading] = useState(false);
+    const [previewVisible, setPreviewVisible] = useState(false);
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -215,6 +218,7 @@ const Tempr = props => {
 
     const calculateOutput = () => {
         setPreviewLoading(true);
+        setPreviewVisible(true);
         return OopCore.previewTempr({
             tempr: {
                 exampleTransmission: updatedTempr.exampleTransmission,
@@ -235,10 +239,56 @@ const Tempr = props => {
             });
     };
 
-    const prettifiedPreview = (
-        <JSONPretty data={updatedTempr.previewTempr}></JSONPretty>
-    );
+    const prettifiedPreview = () => {
+        if (updatedTempr.previewTempr) {
+            const previewObject = JSON.parse(updatedTempr.previewTempr);
 
+            const initialState = {
+                activeKey: previewObject.error ? "2" : "0",
+            };
+
+            return (
+                <StatefulTabs initialState={initialState}>
+                    <Tab title="Rendered body">
+                        <JSONPretty
+                            className="tempr-preview-content "
+                            data={
+                                previewObject.rendered
+                                    ? previewObject.rendered.body
+                                    : ""
+                            }
+                        ></JSONPretty>
+                    </Tab>
+                    <Tab title="Console output">
+                        <JSONPretty
+                            className="tempr-preview-content "
+                            data={previewObject.console}
+                        ></JSONPretty>
+                    </Tab>
+                    <Tab title="Error output">
+                        <JSONPretty
+                            className="tempr-preview-content "
+                            data={previewObject.error}
+                        ></JSONPretty>
+                    </Tab>
+                </StatefulTabs>
+            );
+        }
+    };
+
+    const getPreviewBox = () => {
+        if (previewVisible && previewLoading) {
+            return (
+                <div className="tempr-preview center">
+                    <BaseuiSpinner />
+                </div>
+            );
+        }
+        if (previewVisible && !previewLoading) {
+            return <div className="tempr-preview">{prettifiedPreview()}</div>;
+        }
+        return null;
+    };
     return (
         <div className="content-wrapper">
             <Button
@@ -375,7 +425,7 @@ const Tempr = props => {
                             caption="required"
                             error={temprErrors.base}
                             subtitle="Please provide a host, port, path, protocol and request method"
-                            startOpen
+                            // startOpen
                         >
                             <div className="content-wrapper">
                                 <HttpTemprTemplate
@@ -447,9 +497,7 @@ const Tempr = props => {
                             >
                                 Calculate output
                             </Button>
-                            <div className="tempr-preview">
-                                {prettifiedPreview}
-                            </div>
+                            {getPreviewBox()}
                         </AccordionWithCaption>
                         <FormControl label="Notes" key={`form-control-notes`}>
                             <Textarea
@@ -521,9 +569,7 @@ const Tempr = props => {
                                                         deviceTemprLoading ===
                                                         row.id
                                                     ) {
-                                                        return (
-                                                            <InPlaceSpinner />
-                                                        );
+                                                        return <IconSpinner />;
                                                     }
                                                     return content ? (
                                                         <FontAwesomeIcon
