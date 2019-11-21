@@ -20,3 +20,8 @@ $oop-red-failure: #c32b08; // Failure
 
 $body-font-family: system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
 $header-font-family: $body-font-family;
+
+:export {
+    red: $oop-red-failure;
+    green: $oop-green-success;
+}

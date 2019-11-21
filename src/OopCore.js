@@ -424,6 +424,12 @@ class OopCore extends EventEmitter {
         };
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
+
+    getTransmissionStats(deviceId) {
+        return this.makeRequest(
+            `/dashboards/transmissions?device_id=${deviceId}&group=success`,
+        );
+    }
 }
 
 export default new OopCore();
