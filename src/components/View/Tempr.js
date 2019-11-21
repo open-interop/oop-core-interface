@@ -29,7 +29,7 @@ import {
     SuccessToast,
 } from "../Global";
 import { arrayToObject, identicalObject } from "../../Utilities";
-import { StatefulTabs, Tab } from "baseui/tabs";
+import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
 import "brace/theme/github";
@@ -55,6 +55,8 @@ const Tempr = props => {
     const [deviceTemprLoading, setDeviceTemprLoading] = useState(false);
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false);
+
+    const [activeTab, setActiveTab] = React.useState("0");
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -227,7 +229,8 @@ const Tempr = props => {
         })
             .then(response => {
                 setPreviewLoading(false);
-                setValue("previewTempr", JSON.stringify(response));
+                setValue("previewTempr", response);
+                setActiveTab(response.error ? "2" : "0");
             })
             .catch(error => {
                 setPreviewLoading(false);
@@ -239,44 +242,7 @@ const Tempr = props => {
             });
     };
 
-    const prettifiedPreview = () => {
-        if (updatedTempr.previewTempr) {
-            const previewObject = JSON.parse(updatedTempr.previewTempr);
-
-            const initialState = {
-                activeKey: previewObject.error ? "2" : "0",
-            };
-
-            return (
-                <StatefulTabs initialState={initialState}>
-                    <Tab title="Rendered body">
-                        <JSONPretty
-                            className="tempr-preview-content "
-                            data={
-                                previewObject.rendered
-                                    ? previewObject.rendered.body
-                                    : ""
-                            }
-                        ></JSONPretty>
-                    </Tab>
-                    <Tab title="Console output">
-                        <JSONPretty
-                            className="tempr-preview-content "
-                            data={previewObject.console}
-                        ></JSONPretty>
-                    </Tab>
-                    <Tab title="Error output">
-                        <JSONPretty
-                            className="tempr-preview-content "
-                            data={previewObject.error}
-                        ></JSONPretty>
-                    </Tab>
-                </StatefulTabs>
-            );
-        }
-    };
-
-    const getPreviewBox = () => {
+    const PreviewTemprBox = () => {
         if (previewVisible && previewLoading) {
             return (
                 <div className="tempr-preview center">
@@ -284,11 +250,51 @@ const Tempr = props => {
                 </div>
             );
         }
-        if (previewVisible && !previewLoading) {
-            return <div className="tempr-preview">{prettifiedPreview()}</div>;
+        if (previewVisible && !previewLoading && updatedTempr.previewTempr) {
+            return (
+                <div className="tempr-preview">
+                    <Tabs
+                        onChange={({ activeKey }) => {
+                            setActiveTab(activeKey);
+                        }}
+                        activeKey={activeTab}
+                    >
+                        <Tab title="Rendered body">
+                            <JSONPretty
+                                className="tempr-preview-content "
+                                data={
+                                    updatedTempr.previewTempr.rendered
+                                        ? updatedTempr.previewTempr.rendered
+                                              .body
+                                        : "No data to show"
+                                }
+                            ></JSONPretty>
+                        </Tab>
+                        <Tab title="Console output">
+                            <JSONPretty
+                                className="tempr-preview-content "
+                                data={
+                                    updatedTempr.previewTempr.console ||
+                                    "No data to show"
+                                }
+                            ></JSONPretty>
+                        </Tab>
+                        <Tab title="Error output">
+                            <JSONPretty
+                                className="tempr-preview-content "
+                                data={
+                                    updatedTempr.previewTempr.error ||
+                                    "No data to show"
+                                }
+                            ></JSONPretty>
+                        </Tab>
+                    </Tabs>
+                </div>
+            );
         }
         return null;
     };
+
     return (
         <div className="content-wrapper">
             <Button
@@ -497,7 +503,7 @@ const Tempr = props => {
                             >
                                 Calculate output
                             </Button>
-                            {getPreviewBox()}
+                            {PreviewTemprBox()}
                         </AccordionWithCaption>
                         <FormControl label="Notes" key={`form-control-notes`}>
                             <Textarea
