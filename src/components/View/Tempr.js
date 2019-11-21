@@ -5,6 +5,8 @@ import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
+import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
+import { Textarea } from "baseui/textarea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faExternalLinkAlt,
@@ -14,8 +16,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {
     AccordionWithCaption,
+    BaseuiSpinner,
     DataProvider,
-    InPlaceSpinner,
+    IconSpinner,
     Pagination,
     Table,
 } from "../Universal";
@@ -26,10 +29,11 @@ import {
     SuccessToast,
 } from "../Global";
 import { arrayToObject, identicalObject } from "../../Utilities";
+import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
-
 import "brace/mode/json";
 import "brace/theme/github";
+var JSONPretty = require("react-json-pretty");
 
 const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
 
@@ -50,6 +54,9 @@ const Tempr = props => {
 
     const [deviceTemprLoading, setDeviceTemprLoading] = useState(false);
     const [previewLoading, setPreviewLoading] = useState(false);
+    const [previewVisible, setPreviewVisible] = useState(false);
+
+    const [activeTab, setActiveTab] = React.useState("0");
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -71,6 +78,9 @@ const Tempr = props => {
                   description: "",
                   deviceGroupId: Number(props.match.params.deviceGroupId),
                   endpointType: "http",
+                  queueResponse: false,
+                  queueRequest: false,
+                  notes: "",
                   body: {
                       language: "js",
                       script: "",
@@ -210,6 +220,7 @@ const Tempr = props => {
 
     const calculateOutput = () => {
         setPreviewLoading(true);
+        setPreviewVisible(true);
         return OopCore.previewTempr({
             tempr: {
                 exampleTransmission: updatedTempr.exampleTransmission,
@@ -218,7 +229,8 @@ const Tempr = props => {
         })
             .then(response => {
                 setPreviewLoading(false);
-                setValue("previewTempr", JSON.stringify(response));
+                setValue("previewTempr", response);
+                setActiveTab(response.error ? "2" : "0");
             })
             .catch(error => {
                 setPreviewLoading(false);
@@ -228,6 +240,59 @@ const Tempr = props => {
                     "Error",
                 );
             });
+    };
+
+    const PreviewTemprBox = () => {
+        if (previewVisible && previewLoading) {
+            return (
+                <div className="tempr-preview center">
+                    <BaseuiSpinner />
+                </div>
+            );
+        }
+        if (previewVisible && !previewLoading && updatedTempr.previewTempr) {
+            return (
+                <div className="tempr-preview">
+                    <Tabs
+                        onChange={({ activeKey }) => {
+                            setActiveTab(activeKey);
+                        }}
+                        activeKey={activeTab}
+                    >
+                        <Tab title="Rendered body">
+                            <JSONPretty
+                                className="tempr-preview-content "
+                                data={
+                                    updatedTempr.previewTempr.rendered
+                                        ? updatedTempr.previewTempr.rendered
+                                              .body
+                                        : "No data to show"
+                                }
+                            ></JSONPretty>
+                        </Tab>
+                        <Tab title="Console output">
+                            <JSONPretty
+                                className="tempr-preview-content "
+                                data={
+                                    updatedTempr.previewTempr.console ||
+                                    "No data to show"
+                                }
+                            ></JSONPretty>
+                        </Tab>
+                        <Tab title="Error output">
+                            <JSONPretty
+                                className="tempr-preview-content "
+                                data={
+                                    updatedTempr.previewTempr.error ||
+                                    "No data to show"
+                                }
+                            ></JSONPretty>
+                        </Tab>
+                    </Tabs>
+                </div>
+            );
+        }
+        return null;
     };
 
     return (
@@ -330,11 +395,43 @@ const Tempr = props => {
                                 disabled
                             />
                         </FormControl>
+                        <FormControl
+                            label="Queue Response"
+                            key={`form-control-queue-response`}
+                        >
+                            <Checkbox
+                                checked={updatedTempr.queueResponse}
+                                onChange={() =>
+                                    setValue(
+                                        "queueResponse",
+                                        !updatedTempr.queueResponse,
+                                    )
+                                }
+                                checkmarkType={STYLE_TYPE.toggle_round}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Queue Request"
+                            key={`form-control-queue-request`}
+                        >
+                            <Checkbox
+                                checked={updatedTempr.queueRequest}
+                                onChange={() =>
+                                    setValue(
+                                        "queueRequest",
+                                        !updatedTempr.queueRequest,
+                                    )
+                                }
+                                checkmarkType={STYLE_TYPE.toggle_round}
+                            />
+                        </FormControl>
+
                         <AccordionWithCaption
                             title="Template"
                             caption="required"
                             error={temprErrors.base}
                             subtitle="Please provide a host, port, path, protocol and request method"
+                            // startOpen
                         >
                             <div className="content-wrapper">
                                 <HttpTemprTemplate
@@ -346,13 +443,15 @@ const Tempr = props => {
                                 />
                             </div>
                         </AccordionWithCaption>
-                        <AccordionWithCaption title="Body">
+                        <AccordionWithCaption title="Body" startOpen>
                             <div className="one-row mb-20">
-                                <div>
+                                <div className="w-50">
                                     <label>Example</label>
                                     <AceEditor
                                         mode="json"
                                         theme="github"
+                                        width="100%"
+                                        showPrintMargin={false}
                                         onChange={value => {
                                             setValue(
                                                 "exampleTransmission",
@@ -368,11 +467,13 @@ const Tempr = props => {
                                         }
                                     />
                                 </div>
-                                <div>
+                                <div className="w-50">
                                     <label>Mapping</label>
                                     <AceEditor
                                         mode="javascript"
                                         theme="github"
+                                        width="100%"
+                                        showPrintMargin={false}
                                         onChange={value => {
                                             const updatedData = {
                                                 ...updatedTempr,
@@ -394,20 +495,7 @@ const Tempr = props => {
                                         }
                                     />
                                 </div>
-                                <div>
-                                    <label>Output</label>
-                                    <AceEditor
-                                        mode="json"
-                                        theme="github"
-                                        editorProps={{
-                                            $blockScrolling: true,
-                                        }}
-                                        value={updatedTempr.previewTempr}
-                                        readOnly
-                                    />
-                                </div>
                             </div>
-
                             <Button
                                 kind={KIND.secondary}
                                 onClick={calculateOutput}
@@ -415,11 +503,19 @@ const Tempr = props => {
                             >
                                 Calculate output
                             </Button>
+                            {PreviewTemprBox()}
                         </AccordionWithCaption>
+                        <FormControl label="Notes" key={`form-control-notes`}>
+                            <Textarea
+                                value={updatedTempr.notes || ""}
+                                onChange={e => setValue(e.target.value)}
+                            />
+                        </FormControl>
                         <AccordionWithCaption
                             title="Device associations "
                             subtitle="Select devices to associate with this tempr"
                             error={temprErrors.deviceTemprs}
+                            startOpen
                         >
                             <DataProvider
                                 getData={() => {
@@ -479,9 +575,7 @@ const Tempr = props => {
                                                         deviceTemprLoading ===
                                                         row.id
                                                     ) {
-                                                        return (
-                                                            <InPlaceSpinner />
-                                                        );
+                                                        return <IconSpinner />;
                                                     }
                                                     return content ? (
                                                         <FontAwesomeIcon

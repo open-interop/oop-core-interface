@@ -1,8 +1,9 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
+import { Spinner } from "baseui/spinner";
 
-const Spinner = () => {
+const GifSpinner = () => {
     return (
         <div className="loading-overlay">
             <img alt="loading-spinner" src="loading.gif" />
@@ -10,12 +11,12 @@ const Spinner = () => {
     );
 };
 
-const InPlaceSpinner = () => {
-    return (
-        <div className="fa-spin">
-            <FontAwesomeIcon icon={faSpinner} />
-        </div>
-    );
+const IconSpinner = () => {
+    return <FontAwesomeIcon spin icon={faCircleNotch} />;
 };
 
-export { Spinner, InPlaceSpinner };
+const BaseuiSpinner = () => {
+    return <Spinner className="poop" />;
+};
+
+export { BaseuiSpinner, GifSpinner, IconSpinner };

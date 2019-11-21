@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Error, Spinner } from ".";
+import { Error, GifSpinner } from ".";
 
 const DataProvider = props => {
     const [data, setData] = useState([]);
@@ -41,7 +41,7 @@ const DataProvider = props => {
         return props.loadingFallback !== undefined ? (
             props.loadingFallback
         ) : (
-            <Spinner />
+            <GifSpinner />
         );
     }
 };

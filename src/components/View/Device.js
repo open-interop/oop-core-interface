@@ -17,7 +17,7 @@ import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
     AccordionWithCaption,
     DataProvider,
-    InPlaceSpinner,
+    IconSpinner,
     Pagination,
     Table,
 } from "../Universal";
@@ -223,7 +223,7 @@ const Device = props => {
                 >
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </Button>
-                <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>{" "}
+                <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>
             </div>
             <DataProvider
                 getData={() => {
@@ -529,7 +529,7 @@ const Device = props => {
                                                             loading === row.id
                                                         ) {
                                                             return (
-                                                                <InPlaceSpinner />
+                                                                <IconSpinner />
                                                             );
                                                         }
                                                         return content ? (
