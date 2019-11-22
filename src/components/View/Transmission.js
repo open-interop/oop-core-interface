@@ -109,7 +109,6 @@ const Transmission = props => {
                         >
                             <Input
                                 disabled
-                                type="datetime-local"
                                 id={`input-transmitted-at`}
                                 value={transmission.transmittedAt || ""}
                             />

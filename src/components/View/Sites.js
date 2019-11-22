@@ -21,7 +21,7 @@ const Sites = props => {
                 <h2>Sites</h2>
                 <Button
                     $as={Link}
-                    to={`/users/new`}
+                    to={`/sites/new`}
                     kind={KIND.minimal}
                     aria-label="Create new site"
                     endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}

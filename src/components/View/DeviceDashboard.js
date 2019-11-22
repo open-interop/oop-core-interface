@@ -148,8 +148,8 @@ const DeviceDashboard = props => {
                                         {device.longitude && device.latitude ? (
                                             <Map
                                                 center={[
-                                                    device.longitude,
                                                     device.latitude,
+                                                    device.longitude,
                                                 ]}
                                                 zoom={10}
                                                 className="map-component"
@@ -160,8 +160,8 @@ const DeviceDashboard = props => {
                                                 />
                                                 <Marker
                                                     position={[
-                                                        device.longitude,
                                                         device.latitude,
+                                                        device.longitude,
                                                     ]}
                                                 ></Marker>
                                             </Map>
