@@ -129,7 +129,11 @@ class OopCore extends EventEmitter {
                     }
                 }
 
-                if (response.status === 204) {
+                if (
+                    response.status === 204 ||
+                    (response.status === 200 &&
+                        requestType === RequestType.DELETE)
+                ) {
                     return null;
                 }
 
@@ -368,6 +372,10 @@ class OopCore extends EventEmitter {
 
     createTempr(data) {
         return this.makeRequest(`/temprs`, RequestType.POST, data);
+    }
+
+    deleteTempr(temprId) {
+        return this.makeRequest(`/temprs/${temprId}`, RequestType.DELETE);
     }
 
     previewTempr(data) {

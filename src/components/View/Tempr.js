@@ -33,6 +33,13 @@ import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
 import "brace/theme/github";
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    ModalButton,
+} from "baseui/modal";
 var JSONPretty = require("react-json-pretty");
 
 const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
@@ -46,6 +53,7 @@ const Tempr = props => {
     const [devicesPage, setDevicesPage] = useState(1);
     const [devicesPageSize, setDevicesPageSize] = useState(10);
     const [latestChanged, setLatestChanged] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const [deviceFilterId, setDeviceFilterId] = useState("");
     const [deviceFilterName, setDeviceFilterName] = useState("");
@@ -295,24 +303,140 @@ const Tempr = props => {
         return null;
     };
 
+    const deleteTempr = () => {
+        return OopCore.deleteTempr(updatedTempr.id)
+            .then(() => {
+                props.history.replace(`/temprs`);
+                SuccessToast("Deleted tempr", "Success");
+                setModalOpen(false);
+            })
+            .catch(error => {
+                console.error(error);
+                ErrorToast("Could not delete tempr", "Error");
+            });
+    };
+
     return (
         <div className="content-wrapper">
-            <Button
-                $as={Link}
-                kind={KIND.minimal}
-                to={allTemprsPath}
-                aria-label="Go back to all temprs"
-            >
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </Button>
-
-            <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
                 getData={() => {
                     return getData();
                 }}
                 renderData={() => (
                     <>
+                        <div className="space-between">
+                            {" "}
+                            <Button
+                                $as={Link}
+                                kind={KIND.minimal}
+                                to={allTemprsPath}
+                                aria-label="Go back to all temprs"
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                            <h2>
+                                {blankTempr ? "Create Tempr" : "Edit Tempr"}
+                            </h2>
+                            <div>
+                                {blankTempr ? null : (
+                                    <>
+                                        <Button
+                                            kind={KIND.minimal}
+                                            onClick={() => setModalOpen(true)}
+                                        >
+                                            Delete
+                                        </Button>
+                                        <Modal
+                                            onClose={() => setModalOpen(false)}
+                                            isOpen={modalOpen}
+                                        >
+                                            <ModalHeader>
+                                                Confirm Deletion
+                                            </ModalHeader>
+                                            <ModalBody>
+                                                <div>
+                                                    Are you sure you want to
+                                                    delete this tempr?
+                                                </div>
+                                                <div>
+                                                    This action can't be undone.
+                                                </div>
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <ModalButton
+                                                    kind={KIND.tertiary}
+                                                    onClick={deleteTempr}
+                                                >
+                                                    Delete
+                                                </ModalButton>
+                                                <ModalButton
+                                                    onClick={() =>
+                                                        setModalOpen(false)
+                                                    }
+                                                >
+                                                    Cancel
+                                                </ModalButton>
+                                            </ModalFooter>
+                                        </Modal>
+                                    </>
+                                )}
+                                <Button
+                                    onClick={() => {
+                                        clearToast();
+                                        setTemprErrors({});
+                                        if (blankTempr) {
+                                            return OopCore.createTempr(
+                                                updatedTempr,
+                                            )
+                                                .then(response => {
+                                                    SuccessToast(
+                                                        "Created new tempr",
+                                                        "Success",
+                                                    );
+                                                    refreshTempr(response);
+                                                    props.history.replace(
+                                                        `/temprs/${response.id}`,
+                                                    );
+                                                })
+                                                .catch(error => {
+                                                    setTemprErrors(error);
+                                                    ErrorToast(
+                                                        "Failed to create tempr",
+                                                        "Error",
+                                                    );
+                                                });
+                                        } else {
+                                            OopCore.updateTempr(
+                                                props.match.params.temprId,
+                                                updatedTempr,
+                                            )
+                                                .then(response => {
+                                                    refreshTempr(response);
+                                                    SuccessToast(
+                                                        "Updated tempr",
+                                                        "Success",
+                                                    );
+                                                })
+                                                .catch(error => {
+                                                    setTemprErrors(error);
+                                                    ErrorToast(
+                                                        "Failed to update tempr",
+                                                        "Error",
+                                                    );
+                                                });
+                                        }
+                                    }}
+                                    disabled={saveButtonDisabled()}
+                                    aria-label={
+                                        blankTempr
+                                            ? "Create tempr"
+                                            : "Update tempr"
+                                    }
+                                >
+                                    {blankTempr ? "Create" : "Save"}
+                                </Button>{" "}
+                            </div>
+                        </div>
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
@@ -701,58 +825,6 @@ const Tempr = props => {
                                 )}
                             />
                         </AccordionWithCaption>
-                        <Button
-                            onClick={() => {
-                                clearToast();
-                                setTemprErrors({});
-                                if (blankTempr) {
-                                    return OopCore.createTempr(updatedTempr)
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Created new tempr",
-                                                "Success",
-                                            );
-                                            refreshTempr(response);
-                                            props.history.replace(
-                                                `/temprs/${response.id}`,
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setTemprErrors(error);
-                                            ErrorToast(
-                                                "Failed to create tempr",
-                                                "Error",
-                                            );
-                                        });
-                                } else {
-                                    OopCore.updateTempr(
-                                        props.match.params.temprId,
-                                        updatedTempr,
-                                    )
-                                        .then(response => {
-                                            refreshTempr(response);
-                                            SuccessToast(
-                                                "Updated tempr",
-                                                "Success",
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setTemprErrors(error);
-                                            ErrorToast(
-                                                "Failed to update tempr",
-                                                "Error",
-                                            );
-                                        });
-                                }
-                            }}
-                            disabled={saveButtonDisabled()}
-                            aria-label={
-                                blankTempr ? "Create tempr" : "Update tempr"
-                            }
-                        >
-                            {blankTempr ? "Create" : "Save"}
-                        </Button>
-                        {props.error && <div>{props.error}</div>}
                     </>
                 )}
             />
