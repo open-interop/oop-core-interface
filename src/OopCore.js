@@ -129,14 +129,17 @@ class OopCore extends EventEmitter {
                     }
                 }
 
+                if (response.status === 204) {
+                    return null;
+                }
+
                 return response
                     .json()
                     .then(body => this.snakeToCamel(body))
                     .then(body => {
                         if (
                             response.status === 200 ||
-                            response.status === 201 ||
-                            response.status === 204
+                            response.status === 201
                         ) {
                             return body;
                         } else {
@@ -234,6 +237,10 @@ class OopCore extends EventEmitter {
     createDevice(device) {
         const data = { device: device };
         return this.makeRequest(`/devices`, RequestType.POST, data);
+    }
+
+    deleteDevice(deviceId) {
+        return this.makeRequest(`/devices/${deviceId}`, RequestType.DELETE);
     }
 
     updateDeviceGroup(deviceGroup) {

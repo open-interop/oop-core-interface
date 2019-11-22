@@ -27,6 +27,13 @@ import {
     identicalArray,
     identicalObject,
 } from "../../Utilities";
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    ModalButton,
+} from "baseui/modal";
 
 import { Timezones } from "../../resources/Timezones";
 
@@ -48,6 +55,7 @@ const Device = props => {
     const [temprsPage, setTemprsPage] = useState(1);
     const [temprsPageSize, setTemprsPageSize] = useState(10);
     const [latestChanged, setLatestChanged] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const [temprFilterId, setTemprFilterId] = useState("");
     const [temprFilterName, setTemprFilterName] = useState("");
@@ -121,7 +129,7 @@ const Device = props => {
         setUpdatedDevice(updatedData);
     };
 
-    const allDevicesPath = props.location.pathname.substr(
+    const deviceDashboardPath = props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
     );
@@ -212,19 +220,21 @@ const Device = props => {
         });
     };
 
+    const deleteDevice = () => {
+        return OopCore.deleteDevice(updatedDevice.id)
+            .then(response => {
+                props.history.replace(`/devices`);
+                SuccessToast("Deleted device", "Success");
+                setModalOpen(false);
+            })
+            .catch(error => {
+                console.error(error);
+                ErrorToast("Could not delete device", "Error");
+            });
+    };
+
     return (
         <div className="content-wrapper">
-            <div className="flex-left">
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={allDevicesPath}
-                    aria-label="Go back to device dashboard"
-                >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                </Button>
-                <h2>{blankDevice ? "Create Device" : "Edit Device"}</h2>
-            </div>
             <DataProvider
                 getData={() => {
                     return getData();
@@ -232,6 +242,113 @@ const Device = props => {
                 renderKey={props.location.pathname}
                 renderData={() => (
                     <>
+                        <div className="space-between">
+                            <Button
+                                $as={Link}
+                                kind={KIND.minimal}
+                                to={deviceDashboardPath}
+                                aria-label="Go back to device dashboard"
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                            <h2>
+                                {blankDevice ? "Create Device" : "Edit Device"}
+                            </h2>
+                            <div>
+                                {blankDevice ? null : (
+                                    <>
+                                        <Button
+                                            kind={KIND.minimal}
+                                            onClick={() => setModalOpen(true)}
+                                        >
+                                            Delete
+                                        </Button>
+                                        <Modal
+                                            onClose={() => setModalOpen(false)}
+                                            isOpen={modalOpen}
+                                        >
+                                            <ModalHeader>
+                                                Confirm Deletion
+                                            </ModalHeader>
+                                            <ModalBody>
+                                                <div>
+                                                    Are you sure you want to
+                                                    delete this device?
+                                                </div>
+                                                <div>
+                                                    This action can't be undone.
+                                                </div>
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <ModalButton
+                                                    kind={KIND.tertiary}
+                                                    onClick={deleteDevice}
+                                                >
+                                                    Delete
+                                                </ModalButton>
+                                                <ModalButton
+                                                    onClick={() =>
+                                                        setModalOpen(false)
+                                                    }
+                                                >
+                                                    Cancel
+                                                </ModalButton>
+                                            </ModalFooter>
+                                        </Modal>{" "}
+                                    </>
+                                )}
+                                <Button
+                                    onClick={() => {
+                                        clearToast();
+                                        setDeviceErrors({});
+                                        if (blankDevice) {
+                                            return OopCore.createDevice(
+                                                updatedDevice,
+                                            )
+                                                .then(response => {
+                                                    SuccessToast(
+                                                        "Created new device",
+                                                        "Success",
+                                                    );
+                                                    refreshDevice(response);
+                                                    props.history.replace(
+                                                        `${deviceDashboardPath}/${response.id}`,
+                                                    );
+                                                })
+                                                .catch(error => {
+                                                    setDeviceErrors(error);
+                                                    ErrorToast(
+                                                        "Failed to create device",
+                                                        "Error",
+                                                    );
+                                                });
+                                        } else {
+                                            return OopCore.updateDevice(
+                                                updatedDevice,
+                                            )
+                                                .then(response => {
+                                                    SuccessToast(
+                                                        "Saved device details",
+                                                        "Success",
+                                                    );
+                                                    refreshDevice(response);
+                                                })
+                                                .catch(error => {
+                                                    setDeviceErrors(error);
+                                                    ErrorToast(
+                                                        "Failed to update device",
+                                                        "Error",
+                                                    );
+                                                });
+                                        }
+                                    }}
+                                    disabled={saveButtonDisabled()}
+                                >
+                                    {blankDevice ? "Create" : "Save"}
+                                </Button>
+                            </div>
+                        </div>
+
                         <FormControl
                             label="Name"
                             key={`form-control-name`}
@@ -644,51 +761,6 @@ const Device = props => {
                                 />
                             </AccordionWithCaption>
                         )}
-                        <Button
-                            onClick={() => {
-                                clearToast();
-                                setDeviceErrors({});
-                                if (blankDevice) {
-                                    return OopCore.createDevice(updatedDevice)
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Created new device",
-                                                "Success",
-                                            );
-                                            refreshDevice(response);
-                                            props.history.replace(
-                                                `${allDevicesPath}/${response.id}`,
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setDeviceErrors(error);
-                                            ErrorToast(
-                                                "Failed to create device",
-                                                "Error",
-                                            );
-                                        });
-                                } else {
-                                    return OopCore.updateDevice(updatedDevice)
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Saved device details",
-                                                "Success",
-                                            );
-                                            refreshDevice(response);
-                                        })
-                                        .catch(error => {
-                                            setDeviceErrors(error);
-                                            ErrorToast(
-                                                "Failed to update device",
-                                                "Error",
-                                            );
-                                        });
-                                }
-                            }}
-                            disabled={saveButtonDisabled()}
-                        >
-                            {blankDevice ? "Create" : "Save"}
-                        </Button>
                     </>
                 )}
             />
