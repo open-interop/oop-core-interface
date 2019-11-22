@@ -12,12 +12,20 @@ import { identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    ModalButton,
+} from "baseui/modal";
 
 const Site = props => {
     const [site, setSite] = useState({});
     const [updatedSite, setUpdatedSite] = useState({});
     const [siteErrors, setSiteErrors] = useState({});
     const [sites, setSites] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
     const blankSite = props.match.params.siteId === "new";
     const timezones = Timezones.map(timezone => {
         return {
@@ -75,25 +83,140 @@ const Site = props => {
         );
     };
 
+    const deleteSite = () => {
+        return OopCore.deleteSite(updatedSite.id)
+            .then(() => {
+                props.history.replace(`/sites`);
+                SuccessToast("Deleted site", "Success");
+                setModalOpen(false);
+            })
+            .catch(error => {
+                console.error(error);
+                ErrorToast("Could not delete site", "Error");
+            });
+    };
+
     return (
         <div className="content-wrapper">
-            <div className="flex-left">
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={allSitesPath}
-                    aria-label="Go back to all sites"
-                >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                </Button>
-                <h2>{blankSite ? "Create Site" : "Edit Site"}</h2>
-            </div>
             <DataProvider
                 getData={() => {
                     return getData().then(response => refreshSite(response));
                 }}
                 renderData={() => (
                     <>
+                        <div className="space-between">
+                            <Button
+                                $as={Link}
+                                kind={KIND.minimal}
+                                to={allSitesPath}
+                                aria-label="Go back to all sites"
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                            <h2>{blankSite ? "Create Site" : "Edit Site"}</h2>
+                            <div>
+                                {blankSite ? null : (
+                                    <>
+                                        <Button
+                                            kind={KIND.minimal}
+                                            onClick={() => setModalOpen(true)}
+                                        >
+                                            Delete
+                                        </Button>
+                                        <Modal
+                                            onClose={() => setModalOpen(false)}
+                                            isOpen={modalOpen}
+                                        >
+                                            <ModalHeader>
+                                                Confirm Deletion
+                                            </ModalHeader>
+                                            <ModalBody>
+                                                <div>
+                                                    Are you sure you want to
+                                                    delete this site?
+                                                </div>
+                                                <div>
+                                                    This action can't be undone.
+                                                </div>
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <ModalButton
+                                                    kind={KIND.tertiary}
+                                                    onClick={deleteSite}
+                                                >
+                                                    Delete
+                                                </ModalButton>
+                                                <ModalButton
+                                                    onClick={() =>
+                                                        setModalOpen(false)
+                                                    }
+                                                >
+                                                    Cancel
+                                                </ModalButton>
+                                            </ModalFooter>
+                                        </Modal>
+                                    </>
+                                )}
+                                <Button
+                                    onClick={() => {
+                                        clearToast();
+                                        setSiteErrors({});
+                                        if (blankSite) {
+                                            return OopCore.createSite(
+                                                updatedSite,
+                                            )
+                                                .then(response => {
+                                                    SuccessToast(
+                                                        "Created new site",
+                                                        "Success",
+                                                    );
+                                                    refreshSite(response);
+                                                    props.history.replace(
+                                                        `${allSitesPath}/${response.id}`,
+                                                    );
+                                                })
+                                                .catch(error => {
+                                                    setSiteErrors(error);
+                                                    ErrorToast(
+                                                        "Failed to create site",
+                                                        "Error",
+                                                    );
+                                                });
+                                        } else {
+                                            return OopCore.updateSite(
+                                                props.match.params.siteId,
+                                                updatedSite,
+                                            )
+                                                .then(response => {
+                                                    SuccessToast(
+                                                        "Updated site",
+                                                        "Success",
+                                                    );
+                                                    refreshSite(response);
+                                                })
+                                                .catch(error => {
+                                                    setSiteErrors(error);
+                                                    ErrorToast(
+                                                        "Failed to update site",
+                                                        "Error",
+                                                    );
+                                                });
+                                        }
+                                    }}
+                                    disabled={identicalObject(
+                                        site,
+                                        updatedSite,
+                                    )}
+                                    aria-label={
+                                        blankSite
+                                            ? "Create site"
+                                            : "Update site"
+                                    }
+                                >
+                                    {blankSite ? "Create" : "Save"}
+                                </Button>
+                            </div>
+                        </div>
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
@@ -305,58 +428,6 @@ const Site = props => {
                                 }
                             />
                         </FormControl>
-
-                        <Button
-                            onClick={() => {
-                                clearToast();
-                                setSiteErrors({});
-                                if (blankSite) {
-                                    return OopCore.createSite(updatedSite)
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Created new site",
-                                                "Success",
-                                            );
-                                            refreshSite(response);
-                                            props.history.replace(
-                                                `${allSitesPath}/${response.id}`,
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setSiteErrors(error);
-                                            ErrorToast(
-                                                "Failed to create site",
-                                                "Error",
-                                            );
-                                        });
-                                } else {
-                                    return OopCore.updateSite(
-                                        props.match.params.siteId,
-                                        updatedSite,
-                                    )
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Updated site",
-                                                "Success",
-                                            );
-                                            refreshSite(response);
-                                        })
-                                        .catch(error => {
-                                            setSiteErrors(error);
-                                            ErrorToast(
-                                                "Failed to update site",
-                                                "Error",
-                                            );
-                                        });
-                                }
-                            }}
-                            disabled={identicalObject(site, updatedSite)}
-                            aria-label={
-                                blankSite ? "Create site" : "Update site"
-                            }
-                        >
-                            {blankSite ? "Create" : "Save"}
-                        </Button>
                     </>
                 )}
             />

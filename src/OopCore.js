@@ -329,6 +329,10 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/sites`, RequestType.POST, data);
     }
 
+    deleteSite(siteId) {
+        return this.makeRequest(`/sites/${siteId}`, RequestType.DELETE);
+    }
+
     updateSite(siteId, data) {
         const payload = { site: data };
         return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);

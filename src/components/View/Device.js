@@ -222,7 +222,7 @@ const Device = props => {
 
     const deleteDevice = () => {
         return OopCore.deleteDevice(updatedDevice.id)
-            .then(response => {
+            .then(() => {
                 props.history.replace(`/devices`);
                 SuccessToast("Deleted device", "Success");
                 setModalOpen(false);
