@@ -325,7 +325,6 @@ const Tempr = props => {
                 renderData={() => (
                     <>
                         <div className="space-between">
-                            {" "}
                             <Button
                                 $as={Link}
                                 kind={KIND.minimal}

@@ -261,6 +261,13 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/device_groups`, RequestType.POST, payload);
     }
 
+    deleteDeviceGroup(deviceGroupId) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}`,
+            RequestType.DELETE,
+        );
+    }
+
     getDeviceGroup(deviceGroupId) {
         return this.makeRequest(`/device_groups/${deviceGroupId}`);
     }
