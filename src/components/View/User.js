@@ -147,7 +147,7 @@ const User = props => {
                                                     Cancel
                                                 </ModalButton>
                                             </ModalFooter>
-                                        </Modal>{" "}
+                                        </Modal>
                                     </>
                                 )}
                                 <Button
