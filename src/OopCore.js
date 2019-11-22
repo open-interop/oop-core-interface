@@ -431,6 +431,10 @@ class OopCore extends EventEmitter {
         };
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
+
+    deleteUser(userId) {
+        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
+    }
 }
 
 export default new OopCore();
