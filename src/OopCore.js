@@ -129,22 +129,11 @@ class OopCore extends EventEmitter {
                     }
                 }
 
-                if (
-                    response.status === 204 ||
-                    (response.status === 200 &&
-                        requestType === RequestType.DELETE)
-                ) {
-                    return null;
-                }
-
                 return response
                     .json()
                     .then(body => this.snakeToCamel(body))
                     .then(body => {
-                        if (
-                            response.status === 200 ||
-                            response.status === 201
-                        ) {
+                        if (response.status >= 200 && response.status < 300) {
                             return body;
                         } else {
                             throw body;
