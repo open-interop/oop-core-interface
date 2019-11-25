@@ -440,6 +440,33 @@ const Tempr = props => {
         );
     };
 
+    const saveTempr = () => {
+        clearToast();
+        setTemprErrors({});
+        if (blankTempr) {
+            return OopCore.createTempr(updatedTempr)
+                .then(response => {
+                    SuccessToast("Created new tempr", "Success");
+                    refreshTempr(response);
+                    props.history.replace(`/temprs/${response.id}`);
+                })
+                .catch(error => {
+                    setTemprErrors(error);
+                    ErrorToast("Failed to create tempr", "Error");
+                });
+        } else {
+            OopCore.updateTempr(props.match.params.temprId, updatedTempr)
+                .then(response => {
+                    refreshTempr(response);
+                    SuccessToast("Updated tempr", "Success");
+                })
+                .catch(error => {
+                    setTemprErrors(error);
+                    ErrorToast("Failed to update tempr", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -482,51 +509,7 @@ const Tempr = props => {
                                     />
                                 )}
                                 <Button
-                                    onClick={() => {
-                                        clearToast();
-                                        setTemprErrors({});
-                                        if (blankTempr) {
-                                            return OopCore.createTempr(
-                                                updatedTempr,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Created new tempr",
-                                                        "Success",
-                                                    );
-                                                    refreshTempr(response);
-                                                    props.history.replace(
-                                                        `/temprs/${response.id}`,
-                                                    );
-                                                })
-                                                .catch(error => {
-                                                    setTemprErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to create tempr",
-                                                        "Error",
-                                                    );
-                                                });
-                                        } else {
-                                            OopCore.updateTempr(
-                                                props.match.params.temprId,
-                                                updatedTempr,
-                                            )
-                                                .then(response => {
-                                                    refreshTempr(response);
-                                                    SuccessToast(
-                                                        "Updated tempr",
-                                                        "Success",
-                                                    );
-                                                })
-                                                .catch(error => {
-                                                    setTemprErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to update tempr",
-                                                        "Error",
-                                                    );
-                                                });
-                                        }
-                                    }}
+                                    onClick={saveTempr}
                                     disabled={saveButtonDisabled()}
                                     aria-label={
                                         blankTempr

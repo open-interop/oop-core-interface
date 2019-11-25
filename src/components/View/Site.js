@@ -87,6 +87,33 @@ const Site = props => {
             });
     };
 
+    const saveSite = () => {
+        clearToast();
+        setSiteErrors({});
+        if (blankSite) {
+            return OopCore.createSite(updatedSite)
+                .then(response => {
+                    SuccessToast("Created new site", "Success");
+                    refreshSite(response);
+                    props.history.replace(`${allSitesPath}/${response.id}`);
+                })
+                .catch(error => {
+                    setSiteErrors(error);
+                    ErrorToast("Failed to create site", "Error");
+                });
+        } else {
+            return OopCore.updateSite(props.match.params.siteId, updatedSite)
+                .then(response => {
+                    SuccessToast("Updated site", "Success");
+                    refreshSite(response);
+                })
+                .catch(error => {
+                    setSiteErrors(error);
+                    ErrorToast("Failed to update site", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -127,51 +154,7 @@ const Site = props => {
                                     />
                                 )}
                                 <Button
-                                    onClick={() => {
-                                        clearToast();
-                                        setSiteErrors({});
-                                        if (blankSite) {
-                                            return OopCore.createSite(
-                                                updatedSite,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Created new site",
-                                                        "Success",
-                                                    );
-                                                    refreshSite(response);
-                                                    props.history.replace(
-                                                        `${allSitesPath}/${response.id}`,
-                                                    );
-                                                })
-                                                .catch(error => {
-                                                    setSiteErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to create site",
-                                                        "Error",
-                                                    );
-                                                });
-                                        } else {
-                                            return OopCore.updateSite(
-                                                props.match.params.siteId,
-                                                updatedSite,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Updated site",
-                                                        "Success",
-                                                    );
-                                                    refreshSite(response);
-                                                })
-                                                .catch(error => {
-                                                    setSiteErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to update site",
-                                                        "Error",
-                                                    );
-                                                });
-                                        }
-                                    }}
+                                    onClick={saveSite}
                                     disabled={identicalObject(
                                         site,
                                         updatedSite,

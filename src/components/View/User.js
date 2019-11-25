@@ -76,6 +76,33 @@ const User = props => {
             });
     };
 
+    const saveUser = () => {
+        clearToast();
+        setUserErrors({});
+        if (blankUser) {
+            return OopCore.createUser(updatedUser)
+                .then(response => {
+                    SuccessToast("Created new user", "Success");
+                    refreshUser(response);
+                    props.history.replace(`${allUsersPath}/${response.id}`);
+                })
+                .catch(error => {
+                    setUserErrors(error);
+                    ErrorToast("Failed to create user", "Error");
+                });
+        } else {
+            return OopCore.updateUser(props.match.params.userId, updatedUser)
+                .then(response => {
+                    refreshUser(response);
+                    SuccessToast("Updated user", "Success");
+                })
+                .catch(error => {
+                    setUserErrors(error);
+                    ErrorToast("Failed to update user", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -119,51 +146,7 @@ const User = props => {
                                     />
                                 )}
                                 <Button
-                                    onClick={() => {
-                                        clearToast();
-                                        setUserErrors({});
-                                        if (blankUser) {
-                                            return OopCore.createUser(
-                                                updatedUser,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Created new user",
-                                                        "Success",
-                                                    );
-                                                    refreshUser(response);
-                                                    props.history.replace(
-                                                        `${allUsersPath}/${response.id}`,
-                                                    );
-                                                })
-                                                .catch(error => {
-                                                    setUserErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to create user",
-                                                        "Error",
-                                                    );
-                                                });
-                                        } else {
-                                            return OopCore.updateUser(
-                                                props.match.params.userId,
-                                                updatedUser,
-                                            )
-                                                .then(response => {
-                                                    refreshUser(response);
-                                                    SuccessToast(
-                                                        "Updated user",
-                                                        "Success",
-                                                    );
-                                                })
-                                                .catch(error => {
-                                                    setUserErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to update user",
-                                                        "Error",
-                                                    );
-                                                });
-                                        }
-                                    }}
+                                    onClick={saveUser}
                                     disabled={identicalObject(
                                         user,
                                         updatedUser,

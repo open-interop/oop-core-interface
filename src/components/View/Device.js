@@ -213,7 +213,6 @@ const Device = props => {
     };
 
     const deleteDevice = () => {
-        console.log("deleting");
         return OopCore.deleteDevice(updatedDevice.id)
             .then(() => {
                 props.history.replace(`/devices`);
