@@ -17,6 +17,7 @@ import {
 import {
     AccordionWithCaption,
     BaseuiSpinner,
+    ConfirmModal,
     DataProvider,
     IconSpinner,
     Pagination,
@@ -33,13 +34,6 @@ import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
 import "brace/theme/github";
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
-} from "baseui/modal";
 var JSONPretty = require("react-json-pretty");
 
 const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
@@ -53,7 +47,6 @@ const Tempr = props => {
     const [devicesPage, setDevicesPage] = useState(1);
     const [devicesPageSize, setDevicesPageSize] = useState(10);
     const [latestChanged, setLatestChanged] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
 
     const [deviceFilterId, setDeviceFilterId] = useState("");
     const [deviceFilterName, setDeviceFilterName] = useState("");
@@ -308,7 +301,6 @@ const Tempr = props => {
             .then(() => {
                 props.history.replace(`/temprs`);
                 SuccessToast("Deleted tempr", "Success");
-                setModalOpen(false);
             })
             .catch(error => {
                 console.error(error);
@@ -470,21 +462,11 @@ const Tempr = props => {
                             </h2>
                             <div>
                                 {blankTempr ? null : (
-                                    <>
-                                        <Button
-                                            kind={KIND.minimal}
-                                            onClick={() => setModalOpen(true)}
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Modal
-                                            onClose={() => setModalOpen(false)}
-                                            isOpen={modalOpen}
-                                        >
-                                            <ModalHeader>
-                                                Confirm Deletion
-                                            </ModalHeader>
-                                            <ModalBody>
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
                                                 <div>
                                                     Are you sure you want to
                                                     delete this tempr?
@@ -492,24 +474,12 @@ const Tempr = props => {
                                                 <div>
                                                     This action can't be undone.
                                                 </div>
-                                            </ModalBody>
-                                            <ModalFooter>
-                                                <ModalButton
-                                                    kind={KIND.tertiary}
-                                                    onClick={deleteTempr}
-                                                >
-                                                    Delete
-                                                </ModalButton>
-                                                <ModalButton
-                                                    onClick={() =>
-                                                        setModalOpen(false)
-                                                    }
-                                                >
-                                                    Cancel
-                                                </ModalButton>
-                                            </ModalFooter>
-                                        </Modal>
-                                    </>
+                                            </>
+                                        }
+                                        primaryAction={deleteTempr}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
                                 )}
                                 <Button
                                     onClick={() => {

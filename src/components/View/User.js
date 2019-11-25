@@ -4,27 +4,18 @@ import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { DataProvider } from "../Universal";
+import { ConfirmModal, DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
-} from "baseui/modal";
-
 import OopCore from "../../OopCore";
 
 const User = props => {
     const [user, setUser] = useState({});
     const [updatedUser, setUpdatedUser] = useState({});
     const [userErrors, setUserErrors] = useState({});
-    const [modalOpen, setModalOpen] = useState(false);
     const blankUser = props.match.params.userId === "new";
     const timezones = Timezones.map(timezone => {
         return {
@@ -78,7 +69,6 @@ const User = props => {
             .then(() => {
                 props.history.replace(`/users`);
                 SuccessToast("Deleted user", "Success");
-                setModalOpen(false);
             })
             .catch(error => {
                 console.error(error);
@@ -109,21 +99,11 @@ const User = props => {
                             <h2>{blankUser ? "Create User" : "Edit User"}</h2>
                             <div>
                                 {blankUser ? null : (
-                                    <>
-                                        <Button
-                                            kind={KIND.minimal}
-                                            onClick={() => setModalOpen(true)}
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Modal
-                                            onClose={() => setModalOpen(false)}
-                                            isOpen={modalOpen}
-                                        >
-                                            <ModalHeader>
-                                                Confirm Deletion
-                                            </ModalHeader>
-                                            <ModalBody>
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
                                                 <div>
                                                     Are you sure you want to
                                                     delete this user?
@@ -131,24 +111,12 @@ const User = props => {
                                                 <div>
                                                     This action can't be undone.
                                                 </div>
-                                            </ModalBody>
-                                            <ModalFooter>
-                                                <ModalButton
-                                                    kind={KIND.tertiary}
-                                                    onClick={deleteUser}
-                                                >
-                                                    Delete
-                                                </ModalButton>
-                                                <ModalButton
-                                                    onClick={() =>
-                                                        setModalOpen(false)
-                                                    }
-                                                >
-                                                    Cancel
-                                                </ModalButton>
-                                            </ModalFooter>
-                                        </Modal>
-                                    </>
+                                            </>
+                                        }
+                                        primaryAction={deleteUser}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
                                 )}
                                 <Button
                                     onClick={() => {

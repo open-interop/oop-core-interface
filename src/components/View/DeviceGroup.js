@@ -8,21 +8,13 @@ import { Input } from "baseui/input";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
-} from "baseui/modal";
-import { DataProvider } from "../Universal";
+import { ConfirmModal, DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
     const [deviceGroup, setDeviceGroup] = useState({});
     const [updatedDeviceGroup, setUpdatedDeviceGroup] = useState({});
     const [deviceGroupErrors, setDeviceGroupErrors] = useState({});
     const blankDeviceGroup = props.match.params.deviceGroupId === "new";
-    const [modalOpen, setModalOpen] = useState(false);
 
     const allDeviceGroupsPath = props.location.pathname.substr(
         0,
@@ -53,7 +45,6 @@ const DeviceGroup = props => {
             .then(() => {
                 props.history.replace(`/device-groups`);
                 SuccessToast("Deleted device group", "Success");
-                setModalOpen(false);
             })
             .catch(error => {
                 console.error(error);
@@ -115,21 +106,11 @@ const DeviceGroup = props => {
                             </h2>
                             <div>
                                 {blankDeviceGroup ? null : (
-                                    <>
-                                        <Button
-                                            kind={KIND.minimal}
-                                            onClick={() => setModalOpen(true)}
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Modal
-                                            onClose={() => setModalOpen(false)}
-                                            isOpen={modalOpen}
-                                        >
-                                            <ModalHeader>
-                                                Confirm Deletion
-                                            </ModalHeader>
-                                            <ModalBody>
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
                                                 <div>
                                                     Are you sure you want to
                                                     delete this device group?
@@ -137,24 +118,12 @@ const DeviceGroup = props => {
                                                 <div>
                                                     This action can't be undone.
                                                 </div>
-                                            </ModalBody>
-                                            <ModalFooter>
-                                                <ModalButton
-                                                    kind={KIND.tertiary}
-                                                    onClick={deleteDeviceGroup}
-                                                >
-                                                    Delete
-                                                </ModalButton>
-                                                <ModalButton
-                                                    onClick={() =>
-                                                        setModalOpen(false)
-                                                    }
-                                                >
-                                                    Cancel
-                                                </ModalButton>
-                                            </ModalFooter>
-                                        </Modal>
-                                    </>
+                                            </>
+                                        }
+                                        primaryAction={deleteDeviceGroup}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
                                 )}
                                 <Button
                                     onClick={saveDeviceGroup}

@@ -5,27 +5,19 @@ import { Select } from "baseui/select";
 import { FormControl } from "baseui/form-control";
 import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
-import { DataProvider } from "../Universal";
+import { ConfirmModal, DataProvider } from "../Universal";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
-} from "baseui/modal";
 
 const Site = props => {
     const [site, setSite] = useState({});
     const [updatedSite, setUpdatedSite] = useState({});
     const [siteErrors, setSiteErrors] = useState({});
     const [sites, setSites] = useState([]);
-    const [modalOpen, setModalOpen] = useState(false);
     const blankSite = props.match.params.siteId === "new";
     const timezones = Timezones.map(timezone => {
         return {
@@ -88,7 +80,6 @@ const Site = props => {
             .then(() => {
                 props.history.replace(`/sites`);
                 SuccessToast("Deleted site", "Success");
-                setModalOpen(false);
             })
             .catch(error => {
                 console.error(error);
@@ -116,21 +107,11 @@ const Site = props => {
                             <h2>{blankSite ? "Create Site" : "Edit Site"}</h2>
                             <div>
                                 {blankSite ? null : (
-                                    <>
-                                        <Button
-                                            kind={KIND.minimal}
-                                            onClick={() => setModalOpen(true)}
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Modal
-                                            onClose={() => setModalOpen(false)}
-                                            isOpen={modalOpen}
-                                        >
-                                            <ModalHeader>
-                                                Confirm Deletion
-                                            </ModalHeader>
-                                            <ModalBody>
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
                                                 <div>
                                                     Are you sure you want to
                                                     delete this site?
@@ -138,24 +119,12 @@ const Site = props => {
                                                 <div>
                                                     This action can't be undone.
                                                 </div>
-                                            </ModalBody>
-                                            <ModalFooter>
-                                                <ModalButton
-                                                    kind={KIND.tertiary}
-                                                    onClick={deleteSite}
-                                                >
-                                                    Delete
-                                                </ModalButton>
-                                                <ModalButton
-                                                    onClick={() =>
-                                                        setModalOpen(false)
-                                                    }
-                                                >
-                                                    Cancel
-                                                </ModalButton>
-                                            </ModalFooter>
-                                        </Modal>
-                                    </>
+                                            </>
+                                        }
+                                        primaryAction={deleteSite}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
                                 )}
                                 <Button
                                     onClick={() => {

@@ -16,6 +16,7 @@ import {
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
     AccordionWithCaption,
+    ConfirmModal,
     DataProvider,
     IconSpinner,
     Pagination,
@@ -27,13 +28,6 @@ import {
     identicalArray,
     identicalObject,
 } from "../../Utilities";
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
-} from "baseui/modal";
 
 import { Timezones } from "../../resources/Timezones";
 
@@ -55,8 +49,6 @@ const Device = props => {
     const [temprsPage, setTemprsPage] = useState(1);
     const [temprsPageSize, setTemprsPageSize] = useState(10);
     const [latestChanged, setLatestChanged] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
-
     const [temprFilterId, setTemprFilterId] = useState("");
     const [temprFilterName, setTemprFilterName] = useState("");
     const [temprFilterSelected, setTemprFilterSelected] = useState("");
@@ -221,11 +213,11 @@ const Device = props => {
     };
 
     const deleteDevice = () => {
+        console.log("deleting");
         return OopCore.deleteDevice(updatedDevice.id)
             .then(() => {
                 props.history.replace(`/devices`);
                 SuccessToast("Deleted device", "Success");
-                setModalOpen(false);
             })
             .catch(error => {
                 console.error(error);
@@ -285,21 +277,11 @@ const Device = props => {
                             </h2>
                             <div>
                                 {blankDevice ? null : (
-                                    <>
-                                        <Button
-                                            kind={KIND.minimal}
-                                            onClick={() => setModalOpen(true)}
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Modal
-                                            onClose={() => setModalOpen(false)}
-                                            isOpen={modalOpen}
-                                        >
-                                            <ModalHeader>
-                                                Confirm Deletion
-                                            </ModalHeader>
-                                            <ModalBody>
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
                                                 <div>
                                                     Are you sure you want to
                                                     delete this device?
@@ -307,24 +289,12 @@ const Device = props => {
                                                 <div>
                                                     This action can't be undone.
                                                 </div>
-                                            </ModalBody>
-                                            <ModalFooter>
-                                                <ModalButton
-                                                    kind={KIND.tertiary}
-                                                    onClick={deleteDevice}
-                                                >
-                                                    Delete
-                                                </ModalButton>
-                                                <ModalButton
-                                                    onClick={() =>
-                                                        setModalOpen(false)
-                                                    }
-                                                >
-                                                    Cancel
-                                                </ModalButton>
-                                            </ModalFooter>
-                                        </Modal>
-                                    </>
+                                            </>
+                                        }
+                                        primaryAction={deleteDevice}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
                                 )}
                                 <Button
                                     onClick={saveDevice}
