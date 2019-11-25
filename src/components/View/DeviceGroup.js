@@ -61,6 +61,35 @@ const DeviceGroup = props => {
             });
     };
 
+    const saveDeviceGroup = () => {
+        clearToast();
+        setDeviceGroupErrors({});
+        if (blankDeviceGroup) {
+            OopCore.createDeviceGroup(updatedDeviceGroup)
+                .then(response => {
+                    SuccessToast("Created new device group", "Success");
+                    props.history.replace(
+                        `${allDeviceGroupsPath}/${response.id}`,
+                    );
+                    updateState(response);
+                })
+                .catch(error => {
+                    setDeviceGroupErrors(error);
+                    ErrorToast("Failed to create device group", "Error");
+                });
+        } else {
+            OopCore.updateDeviceGroup(updatedDeviceGroup)
+                .then(response => {
+                    SuccessToast("Updated device group", "Success");
+                    updateState(response);
+                })
+                .catch(error => {
+                    setDeviceGroupErrors(error);
+                    ErrorToast("Failed to update device group", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -128,50 +157,7 @@ const DeviceGroup = props => {
                                     </>
                                 )}
                                 <Button
-                                    onClick={() => {
-                                        clearToast();
-                                        setDeviceGroupErrors({});
-                                        if (blankDeviceGroup) {
-                                            OopCore.createDeviceGroup(
-                                                updatedDeviceGroup,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Created new device group",
-                                                        "Success",
-                                                    );
-                                                    props.history.replace(
-                                                        `${allDeviceGroupsPath}/${response.id}`,
-                                                    );
-                                                    updateState(response);
-                                                })
-                                                .catch(error => {
-                                                    setDeviceGroupErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to create device group",
-                                                        "Error",
-                                                    );
-                                                });
-                                        } else {
-                                            OopCore.updateDeviceGroup(
-                                                updatedDeviceGroup,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Updated device group",
-                                                        "Success",
-                                                    );
-                                                    updateState(response);
-                                                })
-                                                .catch(error => {
-                                                    setDeviceGroupErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to update device group",
-                                                        "Error",
-                                                    );
-                                                });
-                                        }
-                                    }}
+                                    onClick={saveDeviceGroup}
                                     disabled={identicalObject(
                                         deviceGroup,
                                         updatedDeviceGroup,

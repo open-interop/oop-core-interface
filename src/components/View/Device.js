@@ -233,6 +233,35 @@ const Device = props => {
             });
     };
 
+    const saveDevice = () => {
+        clearToast();
+        setDeviceErrors({});
+        if (blankDevice) {
+            return OopCore.createDevice(updatedDevice)
+                .then(response => {
+                    SuccessToast("Created new device", "Success");
+                    refreshDevice(response);
+                    props.history.replace(
+                        `${deviceDashboardPath}/${response.id}`,
+                    );
+                })
+                .catch(error => {
+                    setDeviceErrors(error);
+                    ErrorToast("Failed to create device", "Error");
+                });
+        } else {
+            return OopCore.updateDevice(updatedDevice)
+                .then(response => {
+                    SuccessToast("Saved device details", "Success");
+                    refreshDevice(response);
+                })
+                .catch(error => {
+                    setDeviceErrors(error);
+                    ErrorToast("Failed to update device", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
             <DataProvider
@@ -298,50 +327,7 @@ const Device = props => {
                                     </>
                                 )}
                                 <Button
-                                    onClick={() => {
-                                        clearToast();
-                                        setDeviceErrors({});
-                                        if (blankDevice) {
-                                            return OopCore.createDevice(
-                                                updatedDevice,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Created new device",
-                                                        "Success",
-                                                    );
-                                                    refreshDevice(response);
-                                                    props.history.replace(
-                                                        `${deviceDashboardPath}/${response.id}`,
-                                                    );
-                                                })
-                                                .catch(error => {
-                                                    setDeviceErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to create device",
-                                                        "Error",
-                                                    );
-                                                });
-                                        } else {
-                                            return OopCore.updateDevice(
-                                                updatedDevice,
-                                            )
-                                                .then(response => {
-                                                    SuccessToast(
-                                                        "Saved device details",
-                                                        "Success",
-                                                    );
-                                                    refreshDevice(response);
-                                                })
-                                                .catch(error => {
-                                                    setDeviceErrors(error);
-                                                    ErrorToast(
-                                                        "Failed to update device",
-                                                        "Error",
-                                                    );
-                                                });
-                                        }
-                                    }}
+                                    onClick={saveDevice}
                                     disabled={saveButtonDisabled()}
                                 >
                                     {blankDevice ? "Create" : "Save"}
