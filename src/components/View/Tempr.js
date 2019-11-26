@@ -17,6 +17,7 @@ import {
 import {
     AccordionWithCaption,
     BaseuiSpinner,
+    ConfirmModal,
     DataProvider,
     IconSpinner,
     Pagination,
@@ -295,6 +296,18 @@ const Tempr = props => {
         return null;
     };
 
+    const deleteTempr = () => {
+        return OopCore.deleteTempr(updatedTempr.id)
+            .then(() => {
+                props.history.replace(`/temprs`);
+                SuccessToast("Deleted tempr", "Success");
+            })
+            .catch(error => {
+                console.error(error);
+                ErrorToast("Could not delete tempr", "Error");
+            });
+    };
+
     const renderDeviceAssociations = () => {
         return (
             <>
@@ -427,24 +440,87 @@ const Tempr = props => {
         );
     };
 
+    const saveTempr = () => {
+        clearToast();
+        setTemprErrors({});
+        if (blankTempr) {
+            return OopCore.createTempr(updatedTempr)
+                .then(response => {
+                    SuccessToast("Created new tempr", "Success");
+                    refreshTempr(response);
+                    props.history.replace(`/temprs/${response.id}`);
+                })
+                .catch(error => {
+                    setTemprErrors(error);
+                    ErrorToast("Failed to create tempr", "Error");
+                });
+        } else {
+            OopCore.updateTempr(props.match.params.temprId, updatedTempr)
+                .then(response => {
+                    refreshTempr(response);
+                    SuccessToast("Updated tempr", "Success");
+                })
+                .catch(error => {
+                    setTemprErrors(error);
+                    ErrorToast("Failed to update tempr", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
-            <Button
-                $as={Link}
-                kind={KIND.minimal}
-                to={allTemprsPath}
-                aria-label="Go back to all temprs"
-            >
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </Button>
-
-            <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
                 getData={() => {
                     return getData();
                 }}
                 renderData={() => (
                     <>
+                        <div className="space-between">
+                            <Button
+                                $as={Link}
+                                kind={KIND.minimal}
+                                to={allTemprsPath}
+                                aria-label="Go back to all temprs"
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                            <h2>
+                                {blankTempr ? "Create Tempr" : "Edit Tempr"}
+                            </h2>
+                            <div>
+                                {blankTempr ? null : (
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
+                                                <div>
+                                                    Are you sure you want to
+                                                    delete this tempr?
+                                                </div>
+                                                <div>
+                                                    This action can't be undone.
+                                                </div>
+                                            </>
+                                        }
+                                        primaryAction={deleteTempr}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
+                                )}
+                                <Button
+                                    onClick={saveTempr}
+                                    disabled={saveButtonDisabled()}
+                                    aria-label={
+                                        blankTempr
+                                            ? "Create tempr"
+                                            : "Update tempr"
+                                    }
+                                >
+                                    {blankTempr ? "Create" : "Save"}
+                                </Button>
+                            </div>
+                        </div>
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
