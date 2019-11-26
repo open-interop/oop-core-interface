@@ -1,5 +1,6 @@
 export * from "./AccordionWithCaption";
 export * from "./Error";
+export * from "./DataCircle";
 export * from "./DataProvider";
 export * from "./LineWrapper";
 export * from "./Modal";

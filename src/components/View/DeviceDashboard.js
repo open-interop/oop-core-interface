@@ -37,7 +37,10 @@ const DeviceDashboard = props => {
                 deviceId: props.match.params.deviceId,
                 pageSize: -1,
             }),
-            OopCore.getTransmissionStats(props.match.params.deviceId),
+            OopCore.getTransmissionStats({
+                deviceId: props.match.params.deviceId,
+                group: "success",
+            }),
         ]).then(
             ([
                 device,
@@ -59,7 +62,6 @@ const DeviceDashboard = props => {
                     deviceStats.transmissions.true || 0,
                     deviceStats.transmissions.false || 0,
                 ];
-                console.log(deviceStats);
                 setDevice(device);
                 return device;
             },

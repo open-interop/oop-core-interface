@@ -1,0 +1,45 @@
+div {
+    &[data-baseweb="card"] {
+        &.flex-column {
+            .ce.cf.cg.ch {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                .ci.cj.ae.ck.ag.cl {
+                    flex-grow: 1;
+                    margin-bottom: 0;
+                    display: flex;
+                    flex-direction: column;
+
+                    div {
+                        &.flex-row {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: row;
+                            flex-grow: 1;
+                            justify-content: space-around;
+                            align-items: center;
+
+                            .circle {
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                font-size: xx-large;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.circle-200 {
+    width: 200px;
+    height: 200px;
+}
+
+.data-subtitle {
+    margin-top: 20px;
+}

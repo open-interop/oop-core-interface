@@ -425,10 +425,16 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
 
-    getTransmissionStats(deviceId) {
-        return this.makeRequest(
-            `/dashboards/transmissions?device_id=${deviceId}&group=success`,
-        );
+    getTransmissionStats(filters) {
+        Object.keys(filters).filter(key => filters[key] !== undefined);
+
+        var parameters = queryString.stringify(this.camelToSnake(filters));
+        let path = "/dashboards/transmissions";
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 }
 

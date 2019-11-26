@@ -444,7 +444,7 @@ const Tempr = props => {
                             </div>
                         </AccordionWithCaption>
                         <AccordionWithCaption title="Body" startOpen>
-                            <div className="one-row mb-20">
+                            <div className="flex-row mb-20">
                                 <div className="w-50">
                                     <label>Example</label>
                                     <AceEditor
