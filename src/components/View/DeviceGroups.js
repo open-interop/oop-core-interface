@@ -21,7 +21,7 @@ const DeviceGroups = props => {
     }, [pageSize, id]);
 
     useEffect(() => {
-        document.title = "Device Group | Settings | Open Interop";
+        document.title = "Device Groups | Settings | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (

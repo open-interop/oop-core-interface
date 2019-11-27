@@ -11,10 +11,6 @@ import OopCore from "../../OopCore";
 import { ConfirmModal, DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
-    useEffect(() => {
-        document.title = "Device Group | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
     const [deviceGroup, setDeviceGroup] = useState({});
     const [updatedDeviceGroup, setUpdatedDeviceGroup] = useState({});
     const [deviceGroupErrors, setDeviceGroupErrors] = useState({});
@@ -24,6 +20,13 @@ const DeviceGroup = props => {
         0,
         props.location.pathname.lastIndexOf("/"),
     );
+
+    useEffect(() => {
+        document.title = blankDeviceGroup
+            ? "New Device Group | Settings | Open Interop"
+            : "Edit Device Group | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const setValue = (key, value) => {
         const updatedData = { ...updatedDeviceGroup };

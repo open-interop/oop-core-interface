@@ -14,10 +14,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Site = props => {
-    useEffect(() => {
-        document.title = "Site | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
     const [site, setSite] = useState({});
     const [updatedSite, setUpdatedSite] = useState({});
     const [siteErrors, setSiteErrors] = useState({});
@@ -30,6 +26,12 @@ const Site = props => {
         };
     });
 
+    useEffect(() => {
+        document.title = blankSite
+            ? "New Site | Settings | Open Interop"
+            : "Edit Site | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const getSite = () => {
         return blankSite
             ? Promise.resolve({

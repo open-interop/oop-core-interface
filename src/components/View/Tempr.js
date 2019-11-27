@@ -39,11 +39,6 @@ var JSONPretty = require("react-json-pretty");
 const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
 
 const Tempr = props => {
-    useEffect(() => {
-        document.title = "Tempr | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const [tempr, setTempr] = useState({});
     const [updatedTempr, setUpdatedTempr] = useState({});
     const [temprErrors, setTemprErrors] = useState({});
@@ -65,6 +60,13 @@ const Tempr = props => {
     const [activeTab, setActiveTab] = React.useState("0");
 
     const blankTempr = props.match.params.temprId === "new";
+
+    useEffect(() => {
+        document.title = blankTempr
+            ? "New Tempr | Settings | Open Interop"
+            : "Edit Tempr | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         setDevicesPage(1);
