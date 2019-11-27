@@ -55,6 +55,12 @@ const Device = props => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        document.title = blankDevice
+            ? "New Device | Open Interop"
+            : "Edit Device | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    useEffect(() => {
         setTemprsPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [temprsPageSize, temprFilterId, temprFilterName, temprFilterSelected]);

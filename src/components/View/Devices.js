@@ -15,6 +15,10 @@ import {
 import { arrayToObject } from "../../Utilities";
 
 const Devices = props => {
+    useEffect(() => {
+        document.title = "Devices | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [devices, setDevices] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,10 @@ import { Doughnut } from "react-chartjs-2";
 import OopCore from "../../OopCore";
 
 const DeviceDashboard = props => {
+    useEffect(() => {
+        document.title = "Device Dashboard | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [device, setDevice] = useState({});
     const allDevicesPath = props.location.pathname.substr(
         0,

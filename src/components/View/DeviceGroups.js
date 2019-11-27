@@ -20,6 +20,10 @@ const DeviceGroups = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize, id]);
 
+    useEffect(() => {
+        document.title = "Device Group | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     return (
         <div className="content-wrapper">
             <div className="space-between">

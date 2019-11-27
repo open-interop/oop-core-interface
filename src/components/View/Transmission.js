@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FormControl } from "baseui/form-control";
 import { Button, KIND } from "baseui/button";
@@ -11,6 +11,11 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 var JSONPretty = require("react-json-pretty");
 
 const Transmission = props => {
+    useEffect(() => {
+        document.title = "Transmission | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const [transmission, setTransmission] = useState({});
 
     const allTransmissionsPath = props.location.pathname.substr(

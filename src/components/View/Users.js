@@ -8,6 +8,11 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const Users = props => {
+    useEffect(() => {
+        document.title = "Users | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const [users, setUsers] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);

@@ -8,6 +8,11 @@ import { DataProvider, Pagination, Table } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Temprs = props => {
+    useEffect(() => {
+        document.title = "Temprs | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const [temprs, setTemprs] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +11,10 @@ import OopCore from "../../OopCore";
 import { ConfirmModal, DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
+    useEffect(() => {
+        document.title = "Device Group | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [deviceGroup, setDeviceGroup] = useState({});
     const [updatedDeviceGroup, setUpdatedDeviceGroup] = useState({});
     const [deviceGroupErrors, setDeviceGroupErrors] = useState({});

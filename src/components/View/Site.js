@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { Select } from "baseui/select";
@@ -14,6 +14,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Site = props => {
+    useEffect(() => {
+        document.title = "Site | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [site, setSite] = useState({});
     const [updatedSite, setUpdatedSite] = useState({});
     const [siteErrors, setSiteErrors] = useState({});
