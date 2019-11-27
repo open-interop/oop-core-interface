@@ -12,6 +12,11 @@ import {
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
+    useEffect(() => {
+        document.title = "Transmissions | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const [transmissions, setTransmissions] = useState(null);
     const [device, setDevice] = useState({});
     const [page, setPage] = useQueryParam("page", NumberParam);

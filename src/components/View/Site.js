@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { Select } from "baseui/select";
@@ -26,6 +26,12 @@ const Site = props => {
         };
     });
 
+    useEffect(() => {
+        document.title = blankSite
+            ? "New Site | Settings | Open Interop"
+            : "Edit Site | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const getSite = () => {
         return blankSite
             ? Promise.resolve({

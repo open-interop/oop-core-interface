@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
@@ -8,6 +8,10 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const Sites = props => {
+    useEffect(() => {
+        document.title = "Sites | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [sites, setSites] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);

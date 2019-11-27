@@ -62,6 +62,13 @@ const Tempr = props => {
     const blankTempr = props.match.params.temprId === "new";
 
     useEffect(() => {
+        document.title = blankTempr
+            ? "New Tempr | Settings | Open Interop"
+            : "Edit Tempr | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         setDevicesPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [

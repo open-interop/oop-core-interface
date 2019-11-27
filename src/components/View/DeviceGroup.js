@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +20,13 @@ const DeviceGroup = props => {
         0,
         props.location.pathname.lastIndexOf("/"),
     );
+
+    useEffect(() => {
+        document.title = blankDeviceGroup
+            ? "New Device Group | Settings | Open Interop"
+            : "Edit Device Group | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const setValue = (key, value) => {
         const updatedData = { ...updatedDeviceGroup };
