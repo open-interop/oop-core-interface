@@ -1,8 +1,16 @@
 .device-tempr {
     cursor: pointer;
 
+    div {
+        &.action-column {
+            cursor: auto;
+        }
+    }
+
     &.selected {
-        background-color: $oop-teal;
+        div {
+            font-weight: bolder;
+        }
     }
 }
 

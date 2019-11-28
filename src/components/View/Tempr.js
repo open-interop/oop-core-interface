@@ -427,8 +427,8 @@ const Tempr = props => {
                     }}
                     trueText="Selected"
                     falseText="Not selected"
-                    onRowClick={device => {
-                        if (!deviceTemprLoading) {
+                    onRowClick={(device, column) => {
+                        if (column !== "action" && !deviceTemprLoading) {
                             return toggleDeviceTempr(device);
                         }
                     }}

@@ -21,11 +21,6 @@ const Table = props => {
                         return (
                             <StyledRow
                                 key={index}
-                                onClick={() => {
-                                    if (props.onRowClick) {
-                                        props.onRowClick(row);
-                                    }
-                                }}
                                 className={
                                     props.rowClassName
                                         ? props.rowClassName(row)
@@ -44,6 +39,19 @@ const Table = props => {
                                         return (
                                             <CustomWidthCell
                                                 key={`table-cell-${index}-${column.id}`}
+                                                className={`${
+                                                    column.id === "action"
+                                                        ? "action-column"
+                                                        : ""
+                                                }`}
+                                                onClick={() => {
+                                                    if (props.onRowClick) {
+                                                        props.onRowClick(
+                                                            row,
+                                                            column.id,
+                                                        );
+                                                    }
+                                                }}
                                             >
                                                 {props.mapFunction(
                                                     column.id,
@@ -62,6 +70,14 @@ const Table = props => {
                                         return (
                                             <StyledCell
                                                 key={`table-cell-${index}-${column.id}`}
+                                                onClick={() => {
+                                                    if (props.onRowClick) {
+                                                        props.onRowClick(
+                                                            row,
+                                                            column.id,
+                                                        );
+                                                    }
+                                                }}
                                             >
                                                 {props.mapFunction(
                                                     column.id,
