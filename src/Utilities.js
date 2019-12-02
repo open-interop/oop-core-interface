@@ -44,5 +44,3 @@ export function arrayToObject(array, keyField) {
         return obj;
     }, {});
 }
-
-export function getChartColours(numberOfColours) {}

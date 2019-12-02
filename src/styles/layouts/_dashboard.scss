@@ -34,6 +34,17 @@ div {
                 }
             }
         }
+
+        h1 {
+            div {
+                &[data-baseweb="select"] {
+                    margin-left: 5px;
+                    div {
+                        background-color: $color-white;
+                    }
+                }
+            }
+        }
     }
 }
 

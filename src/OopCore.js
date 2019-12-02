@@ -430,6 +430,11 @@ class OopCore extends EventEmitter {
             case "gteq":
             case "gt":
                 return `filter[transmitted_at[${key}]]`;
+            case "siteId":
+                return `filter[${key}]`;
+            case "field":
+            case "direction":
+                return `filter[sort][${key}]`;
             default:
                 return key;
         }
