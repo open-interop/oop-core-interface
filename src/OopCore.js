@@ -425,10 +425,30 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
 
-    getTransmissionStats(filters) {
-        Object.keys(filters).filter(key => filters[key] !== undefined);
+    mapStatsParams(key) {
+        switch (key) {
+            case "gteq":
+            case "gt":
+                return `filter[transmitted_at[${key}]]`;
+            default:
+                return key;
+        }
+    }
 
-        var parameters = queryString.stringify(this.camelToSnake(filters));
+    getTransmissionStats(filters) {
+        const formattedFilters = {};
+
+        Object.keys(filters)
+            .filter(key => filters[key] !== undefined)
+            .forEach(
+                key =>
+                    (formattedFilters[this.mapStatsParams(key)] = filters[key]),
+            );
+
+        var parameters = queryString.stringify(
+            this.camelToSnake(formattedFilters),
+        );
+
         let path = "/dashboards/transmissions";
         if (parameters) {
             path += `?${parameters}`;

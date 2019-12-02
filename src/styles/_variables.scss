@@ -2,7 +2,7 @@ $color-black: #303030;
 $color-grey: #eee;
 $color-dark-grey: lightgrey;
 $color-white: #fff;
-$color-orange: orange;
+$color-orange: #db6a06;
 
 $oop-dark-blue: #28364d; // Top nav bar, login background, base font colour
 $oop-grey: #e6e8ec; // Body background, input background
@@ -27,4 +27,5 @@ $header-font-family: $body-font-family;
     green: $oop-green-success;
     orange: $color-orange;
     lightBlue: $oop-light-blue;
+    teal: $oop-teal;
 }

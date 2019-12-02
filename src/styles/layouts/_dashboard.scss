@@ -26,6 +26,8 @@ div {
                                 justify-content: center;
                                 align-items: center;
                                 font-size: xx-large;
+                                font-weight: bold;
+                                color: $color-white;
                             }
                         }
                     }
@@ -42,4 +44,5 @@ div {
 
 .data-subtitle {
     margin-top: 20px;
+    font-size: larger;
 }
