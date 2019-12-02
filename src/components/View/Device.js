@@ -517,7 +517,7 @@ const Device = props => {
                                             updatedDevice.authenticationQuery
                                                 .length < 1
                                                 ? [["", ""]]
-                                                : updatedDevice.authenticationHeaders
+                                                : updatedDevice.authenticationQuery
                                         }
                                         updateData={data => {
                                             if (
