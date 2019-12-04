@@ -272,8 +272,15 @@ const Device = props => {
                             <Button
                                 $as={Link}
                                 kind={KIND.minimal}
-                                to={deviceDashboardPath}
-                                aria-label="Go back to device dashboard"
+                                to={
+                                    props.location.prevPath ||
+                                    deviceDashboardPath
+                                }
+                                aria-label={
+                                    props.location.prevPath
+                                        ? "Go back to devices"
+                                        : "Go back to device dashboard"
+                                }
                             >
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </Button>
@@ -461,6 +468,7 @@ const Device = props => {
                                 <FormControl
                                     label="Authentication path"
                                     key={`form-control-authentication-path`}
+                                    error={deviceErrors.authenticationPath}
                                 >
                                     <Input
                                         id={`input-authentication-path`}
@@ -481,6 +489,7 @@ const Device = props => {
                                 <FormControl
                                     label="Authentication headers"
                                     key={`form-control-authentication-headers`}
+                                    error={deviceErrors.authenticationHeaders}
                                 >
                                     <PairInput
                                         data={
@@ -511,6 +520,7 @@ const Device = props => {
                                 <FormControl
                                     label="Authentication query"
                                     key={`form-control-authentication-query`}
+                                    error={deviceErrors.authenticationQuery}
                                 >
                                     <PairInput
                                         data={
