@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +18,10 @@ import styles from "./../../styles/_variables.scss";
 import OopCore from "../../OopCore";
 
 const DeviceDashboard = props => {
+    useEffect(() => {
+        document.title = "Device Dashboard | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [device, setDevice] = useState({});
     const allDevicesPath = props.location.pathname.substr(
         0,
@@ -188,8 +192,8 @@ const DeviceDashboard = props => {
                                         {device.longitude && device.latitude ? (
                                             <Map
                                                 center={[
-                                                    device.longitude,
                                                     device.latitude,
+                                                    device.longitude,
                                                 ]}
                                                 zoom={10}
                                                 className="map-component"
@@ -200,8 +204,8 @@ const DeviceDashboard = props => {
                                                 />
                                                 <Marker
                                                     position={[
-                                                        device.longitude,
                                                         device.latitude,
+                                                        device.longitude,
                                                     ]}
                                                 ></Marker>
                                             </Map>

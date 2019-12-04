@@ -6,7 +6,7 @@ import { Spinner } from "baseui/spinner";
 const GifSpinner = () => {
     return (
         <div className="loading-overlay">
-            <img alt="loading-spinner" src="loading.gif" />
+            <img alt="loading-spinner" src="/loading.gif" />
         </div>
     );
 };

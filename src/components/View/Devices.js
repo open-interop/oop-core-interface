@@ -15,6 +15,10 @@ import {
 import { arrayToObject } from "../../Utilities";
 
 const Devices = props => {
+    useEffect(() => {
+        document.title = "Devices | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [devices, setDevices] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
@@ -69,6 +73,7 @@ const Devices = props => {
             return devices;
         });
     };
+
     return (
         <div className="content-wrapper">
             <div className="space-between">
@@ -109,7 +114,10 @@ const Devices = props => {
                                             <Button
                                                 $as={Link}
                                                 kind={KIND.minimal}
-                                                to={`/devices/${content}/edit`}
+                                                to={{
+                                                    pathname: `/devices/${content}/edit`,
+                                                    prevPath: props.location,
+                                                }}
                                                 aria-label="Edit device"
                                             >
                                                 <FontAwesomeIcon

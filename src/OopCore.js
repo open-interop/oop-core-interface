@@ -129,15 +129,14 @@ class OopCore extends EventEmitter {
                     }
                 }
 
+                if (response.status === 204) {
+                    return null;
+                }
                 return response
                     .json()
                     .then(body => this.snakeToCamel(body))
                     .then(body => {
-                        if (
-                            response.status === 200 ||
-                            response.status === 201 ||
-                            response.status === 204
-                        ) {
+                        if (response.status >= 200 && response.status < 300) {
                             return body;
                         } else {
                             throw body;
@@ -236,6 +235,10 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/devices`, RequestType.POST, data);
     }
 
+    deleteDevice(deviceId) {
+        return this.makeRequest(`/devices/${deviceId}`, RequestType.DELETE);
+    }
+
     updateDeviceGroup(deviceGroup) {
         const payload = { device_group: deviceGroup };
         return this.makeRequest(
@@ -248,6 +251,13 @@ class OopCore extends EventEmitter {
     createDeviceGroup(deviceGroup) {
         const payload = { device_group: deviceGroup };
         return this.makeRequest(`/device_groups`, RequestType.POST, payload);
+    }
+
+    deleteDeviceGroup(deviceGroupId) {
+        return this.makeRequest(
+            `/device_groups/${deviceGroupId}`,
+            RequestType.DELETE,
+        );
     }
 
     getDeviceGroup(deviceGroupId) {
@@ -322,6 +332,10 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/sites`, RequestType.POST, data);
     }
 
+    deleteSite(siteId) {
+        return this.makeRequest(`/sites/${siteId}`, RequestType.DELETE);
+    }
+
     updateSite(siteId, data) {
         const payload = { site: data };
         return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
@@ -357,6 +371,10 @@ class OopCore extends EventEmitter {
 
     createTempr(data) {
         return this.makeRequest(`/temprs`, RequestType.POST, data);
+    }
+
+    deleteTempr(temprId) {
+        return this.makeRequest(`/temprs/${temprId}`, RequestType.DELETE);
     }
 
     previewTempr(data) {
@@ -460,6 +478,10 @@ class OopCore extends EventEmitter {
         }
 
         return this.makeRequest(path);
+    }
+
+    deleteUser(userId) {
+        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
     }
 }
 

@@ -17,6 +17,7 @@ import {
 import {
     AccordionWithCaption,
     BaseuiSpinner,
+    ConfirmModal,
     DataProvider,
     IconSpinner,
     Pagination,
@@ -59,6 +60,13 @@ const Tempr = props => {
     const [activeTab, setActiveTab] = React.useState("0");
 
     const blankTempr = props.match.params.temprId === "new";
+
+    useEffect(() => {
+        document.title = blankTempr
+            ? "New Tempr | Settings | Open Interop"
+            : "Edit Tempr | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         setDevicesPage(1);
@@ -295,24 +303,231 @@ const Tempr = props => {
         return null;
     };
 
+    const deleteTempr = () => {
+        return OopCore.deleteTempr(updatedTempr.id)
+            .then(() => {
+                props.history.replace(`/temprs`);
+                SuccessToast("Deleted tempr", "Success");
+            })
+            .catch(error => {
+                console.error(error);
+                ErrorToast("Could not delete tempr", "Error");
+            });
+    };
+
+    const renderDeviceAssociations = () => {
+        return (
+            <>
+                <Table
+                    data={availableDevices.data}
+                    rowClassName={row =>
+                        `device-tempr${row.selected ? " selected" : ""}`
+                    }
+                    mapFunction={(columnName, content, row) => {
+                        if (columnName === "action") {
+                            return (
+                                <>
+                                    <Button
+                                        kind={KIND.minimal}
+                                        $as={Link}
+                                        target="_blank"
+                                        to={"/devices/" + content}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faExternalLinkAlt}
+                                        />
+                                    </Button>
+                                </>
+                            );
+                        }
+
+                        if (columnName === "selected") {
+                            if (deviceTemprLoading === row.id) {
+                                return <IconSpinner />;
+                            }
+                            return content ? (
+                                <FontAwesomeIcon icon={faCheck} />
+                            ) : (
+                                <FontAwesomeIcon icon={faTimes} />
+                            );
+                        }
+
+                        return content;
+                    }}
+                    columnContent={columnName => {
+                        if (columnName === "action") {
+                            return "id";
+                        }
+
+                        return columnName;
+                    }}
+                    columns={[
+                        {
+                            id: "selected",
+                            name: "",
+                            type: "bool",
+                            hasFilter: true,
+                            width: "20px",
+                        },
+                        {
+                            id: "id",
+                            name: "Id",
+                            type: "text",
+                            hasFilter: true,
+                        },
+                        {
+                            id: "name",
+                            name: "Name",
+                            type: "text",
+                            hasFilter: true,
+                        },
+                        {
+                            id: "siteId",
+                            name: "Site ID",
+                            type: "text",
+                            hasFilter: true,
+                        },
+                        {
+                            id: "siteName",
+                            name: "Site",
+                            type: "text",
+                            hasFilter: false,
+                        },
+
+                        {
+                            id: "action",
+                            name: "",
+                            type: "action",
+                            hasFilter: false,
+                            width: "30px",
+                        },
+                    ]}
+                    filters={{
+                        id: deviceFilterId,
+                        name: deviceFilterName,
+                        siteId: deviceFilterSite,
+                        selected: deviceFilterSelected,
+                    }}
+                    updateFilters={(key, value) => {
+                        switch (key) {
+                            case "id":
+                                return setDeviceFilterId(value);
+                            case "name":
+                                return setDeviceFilterName(value);
+                            case "siteId":
+                                return setDeviceFilterSite(value);
+                            case "selected":
+                                if (value === null) {
+                                    return setDeviceFilterSelected("");
+                                }
+                                return setDeviceFilterSelected(value);
+                            default:
+                                return null;
+                        }
+                    }}
+                    trueText="Selected"
+                    falseText="Not selected"
+                    onRowClick={(device, column) => {
+                        if (column !== "action" && !deviceTemprLoading) {
+                            return toggleDeviceTempr(device);
+                        }
+                    }}
+                />
+                <Pagination
+                    updatePageSize={pageSize => {
+                        setDevicesPageSize(pageSize);
+                    }}
+                    currentPageSize={devicesPageSize}
+                    updatePageNumber={pageNumber => setDevicesPage(pageNumber)}
+                    totalRecords={availableDevices.totalRecords}
+                    numberOfPages={availableDevices.numberOfPages}
+                    currentPage={devicesPage || 1}
+                />
+            </>
+        );
+    };
+
+    const saveTempr = () => {
+        clearToast();
+        setTemprErrors({});
+        if (blankTempr) {
+            return OopCore.createTempr(updatedTempr)
+                .then(response => {
+                    SuccessToast("Created new tempr", "Success");
+                    refreshTempr(response);
+                    props.history.replace(`/temprs/${response.id}`);
+                })
+                .catch(error => {
+                    setTemprErrors(error);
+                    ErrorToast("Failed to create tempr", "Error");
+                });
+        } else {
+            OopCore.updateTempr(props.match.params.temprId, updatedTempr)
+                .then(response => {
+                    refreshTempr(response);
+                    SuccessToast("Updated tempr", "Success");
+                })
+                .catch(error => {
+                    setTemprErrors(error);
+                    ErrorToast("Failed to update tempr", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
-            <Button
-                $as={Link}
-                kind={KIND.minimal}
-                to={allTemprsPath}
-                aria-label="Go back to all temprs"
-            >
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </Button>
-
-            <h2>{blankTempr ? "Create Tempr" : "Edit Tempr"}</h2>
             <DataProvider
                 getData={() => {
                     return getData();
                 }}
                 renderData={() => (
                     <>
+                        <div className="space-between">
+                            <Button
+                                $as={Link}
+                                kind={KIND.minimal}
+                                to={allTemprsPath}
+                                aria-label="Go back to all temprs"
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                            <h2>
+                                {blankTempr ? "Create Tempr" : "Edit Tempr"}
+                            </h2>
+                            <div>
+                                {blankTempr ? null : (
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
+                                                <div>
+                                                    Are you sure you want to
+                                                    delete this tempr?
+                                                </div>
+                                                <div>
+                                                    This action can't be undone.
+                                                </div>
+                                            </>
+                                        }
+                                        primaryAction={deleteTempr}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
+                                )}
+                                <Button
+                                    onClick={saveTempr}
+                                    disabled={saveButtonDisabled()}
+                                    aria-label={
+                                        blankTempr
+                                            ? "Create tempr"
+                                            : "Update tempr"
+                                    }
+                                >
+                                    {blankTempr ? "Create" : "Save"}
+                                </Button>
+                            </div>
+                        </div>
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
@@ -511,196 +726,30 @@ const Tempr = props => {
                                 onChange={e => setValue(e.target.value)}
                             />
                         </FormControl>
-                        <AccordionWithCaption
-                            title="Device associations "
-                            subtitle="Select devices to associate with this tempr"
-                            error={temprErrors.deviceTemprs}
-                            startOpen
-                        >
-                            <DataProvider
-                                getData={() => {
-                                    return getDeviceTemprData();
-                                }}
-                                renderKey={
-                                    devicesPage +
-                                    devicesPageSize +
-                                    latestChanged +
-                                    deviceFilterId +
-                                    deviceFilterName +
-                                    deviceFilterSite +
-                                    deviceFilterSelected
-                                }
-                                renderData={() => (
-                                    <>
-                                        <Table
-                                            data={availableDevices.data}
-                                            rowClassName={row =>
-                                                `device-tempr${
-                                                    row.selected
-                                                        ? " selected"
-                                                        : ""
-                                                }`
-                                            }
-                                            mapFunction={(
-                                                columnName,
-                                                content,
-                                                row,
-                                            ) => {
-                                                if (columnName === "action") {
-                                                    return (
-                                                        <>
-                                                            <Button
-                                                                kind={
-                                                                    KIND.minimal
-                                                                }
-                                                                $as={Link}
-                                                                target="_blank"
-                                                                to={
-                                                                    "/devices/" +
-                                                                    content
-                                                                }
-                                                            >
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faExternalLinkAlt
-                                                                    }
-                                                                />
-                                                            </Button>
-                                                        </>
-                                                    );
-                                                }
-
-                                                if (columnName === "selected") {
-                                                    if (
-                                                        deviceTemprLoading ===
-                                                        row.id
-                                                    ) {
-                                                        return <IconSpinner />;
-                                                    }
-                                                    return content ? (
-                                                        <FontAwesomeIcon
-                                                            icon={faCheck}
-                                                        />
-                                                    ) : (
-                                                        <FontAwesomeIcon
-                                                            icon={faTimes}
-                                                        />
-                                                    );
-                                                }
-
-                                                return content;
-                                            }}
-                                            columnContent={columnName => {
-                                                if (columnName === "action") {
-                                                    return "id";
-                                                }
-
-                                                return columnName;
-                                            }}
-                                            columns={[
-                                                {
-                                                    id: "selected",
-                                                    name: "",
-                                                    type: "bool",
-                                                    hasFilter: true,
-                                                    width: "20px",
-                                                },
-                                                {
-                                                    id: "id",
-                                                    name: "Id",
-                                                    type: "text",
-                                                    hasFilter: true,
-                                                },
-                                                {
-                                                    id: "name",
-                                                    name: "Name",
-                                                    type: "text",
-                                                    hasFilter: true,
-                                                },
-                                                {
-                                                    id: "siteId",
-                                                    name: "Site ID",
-                                                    type: "text",
-                                                    hasFilter: true,
-                                                },
-                                                {
-                                                    id: "siteName",
-                                                    name: "Site",
-                                                    type: "text",
-                                                    hasFilter: false,
-                                                },
-
-                                                {
-                                                    id: "action",
-                                                    name: "",
-                                                    type: "action",
-                                                    hasFilter: false,
-                                                    width: "30px",
-                                                },
-                                            ]}
-                                            filters={{
-                                                id: deviceFilterId,
-                                                name: deviceFilterName,
-                                                siteId: deviceFilterSite,
-                                                selected: deviceFilterSelected,
-                                            }}
-                                            updateFilters={(key, value) => {
-                                                switch (key) {
-                                                    case "id":
-                                                        return setDeviceFilterId(
-                                                            value,
-                                                        );
-                                                    case "name":
-                                                        return setDeviceFilterName(
-                                                            value,
-                                                        );
-                                                    case "siteId":
-                                                        return setDeviceFilterSite(
-                                                            value,
-                                                        );
-                                                    case "selected":
-                                                        if (value === null) {
-                                                            return setDeviceFilterSelected(
-                                                                "",
-                                                            );
-                                                        }
-                                                        return setDeviceFilterSelected(
-                                                            value,
-                                                        );
-                                                    default:
-                                                        return null;
-                                                }
-                                            }}
-                                            trueText="Selected"
-                                            falseText="Not selected"
-                                            onRowClick={device => {
-                                                if (!deviceTemprLoading) {
-                                                    return toggleDeviceTempr(
-                                                        device,
-                                                    );
-                                                }
-                                            }}
-                                        />
-                                        <Pagination
-                                            updatePageSize={pageSize => {
-                                                setDevicesPageSize(pageSize);
-                                            }}
-                                            currentPageSize={devicesPageSize}
-                                            updatePageNumber={pageNumber =>
-                                                setDevicesPage(pageNumber)
-                                            }
-                                            totalRecords={
-                                                availableDevices.totalRecords
-                                            }
-                                            numberOfPages={
-                                                availableDevices.numberOfPages
-                                            }
-                                            currentPage={devicesPage || 1}
-                                        />
-                                    </>
-                                )}
-                            />
-                        </AccordionWithCaption>
+                        {blankTempr ? null : (
+                            <AccordionWithCaption
+                                title="Device associations "
+                                subtitle="Select devices to associate with this tempr"
+                                error={temprErrors.deviceTemprs}
+                                startOpen
+                            >
+                                <DataProvider
+                                    getData={() => {
+                                        return getDeviceTemprData();
+                                    }}
+                                    renderKey={
+                                        devicesPage +
+                                        devicesPageSize +
+                                        latestChanged +
+                                        deviceFilterId +
+                                        deviceFilterName +
+                                        deviceFilterSite +
+                                        deviceFilterSelected
+                                    }
+                                    renderData={renderDeviceAssociations}
+                                />
+                            </AccordionWithCaption>
+                        )}
                         <Button
                             onClick={() => {
                                 clearToast();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -8,6 +8,10 @@ import logo from "../../resources/open-interop-white.svg";
 import OopCore from "../../OopCore";
 
 const PasswordReset = () => {
+    useEffect(() => {
+        document.title = "Password Reset | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);

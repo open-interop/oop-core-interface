@@ -206,3 +206,12 @@ div {
 .circle {
     border-radius: 50%;
 }
+
+button {
+    &.c5 {
+        background-color: $oop-teal;
+        &:hover {
+            background-color: $oop-light-blue;
+        }
+    }
+}

@@ -1,4 +1,5 @@
 export * from "./AccordionWithCaption";
+export * from "./ConfirmModal";
 export * from "./Error";
 export * from "./DataCircle";
 export * from "./DataProvider";

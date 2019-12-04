@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { DataProvider } from "../Universal";
+import { ConfirmModal, DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
@@ -13,6 +13,13 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const User = props => {
+    useEffect(() => {
+        document.title = blankUser
+            ? "New User | Settings | Open Interop"
+            : "Edit User | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const [user, setUser] = useState({});
     const [updatedUser, setUpdatedUser] = useState({});
     const [userErrors, setUserErrors] = useState({});
@@ -64,19 +71,47 @@ const User = props => {
         );
     };
 
+    const deleteUser = () => {
+        return OopCore.deleteUser(updatedUser.id)
+            .then(() => {
+                props.history.replace(`/users`);
+                SuccessToast("Deleted user", "Success");
+            })
+            .catch(error => {
+                console.error(error);
+                ErrorToast("Could not delete user", "Error");
+            });
+    };
+
+    const saveUser = () => {
+        clearToast();
+        setUserErrors({});
+        if (blankUser) {
+            return OopCore.createUser(updatedUser)
+                .then(response => {
+                    SuccessToast("Created new user", "Success");
+                    refreshUser(response);
+                    props.history.replace(`${allUsersPath}/${response.id}`);
+                })
+                .catch(error => {
+                    setUserErrors(error);
+                    ErrorToast("Failed to create user", "Error");
+                });
+        } else {
+            return OopCore.updateUser(props.match.params.userId, updatedUser)
+                .then(response => {
+                    refreshUser(response);
+                    SuccessToast("Updated user", "Success");
+                })
+                .catch(error => {
+                    setUserErrors(error);
+                    ErrorToast("Failed to update user", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
-            <div className="flex-left">
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={allUsersPath}
-                    aria-label="Go back to all users"
-                >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                </Button>
-                <h2>{blankUser ? "Create User" : "Edit User"}</h2>
-            </div>
             <DataProvider
                 getData={() => {
                     return getUser().then(response => {
@@ -86,6 +121,53 @@ const User = props => {
                 }}
                 renderData={() => (
                     <>
+                        <div className="space-between">
+                            <Button
+                                $as={Link}
+                                kind={KIND.minimal}
+                                to={allUsersPath}
+                                aria-label="Go back to all users"
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                            <h2>{blankUser ? "Create User" : "Edit User"}</h2>
+                            <div>
+                                {blankUser ? null : (
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
+                                                <div>
+                                                    Are you sure you want to
+                                                    delete this user?
+                                                </div>
+                                                <div>
+                                                    This action can't be undone.
+                                                </div>
+                                            </>
+                                        }
+                                        primaryAction={deleteUser}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
+                                )}
+                                <Button
+                                    onClick={saveUser}
+                                    disabled={identicalObject(
+                                        user,
+                                        updatedUser,
+                                    )}
+                                    aria-label={
+                                        blankUser
+                                            ? "Create user"
+                                            : "Update user"
+                                    }
+                                >
+                                    {blankUser ? "Create" : "Save"}
+                                </Button>
+                            </div>
+                        </div>
                         <FormControl
                             label="Email"
                             key={"form-control-group-email"}
@@ -179,58 +261,6 @@ const User = props => {
                                 error={userErrors.timeZone}
                             />
                         </FormControl>
-
-                        <Button
-                            onClick={() => {
-                                clearToast();
-                                setUserErrors({});
-                                if (blankUser) {
-                                    return OopCore.createUser(updatedUser)
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Created new user",
-                                                "Success",
-                                            );
-                                            refreshUser(response);
-                                            props.history.replace(
-                                                `${allUsersPath}/${response.id}`,
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setUserErrors(error);
-                                            ErrorToast(
-                                                "Failed to create user",
-                                                "Error",
-                                            );
-                                        });
-                                } else {
-                                    return OopCore.updateUser(
-                                        props.match.params.userId,
-                                        updatedUser,
-                                    )
-                                        .then(response => {
-                                            refreshUser(response);
-                                            SuccessToast(
-                                                "Updated user",
-                                                "Success",
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setUserErrors(error);
-                                            ErrorToast(
-                                                "Failed to update user",
-                                                "Error",
-                                            );
-                                        });
-                                }
-                            }}
-                            disabled={identicalObject(user, updatedUser)}
-                            aria-label={
-                                blankUser ? "Create user" : "Update user"
-                            }
-                        >
-                            {blankUser ? "Create" : "Save"}
-                        </Button>
                     </>
                 )}
             />

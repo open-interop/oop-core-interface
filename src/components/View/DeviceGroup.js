@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,8 +8,7 @@ import { Input } from "baseui/input";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
-
-import { DataProvider } from "../Universal";
+import { ConfirmModal, DataProvider } from "../Universal";
 
 const DeviceGroup = props => {
     const [deviceGroup, setDeviceGroup] = useState({});
@@ -21,6 +20,13 @@ const DeviceGroup = props => {
         0,
         props.location.pathname.lastIndexOf("/"),
     );
+
+    useEffect(() => {
+        document.title = blankDeviceGroup
+            ? "New Device Group | Settings | Open Interop"
+            : "Edit Device Group | Settings | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const setValue = (key, value) => {
         const updatedData = { ...updatedDeviceGroup };
@@ -40,23 +46,50 @@ const DeviceGroup = props => {
         setDeviceGroup(data);
         setUpdatedDeviceGroup(data);
     };
+
+    const deleteDeviceGroup = () => {
+        return OopCore.deleteDeviceGroup(updatedDeviceGroup.id)
+            .then(() => {
+                props.history.replace(`/device-groups`);
+                SuccessToast("Deleted device group", "Success");
+            })
+            .catch(error => {
+                console.error(error);
+                ErrorToast("Could not delete device group", "Error");
+            });
+    };
+
+    const saveDeviceGroup = () => {
+        clearToast();
+        setDeviceGroupErrors({});
+        if (blankDeviceGroup) {
+            OopCore.createDeviceGroup(updatedDeviceGroup)
+                .then(response => {
+                    SuccessToast("Created new device group", "Success");
+                    props.history.replace(
+                        `${allDeviceGroupsPath}/${response.id}`,
+                    );
+                    updateState(response);
+                })
+                .catch(error => {
+                    setDeviceGroupErrors(error);
+                    ErrorToast("Failed to create device group", "Error");
+                });
+        } else {
+            OopCore.updateDeviceGroup(updatedDeviceGroup)
+                .then(response => {
+                    SuccessToast("Updated device group", "Success");
+                    updateState(response);
+                })
+                .catch(error => {
+                    setDeviceGroupErrors(error);
+                    ErrorToast("Failed to update device group", "Error");
+                });
+        }
+    };
+
     return (
         <div className="content-wrapper">
-            <div className="flex-left">
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={allDeviceGroupsPath}
-                    aria-label="Go back to all device groups"
-                >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                </Button>
-                <h2>
-                    {blankDeviceGroup
-                        ? "Create device group"
-                        : "Edit device group"}
-                </h2>
-            </div>
             <DataProvider
                 getData={() => {
                     return getDeviceGroup().then(data => updateState(data));
@@ -64,6 +97,52 @@ const DeviceGroup = props => {
                 renderKey={props.location.pathname}
                 renderData={() => (
                     <>
+                        <div className="space-between">
+                            <Button
+                                $as={Link}
+                                kind={KIND.minimal}
+                                to={allDeviceGroupsPath}
+                                aria-label="Go back to all device groups"
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </Button>
+                            <h2>
+                                {blankDeviceGroup
+                                    ? "Create device group"
+                                    : "Edit device group"}
+                            </h2>
+                            <div>
+                                {blankDeviceGroup ? null : (
+                                    <ConfirmModal
+                                        buttonText="Delete"
+                                        title="Confirm Deletion"
+                                        mainText={
+                                            <>
+                                                <div>
+                                                    Are you sure you want to
+                                                    delete this device group?
+                                                </div>
+                                                <div>
+                                                    This action can't be undone.
+                                                </div>
+                                            </>
+                                        }
+                                        primaryAction={deleteDeviceGroup}
+                                        primaryActionText="Delete"
+                                        secondaryActionText="Cancel"
+                                    />
+                                )}
+                                <Button
+                                    onClick={saveDeviceGroup}
+                                    disabled={identicalObject(
+                                        deviceGroup,
+                                        updatedDeviceGroup,
+                                    )}
+                                >
+                                    {blankDeviceGroup ? "Create" : "Save"}
+                                </Button>
+                            </div>
+                        </div>
                         <FormControl
                             label="Name"
                             key={`form-control-name`}
@@ -98,59 +177,6 @@ const DeviceGroup = props => {
                                 }
                             />
                         </FormControl>
-
-                        <Button
-                            onClick={() => {
-                                clearToast();
-                                setDeviceGroupErrors({});
-                                if (blankDeviceGroup) {
-                                    OopCore.createDeviceGroup(
-                                        updatedDeviceGroup,
-                                    )
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Created new device group",
-                                                "Success",
-                                            );
-                                            props.history.replace(
-                                                `${allDeviceGroupsPath}/${response.id}`,
-                                            );
-                                            updateState(response);
-                                        })
-                                        .catch(error => {
-                                            setDeviceGroupErrors(error);
-                                            ErrorToast(
-                                                "Failed to create device group",
-                                                "Error",
-                                            );
-                                        });
-                                } else {
-                                    OopCore.updateDeviceGroup(
-                                        updatedDeviceGroup,
-                                    )
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Updated device group",
-                                                "Success",
-                                            );
-                                            updateState(response);
-                                        })
-                                        .catch(error => {
-                                            setDeviceGroupErrors(error);
-                                            ErrorToast(
-                                                "Failed to update device group",
-                                                "Error",
-                                            );
-                                        });
-                                }
-                            }}
-                            disabled={identicalObject(
-                                deviceGroup,
-                                updatedDeviceGroup,
-                            )}
-                        >
-                            {blankDeviceGroup ? "Create" : "Save"}
-                        </Button>
                     </>
                 )}
             />
