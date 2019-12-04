@@ -73,6 +73,7 @@ const Devices = props => {
             return devices;
         });
     };
+
     return (
         <div className="content-wrapper">
             <div className="space-between">
@@ -113,7 +114,10 @@ const Devices = props => {
                                             <Button
                                                 $as={Link}
                                                 kind={KIND.minimal}
-                                                to={`/devices/${content}/edit`}
+                                                to={{
+                                                    pathname: `/devices/${content}/edit`,
+                                                    prevPath: props.location,
+                                                }}
                                                 aria-label="Edit device"
                                             >
                                                 <FontAwesomeIcon

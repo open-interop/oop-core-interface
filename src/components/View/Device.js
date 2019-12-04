@@ -272,8 +272,15 @@ const Device = props => {
                             <Button
                                 $as={Link}
                                 kind={KIND.minimal}
-                                to={deviceDashboardPath}
-                                aria-label="Go back to device dashboard"
+                                to={
+                                    props.location.prevPath ||
+                                    deviceDashboardPath
+                                }
+                                aria-label={
+                                    props.location.prevPath
+                                        ? "Go back to devices"
+                                        : "Go back to device dashboard"
+                                }
                             >
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </Button>
