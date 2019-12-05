@@ -13,7 +13,7 @@ import { DataProvider, Table } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody, StyledAction } from "baseui/card";
 import { Map, TileLayer, Marker } from "react-leaflet";
-import { DiscreteColorLegend, RadialChart } from "react-vis";
+import { Pie } from "react-chartjs-2";
 import styles from "./../../styles/_variables.scss";
 import OopCore from "../../OopCore";
 
@@ -61,30 +61,17 @@ const DeviceDashboard = props => {
                 );
                 device.transmissions = transmissions.data;
                 device.deviceTemprs = deviceTemprs.data.length;
-                const successfulTransmissions =
-                    deviceStats.transmissions.true || 0;
-                const failedTransmissions =
-                    deviceStats.transmissions.false || 0;
-                const totalTransmissions =
-                    successfulTransmissions + failedTransmissions;
-                device.stats = totalTransmissions
-                    ? [
-                          {
-                              angle:
-                                  (successfulTransmissions /
-                                      totalTransmissions) *
-                                  360.0,
-                              color: styles.green,
-                          },
-                          {
-                              // deviceStats.transmissions.false || 0 },
-                              angle:
-                                  (failedTransmissions / totalTransmissions) *
-                                  360.0,
-                              color: styles.red,
-                          },
-                      ]
-                    : [];
+                const successfulTransmissions = {
+                    label: "Successful",
+                    value: deviceStats.transmissions.true || 0,
+                    backgroundColor: styles.green,
+                };
+                const failedTransmissions = {
+                    label: "Failed",
+                    value: deviceStats.transmissions.false || 0,
+                    backgroundColor: styles.red,
+                };
+                device.stats = [successfulTransmissions, failedTransmissions];
                 setDevice(device);
                 return device;
             },
@@ -289,51 +276,32 @@ const DeviceDashboard = props => {
                                     device.transmissions.length ? (
                                         <Card title="Transmission Status">
                                             <div className="flex-row center">
-                                                <RadialChart
-                                                    data={device.stats}
-                                                    showLabels={true}
-                                                    width={250}
-                                                    height={250}
-                                                    colorType="literal"
-                                                    labelsRadiusMultiplier={1.2}
-                                                />
-                                                <DiscreteColorLegend
-                                                    items={[
-                                                        {
-                                                            title:
-                                                                " 2313 successful",
-                                                            color: styles.green,
+                                                <Pie
+                                                    data={{
+                                                        labels: device.stats.map(
+                                                            stat =>
+                                                                `${stat.value} ${stat.label}`,
+                                                        ),
+                                                        datasets: [
+                                                            {
+                                                                data: device.stats.map(
+                                                                    stat =>
+                                                                        stat.value,
+                                                                ),
+                                                                backgroundColor: device.stats.map(
+                                                                    stat =>
+                                                                        stat.backgroundColor,
+                                                                ),
+                                                            },
+                                                        ],
+                                                    }}
+                                                    options={{
+                                                        legend: {
+                                                            position: "right",
                                                         },
-                                                        {
-                                                            title:
-                                                                " 342 failed",
-                                                            color: styles.red,
-                                                        },
-                                                    ]}
+                                                    }}
                                                 />
                                             </div>
-
-                                            {/* <Doughnut
-                                                data={{
-                                                    labels: [
-                                                        "Success",
-                                                        "Failure",
-                                                    ],
-                                                    datasets: [
-                                                        {
-                                                            data: device.stats,
-                                                            hoverBackgroundColor: [
-                                                                styles.green,
-                                                                styles.red,
-                                                            ],
-                                                            backgroundColor: [
-                                                                styles.green,
-                                                                styles.red,
-                                                            ],
-                                                        },
-                                                    ],
-                                                }}
-                                            /> */}
                                         </Card>
                                     ) : null}
                                 </div>
