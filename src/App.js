@@ -38,6 +38,7 @@ class App extends Component {
             isLoading: true,
             user: false,
             site: null,
+            timeRange: null,
         };
 
         OopCore.getLoggedInUser().catch(() => this.setNoUser());
@@ -53,6 +54,11 @@ class App extends Component {
                 this.setState({ site: result });
             })
             .catch(() => this.setState({ site: null }));
+        OopCore.getCurrentTimeRange()
+            .then(result => {
+                this.setState({ timeRange: result });
+            })
+            .catch(() => this.setState({ timeRange: null }));
     }
 
     setUser = user => {
@@ -66,6 +72,11 @@ class App extends Component {
     selectSite = site => {
         this.setState({ site: site });
         return OopCore.selectSite(site);
+    };
+
+    selectTimeRange = timeRange => {
+        this.setState({ timeRange: timeRange });
+        return OopCore.selectTimeRange(timeRange);
     };
 
     HeaderWithRouter = withRouter(Header);
@@ -137,6 +148,8 @@ class App extends Component {
                                 ...props,
                                 site: this.state.site,
                                 selectSite: this.selectSite,
+                                dateFrom: this.state.timeRange,
+                                setDateFrom: this.selectTimeRange,
                             })
                         }
                     />

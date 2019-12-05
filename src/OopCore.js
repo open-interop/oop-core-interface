@@ -36,7 +36,7 @@ class OopCore extends EventEmitter {
     }
 
     toSnakeCase(s) {
-        return s
+        return String(s)
             .replace(/^\w/, c => c.toLowerCase())
             .replace(/[A-Z]/g, $1 => {
                 return "_" + $1.toLowerCase();
@@ -198,6 +198,29 @@ class OopCore extends EventEmitter {
             this.saveCookie("site", JSON.stringify(site));
         } else {
             this.removeCookie("site");
+        }
+    }
+
+    getTimeRange() {
+        const currentCookie = cookie.load("range");
+        const cookieObject = currentCookie || null;
+        return cookieObject;
+    }
+
+    getCurrentTimeRange() {
+        const currentCookie = this.getTimeRange();
+        if (currentCookie) {
+            return Promise.resolve(currentCookie);
+        } else {
+            return Promise.resolve(null);
+        }
+    }
+
+    selectTimeRange(timeRange) {
+        if (timeRange) {
+            this.saveCookie("range", JSON.stringify(timeRange));
+        } else {
+            this.removeCookie("range");
         }
     }
 
@@ -452,7 +475,7 @@ class OopCore extends EventEmitter {
                 return `filter[${key}]`;
             case "field":
             case "direction":
-                return `filter[sort][${key}]`;
+                return `filter[sort][${this.camelToSnake(key)}]`;
             default:
                 return key;
         }
@@ -463,10 +486,11 @@ class OopCore extends EventEmitter {
 
         Object.keys(filters)
             .filter(key => filters[key] !== undefined)
-            .forEach(
-                key =>
-                    (formattedFilters[this.mapStatsParams(key)] = filters[key]),
-            );
+            .forEach(key => {
+                return (formattedFilters[
+                    this.mapStatsParams(key)
+                ] = this.toSnakeCase(filters[key]));
+            });
 
         var parameters = queryString.stringify(
             this.camelToSnake(formattedFilters),

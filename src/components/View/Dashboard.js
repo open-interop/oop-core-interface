@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, StyledTitle } from "baseui/card";
 import { DataCircle, DataProvider, InPlaceGifSpinner } from "../Universal";
 import { Select } from "baseui/select";
-import { Bar } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 import OopCore from "../../OopCore";
 import moment from "moment";
 import chartStyles from "./../../styles/_chartColours.scss";
@@ -34,11 +34,12 @@ const availableColours = [
 ];
 
 const Dashboard = props => {
-    const [dateFrom, setDateFrom] = useState({
+    const dateFrom = props.dateFrom || {
         id: 1,
         name: "last 24 hours",
-    });
+    };
 
+    const [devices, setDevices] = useState({});
     const [transmissionTimeline, setTransmissionTimeline] = useState({});
     const [failedTransmissions, setFailedTransmissions] = useState({});
     const [daysSinceLastTransmission, setDaysSinceLastTransmission] = useState(
@@ -47,25 +48,39 @@ const Dashboard = props => {
     const [generalStats, setGeneralStats] = useState({});
 
     const now = new Date();
-    const startDate = new Date(now.getTime());
-    startDate.setDate(now.getDate() - dateFrom.id);
+    const customStartDate = new Date(now.getTime());
+    customStartDate.setDate(now.getDate() - dateFrom.id);
+
+    const eightDaysAgo = new Date(now.getTime());
+    eightDaysAgo.setDate(now.getDate() - 8);
+
+    const oneYearAgo = new Date(now.getTime());
+    oneYearAgo.setDate(now.getDate() - 365);
+
+    const getAllDevices = () => {
+        return OopCore.getDevices({
+            pageSize: -1,
+        }).then(response => {
+            setDevices(response.data);
+            return response;
+        });
+    };
 
     const getTransmissionsTimeline = () => {
-        return OopCore.getDevices({
-            siteId: props.site ? props.site.id : null,
-        }).then(response => {
-            const devices = response.data;
-            return Promise.all(
-                devices.map(device => getTransmissionsByDate(device)),
-            );
-        });
+        const devicesForSite = props.site
+            ? devices.filter(device => device.siteId === props.site.id)
+            : devices;
+
+        return Promise.all(
+            devicesForSite.map(device => getTransmissionsByDate(device)),
+        ).then(timeline => setTransmissionTimeline(timeline));
     };
 
     const getTransmissionsByDate = device => {
         return OopCore.getTransmissionStats({
             group: "transmitted_at",
             deviceId: device.id,
-            gteq: startDate.toISOString().split("T")[0],
+            gteq: oneYearAgo.toISOString().split("T")[0],
         }).then(response => {
             response.deviceId = device.id;
             response.deviceName = device.name;
@@ -92,37 +107,134 @@ const Dashboard = props => {
                 siteId: props.site ? props.site.id : undefined,
             }),
         ]).then(([thirtyDayResponse, oneDayResponse]) => {
-            return {
+            setFailedTransmissions({
                 thirtyDays: thirtyDayResponse.transmissions.false || 0,
                 oneDay: oneDayResponse.transmissions.false || 0,
-            };
+            });
         });
     };
 
     const getDaysSinceLastTransmissions = () => {
+        const sevenDaysAgo = new Date(now.getTime());
+        sevenDaysAgo.setDate(now.getDate() - 7);
         return OopCore.getTransmissionStats({
-            group: "device_id",
+            group: "transmittedAt",
             field: "transmittedAt",
             direction: "asc",
+            gteq: sevenDaysAgo.toISOString().split("T")[0],
+        }).then(response => {
+            setDaysSinceLastTransmission(response);
         });
     };
 
     const getGeneralStats = () => {
         return Promise.all([
             OopCore.getDeviceGroups(),
-            OopCore.getDevices(),
             OopCore.getTemprs(),
-        ]).then(([deviceGroupsResponse, devicesResponse, temprsResponse]) => {
-            return {
+        ]).then(([deviceGroupsResponse, temprsResponse]) => {
+            setGeneralStats({
                 deviceGroups: deviceGroupsResponse.totalRecords,
-                devices: devicesResponse.totalRecords,
+                devices: devices.length,
                 temprs: temprsResponse.totalRecords,
+            });
+        });
+    };
+
+    const transmissionCardsFallback = (
+        <div className="mb-20 space-between">
+            <Card className="width-49">
+                <StyledTitle className="center">
+                    Transmissions
+                    <div className="width-19">
+                        <Select
+                            required
+                            options={[
+                                {
+                                    id: 1,
+                                    name: "last 24 hours",
+                                },
+                                {
+                                    id: 30,
+                                    name: "last 30 days",
+                                },
+                                {
+                                    id: 180,
+                                    name: "last 180 days",
+                                },
+                                {
+                                    id: 365,
+                                    name: "last 365 days",
+                                },
+                            ]}
+                            labelKey="name"
+                            valueKey="id"
+                            searchable={false}
+                            onChange={event => {
+                                props.setDateFrom(event.option);
+                            }}
+                            value={dateFrom}
+                        />
+                    </div>
+                </StyledTitle>
+                <InPlaceGifSpinner />
+            </Card>
+            <Card className="width-49">
+                <StyledTitle className="center">
+                    Days since last transmission
+                </StyledTitle>
+                <InPlaceGifSpinner />
+            </Card>
+        </div>
+    );
+
+    const getDateRange = (startDate, endDate) => {
+        const timelineDates = [];
+
+        var currentDate = moment(startDate).startOf("day");
+        var lastPossibleDate = moment(endDate).endOf("day");
+
+        while (currentDate.add(1, "days").diff(lastPossibleDate) < 0) {
+            timelineDates.push(currentDate.clone().toDate());
+        }
+
+        return timelineDates.map(date => {
+            return {
+                date: moment(date).format("YYYY-MM-DD"),
+                label: moment(date).format("DD MMM"),
             };
         });
     };
 
-    return (
-        <>
+    const renderTransmissionCards = () => {
+        const timelineRange = getDateRange(customStartDate, now);
+        const lastTransmissionsRange = getDateRange(eightDaysAgo, now);
+
+        const getDaysAgo = series => {
+            var lastDay = 0;
+            var i;
+            for (i = lastTransmissionsRange.length - 1; i > 0; i--) {
+                if (series.transmissions[lastTransmissionsRange[i].date]) {
+                    break;
+                } else {
+                    lastDay = moment(now).diff(
+                        moment(lastTransmissionsRange[i - 1].date),
+                        "days",
+                    );
+                }
+            }
+
+            return {
+                deviceId: series.deviceId,
+                deviceName: series.deviceName,
+                daysAgo: lastDay,
+            };
+        };
+
+        const transmissionsByLastDay = transmissionTimeline
+            .map(series => getDaysAgo(series))
+            .filter(device => device.daysAgo < 7 && device.daysAgo !== 0);
+
+        return (
             <div className="mb-20 space-between">
                 <Card className="width-49">
                     <StyledTitle className="center">
@@ -131,84 +243,60 @@ const Dashboard = props => {
                             <Select
                                 required
                                 options={[
-                                    { id: 1, name: "last 24 hours" },
-                                    { id: 30, name: "last 30 days" },
-                                    { id: 180, name: "last 180 days" },
-                                    { id: 365, name: "last 365 days" },
+                                    {
+                                        id: 1,
+                                        name: "last 24 hours",
+                                    },
+                                    {
+                                        id: 30,
+                                        name: "last 30 days",
+                                    },
+                                    {
+                                        id: 180,
+                                        name: "last 180 days",
+                                    },
+                                    {
+                                        id: 365,
+                                        name: "last 365 days",
+                                    },
                                 ]}
                                 labelKey="name"
                                 valueKey="id"
                                 searchable={false}
                                 onChange={event => {
-                                    setDateFrom(event.option);
+                                    props.setDateFrom(event.option);
                                 }}
                                 value={dateFrom}
                             />
                         </div>
                     </StyledTitle>
-                    <DataProvider
-                        loadingFallback={<InPlaceGifSpinner />}
-                        getData={() =>
-                            getTransmissionsTimeline().then(response =>
-                                setTransmissionTimeline(response),
-                            )
-                        }
-                        renderKey={
-                            props.site
-                                ? props.site.id + dateFrom.id
-                                : dateFrom.id
-                        }
-                        renderData={() => {
-                            const dates = [];
 
-                            var currDate = moment(startDate).startOf("day");
-                            var lastDate = moment(now).startOf("day");
-
-                            while (currDate.add(1, "days").diff(lastDate) < 0) {
-                                dates.push(currDate.clone().toDate());
-                            }
-
-                            const dateRange = dates.map(date => {
-                                return {
-                                    date: moment(date).format("YYYY-MM-DD"),
-                                    label: moment(date).format("DD MMM"),
-                                };
-                            });
-
-                            return (
-                                <Bar
-                                    data={{
-                                        labels: dateRange.map(
-                                            date => date.label,
+                    <Bar
+                        data={{
+                            labels: timelineRange.map(date => date.label),
+                            datasets: transmissionTimeline.map(
+                                (series, index) => {
+                                    return {
+                                        label: series.deviceName,
+                                        data: timelineRange.map(
+                                            date =>
+                                                series.transmissions[
+                                                    date.date
+                                                ] || 0,
                                         ),
-                                        datasets: transmissionTimeline.map(
-                                            (series, index) => {
-                                                return {
-                                                    label: series.deviceName,
-                                                    data: dateRange.map(
-                                                        date =>
-                                                            series
-                                                                .transmissions[
-                                                                date.date
-                                                            ] || 0,
-                                                    ),
-                                                    backgroundColor:
-                                                        availableColours[
-                                                            index %
-                                                                availableColours.length
-                                                        ],
-                                                };
-                                            },
-                                        ),
-                                    }}
-                                    options={{
-                                        scales: {
-                                            yAxes: [{ stacked: true }],
-                                            xAxes: [{ stacked: true }],
-                                        },
-                                    }}
-                                />
-                            );
+                                        backgroundColor:
+                                            availableColours[
+                                                index % availableColours.length
+                                            ],
+                                    };
+                                },
+                            ),
+                        }}
+                        options={{
+                            scales: {
+                                yAxes: [{ stacked: true }],
+                                xAxes: [{ stacked: true }],
+                            },
                         }}
                     />
                 </Card>
@@ -216,88 +304,120 @@ const Dashboard = props => {
                     <StyledTitle className="center">
                         Days since last transmission
                     </StyledTitle>
-                    <DataProvider
-                        loadingFallback={<InPlaceGifSpinner />}
-                        getData={() =>
-                            getDaysSinceLastTransmissions().then(response =>
-                                setDaysSinceLastTransmission(response),
-                            )
-                        }
-                        renderKey={props.site ? props.site.id : ""}
-                        renderData={() => {
-                            return <div>days since last transmission</div>;
+                    <Bar
+                        data={{
+                            labels: transmissionsByLastDay.map(
+                                device => device.deviceName,
+                            ),
+                            datasets: [
+                                {
+                                    data: transmissionsByLastDay.map(
+                                        device => device.daysAgo,
+                                    ),
+                                    backgroundColor: transmissionsByLastDay.map(
+                                        (currentValue, index) =>
+                                            availableColours[
+                                                index % availableColours.length
+                                            ],
+                                    ),
+                                },
+                            ],
+                        }}
+                        options={{
+                            scales: {
+                                yAxes: [
+                                    {
+                                        ticks: {
+                                            beginAtZero: true,
+                                            stepSize: 1,
+                                        },
+                                    },
+                                ],
+                            },
+                            legend: {
+                                display: false,
+                            },
                         }}
                     />
                 </Card>
             </div>
+        );
+    };
 
-            <div className="space-between">
-                <Card className="width-49 flex-column">
-                    <StyledTitle className="center">
-                        Failed Transmissions
-                    </StyledTitle>
-                    <DataProvider
-                        loadingFallback={<InPlaceGifSpinner />}
-                        getData={() =>
-                            getFailedTransmissions().then(response =>
-                                setFailedTransmissions(response),
-                            )
-                        }
-                        renderKey={props.site ? props.site.id : ""}
-                        renderData={() => {
-                            return (
-                                <div className="flex-row">
-                                    <DataCircle
-                                        value={failedTransmissions.thirtyDays}
-                                        color={styles.orange}
-                                        subtitle="in the last 30 days"
-                                    />
-                                    <DataCircle
-                                        value={failedTransmissions.oneDay}
-                                        color={styles.lightBlue}
-                                        subtitle="in the last 24 hours"
-                                    />
-                                </div>
-                            );
-                        }}
-                    />
-                </Card>
+    const renderCards = () => {
+        return (
+            <>
+                <DataProvider
+                    loadingFallback={transmissionCardsFallback}
+                    getData={getTransmissionsTimeline}
+                    renderKey={props.site ? props.site.id : ""}
+                    renderData={renderTransmissionCards}
+                />
 
-                <Card className="width-49 flex-column">
-                    <StyledTitle className="center">Stats</StyledTitle>
-                    <DataProvider
-                        loadingFallback={<InPlaceGifSpinner />}
-                        getData={() =>
-                            getGeneralStats().then(response =>
-                                setGeneralStats(response),
-                            )
-                        }
-                        renderData={() => {
-                            return (
-                                <div className="flex-row">
-                                    <DataCircle
-                                        value={generalStats.deviceGroups}
-                                        color={styles.lightBlue}
-                                        subtitle="Device Groups"
-                                    />
-                                    <DataCircle
-                                        value={generalStats.devices}
-                                        color={styles.orange}
-                                        subtitle="Devices"
-                                    />
-                                    <DataCircle
-                                        value={generalStats.temprs}
-                                        color={styles.teal}
-                                        subtitle="Temprs"
-                                    />
-                                </div>
-                            );
-                        }}
-                    />
-                </Card>
-            </div>
-        </>
-    );
+                <div className="space-between">
+                    <Card className="width-49 flex-column">
+                        <StyledTitle className="center">
+                            Failed Transmissions
+                        </StyledTitle>
+                        <DataProvider
+                            loadingFallback={<InPlaceGifSpinner />}
+                            getData={getFailedTransmissions}
+                            renderKey={props.site ? props.site.id : ""}
+                            renderData={() => {
+                                return (
+                                    <div className="flex-row">
+                                        <DataCircle
+                                            value={
+                                                failedTransmissions.thirtyDays
+                                            }
+                                            color={styles.lightBlue}
+                                            subtitle="in the last 30 days"
+                                        />
+                                        <DataCircle
+                                            value={failedTransmissions.oneDay}
+                                            color={styles.orange}
+                                            subtitle="in the last 24 hours"
+                                        />
+                                    </div>
+                                );
+                            }}
+                        />
+                    </Card>
+
+                    <Card className="width-49 flex-column">
+                        <StyledTitle className="center">Stats</StyledTitle>
+                        <DataProvider
+                            loadingFallback={<InPlaceGifSpinner />}
+                            getData={getGeneralStats}
+                            renderData={() => {
+                                return (
+                                    <div className="flex-row">
+                                        <DataCircle
+                                            value={generalStats.deviceGroups}
+                                            color={styles.teal}
+                                            subtitle="Device Groups"
+                                        />
+                                        <DataCircle
+                                            value={generalStats.devices}
+                                            color={styles.lightBlue}
+                                            subtitle="Devices"
+                                        />
+                                        <DataCircle
+                                            value={generalStats.temprs}
+                                            color={chartStyles.chart04}
+                                            subtitle="Temprs"
+                                        />
+                                    </div>
+                                );
+                            }}
+                        />
+                    </Card>
+                </div>
+            </>
+        );
+    };
+
+    return <DataProvider getData={getAllDevices} renderData={renderCards} />;
 };
 
 export { Dashboard };
