@@ -1,19 +1,23 @@
 # Open Interop user interface
 
-This application consumes the management API for the Open Interop platform available (here)[https://github.com/open-interop/oop-core]
+This application consumes the management API for the Open Interop platform available [here](https://github.com/open-interop/oop-core).
 
 ### Environment variables
 
 - Development
+
 PROXY
 
 - Production
+
 REACT_APP_BASE_PATH
+
 PUBLIC_URL
 
 ### Installation
 
-* Clone the application `git clone git@github.com:open-interop/oop-core-interface.git`
+* Clone the application
+`git clone git@github.com:open-interop/oop-core-interface.git`
 
 * Install [Yarn](https://yarnpkg.com/en/docs/install) if necessary
 
