@@ -89,7 +89,7 @@ const PairInput = props => {
 
     const InputRow = (index, key, value) => {
         return (
-            <div className="one-row space-between mb-10" key={`row-${index}`}>
+            <div className="flex-row space-between mb-10" key={`row-${index}`}>
                 <div className="width-49 left-margin">
                     <Input
                         error={props.error || (!key && value)}

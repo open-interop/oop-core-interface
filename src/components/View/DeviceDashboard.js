@@ -13,7 +13,8 @@ import { DataProvider, Table } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody, StyledAction } from "baseui/card";
 import { Map, TileLayer, Marker } from "react-leaflet";
-import { Doughnut } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
+import styles from "./../../styles/_variables.scss";
 import OopCore from "../../OopCore";
 
 const DeviceDashboard = props => {
@@ -39,16 +40,42 @@ const DeviceDashboard = props => {
                 deviceId: props.match.params.deviceId,
                 pageSize: -1,
             }),
-        ]).then(([device, sites, groups, transmissions, deviceTemprs]) => {
-            device.site = sites.data.find(site => site.id === device.siteId);
-            device.group = groups.data.find(
-                group => group.id === device.deviceGroupId,
-            );
-            device.transmissions = transmissions.data;
-            device.deviceTemprs = deviceTemprs.data.length;
-            setDevice(device);
-            return device;
-        });
+            OopCore.getTransmissionStats({
+                deviceId: props.match.params.deviceId,
+                group: "success",
+            }),
+        ]).then(
+            ([
+                device,
+                sites,
+                groups,
+                transmissions,
+                deviceTemprs,
+                deviceStats,
+            ]) => {
+                device.site = sites.data.find(
+                    site => site.id === device.siteId,
+                );
+                device.group = groups.data.find(
+                    group => group.id === device.deviceGroupId,
+                );
+                device.transmissions = transmissions.data;
+                device.deviceTemprs = deviceTemprs.data.length;
+                const successfulTransmissions = {
+                    label: "Successful",
+                    value: deviceStats.transmissions.true || 0,
+                    backgroundColor: styles.green,
+                };
+                const failedTransmissions = {
+                    label: "Failed",
+                    value: deviceStats.transmissions.false || 0,
+                    backgroundColor: styles.red,
+                };
+                device.stats = [successfulTransmissions, failedTransmissions];
+                setDevice(device);
+                return device;
+            },
+        );
     };
 
     return (
@@ -247,29 +274,34 @@ const DeviceDashboard = props => {
                                 <div className="width-39">
                                     {device.transmissions &&
                                     device.transmissions.length ? (
-                                        <Card>
-                                            <Doughnut
-                                                data={{
-                                                    labels: [
-                                                        "Success",
-                                                        "Failure",
-                                                    ],
-                                                    datasets: [
-                                                        {
-                                                            data: [300, 50],
-
-                                                            hoverBackgroundColor: [
-                                                                "#36A2EB",
-                                                                "#FF6384",
-                                                            ],
-                                                            backgroundColor: [
-                                                                "#36A2EB",
-                                                                "#FF6384",
-                                                            ],
+                                        <Card title="Transmission Status">
+                                            <div className="flex-row center">
+                                                <Pie
+                                                    data={{
+                                                        labels: device.stats.map(
+                                                            stat =>
+                                                                `${stat.value} ${stat.label}`,
+                                                        ),
+                                                        datasets: [
+                                                            {
+                                                                data: device.stats.map(
+                                                                    stat =>
+                                                                        stat.value,
+                                                                ),
+                                                                backgroundColor: device.stats.map(
+                                                                    stat =>
+                                                                        stat.backgroundColor,
+                                                                ),
+                                                            },
+                                                        ],
+                                                    }}
+                                                    options={{
+                                                        legend: {
+                                                            position: "right",
                                                         },
-                                                    ],
-                                                }}
-                                            />
+                                                    }}
+                                                />
+                                            </div>
                                         </Card>
                                     ) : null}
                                 </div>

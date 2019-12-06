@@ -1,3 +1,4 @@
+export * from "./Dashboard";
 export * from "./Device";
 export * from "./DeviceDashboard";
 export * from "./DeviceGroup";
@@ -6,7 +7,6 @@ export * from "./Devices";
 export * from "./Transmission";
 export * from "./Transmissions";
 export * from "./Header";
-export * from "./Home";
 export * from "./Login";
 export * from "./PasswordReset";
 export * from "./Profile";

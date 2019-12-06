@@ -2,7 +2,7 @@ div[id="root"] {
     position: relative;
 
     .content {
-        background-color: $color-grey;
+        background-color: $oop-grey;
         flex: 1;
         margin-left: 9.5rem;
         padding: 9em 2rem;
@@ -108,9 +108,14 @@ label {
     justify-content: right;
 }
 
-.one-row {
+.flex-row {
     display: flex;
     flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
 }
 
 div {
@@ -123,6 +128,18 @@ div {
     & + & {
         margin-left: 10px;
     }
+}
+
+.width-19 {
+    width: 19%;
+}
+
+.width-25 {
+    width: 25%;
+}
+
+.width-29 {
+    width: 29%;
 }
 
 .width-39 {
@@ -142,6 +159,9 @@ div {
     flex-wrap: wrap;
 }
 
+.mt-10 {
+    margin-top: 2rem;
+}
 .mb-10 {
     margin-bottom: 10px;
 }
@@ -188,6 +208,17 @@ div {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.circle {
+    border-radius: 50%;
+    width: 100%;
+}
+
+.circle:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
 }
 
 button {

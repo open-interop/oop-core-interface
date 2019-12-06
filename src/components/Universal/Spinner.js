@@ -11,12 +11,20 @@ const GifSpinner = () => {
     );
 };
 
+const InPlaceGifSpinner = () => {
+    return (
+        <div className="center">
+            <img alt="loading-spinner" src="loading.gif" />
+        </div>
+    );
+};
+
 const IconSpinner = () => {
     return <FontAwesomeIcon spin icon={faCircleNotch} />;
 };
 
 const BaseuiSpinner = () => {
-    return <Spinner className="poop" />;
+    return <Spinner />;
 };
 
-export { BaseuiSpinner, GifSpinner, IconSpinner };
+export { BaseuiSpinner, GifSpinner, IconSpinner, InPlaceGifSpinner };

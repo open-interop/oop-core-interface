@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
+    Dashboard,
     Device,
     DeviceDashboard,
     DeviceGroup,
@@ -10,7 +11,6 @@ import {
     Transmission,
     Transmissions,
     Header,
-    Home,
     Login,
     PasswordReset,
     Profile,
@@ -38,6 +38,7 @@ class App extends Component {
             isLoading: true,
             user: false,
             site: null,
+            timeRange: OopCore.getCurrentTimeRange(),
         };
 
         OopCore.getLoggedInUser().catch(() => this.setNoUser());
@@ -66,6 +67,11 @@ class App extends Component {
     selectSite = site => {
         this.setState({ site: site });
         return OopCore.selectSite(site);
+    };
+
+    selectTimeRange = timeRange => {
+        this.setState({ timeRange: timeRange });
+        return OopCore.selectTimeRange(timeRange);
     };
 
     HeaderWithRouter = withRouter(Header);
@@ -133,7 +139,13 @@ class App extends Component {
                         path="/"
                         exact
                         render={props =>
-                            this.getComponent(!hasUser, Home, props)
+                            this.getComponent(!hasUser, Dashboard, {
+                                ...props,
+                                site: this.state.site,
+                                selectSite: this.selectSite,
+                                dateFrom: this.state.timeRange,
+                                setDateFrom: this.selectTimeRange,
+                            })
                         }
                     />
                     <Route

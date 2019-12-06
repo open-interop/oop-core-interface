@@ -36,7 +36,7 @@ class OopCore extends EventEmitter {
     }
 
     toSnakeCase(s) {
-        return s
+        return String(s)
             .replace(/^\w/, c => c.toLowerCase())
             .replace(/[A-Z]/g, $1 => {
                 return "_" + $1.toLowerCase();
@@ -198,6 +198,18 @@ class OopCore extends EventEmitter {
             this.saveCookie("site", JSON.stringify(site));
         } else {
             this.removeCookie("site");
+        }
+    }
+
+    getCurrentTimeRange() {
+        return cookie.load("range") || null;
+    }
+
+    selectTimeRange(timeRange) {
+        if (timeRange) {
+            this.saveCookie("range", JSON.stringify(timeRange));
+        } else {
+            this.removeCookie("range");
         }
     }
 
@@ -441,6 +453,44 @@ class OopCore extends EventEmitter {
             user: data,
         };
         return this.makeRequest(`/users`, RequestType.POST, payload);
+    }
+
+    mapStatsParams(key) {
+        switch (key) {
+            case "gteq":
+            case "gt":
+                return `filter[transmitted_at[${key}]]`;
+            case "siteId":
+                return `filter[${key}]`;
+            case "field":
+            case "direction":
+                return `filter[sort][${key}]`;
+            default:
+                return key;
+        }
+    }
+
+    getTransmissionStats(filters) {
+        const formattedFilters = {};
+
+        Object.keys(filters)
+            .filter(key => filters[key] !== undefined)
+            .forEach(key => {
+                return (formattedFilters[
+                    this.mapStatsParams(key)
+                ] = this.toSnakeCase(filters[key]));
+            });
+
+        var parameters = queryString.stringify(
+            this.camelToSnake(formattedFilters),
+        );
+
+        let path = "/dashboards/transmissions";
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 
     deleteUser(userId) {
