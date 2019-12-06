@@ -201,19 +201,8 @@ class OopCore extends EventEmitter {
         }
     }
 
-    getTimeRange() {
-        const currentCookie = cookie.load("range");
-        const cookieObject = currentCookie || null;
-        return cookieObject;
-    }
-
     getCurrentTimeRange() {
-        const currentCookie = this.getTimeRange();
-        if (currentCookie) {
-            return Promise.resolve(currentCookie);
-        } else {
-            return Promise.resolve(null);
-        }
+        return cookie.load("range") || null;
     }
 
     selectTimeRange(timeRange) {
@@ -475,7 +464,7 @@ class OopCore extends EventEmitter {
                 return `filter[${key}]`;
             case "field":
             case "direction":
-                return `filter[sort][${this.camelToSnake(key)}]`;
+                return `filter[sort][${key}]`;
             default:
                 return key;
         }

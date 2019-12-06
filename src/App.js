@@ -38,7 +38,7 @@ class App extends Component {
             isLoading: true,
             user: false,
             site: null,
-            timeRange: null,
+            timeRange: OopCore.getCurrentTimeRange(),
         };
 
         OopCore.getLoggedInUser().catch(() => this.setNoUser());
@@ -54,11 +54,6 @@ class App extends Component {
                 this.setState({ site: result });
             })
             .catch(() => this.setState({ site: null }));
-        OopCore.getCurrentTimeRange()
-            .then(result => {
-                this.setState({ timeRange: result });
-            })
-            .catch(() => this.setState({ timeRange: null }));
     }
 
     setUser = user => {

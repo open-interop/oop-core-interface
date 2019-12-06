@@ -47,6 +47,10 @@ const Dashboard = props => {
     );
     const [generalStats, setGeneralStats] = useState({});
 
+    const formatDateTime = dateTime => {
+        return dateTime.toISOString().split("T")[0];
+    };
+
     const now = new Date();
     const customStartDate = new Date(now.getTime());
     customStartDate.setDate(now.getDate() - dateFrom.id);
@@ -80,7 +84,7 @@ const Dashboard = props => {
         return OopCore.getTransmissionStats({
             group: "transmitted_at",
             deviceId: device.id,
-            gteq: oneYearAgo.toISOString().split("T")[0],
+            gteq: formatDateTime(oneYearAgo),
         }).then(response => {
             response.deviceId = device.id;
             response.deviceName = device.name;
@@ -98,12 +102,12 @@ const Dashboard = props => {
         return Promise.all([
             OopCore.getTransmissionStats({
                 group: "success",
-                gteq: thirtyDaysAgo.toISOString().split("T")[0],
+                gteq: formatDateTime(thirtyDaysAgo),
                 siteId: props.site ? props.site.id : undefined,
             }),
             OopCore.getTransmissionStats({
                 group: "success",
-                gteq: oneDayAgo.toISOString().split("T")[0],
+                gteq: formatDateTime(oneDayAgo),
                 siteId: props.site ? props.site.id : undefined,
             }),
         ]).then(([thirtyDayResponse, oneDayResponse]) => {
@@ -121,7 +125,7 @@ const Dashboard = props => {
             group: "transmittedAt",
             field: "transmittedAt",
             direction: "asc",
-            gteq: sevenDaysAgo.toISOString().split("T")[0],
+            gteq: formatDateTime(sevenDaysAgo),
         }).then(response => {
             setDaysSinceLastTransmission(response);
         });
