@@ -159,6 +159,9 @@ div {
     flex-wrap: wrap;
 }
 
+.mt-10 {
+    margin-top: 2rem;
+}
 .mb-10 {
     margin-bottom: 10px;
 }
@@ -209,6 +212,13 @@ div {
 
 .circle {
     border-radius: 50%;
+    width: 100%;
+}
+
+.circle:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
 }
 
 button {
