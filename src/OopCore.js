@@ -244,6 +244,7 @@ class OopCore extends EventEmitter {
 
     createDevice(device) {
         const data = { device: device };
+        device.authenticationPath = device.authenticationPath || null;
         return this.makeRequest(`/devices`, RequestType.POST, data);
     }
 

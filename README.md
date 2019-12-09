@@ -4,15 +4,15 @@ This application consumes the management API for the Open Interop platform avail
 
 ### Environment variables
 
--   Development
+#### Development
 
-PROXY
+-   PROXY - The URL for the oop-core application
 
--   Production
+#### Production
 
-REACT_APP_BASE_PATH
+-   REACT_APP_BASE_PATH - The directory path serving oop-core-interface
 
-PUBLIC_URL
+-   PUBLIC_URL - The public URL for oop-core-interface
 
 ### Installation
 
