@@ -1,0 +1,47 @@
+.fixed-height {
+    height: 370px;
+}
+
+.card-label {
+    p {
+        &[data-baseweb="typo-p3"] {
+            font-weight: bolder;
+        }
+    }
+}
+
+.map-component {
+    margin-left: auto;
+    height: 286px;
+    width: 100%;
+}
+
+.map-component-placeholder {
+    background-color: $oop-grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 286px;
+}
+
+.active-device {
+    color: $oop-green-success;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.smaller {
+    font-size: smaller;
+}
+
+.blink {
+    animation: blinker 2s step-start infinite;
+}
+
+.inactive-device {
+    color: $oop-red-failure;
+}

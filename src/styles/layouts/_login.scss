@@ -1,0 +1,66 @@
+.login {
+    align-items: center;
+    background-color: $oop-dark-blue;
+    color: $oop-grey;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    width: 100%;
+
+    .login-form {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 10rem;
+        width: 25%;
+
+        img {
+            width: 75%;
+            padding-bottom: 2rem;
+        }
+
+        .form-wrapper {
+            width: 100%;
+        }
+
+        .password-reset-text {
+            padding-bottom: 16px;
+        }
+
+        .bp {
+            font-size: 0.8rem;
+        }
+
+        .bu {
+            padding-right: 20px;
+        }
+
+        .bt {
+            padding-left: 20px;
+        }
+
+        .br {
+            padding-top: 6px;
+        }
+
+        .bs {
+            padding-bottom: 6px;
+        }
+
+        .login-button {
+            background-color: $oop-teal;
+            width: 100%;
+        }
+
+        .reset-link {
+            color: $color-white;
+            margin-top: 1em;
+            text-align: center;
+
+            &:hover {
+                color: $oop-grey;
+            }
+        }
+    }
+}

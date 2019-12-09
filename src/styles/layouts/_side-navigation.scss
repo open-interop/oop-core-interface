@@ -1,0 +1,128 @@
+div[id="root"] {
+    .side-navigation {
+        bottom: 0;
+        color: $color-white;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 5rem;
+        width: 9.5rem;
+        z-index: 100;
+
+        .filler {
+            background-color: $oop-teal;
+            flex-grow: 1;
+        }
+
+        a {
+            color: $color-white;
+        }
+
+        .navigation-item {
+            background-color: $oop-teal;
+            padding: 1rem;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+
+            &:first-child {
+                padding-top: 40px;
+            }
+
+            &.active {
+                background-color: $oop-active-teal;
+            }
+
+            &:hover {
+                background-color: $oop-active-teal;
+            }
+
+            a {
+                color: $color-white;
+                text-decoration: none;
+            }
+
+            .navigation-icon {
+                margin-bottom: 20px;
+            }
+        }
+
+        .nested-navigation {
+            background-color: $oop-dark-teal;
+            height: 100%;
+            left: -12rem;
+            min-width: 20rem;
+            overflow-y: auto;
+            position: absolute;
+            top: 0;
+            transition: 1s;
+            z-index: -1;
+
+            &.open {
+                height: 100%;
+                left: 9.5rem;
+                position: absolute;
+                top: 0;
+                transition: 1s;
+                z-index: -1;
+            }
+
+            .navigation-item {
+                background-color: $oop-dark-teal;
+                cursor: pointer;
+                display: block;
+                height: auto;
+                padding: 1rem;
+                position: relative;
+                z-index: -1;
+                text-align: left;
+                font-weight: 500;
+                font-size: 14px;
+
+                &:hover {
+                    background-color: $oop-darker-teal;
+                }
+
+                &.group-name {
+                    background-color: $oop-darker-teal;
+                }
+
+                &.no-devices {
+                    cursor: default;
+
+                    &:hover {
+                        background-color: initial;
+                    }
+                }
+            }
+
+            .bottom {
+                bottom: 0;
+                position: relative;
+                right: 0;
+            }
+
+            .mr-1 {
+                margin-right: 1rem;
+            }
+
+            .site-name {
+                padding: 1rem;
+                font-size: larger;
+                font-weight: bolder;
+            }
+
+            .align-right {
+                float: right;
+            }
+        }
+    }
+}
+
+.size-xxxl {
+    font-size: xxx-large;
+}
+
+.size-xxl {
+    font-size: xx-large;
+}

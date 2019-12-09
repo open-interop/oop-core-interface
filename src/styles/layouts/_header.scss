@@ -1,0 +1,41 @@
+div[id="root"] .header {
+    background-color: $oop-dark-blue;
+    height: 4.5rem;
+    padding-top: 0.5rem;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        border-bottom: 0;
+
+        a {
+            &[data-baseweb="link"] {
+                color: $color-white;
+                border-right: 1px solid $oop-teal;
+                padding-right: 1rem;
+            }
+
+            &[data-baseweb="button"] {
+                color: $color-white;
+            }
+            &:hover {
+                background-color: initial;
+            }
+        }
+
+        img {
+            border-right: 1px solid $oop-teal;
+            padding-right: 1rem;
+            width: 7rem;
+        }
+    }
+
+    &[data-baseweb="header-navigation"] {
+        border: 0;
+        padding-right: 12px;
+    }
+}

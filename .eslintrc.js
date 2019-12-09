@@ -19,6 +19,6 @@ module.exports = {
         curly: ["error", "all"],
         "comma-dangle": ["error", "always-multiline"],
         "prettier/prettier": "error",
-        "linebreak-style": ["error", "windows"]
+        "linebreak-style": ["error", "unix"]
     }
 };
