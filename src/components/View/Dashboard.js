@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, StyledTitle } from "baseui/card";
 import { DataCircle, DataProvider, InPlaceGifSpinner } from "../Universal";
 import { Select } from "baseui/select";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import OopCore from "../../OopCore";
 import moment from "moment";
 import chartStyles from "./../../styles/_chartColours.scss";
@@ -42,9 +42,6 @@ const Dashboard = props => {
     const [devices, setDevices] = useState({});
     const [transmissionTimeline, setTransmissionTimeline] = useState({});
     const [failedTransmissions, setFailedTransmissions] = useState({});
-    const [daysSinceLastTransmission, setDaysSinceLastTransmission] = useState(
-        {},
-    );
     const [generalStats, setGeneralStats] = useState({});
 
     const formatDateTime = dateTime => {
@@ -115,19 +112,6 @@ const Dashboard = props => {
                 thirtyDays: thirtyDayResponse.transmissions.false || 0,
                 oneDay: oneDayResponse.transmissions.false || 0,
             });
-        });
-    };
-
-    const getDaysSinceLastTransmissions = () => {
-        const sevenDaysAgo = new Date(now.getTime());
-        sevenDaysAgo.setDate(now.getDate() - 7);
-        return OopCore.getTransmissionStats({
-            group: "transmittedAt",
-            field: "transmittedAt",
-            direction: "asc",
-            gteq: formatDateTime(sevenDaysAgo),
-        }).then(response => {
-            setDaysSinceLastTransmission(response);
         });
     };
 

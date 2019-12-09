@@ -1,7 +1,7 @@
 {
   "name": "oop-core-interface",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
   "homepage": ".",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.24",

@@ -1,20 +1,47 @@
-## Open Interop user interface
+# Open Interop user interface
 
-Run instructions:
+This application consumes the management API for the Open Interop platform available [here](https://github.com/open-interop/oop-core).
 
-1. Clone project
+### Environment variables
 
-2. Install [Yarn](https://yarnpkg.com/en/docs/install)
+#### Development
 
-3. In the project root directory, run
+-   PROXY - The URL for the oop-core application
+
+#### Production
+
+-   REACT_APP_BASE_PATH - The directory path serving oop-core-interface
+
+-   PUBLIC_URL - The public URL for oop-core-interface
+
+### Installation
+
+-   Clone the application
+    `git clone git@github.com:open-interop/oop-core-interface.git`
+
+-   Install [Yarn](https://yarnpkg.com/en/docs/install) if necessary
+
+-   In the project root directory, install project dependencies
 
 `yarn install`
 
-4. Rename `.env.example` to `.env` and update the value of `PROXY` to match the host and port you are running [oop-core](https://github.com/open-interop/oop-core) on
+-   Create a `.env` file containing the necessary environment variables, see `.env.example` for the correct format.
 
-5. In the project root directory, run
+-   In the project root directory, run
 
 `yarn run start`
+
+for the dev server and
+
+`yarn run build`
+
+for the production app.
+
+## Contributing
+
+We welcome help from the community, please read the [Contributing guide](https://github.com/open-interop/oop-guidelines/blob/master/CONTRIBUTING.md) and [Community guidelines](https://github.com/open-interop/oop-guidelines/blob/master/CODE_OF_CONDUCT.md).
+
+# License
 
 Copyright (C) 2019 Blue Frontier IT Ltd
 
