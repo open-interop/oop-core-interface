@@ -4,11 +4,11 @@ This application consumes the management API for the Open Interop platform avail
 
 ### Environment variables
 
-- Development
+-   Development
 
 PROXY
 
-- Production
+-   Production
 
 REACT_APP_BASE_PATH
 
@@ -16,22 +16,22 @@ PUBLIC_URL
 
 ### Installation
 
-* Clone the application
-`git clone git@github.com:open-interop/oop-core-interface.git`
+-   Clone the application
+    `git clone git@github.com:open-interop/oop-core-interface.git`
 
-* Install [Yarn](https://yarnpkg.com/en/docs/install) if necessary
+-   Install [Yarn](https://yarnpkg.com/en/docs/install) if necessary
 
-* In the project root directory, install project dependencies
+-   In the project root directory, install project dependencies
 
 `yarn install`
 
-* Create a `.env` file containing the necessary environment variables, see `.env.example` for the correct format.
+-   Create a `.env` file containing the necessary environment variables, see `.env.example` for the correct format.
 
-* In the project root directory, run
+-   In the project root directory, run
 
 `yarn run start`
 
-for the dev server and 
+for the dev server and
 
 `yarn run build`
 
@@ -39,9 +39,10 @@ for the production app.
 
 ## Contributing
 
-We welcome help from the community, please read the Contributing guide and Community guidelines.
+We welcome help from the community, please read the [Contributing guide](https://github.com/open-interop/oop-guidelines/blob/master/CONTRIBUTING.md) and [Community guidelines](https://github.com/open-interop/oop-guidelines/blob/master/CODE_OF_CONDUCT.md).
 
 # License
+
 Copyright (C) 2019 Blue Frontier IT Ltd
 
 This program is free software: you can redistribute it and/or modify
