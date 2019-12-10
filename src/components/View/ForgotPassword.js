@@ -7,7 +7,7 @@ import { Error, LineWrapper } from "../Universal";
 import logo from "../../resources/open-interop-white.svg";
 import OopCore from "../../OopCore";
 
-const PasswordReset = () => {
+const ForgotPassword = () => {
     useEffect(() => {
         document.title = "Password Reset | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -21,7 +21,7 @@ const PasswordReset = () => {
         setLoading(true);
         setSubmitted(false);
         setErrorMessage("");
-        OopCore.resetPassword(user)
+        OopCore.requestPasswordReset(user)
             .then(() => {
                 setErrorMessage("");
                 setLoading(false);
@@ -54,27 +54,27 @@ const PasswordReset = () => {
                                 placeholder="E-mail address"
                             />
                         </FormControl>
-                        <div className="password-reset-text">
+                        <div className="forgot-password-text">
                             Enter your email address and we'll send you a link
                             to reset your password
                         </div>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                className="reset-button"
+
+                        <Button
+                            type="submit"
+                            className="login-button"
+                            onClick={handleSubmit}
+                            aria-label="Submit"
+                        >
+                            Submit
+                        </Button>
+                        <div className="reset-link">
+                            <Link
+                                className="reset-link"
                                 to={"/login"}
                                 aria-label="Go back to login"
                             >
                                 Go back
-                            </Button>
-                            <Button
-                                type="submit"
-                                className="login-button"
-                                onClick={handleSubmit}
-                                aria-label="Submit"
-                            >
-                                Submit
-                            </Button>
+                            </Link>
                         </div>
                         <div>
                             <Error message={errorMessage} />
@@ -111,4 +111,4 @@ const PasswordReset = () => {
     }
 };
 
-export { PasswordReset };
+export { ForgotPassword };

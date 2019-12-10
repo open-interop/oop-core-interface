@@ -71,7 +71,7 @@ const Login = () => {
                     <div className="reset-link">
                         <Link
                             className="reset-link"
-                            to={"/password-reset"}
+                            to={"/forgot-password"}
                             aria-label="Forgot password"
                         >
                             Forgotten your password?
