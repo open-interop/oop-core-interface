@@ -30,7 +30,7 @@ const Login = () => {
         <>
             <div className="login-form">
                 <img src={logo} alt="logo" />
-                <LineWrapper title="Sign in">
+                <LineWrapper title="Login">
                     <FormControl>
                         <Input
                             id="input-email"
@@ -62,11 +62,11 @@ const Login = () => {
                     </FormControl>
                     <Button
                         type="submit"
-                        className="login-button"
+                        className="submit-button"
                         onClick={handleSubmit}
                         aria-label="Log in"
                     >
-                        Login
+                        Log in
                     </Button>
                     <div className="reset-link">
                         <Link

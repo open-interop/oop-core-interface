@@ -51,6 +51,11 @@ const ForgotPassword = () => {
                                         email: event.currentTarget.value,
                                     })
                                 }
+                                onKeyDown={event => {
+                                    if (event.keyCode === 13) {
+                                        handleSubmit();
+                                    }
+                                }}
                                 placeholder="E-mail address"
                             />
                         </FormControl>
@@ -61,9 +66,10 @@ const ForgotPassword = () => {
 
                         <Button
                             type="submit"
-                            className="login-button"
+                            className="submit-button"
                             onClick={handleSubmit}
                             aria-label="Submit"
+                            disabled={!user.email}
                         >
                             Submit
                         </Button>
@@ -90,16 +96,20 @@ const ForgotPassword = () => {
                 <div className="login-form">
                     <img src={logo} alt="logo" />
                     <LineWrapper title="Success!">
-                        <div>A password reset link has been emailed to you</div>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                to={"/login"}
-                                aria-label="Go to login"
-                            >
-                                Login
-                            </Button>
+                        <div className="forgot-password-text">
+                            The email address you entered will receive a
+                            password reset link.
                         </div>
+
+                        <Button
+                            className="submit-button"
+                            $as={Link}
+                            to={"/login"}
+                            aria-label="Go to login"
+                        >
+                            Go to Login
+                        </Button>
+
                         <div>
                             <Error message={errorMessage} />
                         </div>

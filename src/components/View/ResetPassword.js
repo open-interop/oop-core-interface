@@ -10,17 +10,26 @@ const queryString = require("query-string");
 const ResetPassword = props => {
     const token = queryString.parse(props.location.search).token || "";
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errors, setErrors] = useState({});
+
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordconfirmation] = useState("");
     const handleSubmit = () => {
         setLoading(true);
-        setErrorMessage("");
+        setErrors({});
         OopCore.resetPassword(token, password, passwordConfirmation)
-            .then(() => props.history.replace(`/login`))
+            .then(() => props.history.push(`/login`))
             .catch(error => {
-                setErrorMessage(error.message);
-                setLoading(false);
+                if (typeof error === "string") {
+                    const updatedErrors = { ...errors };
+                    console.log(error);
+                    updatedErrors.generic = error;
+                    setErrors(updatedErrors);
+                    setLoading(false);
+                } else {
+                    setErrors(error);
+                    setLoading(false);
+                }
             });
     };
 
@@ -40,7 +49,13 @@ const ResetPassword = props => {
                         placeholder="New Password"
                     />
                 </FormControl>
-                <FormControl>
+                <FormControl
+                    error={
+                        errors.passwordConfirmation
+                            ? `Password confirmation ${errors.passwordConfirmation}`
+                            : ""
+                    }
+                >
                     <Input
                         id="input-password"
                         type="password"
@@ -59,14 +74,14 @@ const ResetPassword = props => {
                 </FormControl>
                 <Button
                     type="submit"
-                    className="login-button"
+                    className="submit-button"
                     onClick={handleSubmit}
                     aria-label="Submit new password"
                 >
                     Submit
                 </Button>
                 <div>
-                    <Error message={errorMessage} />
+                    <Error message={errors.generic} />
                 </div>
                 <div> {loading && "loading"}</div>
             </LineWrapper>

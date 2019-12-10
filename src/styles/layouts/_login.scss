@@ -48,7 +48,7 @@
             padding-bottom: 6px;
         }
 
-        .login-button {
+        .submit-button {
             background-color: $oop-teal;
             width: 100%;
         }
@@ -60,6 +60,16 @@
 
             &:hover {
                 color: $oop-grey;
+            }
+        }
+
+        .submit-button {
+            color: $color-white;
+
+            &:not([disabled]) {
+                &:hover {
+                    background-color: $oop-light-blue;
+                }
             }
         }
     }
