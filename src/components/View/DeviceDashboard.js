@@ -315,7 +315,9 @@ const DeviceDashboard = props => {
                                             </StyledBody>
                                             <StyledAction></StyledAction>
                                         </Card>
-                                    ) : null}
+                                    ) : (
+                                        <Card title="No transmissions available" />
+                                    )}
                                 </div>
                                 <div className="width-39">
                                     {device.transmissions &&
@@ -351,7 +353,9 @@ const DeviceDashboard = props => {
                                                 />
                                             </div>
                                         </Card>
-                                    ) : null}
+                                    ) : (
+                                        <Card title="No transmission status available" />
+                                    )}
                                 </div>
                             </div>
                         </>

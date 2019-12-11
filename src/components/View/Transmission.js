@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FormControl } from "baseui/form-control";
 import { Button, KIND } from "baseui/button";
-import { Input } from "baseui/input";
-import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
+import { ListItem, ListItemLabel } from "baseui/list";
+import { Card, StyledBody } from "baseui/card";
 import { DataProvider, Modal } from "../Universal";
 import OopCore from "../../OopCore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,22 +22,19 @@ const Transmission = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
-    const setValue = (key, value) => {
-        const updatedData = { ...transmission };
-        updatedData[key] = value;
-        setTransmission(updatedData);
-    };
-
     return (
         <div className="content-wrapper">
-            <Button
-                $as={Link}
-                kind={KIND.minimal}
-                to={allTransmissionsPath}
-                aria-label="Go back to all transmissions"
-            >
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </Button>
+            <div className="flex-left">
+                <Button
+                    $as={Link}
+                    kind={KIND.minimal}
+                    to={allTransmissionsPath}
+                    aria-label="Go back to all transmissions"
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <h2>Transmissions details</h2>
+            </div>
 
             <DataProvider
                 getData={() => {
@@ -52,84 +48,89 @@ const Transmission = props => {
                 }}
                 renderData={() => (
                     <>
-                        <FormControl
-                            label="Transmission UUID"
-                            key={`form-control-transmission-uuid`}
-                        >
-                            <Input
-                                disabled
-                                id={`input-transmission-uuid`}
-                                value={transmission.transmissionUuid || ""}
-                                onChange={event =>
-                                    setValue(
-                                        "transmission-uuid",
-                                        event.currentTarget.value,
-                                    )
-                                }
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Message UUID"
-                            key={`form-control-message-uuid`}
-                        >
-                            <Input
-                                disabled
-                                id={`input-message-uuid`}
-                                value={transmission.messageUuid || ""}
-                                onChange={event =>
-                                    setValue(
-                                        "message-uuid",
-                                        event.currentTarget.value,
-                                    )
-                                }
-                            />
-                        </FormControl>
-                        <FormControl label="Device" key={`form-control-device`}>
-                            <Input
-                                disabled
-                                id={`input-device`}
-                                value={transmission.deviceId || ""}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Device Tempr"
-                            key={`form-control-device-tempr`}
-                        >
-                            <Input
-                                disabled
-                                id={`input-device-tempr-id`}
-                                value={transmission.deviceTemprId || ""}
-                            />
-                        </FormControl>
-                        <FormControl label="Status" key={`form-control-status`}>
-                            <Checkbox
-                                disabled
-                                checked={transmission.status}
-                                checkmarkType={STYLE_TYPE.toggle_round}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Transmitted At"
-                            key={`form-control-transmitted-at`}
-                        >
-                            <Input
-                                disabled
-                                id={`input-transmitted-at`}
-                                value={transmission.transmittedAt || ""}
-                            />
-                        </FormControl>
-                        {transmission.body && (
-                            <FormControl label="Body" key={`form-control-body`}>
-                                <Modal
-                                    buttonText="View"
-                                    content={
-                                        <JSONPretty
-                                            data={transmission.body}
-                                        ></JSONPretty>
-                                    }
-                                />
-                            </FormControl>
-                        )}
+                        <Card>
+                            <StyledBody>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Transmission UUID">
+                                            {transmission.transmissionUuid ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Message UUID">
+                                            {transmission.messageUuid ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Device ID">
+                                            {transmission.deviceId ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Tempr ID">
+                                            {transmission.temprId ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Status">
+                                            {transmission.status
+                                                ? "Successful"
+                                                : "Failed"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Transmitted at">
+                                            {transmission.transmittedAt ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                                {transmission.requestBody && (
+                                    <ListItem>
+                                        <Modal
+                                            buttonText="View request body"
+                                            buttonKind={KIND.secondary}
+                                            content={
+                                                <JSONPretty
+                                                    data={
+                                                        transmission.requestBody
+                                                    }
+                                                />
+                                            }
+                                        />
+                                    </ListItem>
+                                )}
+                                {transmission.responseBody && (
+                                    <ListItem>
+                                        <Modal
+                                            buttonText="View response body"
+                                            buttonKind={KIND.secondary}
+                                            content={
+                                                <JSONPretty
+                                                    data={
+                                                        transmission.responseBody
+                                                    }
+                                                />
+                                            }
+                                        />
+                                    </ListItem>
+                                )}
+                            </StyledBody>
+                        </Card>
                     </>
                 )}
             />
