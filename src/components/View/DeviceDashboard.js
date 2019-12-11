@@ -13,7 +13,7 @@ import { DataProvider, Table } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody, StyledAction } from "baseui/card";
 import { Map, TileLayer, Marker } from "react-leaflet";
-import { Pie } from "react-chartjs-2";
+import { Chart, Pie } from "react-chartjs-2";
 import styles from "./../../styles/_variables.scss";
 import OopCore from "../../OopCore";
 
@@ -76,6 +76,52 @@ const DeviceDashboard = props => {
                 return device;
             },
         );
+    };
+
+    const generateCustomLabels = chart => {
+        var data = chart.data;
+
+        if (data.labels.length && data.datasets.length) {
+            return data.labels.map(function(label, i) {
+                var meta = chart.getDatasetMeta(0);
+                var ds = data.datasets[0];
+                var arc = meta.data[i];
+                var custom = (arc && arc.custom) || {};
+                var getValueAtIndexOrDefault =
+                    Chart.helpers.getValueAtIndexOrDefault;
+                var arcOpts = chart.options.elements.arc;
+                var fill = custom.backgroundColor
+                    ? custom.backgroundColor
+                    : getValueAtIndexOrDefault(
+                          ds.backgroundColor,
+                          i,
+                          arcOpts.backgroundColor,
+                      );
+                var stroke = custom.borderColor
+                    ? custom.borderColor
+                    : getValueAtIndexOrDefault(
+                          ds.borderColor,
+                          i,
+                          arcOpts.borderColor,
+                      );
+                var bw = custom.borderWidth
+                    ? custom.borderWidth
+                    : getValueAtIndexOrDefault(
+                          ds.borderWidth,
+                          i,
+                          arcOpts.borderWidth,
+                      );
+                return {
+                    text: ds.data[i] + " " + label.toLowerCase(),
+                    fillStyle: fill,
+                    strokeStyle: stroke,
+                    lineWidth: bw,
+                    hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+                    index: i,
+                };
+            });
+        }
+        return [];
     };
 
     return (
@@ -281,8 +327,7 @@ const DeviceDashboard = props => {
                                                 <Pie
                                                     data={{
                                                         labels: device.stats.map(
-                                                            stat =>
-                                                                `${stat.value} ${stat.label}`,
+                                                            stat => stat.label,
                                                         ),
                                                         datasets: [
                                                             {
@@ -300,6 +345,9 @@ const DeviceDashboard = props => {
                                                     options={{
                                                         legend: {
                                                             position: "right",
+                                                            labels: {
+                                                                generateLabels: generateCustomLabels,
+                                                            },
                                                         },
                                                     }}
                                                 />

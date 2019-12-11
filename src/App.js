@@ -8,17 +8,18 @@ import {
     DeviceGroup,
     DeviceGroups,
     Devices,
-    Transmission,
-    Transmissions,
+    ForgotPassword,
     Header,
     Login,
-    PasswordReset,
+    ResetPassword,
     Profile,
     SideNavigation,
     Site,
     Sites,
     Tempr,
     Temprs,
+    Transmission,
+    Transmissions,
     User,
     Users,
 } from "./components/View";
@@ -94,7 +95,9 @@ class App extends Component {
                             : `?redirect=${currentPath}`,
                 }}
             />
-        ) : currentPath === "/login" || currentPath === "/password-reset" ? (
+        ) : currentPath === "/login" ||
+          currentPath === "/forgot-password" ||
+          currentPath === "/reset-password" ? (
             <div className="login">
                 <Component {...props} />
             </div>
@@ -119,10 +122,17 @@ class App extends Component {
                         }
                     />
                     <Route
-                        path="/password-reset"
+                        path="/forgot-password"
                         exact
                         render={props =>
-                            this.getComponent(hasUser, PasswordReset, props)
+                            this.getComponent(hasUser, ForgotPassword, props)
+                        }
+                    />
+                    <Route
+                        path="/reset-password"
+                        exact
+                        render={props =>
+                            this.getComponent(hasUser, ResetPassword, props)
                         }
                     />
                     {hasUser && (
@@ -159,7 +169,6 @@ class App extends Component {
                             })
                         }
                     />
-
                     <Route
                         path="/devices/:deviceId"
                         exact

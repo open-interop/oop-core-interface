@@ -285,6 +285,9 @@ const Dashboard = props => {
                                 yAxes: [{ stacked: true }],
                                 xAxes: [{ stacked: true }],
                             },
+                            tooltips: {
+                                mode: "label",
+                            },
                         }}
                     />
                 </Card>
