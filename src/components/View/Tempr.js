@@ -276,7 +276,7 @@ const Tempr = props => {
                                               .body
                                         : "No data to show"
                                 }
-                            ></JSONPretty>
+                            />
                         </Tab>
                         <Tab title="Console output">
                             <JSONPretty
@@ -285,7 +285,7 @@ const Tempr = props => {
                                     updatedTempr.previewTempr.console ||
                                     "No data to show"
                                 }
-                            ></JSONPretty>
+                            />
                         </Tab>
                         <Tab title="Error output">
                             <JSONPretty
@@ -294,7 +294,7 @@ const Tempr = props => {
                                     updatedTempr.previewTempr.error ||
                                     "No data to show"
                                 }
-                            ></JSONPretty>
+                            />
                         </Tab>
                     </Tabs>
                 </div>

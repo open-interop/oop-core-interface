@@ -109,7 +109,7 @@ const Transmission = props => {
                                                     data={
                                                         transmission.requestBody
                                                     }
-                                                ></JSONPretty>
+                                                />
                                             }
                                         />
                                     </ListItem>
@@ -124,7 +124,7 @@ const Transmission = props => {
                                                     data={
                                                         transmission.responseBody
                                                     }
-                                                ></JSONPretty>
+                                                />
                                             }
                                         />
                                     </ListItem>
