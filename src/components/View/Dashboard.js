@@ -52,8 +52,8 @@ const Dashboard = props => {
     const customStartDate = new Date(now.getTime());
     customStartDate.setDate(now.getDate() - dateFrom.id);
 
-    const eightDaysAgo = new Date(now.getTime());
-    eightDaysAgo.setDate(now.getDate() - 8);
+    const nineDaysAgo = new Date(now.getTime());
+    nineDaysAgo.setDate(now.getDate() - 9);
 
     const oneYearAgo = new Date(now.getTime());
     oneYearAgo.setDate(now.getDate() - 365);
@@ -195,16 +195,16 @@ const Dashboard = props => {
 
     const renderTransmissionCards = () => {
         const timelineRange = getDateRange(customStartDate, now);
-        const lastTransmissionsRange = getDateRange(eightDaysAgo, now);
+        const lastTransmissionsRange = getDateRange(nineDaysAgo, now);
 
         const getDaysAgo = series => {
-            var lastDay = 0;
+            var dayDifference = 0;
             var i;
             for (i = lastTransmissionsRange.length - 1; i > 0; i--) {
                 if (series.transmissions[lastTransmissionsRange[i].date]) {
                     break;
                 } else {
-                    lastDay = moment(now).diff(
+                    dayDifference = moment(now).diff(
                         moment(lastTransmissionsRange[i - 1].date),
                         "days",
                     );
@@ -214,13 +214,13 @@ const Dashboard = props => {
             return {
                 deviceId: series.deviceId,
                 deviceName: series.deviceName,
-                daysAgo: lastDay,
+                daysAgo: dayDifference,
             };
         };
 
         const transmissionsByLastDay = transmissionTimeline
             .map(series => getDaysAgo(series))
-            .filter(device => device.daysAgo < 7 && device.daysAgo !== 0);
+            .filter(device => device.daysAgo !== 0);
 
         return (
             <div className="mb-20 space-between">
@@ -318,6 +318,8 @@ const Dashboard = props => {
                                         ticks: {
                                             beginAtZero: true,
                                             stepSize: 1,
+                                            callback: value =>
+                                                value <= 7 ? value : "7+",
                                         },
                                     },
                                 ],
