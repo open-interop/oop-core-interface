@@ -52,8 +52,8 @@ const Dashboard = props => {
     const customStartDate = new Date(now.getTime());
     customStartDate.setDate(now.getDate() - dateFrom.id);
 
-    const nineDaysAgo = new Date(now.getTime());
-    nineDaysAgo.setDate(now.getDate() - 9);
+    const eightDaysAgo = new Date(now.getTime());
+    eightDaysAgo.setDate(now.getDate() - 8);
 
     const oneYearAgo = new Date(now.getTime());
     oneYearAgo.setDate(now.getDate() - 365);
@@ -195,7 +195,7 @@ const Dashboard = props => {
 
     const renderTransmissionCards = () => {
         const timelineRange = getDateRange(customStartDate, now);
-        const lastTransmissionsRange = getDateRange(nineDaysAgo, now);
+        const lastTransmissionsRange = getDateRange(eightDaysAgo, now);
 
         const getDaysAgo = series => {
             var dayDifference = 0;
@@ -322,7 +322,7 @@ const Dashboard = props => {
                                             beginAtZero: true,
                                             stepSize: 1,
                                             callback: value =>
-                                                value <= 7 ? value : "7+",
+                                                value < 7 ? value : "7+",
                                         },
                                     },
                                 ],
