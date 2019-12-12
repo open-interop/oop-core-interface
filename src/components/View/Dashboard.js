@@ -330,6 +330,9 @@ const Dashboard = props => {
                             legend: {
                                 display: false,
                             },
+                            tooltips: {
+                                enabled: false,
+                            },
                         }}
                     />
                 </Card>
