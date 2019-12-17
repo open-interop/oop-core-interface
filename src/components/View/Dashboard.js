@@ -68,6 +68,7 @@ const Dashboard = props => {
     };
 
     const getTransmissionsTimeline = () => {
+        setTransmissionTimeline([]);
         const devicesForSite = props.site
             ? devices.filter(device => device.siteId === props.site.id)
             : devices;
