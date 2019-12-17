@@ -1,0 +1,17 @@
+.toggle {
+    margin: 0 1rem;
+
+    input {
+        &[type="checkbox"] {
+            display: none;
+        }
+    }
+    > label {
+        > div {
+            padding-right: 0;
+            > div {
+                background-color: $oop-teal;
+            }
+        }
+    }
+}

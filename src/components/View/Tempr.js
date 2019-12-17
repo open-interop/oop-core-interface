@@ -33,7 +33,9 @@ import { arrayToObject, identicalObject } from "../../Utilities";
 import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
-import "brace/theme/github";
+import "brace/mode/javascript";
+import "brace/mode/handlebars";
+import "brace/theme/kuroir";
 var JSONPretty = require("react-json-pretty");
 
 const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
@@ -664,7 +666,7 @@ const Tempr = props => {
                                     <label>Example</label>
                                     <AceEditor
                                         mode="json"
-                                        theme="github"
+                                        theme="kuroir"
                                         width="100%"
                                         showPrintMargin={false}
                                         onChange={value => {
@@ -683,10 +685,47 @@ const Tempr = props => {
                                     />
                                 </div>
                                 <div className="w-50">
-                                    <label>Mapping</label>
+                                    <div className="flex-row">
+                                        <label>Basic mapping</label>
+                                        <div className="toggle">
+                                            <Checkbox
+                                                isIndeterminate={true}
+                                                checked={
+                                                    updatedTempr.template.body
+                                                        .language === "js"
+                                                }
+                                                onChange={event => {
+                                                    const updatedData = {
+                                                        ...updatedTempr,
+                                                    };
+                                                    updatedData.template.body = {
+                                                        language: event.target
+                                                            .checked
+                                                            ? "js"
+                                                            : "handlebars",
+                                                        script:
+                                                            updatedData.template
+                                                                .body.script,
+                                                    };
+                                                    setUpdatedTempr(
+                                                        updatedData,
+                                                    );
+                                                }}
+                                                checkmarkType={
+                                                    STYLE_TYPE.toggle_round
+                                                }
+                                            />
+                                        </div>
+                                        <label>Advanced mapping</label>
+                                    </div>
                                     <AceEditor
-                                        mode="javascript"
-                                        theme="github"
+                                        mode={
+                                            updatedTempr.template.body
+                                                .language === "js"
+                                                ? "javascript"
+                                                : "handlebars"
+                                        }
+                                        theme="kuroir"
                                         width="100%"
                                         showPrintMargin={false}
                                         onChange={value => {
