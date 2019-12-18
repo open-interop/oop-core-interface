@@ -13,6 +13,8 @@ import {
     faCheck,
     faTimes,
     faChevronLeft,
+    faExpandArrowsAlt,
+    faCompressArrowsAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     AccordionWithCaption,
@@ -59,7 +61,9 @@ const Tempr = props => {
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false);
 
-    const [activeTab, setActiveTab] = React.useState("0");
+    const [activeTab, setActiveTab] = useState("0");
+    const [mappingFullScreen, setMappingFullScreen] = useState(false);
+    const [fullScreenActiveTab, setFullScreenActiveTab] = useState("0");
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -476,8 +480,165 @@ const Tempr = props => {
         }
     };
 
+    const ExampleEditor = () => {
+        return (
+            <AceEditor
+                mode="json"
+                theme="kuroir"
+                width="100%"
+                height={mappingFullScreen ? "75vh" : "500px"}
+                showPrintMargin={false}
+                onChange={value => {
+                    setValue("exampleTransmission", value);
+                }}
+                editorProps={{
+                    $blockScrolling: true,
+                }}
+                value={updatedTempr.exampleTransmission || ""}
+            />
+        );
+    };
+
+    const MappingEditor = () => {
+        return (
+            <>
+                <div className="flex-row mb-10">
+                    <label>Basic mapping</label>
+                    <div className="toggle">
+                        <Checkbox
+                            isIndeterminate={true}
+                            checked={
+                                updatedTempr.template.body &&
+                                updatedTempr.template.body.language === "js"
+                            }
+                            onChange={event => {
+                                const updatedData = {
+                                    ...updatedTempr,
+                                };
+                                updatedData.template.body = {
+                                    language: event.target.checked
+                                        ? "js"
+                                        : "handlebars",
+                                    script: updatedData.template.body.script,
+                                };
+                                setUpdatedTempr(updatedData);
+                            }}
+                            checkmarkType={STYLE_TYPE.toggle_round}
+                        />
+                    </div>
+                    <label>Advanced mapping</label>
+                </div>
+                <AceEditor
+                    mode={
+                        updatedTempr.template.body &&
+                        updatedTempr.template.body.language === "js"
+                            ? "javascript"
+                            : "handlebars"
+                    }
+                    theme="kuroir"
+                    width="100%"
+                    height={mappingFullScreen ? "75vh" : "500px"}
+                    showPrintMargin={false}
+                    onChange={value => {
+                        const updatedData = {
+                            ...updatedTempr,
+                        };
+                        updatedData.template.body = {
+                            language: "js",
+                            script: value,
+                        };
+                        setUpdatedTempr(updatedData);
+                    }}
+                    editorProps={{
+                        $blockScrolling: true,
+                    }}
+                    value={
+                        updatedTempr.template.body
+                            ? updatedTempr.template.body.script
+                            : ""
+                    }
+                />
+            </>
+        );
+    };
+
+    const renderBody = () => {
+        if (mappingFullScreen) {
+            return (
+                <div className="overlay">
+                    <div className="space-between">
+                        <h3>Tempr body</h3>
+                        <Button
+                            kind={KIND.secondary}
+                            onClick={() => {
+                                document.body.classList.remove("no-scroll");
+                                setMappingFullScreen(false);
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faCompressArrowsAlt} />
+                        </Button>
+                    </div>
+                    <Tabs
+                        onChange={({ activeKey }) => {
+                            setFullScreenActiveTab(activeKey);
+                        }}
+                        activeKey={fullScreenActiveTab}
+                    >
+                        <Tab title="Example">{ExampleEditor()}</Tab>
+                        <Tab title="Mapping">{MappingEditor()}</Tab>
+                        <Tab title="Output">
+                            <Button
+                                kind={KIND.primary}
+                                onClick={calculateOutput}
+                                isLoading={previewLoading}
+                            >
+                                Calculate output
+                            </Button>
+                            {PreviewTemprBox()}
+                        </Tab>
+                    </Tabs>
+                </div>
+            );
+        } else {
+            return (
+                <>
+                    <div className="flex-row-reverse">
+                        <Button
+                            kind={KIND.secondary}
+                            onClick={() => {
+                                document.body.classList.add("no-scroll");
+                                setMappingFullScreen(true);
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faExpandArrowsAlt} />
+                        </Button>
+                    </div>
+                    <div className="flex-row mb-20">
+                        <div className="w-50">
+                            <div className="mb-10">Example</div>
+                            {ExampleEditor()}
+                        </div>
+                        <div className="w-50">{MappingEditor()}</div>
+                    </div>
+                    <Button
+                        kind={KIND.secondary}
+                        onClick={calculateOutput}
+                        isLoading={previewLoading}
+                    >
+                        Calculate output
+                    </Button>
+                    {PreviewTemprBox()}
+                </>
+            );
+        }
+    };
+
     return (
-        <div className="content-wrapper">
+        <div
+            className={`content-wrapper ${
+                mappingFullScreen ? "no-scroll" : ""
+            }`}
+        >
             <DataProvider
                 getData={() => {
                     return getData();
@@ -661,103 +822,7 @@ const Tempr = props => {
                             </div>
                         </AccordionWithCaption>
                         <AccordionWithCaption title="Body" startOpen>
-                            <div className="flex-row mb-20">
-                                <div className="w-50">
-                                    <label>Example</label>
-                                    <AceEditor
-                                        mode="json"
-                                        theme="kuroir"
-                                        width="100%"
-                                        showPrintMargin={false}
-                                        onChange={value => {
-                                            setValue(
-                                                "exampleTransmission",
-                                                value,
-                                            );
-                                        }}
-                                        editorProps={{
-                                            $blockScrolling: true,
-                                        }}
-                                        value={
-                                            updatedTempr.exampleTransmission ||
-                                            ""
-                                        }
-                                    />
-                                </div>
-                                <div className="w-50">
-                                    <div className="flex-row">
-                                        <label>Basic mapping</label>
-                                        <div className="toggle">
-                                            <Checkbox
-                                                isIndeterminate={true}
-                                                checked={
-                                                    updatedTempr.template.body
-                                                        .language === "js"
-                                                }
-                                                onChange={event => {
-                                                    const updatedData = {
-                                                        ...updatedTempr,
-                                                    };
-                                                    updatedData.template.body = {
-                                                        language: event.target
-                                                            .checked
-                                                            ? "js"
-                                                            : "handlebars",
-                                                        script:
-                                                            updatedData.template
-                                                                .body.script,
-                                                    };
-                                                    setUpdatedTempr(
-                                                        updatedData,
-                                                    );
-                                                }}
-                                                checkmarkType={
-                                                    STYLE_TYPE.toggle_round
-                                                }
-                                            />
-                                        </div>
-                                        <label>Advanced mapping</label>
-                                    </div>
-                                    <AceEditor
-                                        mode={
-                                            updatedTempr.template.body
-                                                .language === "js"
-                                                ? "javascript"
-                                                : "handlebars"
-                                        }
-                                        theme="kuroir"
-                                        width="100%"
-                                        showPrintMargin={false}
-                                        onChange={value => {
-                                            const updatedData = {
-                                                ...updatedTempr,
-                                            };
-                                            updatedData.template.body = {
-                                                language: "js",
-                                                script: value,
-                                            };
-                                            setUpdatedTempr(updatedData);
-                                        }}
-                                        editorProps={{
-                                            $blockScrolling: true,
-                                        }}
-                                        value={
-                                            updatedTempr.template.body
-                                                ? updatedTempr.template.body
-                                                      .script
-                                                : ""
-                                        }
-                                    />
-                                </div>
-                            </div>
-                            <Button
-                                kind={KIND.secondary}
-                                onClick={calculateOutput}
-                                isLoading={previewLoading}
-                            >
-                                Calculate output
-                            </Button>
-                            {PreviewTemprBox()}
+                            {renderBody()}
                         </AccordionWithCaption>
                         <FormControl label="Notes" key={`form-control-notes`}>
                             <Textarea
