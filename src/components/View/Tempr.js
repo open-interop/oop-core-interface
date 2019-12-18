@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Prompt } from "react-router-dom";
 import AceEditor from "react-ace";
 import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -634,282 +634,297 @@ const Tempr = props => {
     };
 
     return (
-        <div
-            className={`content-wrapper ${
-                mappingFullScreen ? "no-scroll" : ""
-            }`}
-        >
-            <DataProvider
-                getData={() => {
-                    return getData();
-                }}
-                renderData={() => (
-                    <>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                kind={KIND.minimal}
-                                to={allTemprsPath}
-                                aria-label="Go back to all temprs"
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </Button>
-                            <h2>
-                                {blankTempr ? "Create Tempr" : "Edit Tempr"}
-                            </h2>
-                            <div>
-                                {blankTempr ? null : (
-                                    <ConfirmModal
-                                        buttonText="Delete"
-                                        title="Confirm Deletion"
-                                        mainText={
-                                            <>
-                                                <div>
-                                                    Are you sure you want to
-                                                    delete this tempr?
-                                                </div>
-                                                <div>
-                                                    This action can't be undone.
-                                                </div>
-                                            </>
-                                        }
-                                        primaryAction={deleteTempr}
-                                        primaryActionText="Delete"
-                                        secondaryActionText="Cancel"
-                                    />
-                                )}
+        <>
+            <Prompt message="Are you sure you want to leave this page?" />
+            <div
+                className={`content-wrapper ${
+                    mappingFullScreen ? "no-scroll" : ""
+                }`}
+            >
+                <DataProvider
+                    getData={() => {
+                        return getData();
+                    }}
+                    renderData={() => (
+                        <>
+                            <div className="space-between">
                                 <Button
-                                    onClick={saveTempr}
-                                    disabled={saveButtonDisabled()}
-                                    aria-label={
-                                        blankTempr
-                                            ? "Create tempr"
-                                            : "Update tempr"
-                                    }
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={allTemprsPath}
+                                    aria-label="Go back to all temprs"
                                 >
-                                    {blankTempr ? "Create" : "Save"}
+                                    <FontAwesomeIcon icon={faChevronLeft} />
                                 </Button>
+                                <h2>
+                                    {blankTempr ? "Create Tempr" : "Edit Tempr"}
+                                </h2>
+                                <div>
+                                    {blankTempr ? null : (
+                                        <ConfirmModal
+                                            buttonText="Delete"
+                                            title="Confirm Deletion"
+                                            mainText={
+                                                <>
+                                                    <div>
+                                                        Are you sure you want to
+                                                        delete this tempr?
+                                                    </div>
+                                                    <div>
+                                                        This action can't be
+                                                        undone.
+                                                    </div>
+                                                </>
+                                            }
+                                            primaryAction={deleteTempr}
+                                            primaryActionText="Delete"
+                                            secondaryActionText="Cancel"
+                                        />
+                                    )}
+                                    <Button
+                                        onClick={saveTempr}
+                                        disabled={saveButtonDisabled()}
+                                        aria-label={
+                                            blankTempr
+                                                ? "Create tempr"
+                                                : "Update tempr"
+                                        }
+                                    >
+                                        {blankTempr ? "Create" : "Save"}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                        <FormControl
-                            label="Name"
-                            key={"form-control-group-name"}
-                            error={
-                                temprErrors.name
-                                    ? `Name ${temprErrors.name}`
-                                    : ""
-                            }
-                            caption="required"
-                        >
-                            <Input
-                                id={"input-name"}
-                                value={updatedTempr.name || ""}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
+                            <FormControl
+                                label="Name"
+                                key={"form-control-group-name"}
+                                error={
+                                    temprErrors.name
+                                        ? `Name ${temprErrors.name}`
+                                        : ""
                                 }
-                                error={temprErrors.name}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Group"
-                            key={"form-control-group-group"}
-                            error={temprErrors.deviceGroup}
-                            caption="required"
-                        >
-                            <Select
-                                options={groups}
-                                labelKey="name"
-                                valueKey="id"
-                                searchable={false}
-                                clearable={false}
-                                onChange={event => {
-                                    setValue(
-                                        "deviceGroupId",
-                                        event.value[0].id,
-                                    );
-                                }}
-                                value={groups.filter(
-                                    item =>
-                                        item.id === updatedTempr.deviceGroupId,
-                                )}
-                                error={temprErrors.deviceGroup}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Description"
-                            key={"form-control-group-description"}
-                        >
-                            <Input
-                                id={"input-description"}
-                                value={updatedTempr.description || ""}
-                                onChange={event =>
-                                    setValue(
-                                        "description",
-                                        event.currentTarget.value,
-                                    )
-                                }
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Endpoint type"
-                            key={"form-control-group-endpoint-type"}
-                            caption="required"
-                        >
-                            <Select
-                                options={endpointTypeOptions}
-                                labelKey="id"
-                                valueKey="id"
-                                searchable={false}
-                                clearable={false}
-                                onChange={event => {
-                                    setValue("endpointType", event.option.id);
-                                }}
-                                value={endpointTypeOptions.find(
-                                    item =>
-                                        item.id === updatedTempr.endpointType ||
-                                        item.id === "http",
-                                )}
-                                error={props.error}
-                                disabled
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Queue Response"
-                            key={`form-control-queue-response`}
-                        >
-                            <Checkbox
-                                checked={updatedTempr.queueResponse}
-                                onChange={() =>
-                                    setValue(
-                                        "queueResponse",
-                                        !updatedTempr.queueResponse,
-                                    )
-                                }
-                                checkmarkType={STYLE_TYPE.toggle_round}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Queue Request"
-                            key={`form-control-queue-request`}
-                        >
-                            <Checkbox
-                                checked={updatedTempr.queueRequest}
-                                onChange={() =>
-                                    setValue(
-                                        "queueRequest",
-                                        !updatedTempr.queueRequest,
-                                    )
-                                }
-                                checkmarkType={STYLE_TYPE.toggle_round}
-                            />
-                        </FormControl>
-
-                        <AccordionWithCaption
-                            title="Template"
-                            caption="required"
-                            error={temprErrors.base}
-                            subtitle="Please provide a host, port, path, protocol and request method"
-                            // startOpen
-                        >
-                            <div className="content-wrapper">
-                                <HttpTemprTemplate
-                                    template={updatedTempr.template}
-                                    updateTemplate={value =>
-                                        setValue("template", value)
-                                    }
-                                    error={temprErrors.base}
-                                />
-                            </div>
-                        </AccordionWithCaption>
-                        <AccordionWithCaption title="Body" startOpen>
-                            {renderBody()}
-                        </AccordionWithCaption>
-                        <FormControl label="Notes" key={`form-control-notes`}>
-                            <Textarea
-                                value={updatedTempr.notes || ""}
-                                onChange={e => setValue(e.target.value)}
-                            />
-                        </FormControl>
-                        {blankTempr ? null : (
-                            <AccordionWithCaption
-                                title="Device associations "
-                                subtitle="Select devices to associate with this tempr"
-                                error={temprErrors.deviceTemprs}
-                                startOpen
+                                caption="required"
                             >
-                                <DataProvider
-                                    getData={() => {
-                                        return getDeviceTemprData();
-                                    }}
-                                    renderKey={
-                                        devicesPage +
-                                        devicesPageSize +
-                                        latestChanged +
-                                        deviceFilterId +
-                                        deviceFilterName +
-                                        deviceFilterSite +
-                                        deviceFilterSelected
+                                <Input
+                                    id={"input-name"}
+                                    value={updatedTempr.name || ""}
+                                    onChange={event =>
+                                        setValue(
+                                            "name",
+                                            event.currentTarget.value,
+                                        )
                                     }
-                                    renderData={renderDeviceAssociations}
+                                    error={temprErrors.name}
                                 />
+                            </FormControl>
+                            <FormControl
+                                label="Group"
+                                key={"form-control-group-group"}
+                                error={temprErrors.deviceGroup}
+                                caption="required"
+                            >
+                                <Select
+                                    options={groups}
+                                    labelKey="name"
+                                    valueKey="id"
+                                    searchable={false}
+                                    clearable={false}
+                                    onChange={event => {
+                                        setValue(
+                                            "deviceGroupId",
+                                            event.value[0].id,
+                                        );
+                                    }}
+                                    value={groups.filter(
+                                        item =>
+                                            item.id ===
+                                            updatedTempr.deviceGroupId,
+                                    )}
+                                    error={temprErrors.deviceGroup}
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Description"
+                                key={"form-control-group-description"}
+                            >
+                                <Input
+                                    id={"input-description"}
+                                    value={updatedTempr.description || ""}
+                                    onChange={event =>
+                                        setValue(
+                                            "description",
+                                            event.currentTarget.value,
+                                        )
+                                    }
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Endpoint type"
+                                key={"form-control-group-endpoint-type"}
+                                caption="required"
+                            >
+                                <Select
+                                    options={endpointTypeOptions}
+                                    labelKey="id"
+                                    valueKey="id"
+                                    searchable={false}
+                                    clearable={false}
+                                    onChange={event => {
+                                        setValue(
+                                            "endpointType",
+                                            event.option.id,
+                                        );
+                                    }}
+                                    value={endpointTypeOptions.find(
+                                        item =>
+                                            item.id ===
+                                                updatedTempr.endpointType ||
+                                            item.id === "http",
+                                    )}
+                                    error={props.error}
+                                    disabled
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Queue Response"
+                                key={`form-control-queue-response`}
+                            >
+                                <Checkbox
+                                    checked={updatedTempr.queueResponse}
+                                    onChange={() =>
+                                        setValue(
+                                            "queueResponse",
+                                            !updatedTempr.queueResponse,
+                                        )
+                                    }
+                                    checkmarkType={STYLE_TYPE.toggle_round}
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Queue Request"
+                                key={`form-control-queue-request`}
+                            >
+                                <Checkbox
+                                    checked={updatedTempr.queueRequest}
+                                    onChange={() =>
+                                        setValue(
+                                            "queueRequest",
+                                            !updatedTempr.queueRequest,
+                                        )
+                                    }
+                                    checkmarkType={STYLE_TYPE.toggle_round}
+                                />
+                            </FormControl>
+
+                            <AccordionWithCaption
+                                title="Template"
+                                caption="required"
+                                error={temprErrors.base}
+                                subtitle="Please provide a host, port, path, protocol and request method"
+                                // startOpen
+                            >
+                                <div className="content-wrapper">
+                                    <HttpTemprTemplate
+                                        template={updatedTempr.template}
+                                        updateTemplate={value =>
+                                            setValue("template", value)
+                                        }
+                                        error={temprErrors.base}
+                                    />
+                                </div>
                             </AccordionWithCaption>
-                        )}
-                        <Button
-                            onClick={() => {
-                                clearToast();
-                                setTemprErrors({});
-                                if (blankTempr) {
-                                    return OopCore.createTempr(updatedTempr)
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Created new tempr",
-                                                "Success",
-                                            );
-                                            refreshTempr(response);
-                                            props.history.replace(
-                                                `/temprs/${response.id}`,
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setTemprErrors(error);
-                                            ErrorToast(
-                                                "Failed to create tempr",
-                                                "Error",
-                                            );
-                                        });
-                                } else {
-                                    OopCore.updateTempr(
-                                        props.match.params.temprId,
-                                        updatedTempr,
-                                    )
-                                        .then(response => {
-                                            refreshTempr(response);
-                                            SuccessToast(
-                                                "Updated tempr",
-                                                "Success",
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setTemprErrors(error);
-                                            ErrorToast(
-                                                "Failed to update tempr",
-                                                "Error",
-                                            );
-                                        });
+                            <AccordionWithCaption title="Body" startOpen>
+                                {renderBody()}
+                            </AccordionWithCaption>
+                            <FormControl
+                                label="Notes"
+                                key={`form-control-notes`}
+                            >
+                                <Textarea
+                                    value={updatedTempr.notes || ""}
+                                    onChange={e => setValue(e.target.value)}
+                                />
+                            </FormControl>
+                            {blankTempr ? null : (
+                                <AccordionWithCaption
+                                    title="Device associations "
+                                    subtitle="Select devices to associate with this tempr"
+                                    error={temprErrors.deviceTemprs}
+                                    startOpen
+                                >
+                                    <DataProvider
+                                        getData={() => {
+                                            return getDeviceTemprData();
+                                        }}
+                                        renderKey={
+                                            devicesPage +
+                                            devicesPageSize +
+                                            latestChanged +
+                                            deviceFilterId +
+                                            deviceFilterName +
+                                            deviceFilterSite +
+                                            deviceFilterSelected
+                                        }
+                                        renderData={renderDeviceAssociations}
+                                    />
+                                </AccordionWithCaption>
+                            )}
+                            <Button
+                                onClick={() => {
+                                    clearToast();
+                                    setTemprErrors({});
+                                    if (blankTempr) {
+                                        return OopCore.createTempr(updatedTempr)
+                                            .then(response => {
+                                                SuccessToast(
+                                                    "Created new tempr",
+                                                    "Success",
+                                                );
+                                                refreshTempr(response);
+                                                props.history.replace(
+                                                    `/temprs/${response.id}`,
+                                                );
+                                            })
+                                            .catch(error => {
+                                                setTemprErrors(error);
+                                                ErrorToast(
+                                                    "Failed to create tempr",
+                                                    "Error",
+                                                );
+                                            });
+                                    } else {
+                                        OopCore.updateTempr(
+                                            props.match.params.temprId,
+                                            updatedTempr,
+                                        )
+                                            .then(response => {
+                                                refreshTempr(response);
+                                                SuccessToast(
+                                                    "Updated tempr",
+                                                    "Success",
+                                                );
+                                            })
+                                            .catch(error => {
+                                                setTemprErrors(error);
+                                                ErrorToast(
+                                                    "Failed to update tempr",
+                                                    "Error",
+                                                );
+                                            });
+                                    }
+                                }}
+                                disabled={saveButtonDisabled()}
+                                aria-label={
+                                    blankTempr ? "Create tempr" : "Update tempr"
                                 }
-                            }}
-                            disabled={saveButtonDisabled()}
-                            aria-label={
-                                blankTempr ? "Create tempr" : "Update tempr"
-                            }
-                        >
-                            {blankTempr ? "Create" : "Save"}
-                        </Button>
-                        {props.error && <div>{props.error}</div>}
-                    </>
-                )}
-            />
-        </div>
+                            >
+                                {blankTempr ? "Create" : "Save"}
+                            </Button>
+                            {props.error && <div>{props.error}</div>}
+                        </>
+                    )}
+                />
+            </div>
+        </>
     );
 };
 
