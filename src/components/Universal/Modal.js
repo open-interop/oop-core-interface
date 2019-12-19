@@ -7,6 +7,7 @@ import {
     ModalFooter,
     ModalButton,
     FocusOnce,
+    SIZE,
 } from "baseui/modal";
 
 const Modal = props => {
@@ -24,26 +25,29 @@ const Modal = props => {
             >
                 {props.buttonText}
             </Button>
-            <ModalBase onClose={close} isOpen={isOpen}>
-                <FocusOnce>
-                    <ModalHeader>{props.title}</ModalHeader>
-                </FocusOnce>
-                <ModalBody>{props.content}</ModalBody>
-                {props.secondaryButtonText ||
-                    (props.primaryButtonText && (
-                        <ModalFooter>
-                            {props.secondaryButtonText && (
-                                <ModalButton onClick={close}>
-                                    {props.secondaryButtonText}
-                                </ModalButton>
-                            )}
-                            {props.primaryButtonText && (
-                                <ModalButton onClick={close}>
-                                    {props.primaryButtonText}
-                                </ModalButton>
-                            )}
-                        </ModalFooter>
-                    ))}
+
+            <ModalBase onClose={close} isOpen={isOpen} size={SIZE.auto}>
+                <div className="text-modal">
+                    <FocusOnce>
+                        <ModalHeader>{props.title}</ModalHeader>
+                    </FocusOnce>
+                    <ModalBody>{props.content}</ModalBody>{" "}
+                    {props.secondaryButtonText ||
+                        (props.primaryButtonText && (
+                            <ModalFooter>
+                                {props.secondaryButtonText && (
+                                    <ModalButton onClick={close}>
+                                        {props.secondaryButtonText}
+                                    </ModalButton>
+                                )}
+                                {props.primaryButtonText && (
+                                    <ModalButton onClick={close}>
+                                        {props.primaryButtonText}
+                                    </ModalButton>
+                                )}
+                            </ModalFooter>
+                        ))}
+                </div>
             </ModalBase>
         </>
     );

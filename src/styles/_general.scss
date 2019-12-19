@@ -238,7 +238,6 @@ button {
 .overlay {
     position: fixed;
     margin-top: 4.5rem;
-
     top: 0;
     left: 0;
     right: 0;
@@ -254,4 +253,10 @@ button {
 
 .no-scroll {
     overflow: hidden;
+}
+
+.text-modal {
+    max-height: 80vh;
+    max-width: 80vh;
+    overflow: auto;
 }
