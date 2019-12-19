@@ -259,83 +259,98 @@ const Dashboard = props => {
                             />
                         </div>
                     </StyledTitle>
-
-                    <Bar
-                        data={{
-                            labels: timelineRange.map(date => date.label),
-                            datasets: transmissionTimeline.map(
-                                (series, index) => {
-                                    return {
-                                        label: series.deviceName,
-                                        data: timelineRange.map(
-                                            date =>
-                                                series.transmissions[
-                                                    date.date
-                                                ] || 0,
-                                        ),
-                                        backgroundColor:
-                                            availableColours[
-                                                index % availableColours.length
-                                            ],
-                                    };
+                    <div className="center">
+                        {!transmissionTimeline.length && (
+                            <div className="chart-overlay">
+                                No transmission data available
+                            </div>
+                        )}
+                        <Bar
+                            data={{
+                                labels: timelineRange.map(date => date.label),
+                                datasets: transmissionTimeline.map(
+                                    (series, index) => {
+                                        return {
+                                            label: series.deviceName,
+                                            data: timelineRange.map(
+                                                date =>
+                                                    series.transmissions[
+                                                        date.date
+                                                    ] || 0,
+                                            ),
+                                            backgroundColor:
+                                                availableColours[
+                                                    index %
+                                                        availableColours.length
+                                                ],
+                                        };
+                                    },
+                                ),
+                            }}
+                            options={{
+                                scales: {
+                                    yAxes: [{ stacked: true }],
+                                    xAxes: [{ stacked: true }],
                                 },
-                            ),
-                        }}
-                        options={{
-                            scales: {
-                                yAxes: [{ stacked: true }],
-                                xAxes: [{ stacked: true }],
-                            },
-                            tooltips: {
-                                mode: "label",
-                            },
-                        }}
-                    />
+                                tooltips: {
+                                    mode: "label",
+                                },
+                            }}
+                        />
+                    </div>
                 </Card>
                 <Card className="width-49">
                     <StyledTitle className="center">
                         Days since last transmission
                     </StyledTitle>
-                    <Bar
-                        data={{
-                            labels: transmissionsByLastDay.map(
-                                device => device.deviceName,
-                            ),
-                            datasets: [
-                                {
-                                    data: transmissionsByLastDay.map(
-                                        device => device.daysAgo,
-                                    ),
-                                    backgroundColor: transmissionsByLastDay.map(
-                                        (currentValue, index) =>
-                                            availableColours[
-                                                index % availableColours.length
-                                            ],
-                                    ),
-                                },
-                            ],
-                        }}
-                        options={{
-                            scales: {
-                                yAxes: [
+                    <div className="center">
+                        {!transmissionsByLastDay.length && (
+                            <div className="chart-overlay">
+                                No transmission data available
+                            </div>
+                        )}
+                        <Bar
+                            data={{
+                                labels: transmissionsByLastDay.map(
+                                    device => device.deviceName,
+                                ),
+                                datasets: [
                                     {
-                                        ticks: {
-                                            beginAtZero: true,
-                                            stepSize: 1,
-                                            callback: value =>
-                                                value < 7 ? value : "7+",
-                                        },
+                                        data: transmissionsByLastDay.map(
+                                            device => device.daysAgo,
+                                        ),
+                                        backgroundColor: transmissionsByLastDay.map(
+                                            (currentValue, index) =>
+                                                availableColours[
+                                                    index %
+                                                        availableColours.length
+                                                ],
+                                        ),
                                     },
                                 ],
-                            },
-                            legend: {
-                                display: false,
-                            },
-                            tooltips: {
-                                enabled: false,
-                            },
-                        }}
-                    />
+                            }}
+                            options={{
+                                scales: {
+                                    yAxes: [
+                                        {
+                                            ticks: {
+                                                beginAtZero: true,
+                                                stepSize: 1,
+                                                callback: value =>
+                                                    value < 7 ? value : "7+",
+                                            },
+                                        },
+                                    ],
+                                },
+                                legend: {
+                                    display: false,
+                                },
+                                tooltips: {
+                                    enabled: false,
+                                },
+                            }}
+                        />
+                    </div>
                 </Card>
             </div>
         );
