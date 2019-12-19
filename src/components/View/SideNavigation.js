@@ -23,32 +23,35 @@ const SideNavigation = props => {
         return props.history.location.pathname.includes(path);
     };
 
-    const flattenArray = array => {
-        return Array.prototype.concat.apply([], array);
-    };
-
-    const getAllDeviceGroups = groupsBySite => {
-        return groupsBySite;
-    };
-
-    const getDeviceGroupsForSite = (siteId, associations) => {
-        const abc = associations.find(association => association.id === siteId);
-        return abc ? abc.deviceGroups : [];
+    const createDevicesAccordion = (deviceGroups, devices) => {
+        return deviceGroups.map(deviceGroup => {
+            return {
+                id: deviceGroup.id,
+                name: deviceGroup.name,
+                devices: devices
+                    .filter(device => device.deviceGroupId === deviceGroup.id)
+                    .slice(0, 3),
+            };
+        });
     };
 
     const getDeviceGroups = () => {
         if (props.site) {
             return OopCore.getDevicesByGroup({ siteId: props.site.id }).then(
                 response => {
-                    const deviceGroupsBySite = flattenArray(response.sites);
-                    return getDeviceGroupsForSite(
-                        props.site.id,
-                        deviceGroupsBySite,
+                    const association = response.sites.find(
+                        association => association.id === props.site.id,
                     );
+                    return association ? association.deviceGroups : [];
                 },
             );
         } else {
-            return Promise.resolve([]);
+            return Promise.all([
+                OopCore.getDevices({ pageSize: -1 }),
+                OopCore.getDeviceGroups({ pageSize: -1 }),
+            ]).then(([devices, deviceGroups]) =>
+                createDevicesAccordion(deviceGroups.data, devices.data),
+            );
         }
     };
 
@@ -60,9 +63,7 @@ const SideNavigation = props => {
                         setDeviceGroups(response);
                     });
                 }}
-                renderKey={`${devicesRenderKey}${
-                    props.site ? props.site.id : ""
-                }`}
+                renderKey={devicesRenderKey}
                 renderData={() => (
                     <NavigationGroup
                         pathName="Devices"
