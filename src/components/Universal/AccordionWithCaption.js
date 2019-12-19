@@ -8,7 +8,9 @@ const AccordionWithCaption = props => {
                 initialState={props.startOpen ? { expanded: ["0"] } : null}
             >
                 <Panel title={props.title}>
-                    <div className="subtitle">{props.subtitle}</div>
+                    {props.subtitle && (
+                        <div className="subtitle">{props.subtitle}</div>
+                    )}
                     {props.children}
                 </Panel>
             </Accordion>
