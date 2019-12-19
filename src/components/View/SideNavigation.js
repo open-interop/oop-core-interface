@@ -14,6 +14,7 @@ const SideNavigation = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
     const [devicesAccordionOpen, setDevicesAccordionOpen] = useState(false);
     const [settingsAccordionOpen, setSettingsAccordionOpen] = useState(false);
+    const [devicesRenderKey, setDevicesRenderKey] = useState(false);
     const pathMatch = path => {
         return props.history.location.pathname === path;
     };
@@ -22,42 +23,36 @@ const SideNavigation = props => {
         return props.history.location.pathname.includes(path);
     };
 
-    const createDevicesAccordion = (deviceGroups, devices, site) => {
-        const filteredDevices = devices.filter(
-            device => !site || device.siteId === site.id,
-        );
-
-        const accordion = deviceGroups.map(deviceGroup => {
+    const createDevicesAccordion = (deviceGroups, devices) => {
+        return deviceGroups.map(deviceGroup => {
             return {
                 id: deviceGroup.id,
                 name: deviceGroup.name,
-                devices: filteredDevices.filter(
-                    device => device.deviceGroupId === deviceGroup.id,
-                ),
+                devices: devices
+                    .filter(device => device.deviceGroupId === deviceGroup.id)
+                    .slice(0, 3),
             };
         });
-
-        return accordion;
-    };
-
-    const getDevices = () => {
-        if (props.site && props.site.id) {
-            return OopCore.getDevices({ filters: { siteId: props.site.id } });
-        } else {
-            return OopCore.getDevices();
-        }
     };
 
     const getDeviceGroups = () => {
-        return Promise.all([OopCore.getDeviceGroups(), getDevices()]).then(
-            ([deviceGroups, devices]) => {
-                return createDevicesAccordion(
-                    deviceGroups.data,
-                    devices.data,
-                    props.site,
-                );
-            },
-        );
+        if (props.site) {
+            return OopCore.getDevicesByGroup({ siteId: props.site.id }).then(
+                response => {
+                    const association = response.sites.find(
+                        association => association.id === props.site.id,
+                    );
+                    return association ? association.deviceGroups : [];
+                },
+            );
+        } else {
+            return Promise.all([
+                OopCore.getDevices({ pageSize: -1 }),
+                OopCore.getDeviceGroups({ pageSize: -1 }),
+            ]).then(([devices, deviceGroups]) =>
+                createDevicesAccordion(deviceGroups.data, devices.data),
+            );
+        }
     };
 
     const devicesSubNavigation = () => {
@@ -68,13 +63,18 @@ const SideNavigation = props => {
                         setDeviceGroups(response);
                     });
                 }}
-                renderKey={devicesAccordionOpen}
+                renderKey={devicesRenderKey}
                 renderData={() => (
                     <NavigationGroup
                         pathName="Devices"
                         isActive={pathIncludes("/devices")}
                         isOpen={devicesAccordionOpen}
-                        setOpen={setDevicesAccordionOpen}
+                        setOpen={status => {
+                            setDevicesAccordionOpen(status);
+                            if (status) {
+                                setDevicesRenderKey(!devicesRenderKey);
+                            }
+                        }}
                         icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     >
                         {props.site && props.site.fullName ? (
