@@ -22,7 +22,6 @@ const ResetPassword = props => {
             .catch(error => {
                 if (typeof error === "string") {
                     const updatedErrors = { ...errors };
-                    console.log(error);
                     updatedErrors.generic = error;
                     setErrors(updatedErrors);
                     setLoading(false);
