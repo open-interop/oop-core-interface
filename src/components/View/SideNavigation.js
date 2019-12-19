@@ -14,6 +14,7 @@ const SideNavigation = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
     const [devicesAccordionOpen, setDevicesAccordionOpen] = useState(false);
     const [settingsAccordionOpen, setSettingsAccordionOpen] = useState(false);
+    const [devicesRenderKey, setDevicesRenderKey] = useState(false);
     const pathMatch = path => {
         return props.history.location.pathname === path;
     };
@@ -22,42 +23,33 @@ const SideNavigation = props => {
         return props.history.location.pathname.includes(path);
     };
 
-    const createDevicesAccordion = (deviceGroups, devices, site) => {
-        const filteredDevices = devices.filter(
-            device => !site || device.siteId === site.id,
-        );
-
-        const accordion = deviceGroups.map(deviceGroup => {
-            return {
-                id: deviceGroup.id,
-                name: deviceGroup.name,
-                devices: filteredDevices.filter(
-                    device => device.deviceGroupId === deviceGroup.id,
-                ),
-            };
-        });
-
-        return accordion;
+    const flattenArray = array => {
+        return Array.prototype.concat.apply([], array);
     };
 
-    const getDevices = () => {
-        if (props.site && props.site.id) {
-            return OopCore.getDevices({ filters: { siteId: props.site.id } });
-        } else {
-            return OopCore.getDevices();
-        }
+    const getAllDeviceGroups = groupsBySite => {
+        return groupsBySite;
+    };
+
+    const getDeviceGroupsForSite = (siteId, associations) => {
+        const abc = associations.find(association => association.id === siteId);
+        return abc ? abc.deviceGroups : [];
     };
 
     const getDeviceGroups = () => {
-        return Promise.all([OopCore.getDeviceGroups(), getDevices()]).then(
-            ([deviceGroups, devices]) => {
-                return createDevicesAccordion(
-                    deviceGroups.data,
-                    devices.data,
-                    props.site,
-                );
-            },
-        );
+        if (props.site) {
+            return OopCore.getDevicesByGroup({ siteId: props.site.id }).then(
+                response => {
+                    const deviceGroupsBySite = flattenArray(response.sites);
+                    return getDeviceGroupsForSite(
+                        props.site.id,
+                        deviceGroupsBySite,
+                    );
+                },
+            );
+        } else {
+            return Promise.resolve([]);
+        }
     };
 
     const devicesSubNavigation = () => {
@@ -68,13 +60,20 @@ const SideNavigation = props => {
                         setDeviceGroups(response);
                     });
                 }}
-                renderKey={devicesAccordionOpen}
+                renderKey={`${devicesRenderKey}${
+                    props.site ? props.site.id : ""
+                }`}
                 renderData={() => (
                     <NavigationGroup
                         pathName="Devices"
                         isActive={pathIncludes("/devices")}
                         isOpen={devicesAccordionOpen}
-                        setOpen={setDevicesAccordionOpen}
+                        setOpen={status => {
+                            setDevicesAccordionOpen(status);
+                            if (status) {
+                                setDevicesRenderKey(!devicesRenderKey);
+                            }
+                        }}
                         icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     >
                         {props.site && props.site.fullName ? (

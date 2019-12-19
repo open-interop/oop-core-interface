@@ -187,14 +187,8 @@ class OopCore extends EventEmitter {
         return Promise.resolve();
     }
 
-    getSelectedSite() {
-        const currentCookie = cookie.load("site");
-        const cookieObject = currentCookie || null;
-        return cookieObject;
-    }
-
     getCurrentSite() {
-        const currentCookie = this.getSelectedSite();
+        const currentCookie = cookie.load("site") || null;
         if (currentCookie) {
             return this.getSite(currentCookie.id);
         } else {
@@ -505,6 +499,18 @@ class OopCore extends EventEmitter {
 
     deleteUser(userId) {
         return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
+    }
+
+    getDevicesByGroup(queryParameters) {
+        const parameters = queryString.stringify(
+            this.camelToSnake(queryParameters),
+        );
+        let path = `/sites/sidebar`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 }
 
