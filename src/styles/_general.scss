@@ -113,6 +113,11 @@ label {
     flex-direction: row;
 }
 
+.flex-row-reverse {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .flex-column {
     display: flex;
     flex-direction: column;
@@ -228,4 +233,30 @@ button {
             background-color: $oop-light-blue;
         }
     }
+}
+
+.overlay {
+    position: fixed;
+    margin-top: 4.5rem;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    padding-bottom: 40px;
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left: 24px;
+    background-color: $color-white;
+    overflow: scroll;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+.text-modal {
+    max-height: 80vh;
+    max-width: 80vh;
+    overflow: auto;
 }
