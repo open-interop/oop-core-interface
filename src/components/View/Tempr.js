@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Prompt } from "react-router-dom";
 import AceEditor from "react-ace";
 import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -13,6 +13,8 @@ import {
     faCheck,
     faTimes,
     faChevronLeft,
+    faExpandArrowsAlt,
+    faCompressArrowsAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     AccordionWithCaption,
@@ -33,7 +35,9 @@ import { arrayToObject, identicalObject } from "../../Utilities";
 import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
-import "brace/theme/github";
+import "brace/mode/javascript";
+import "brace/mode/handlebars";
+import "brace/theme/kuroir";
 var JSONPretty = require("react-json-pretty");
 
 const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
@@ -57,7 +61,9 @@ const Tempr = props => {
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false);
 
-    const [activeTab, setActiveTab] = React.useState("0");
+    const [activeTab, setActiveTab] = useState("0");
+    const [mappingFullScreen, setMappingFullScreen] = useState(false);
+    const [fullScreenActiveTab, setFullScreenActiveTab] = useState("0");
 
     const blankTempr = props.match.params.temprId === "new";
 
@@ -276,7 +282,7 @@ const Tempr = props => {
                                               .body
                                         : "No data to show"
                                 }
-                            ></JSONPretty>
+                            />
                         </Tab>
                         <Tab title="Console output">
                             <JSONPretty
@@ -285,7 +291,7 @@ const Tempr = props => {
                                     updatedTempr.previewTempr.console ||
                                     "No data to show"
                                 }
-                            ></JSONPretty>
+                            />
                         </Tab>
                         <Tab title="Error output">
                             <JSONPretty
@@ -294,7 +300,7 @@ const Tempr = props => {
                                     updatedTempr.previewTempr.error ||
                                     "No data to show"
                                 }
-                            ></JSONPretty>
+                            />
                         </Tab>
                     </Tabs>
                 </div>
@@ -474,338 +480,451 @@ const Tempr = props => {
         }
     };
 
-    return (
-        <div className="content-wrapper">
-            <DataProvider
-                getData={() => {
-                    return getData();
+    const ExampleEditor = () => {
+        return (
+            <AceEditor
+                mode="json"
+                theme="kuroir"
+                width="100%"
+                height={mappingFullScreen ? "75vh" : "500px"}
+                showPrintMargin={false}
+                onChange={value => {
+                    setValue("exampleTransmission", value);
                 }}
-                renderData={() => (
-                    <>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                kind={KIND.minimal}
-                                to={allTemprsPath}
-                                aria-label="Go back to all temprs"
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </Button>
-                            <h2>
-                                {blankTempr ? "Create Tempr" : "Edit Tempr"}
-                            </h2>
-                            <div>
-                                {blankTempr ? null : (
-                                    <ConfirmModal
-                                        buttonText="Delete"
-                                        title="Confirm Deletion"
-                                        mainText={
-                                            <>
-                                                <div>
-                                                    Are you sure you want to
-                                                    delete this tempr?
-                                                </div>
-                                                <div>
-                                                    This action can't be undone.
-                                                </div>
-                                            </>
-                                        }
-                                        primaryAction={deleteTempr}
-                                        primaryActionText="Delete"
-                                        secondaryActionText="Cancel"
-                                    />
-                                )}
-                                <Button
-                                    onClick={saveTempr}
-                                    disabled={saveButtonDisabled()}
-                                    aria-label={
-                                        blankTempr
-                                            ? "Create tempr"
-                                            : "Update tempr"
-                                    }
-                                >
-                                    {blankTempr ? "Create" : "Save"}
-                                </Button>
-                            </div>
-                        </div>
-                        <FormControl
-                            label="Name"
-                            key={"form-control-group-name"}
-                            error={
-                                temprErrors.name
-                                    ? `Name ${temprErrors.name}`
-                                    : ""
-                            }
-                            caption="required"
-                        >
-                            <Input
-                                id={"input-name"}
-                                value={updatedTempr.name || ""}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
-                                }
-                                error={temprErrors.name}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Group"
-                            key={"form-control-group-group"}
-                            error={temprErrors.deviceGroup}
-                            caption="required"
-                        >
-                            <Select
-                                options={groups}
-                                labelKey="name"
-                                valueKey="id"
-                                searchable={false}
-                                clearable={false}
-                                onChange={event => {
-                                    setValue(
-                                        "deviceGroupId",
-                                        event.value[0].id,
-                                    );
-                                }}
-                                value={groups.filter(
-                                    item =>
-                                        item.id === updatedTempr.deviceGroupId,
-                                )}
-                                error={temprErrors.deviceGroup}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Description"
-                            key={"form-control-group-description"}
-                        >
-                            <Input
-                                id={"input-description"}
-                                value={updatedTempr.description || ""}
-                                onChange={event =>
-                                    setValue(
-                                        "description",
-                                        event.currentTarget.value,
-                                    )
-                                }
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Endpoint type"
-                            key={"form-control-group-endpoint-type"}
-                            caption="required"
-                        >
-                            <Select
-                                options={endpointTypeOptions}
-                                labelKey="id"
-                                valueKey="id"
-                                searchable={false}
-                                clearable={false}
-                                onChange={event => {
-                                    setValue("endpointType", event.option.id);
-                                }}
-                                value={endpointTypeOptions.find(
-                                    item =>
-                                        item.id === updatedTempr.endpointType ||
-                                        item.id === "http",
-                                )}
-                                error={props.error}
-                                disabled
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Queue Response"
-                            key={`form-control-queue-response`}
-                        >
-                            <Checkbox
-                                checked={updatedTempr.queueResponse}
-                                onChange={() =>
-                                    setValue(
-                                        "queueResponse",
-                                        !updatedTempr.queueResponse,
-                                    )
-                                }
-                                checkmarkType={STYLE_TYPE.toggle_round}
-                            />
-                        </FormControl>
-                        <FormControl
-                            label="Queue Request"
-                            key={`form-control-queue-request`}
-                        >
-                            <Checkbox
-                                checked={updatedTempr.queueRequest}
-                                onChange={() =>
-                                    setValue(
-                                        "queueRequest",
-                                        !updatedTempr.queueRequest,
-                                    )
-                                }
-                                checkmarkType={STYLE_TYPE.toggle_round}
-                            />
-                        </FormControl>
+                editorProps={{
+                    $blockScrolling: true,
+                }}
+                value={updatedTempr.exampleTransmission || ""}
+            />
+        );
+    };
 
-                        <AccordionWithCaption
-                            title="Template"
-                            caption="required"
-                            error={temprErrors.base}
-                            subtitle="Please provide a host, port, path, protocol and request method"
-                            // startOpen
+    const MappingEditor = () => {
+        return (
+            <>
+                <div className="flex-row mb-10">
+                    <label>Basic mapping</label>
+                    <div className="toggle">
+                        <Checkbox
+                            isIndeterminate={true}
+                            checked={
+                                updatedTempr.template.body &&
+                                updatedTempr.template.body.language === "js"
+                            }
+                            onChange={event => {
+                                const updatedData = {
+                                    ...updatedTempr,
+                                };
+                                updatedData.template.body = {
+                                    language: event.target.checked
+                                        ? "js"
+                                        : "handlebars",
+                                    script: updatedData.template.body.script,
+                                };
+                                setUpdatedTempr(updatedData);
+                            }}
+                            checkmarkType={STYLE_TYPE.toggle_round}
+                        />
+                    </div>
+                    <label>Advanced mapping</label>
+                </div>
+                <AceEditor
+                    mode={
+                        updatedTempr.template.body &&
+                        updatedTempr.template.body.language === "js"
+                            ? "javascript"
+                            : "handlebars"
+                    }
+                    theme="kuroir"
+                    width="100%"
+                    height={mappingFullScreen ? "75vh" : "500px"}
+                    showPrintMargin={false}
+                    onChange={value => {
+                        const updatedData = {
+                            ...updatedTempr,
+                        };
+                        updatedData.template.body = {
+                            language: "js",
+                            script: value,
+                        };
+                        setUpdatedTempr(updatedData);
+                    }}
+                    editorProps={{
+                        $blockScrolling: true,
+                    }}
+                    value={
+                        updatedTempr.template.body
+                            ? updatedTempr.template.body.script
+                            : ""
+                    }
+                />
+            </>
+        );
+    };
+
+    const renderBody = () => {
+        if (mappingFullScreen) {
+            return (
+                <div className="overlay">
+                    <div className="space-between">
+                        <h3>Tempr body</h3>
+                        <Button
+                            kind={KIND.secondary}
+                            onClick={() => {
+                                document.body.classList.remove("no-scroll");
+                                setMappingFullScreen(false);
+                            }}
                         >
-                            <div className="content-wrapper">
-                                <HttpTemprTemplate
-                                    template={updatedTempr.template}
-                                    updateTemplate={value =>
-                                        setValue("template", value)
-                                    }
-                                    error={temprErrors.base}
-                                />
-                            </div>
-                        </AccordionWithCaption>
-                        <AccordionWithCaption title="Body" startOpen>
-                            <div className="flex-row mb-20">
-                                <div className="w-50">
-                                    <label>Example</label>
-                                    <AceEditor
-                                        mode="json"
-                                        theme="github"
-                                        width="100%"
-                                        showPrintMargin={false}
-                                        onChange={value => {
-                                            setValue(
-                                                "exampleTransmission",
-                                                value,
-                                            );
-                                        }}
-                                        editorProps={{
-                                            $blockScrolling: true,
-                                        }}
-                                        value={
-                                            updatedTempr.exampleTransmission ||
-                                            ""
-                                        }
-                                    />
-                                </div>
-                                <div className="w-50">
-                                    <label>Mapping</label>
-                                    <AceEditor
-                                        mode="javascript"
-                                        theme="github"
-                                        width="100%"
-                                        showPrintMargin={false}
-                                        onChange={value => {
-                                            const updatedData = {
-                                                ...updatedTempr,
-                                            };
-                                            updatedData.template.body = {
-                                                language: "js",
-                                                script: value,
-                                            };
-                                            setUpdatedTempr(updatedData);
-                                        }}
-                                        editorProps={{
-                                            $blockScrolling: true,
-                                        }}
-                                        value={
-                                            updatedTempr.template.body
-                                                ? updatedTempr.template.body
-                                                      .script
-                                                : ""
-                                        }
-                                    />
-                                </div>
-                            </div>
+                            <FontAwesomeIcon icon={faCompressArrowsAlt} />
+                        </Button>
+                    </div>
+                    <Tabs
+                        onChange={({ activeKey }) => {
+                            setFullScreenActiveTab(activeKey);
+                        }}
+                        activeKey={fullScreenActiveTab}
+                    >
+                        <Tab title="Example">{ExampleEditor()}</Tab>
+                        <Tab title="Mapping">{MappingEditor()}</Tab>
+                        <Tab title="Output">
                             <Button
-                                kind={KIND.secondary}
+                                kind={KIND.primary}
                                 onClick={calculateOutput}
                                 isLoading={previewLoading}
                             >
                                 Calculate output
                             </Button>
                             {PreviewTemprBox()}
-                        </AccordionWithCaption>
-                        <FormControl label="Notes" key={`form-control-notes`}>
-                            <Textarea
-                                value={updatedTempr.notes || ""}
-                                onChange={e => setValue(e.target.value)}
-                            />
-                        </FormControl>
-                        {blankTempr ? null : (
-                            <AccordionWithCaption
-                                title="Device associations "
-                                subtitle="Select devices to associate with this tempr"
-                                error={temprErrors.deviceTemprs}
-                                startOpen
-                            >
-                                <DataProvider
-                                    getData={() => {
-                                        return getDeviceTemprData();
-                                    }}
-                                    renderKey={
-                                        devicesPage +
-                                        devicesPageSize +
-                                        latestChanged +
-                                        deviceFilterId +
-                                        deviceFilterName +
-                                        deviceFilterSite +
-                                        deviceFilterSelected
-                                    }
-                                    renderData={renderDeviceAssociations}
-                                />
-                            </AccordionWithCaption>
-                        )}
+                        </Tab>
+                    </Tabs>
+                </div>
+            );
+        } else {
+            return (
+                <>
+                    <div className="flex-row-reverse">
                         <Button
+                            kind={KIND.secondary}
                             onClick={() => {
-                                clearToast();
-                                setTemprErrors({});
-                                if (blankTempr) {
-                                    return OopCore.createTempr(updatedTempr)
-                                        .then(response => {
-                                            SuccessToast(
-                                                "Created new tempr",
-                                                "Success",
-                                            );
-                                            refreshTempr(response);
-                                            props.history.replace(
-                                                `/temprs/${response.id}`,
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setTemprErrors(error);
-                                            ErrorToast(
-                                                "Failed to create tempr",
-                                                "Error",
-                                            );
-                                        });
-                                } else {
-                                    OopCore.updateTempr(
-                                        props.match.params.temprId,
-                                        updatedTempr,
-                                    )
-                                        .then(response => {
-                                            refreshTempr(response);
-                                            SuccessToast(
-                                                "Updated tempr",
-                                                "Success",
-                                            );
-                                        })
-                                        .catch(error => {
-                                            setTemprErrors(error);
-                                            ErrorToast(
-                                                "Failed to update tempr",
-                                                "Error",
-                                            );
-                                        });
-                                }
+                                document.body.classList.add("no-scroll");
+                                setMappingFullScreen(true);
                             }}
-                            disabled={saveButtonDisabled()}
-                            aria-label={
-                                blankTempr ? "Create tempr" : "Update tempr"
-                            }
                         >
-                            {blankTempr ? "Create" : "Save"}
+                            <FontAwesomeIcon icon={faExpandArrowsAlt} />
                         </Button>
-                        {props.error && <div>{props.error}</div>}
-                    </>
-                )}
-            />
-        </div>
+                    </div>
+                    <div className="flex-row mb-20">
+                        <div className="w-50">
+                            <div className="mb-10">Example</div>
+                            {ExampleEditor()}
+                        </div>
+                        <div className="w-50">{MappingEditor()}</div>
+                    </div>
+                    <Button
+                        kind={KIND.secondary}
+                        onClick={calculateOutput}
+                        isLoading={previewLoading}
+                    >
+                        Calculate output
+                    </Button>
+                    {PreviewTemprBox()}
+                </>
+            );
+        }
+    };
+
+    return (
+        <>
+            <Prompt message="Are you sure you want to leave this page?" />
+            <div
+                className={`content-wrapper ${
+                    mappingFullScreen ? "no-scroll" : ""
+                }`}
+            >
+                <DataProvider
+                    getData={() => {
+                        return getData();
+                    }}
+                    renderData={() => (
+                        <>
+                            <div className="space-between">
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={allTemprsPath}
+                                    aria-label="Go back to all temprs"
+                                >
+                                    <FontAwesomeIcon icon={faChevronLeft} />
+                                </Button>
+                                <h2>
+                                    {blankTempr ? "Create Tempr" : "Edit Tempr"}
+                                </h2>
+                                <div>
+                                    {blankTempr ? null : (
+                                        <ConfirmModal
+                                            buttonText="Delete"
+                                            title="Confirm Deletion"
+                                            mainText={
+                                                <>
+                                                    <div>
+                                                        Are you sure you want to
+                                                        delete this tempr?
+                                                    </div>
+                                                    <div>
+                                                        This action can't be
+                                                        undone.
+                                                    </div>
+                                                </>
+                                            }
+                                            primaryAction={deleteTempr}
+                                            primaryActionText="Delete"
+                                            secondaryActionText="Cancel"
+                                        />
+                                    )}
+                                    <Button
+                                        onClick={saveTempr}
+                                        disabled={saveButtonDisabled()}
+                                        aria-label={
+                                            blankTempr
+                                                ? "Create tempr"
+                                                : "Update tempr"
+                                        }
+                                    >
+                                        {blankTempr ? "Create" : "Save"}
+                                    </Button>
+                                </div>
+                            </div>
+                            <FormControl
+                                label="Name"
+                                key={"form-control-group-name"}
+                                error={
+                                    temprErrors.name
+                                        ? `Name ${temprErrors.name}`
+                                        : ""
+                                }
+                                caption="required"
+                            >
+                                <Input
+                                    id={"input-name"}
+                                    value={updatedTempr.name || ""}
+                                    onChange={event =>
+                                        setValue(
+                                            "name",
+                                            event.currentTarget.value,
+                                        )
+                                    }
+                                    error={temprErrors.name}
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Group"
+                                key={"form-control-group-group"}
+                                error={temprErrors.deviceGroup}
+                                caption="required"
+                            >
+                                <Select
+                                    options={groups}
+                                    labelKey="name"
+                                    valueKey="id"
+                                    searchable={false}
+                                    clearable={false}
+                                    onChange={event => {
+                                        setValue(
+                                            "deviceGroupId",
+                                            event.value[0].id,
+                                        );
+                                    }}
+                                    value={groups.filter(
+                                        item =>
+                                            item.id ===
+                                            updatedTempr.deviceGroupId,
+                                    )}
+                                    error={temprErrors.deviceGroup}
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Description"
+                                key={"form-control-group-description"}
+                            >
+                                <Input
+                                    id={"input-description"}
+                                    value={updatedTempr.description || ""}
+                                    onChange={event =>
+                                        setValue(
+                                            "description",
+                                            event.currentTarget.value,
+                                        )
+                                    }
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Endpoint type"
+                                key={"form-control-group-endpoint-type"}
+                                caption="required"
+                            >
+                                <Select
+                                    options={endpointTypeOptions}
+                                    labelKey="id"
+                                    valueKey="id"
+                                    searchable={false}
+                                    clearable={false}
+                                    onChange={event => {
+                                        setValue(
+                                            "endpointType",
+                                            event.option.id,
+                                        );
+                                    }}
+                                    value={endpointTypeOptions.find(
+                                        item =>
+                                            item.id ===
+                                                updatedTempr.endpointType ||
+                                            item.id === "http",
+                                    )}
+                                    error={props.error}
+                                    disabled
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Queue Response"
+                                key={`form-control-queue-response`}
+                            >
+                                <Checkbox
+                                    checked={updatedTempr.queueResponse}
+                                    onChange={() =>
+                                        setValue(
+                                            "queueResponse",
+                                            !updatedTempr.queueResponse,
+                                        )
+                                    }
+                                    checkmarkType={STYLE_TYPE.toggle_round}
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Queue Request"
+                                key={`form-control-queue-request`}
+                            >
+                                <Checkbox
+                                    checked={updatedTempr.queueRequest}
+                                    onChange={() =>
+                                        setValue(
+                                            "queueRequest",
+                                            !updatedTempr.queueRequest,
+                                        )
+                                    }
+                                    checkmarkType={STYLE_TYPE.toggle_round}
+                                />
+                            </FormControl>
+
+                            <AccordionWithCaption
+                                title="Template"
+                                caption="required"
+                                error={temprErrors.base}
+                                subtitle="Please provide a host, port, path, protocol and request method"
+                                // startOpen
+                            >
+                                <div className="content-wrapper">
+                                    <HttpTemprTemplate
+                                        template={updatedTempr.template}
+                                        updateTemplate={value =>
+                                            setValue("template", value)
+                                        }
+                                        error={temprErrors.base}
+                                    />
+                                </div>
+                            </AccordionWithCaption>
+                            <AccordionWithCaption title="Body" startOpen>
+                                {renderBody()}
+                            </AccordionWithCaption>
+                            <FormControl
+                                label="Notes"
+                                key={`form-control-notes`}
+                            >
+                                <Textarea
+                                    value={updatedTempr.notes || ""}
+                                    onChange={e => setValue(e.target.value)}
+                                />
+                            </FormControl>
+                            {blankTempr ? null : (
+                                <AccordionWithCaption
+                                    title="Device associations "
+                                    subtitle="Select devices to associate with this tempr"
+                                    error={temprErrors.deviceTemprs}
+                                    startOpen
+                                >
+                                    <DataProvider
+                                        getData={() => {
+                                            return getDeviceTemprData();
+                                        }}
+                                        renderKey={
+                                            devicesPage +
+                                            devicesPageSize +
+                                            latestChanged +
+                                            deviceFilterId +
+                                            deviceFilterName +
+                                            deviceFilterSite +
+                                            deviceFilterSelected
+                                        }
+                                        renderData={renderDeviceAssociations}
+                                    />
+                                </AccordionWithCaption>
+                            )}
+                            <Button
+                                onClick={() => {
+                                    clearToast();
+                                    setTemprErrors({});
+                                    if (blankTempr) {
+                                        return OopCore.createTempr(updatedTempr)
+                                            .then(response => {
+                                                SuccessToast(
+                                                    "Created new tempr",
+                                                    "Success",
+                                                );
+                                                refreshTempr(response);
+                                                props.history.replace(
+                                                    `/temprs/${response.id}`,
+                                                );
+                                            })
+                                            .catch(error => {
+                                                setTemprErrors(error);
+                                                ErrorToast(
+                                                    "Failed to create tempr",
+                                                    "Error",
+                                                );
+                                            });
+                                    } else {
+                                        OopCore.updateTempr(
+                                            props.match.params.temprId,
+                                            updatedTempr,
+                                        )
+                                            .then(response => {
+                                                refreshTempr(response);
+                                                SuccessToast(
+                                                    "Updated tempr",
+                                                    "Success",
+                                                );
+                                            })
+                                            .catch(error => {
+                                                setTemprErrors(error);
+                                                ErrorToast(
+                                                    "Failed to update tempr",
+                                                    "Error",
+                                                );
+                                            });
+                                    }
+                                }}
+                                disabled={saveButtonDisabled()}
+                                aria-label={
+                                    blankTempr ? "Create tempr" : "Update tempr"
+                                }
+                            >
+                                {blankTempr ? "Create" : "Save"}
+                            </Button>
+                            {props.error && <div>{props.error}</div>}
+                        </>
+                    )}
+                />
+            </div>
+        </>
     );
 };
 

@@ -1,12 +1,12 @@
 div {
     &[data-baseweb="card"] {
         &.flex-column {
-            .ce.cf.cg.ch {
+            > div {
                 display: flex;
                 flex-direction: column;
                 flex-grow: 1;
 
-                .ci.cj.ae.ck.ag.cl {
+                > div {
                     flex-grow: 1;
                     margin-bottom: 0;
                     display: flex;
@@ -51,4 +51,9 @@ div {
 .data-subtitle {
     margin-top: 20px;
     font-size: larger;
+}
+
+.chart-overlay {
+    z-index: 100;
+    position: absolute;
 }
