@@ -30,6 +30,7 @@ import {
     ErrorToast,
     HttpTemprTemplate,
     SuccessToast,
+    TemprSelector,
 } from "../Global";
 import { arrayToObject, identicalObject } from "../../Utilities";
 import { Tabs, Tab } from "baseui/tabs";
@@ -88,26 +89,27 @@ const Tempr = props => {
     const getTempr = () => {
         return blankTempr
             ? Promise.resolve({
-                  name: "",
-                  description: "",
-                  deviceGroupId: Number(props.match.params.deviceGroupId),
-                  endpointType: "http",
-                  queueResponse: false,
-                  queueRequest: false,
-                  notes: "",
-                  body: {
-                      language: "js",
-                      script: "",
-                  },
-                  template: {
-                      headers: {},
-                      host: "",
-                      path: "",
-                      port: 0,
-                      protocol: "",
-                      requestMethod: "",
-                  },
-              })
+                name: "",
+                temprId: null,
+                description: "",
+                deviceGroupId: Number(props.match.params.deviceGroupId),
+                endpointType: "http",
+                queueResponse: false,
+                queueRequest: false,
+                notes: "",
+                body: {
+                    language: "js",
+                    script: "",
+                },
+                template: {
+                    headers: {},
+                    host: "",
+                    path: "",
+                    port: 0,
+                    protocol: "",
+                    requestMethod: "",
+                },
+            })
             : OopCore.getTempr(props.match.params.temprId);
     };
 
@@ -740,6 +742,23 @@ const Tempr = props => {
                                             updatedTempr.deviceGroupId,
                                     )}
                                     error={temprErrors.deviceGroup}
+                                />
+                            </FormControl>
+                            <FormControl
+                                label="Parent Tempr"
+                                key={"form-control-group-parent"}
+                            >
+                                <TemprSelector
+                                    deviceGroup={updatedTempr.deviceGroupId}
+                                    onChange={event => {
+                                        setValue(
+                                            "temprId",
+                                            event.value[0]
+                                                ? event.value[0].id
+                                                : null,
+                                        );
+                                    }}
+                                    value={updatedTempr.temprId}
                                 />
                             </FormControl>
                             <FormControl
