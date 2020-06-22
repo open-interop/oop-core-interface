@@ -9,6 +9,8 @@ export * from "./Header";
 export * from "./Login";
 export * from "./ResetPassword";
 export * from "./Profile";
+export * from "./Schedules";
+export * from "./Schedule";
 export * from "./SideNavigation";
 export * from "./Site";
 export * from "./Sites";

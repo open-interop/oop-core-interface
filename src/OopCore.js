@@ -459,6 +459,22 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
 
+    deleteUser(userId) {
+        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
+    }
+
+    getDevicesByGroup(queryParameters) {
+        const parameters = queryString.stringify(
+            this.camelToSnake(queryParameters),
+        );
+        let path = `/sites/sidebar`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
     mapStatsParams(key) {
         switch (key) {
             case "gteq":
@@ -497,20 +513,27 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    deleteUser(userId) {
-        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
-    }
-
-    getDevicesByGroup(queryParameters) {
-        const parameters = queryString.stringify(
-            this.camelToSnake(queryParameters),
-        );
-        let path = `/sites/sidebar`;
+    getSchedules(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/schedules`;
         if (parameters) {
             path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
+    }
+
+    getSchedule(id) {
+        return this.makeRequest(`/schedules/${id}`);
+    }
+
+    createSchedule(data) {
+        const payload = { schedule: data };
+        return this.makeRequest(`/schedules`, RequestType.POST, payload);
+    }
+
+    deleteSchedule(scheduleId) {
+        return this.makeRequest(`/schedules/${scheduleId}`, RequestType.DELETE);
     }
 }
 
