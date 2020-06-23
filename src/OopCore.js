@@ -9,6 +9,18 @@ const RequestType = {
     DELETE: "DELETE",
 };
 
+const uri = (strings, ...values) => {
+    const encoded = values.map(encodeURIComponent);
+    const parts = [...strings.raw];
+    let ret = parts.shift();
+
+    while (parts.length) {
+        ret += encoded.shift() + parts.shift();
+    }
+
+    return ret;
+};
+
 class OopCore extends EventEmitter {
     constructor(props) {
         super(props);
@@ -459,6 +471,22 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
 
+    deleteUser(userId) {
+        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
+    }
+
+    getDevicesByGroup(queryParameters) {
+        const parameters = queryString.stringify(
+            this.camelToSnake(queryParameters),
+        );
+        let path = `/sites/sidebar`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
     mapStatsParams(key) {
         switch (key) {
             case "gteq":
@@ -497,20 +525,59 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    deleteUser(userId) {
-        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
-    }
-
-    getDevicesByGroup(queryParameters) {
-        const parameters = queryString.stringify(
-            this.camelToSnake(queryParameters),
-        );
-        let path = `/sites/sidebar`;
+    getSchedules(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/schedules`;
         if (parameters) {
             path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
+    }
+
+    async getSchedule(id) {
+        const [schedule, relations] = await Promise.all([
+            this.makeRequest(uri`/schedules/${id}`),
+            this.makeRequest(uri`/schedule_temprs?filter[schedule_id]=${id}`),
+        ]);
+
+        schedule.relations = relations.data;
+
+        return schedule;
+    }
+
+    createSchedule(data) {
+        const payload = { schedule: data };
+        return this.makeRequest(`/schedules`, RequestType.POST, payload);
+    }
+
+    updateSchedule(schedule) {
+        return this.makeRequest(
+            uri`/schedules/${schedule.id}`,
+            RequestType.PUT,
+            { schedule },
+        );
+    }
+
+    deleteSchedule(scheduleId) {
+        return this.makeRequest(
+            uri`/schedules/${scheduleId}`,
+            RequestType.DELETE,
+        );
+    }
+
+    createScheduleTempr(scheduleId, temprId) {
+        return this.makeRequest(
+            uri`/schedule_temprs?tempr_id=${temprId}&schedule_id=${scheduleId}`,
+            RequestType.POST,
+        );
+    }
+
+    deleteScheduleTempr(data) {
+        return this.makeRequest(
+            uri`/schedule_temprs/${data.id}?tempr_id=${data.temprId}&schedule_id=${data.scheduleId}`,
+            RequestType.DELETE,
+        );
     }
 }
 

@@ -13,6 +13,8 @@ import {
     Login,
     ResetPassword,
     Profile,
+    Schedules,
+    Schedule,
     SideNavigation,
     Site,
     Sites,
@@ -222,6 +224,20 @@ class App extends Component {
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Temprs, props)
+                        }
+                    />
+                    <Route
+                        path="/schedules"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Schedules, props)
+                        }
+                    />
+                    <Route
+                        path="/schedules/:scheduleId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Schedule, props)
                         }
                     />
                     <Route
