@@ -10,7 +10,6 @@ const RequestType = {
 };
 
 const uri = (strings, ...values) => {
-    console.log(strings);
     const encoded = values.map(encodeURIComponent);
     const parts = [...strings.raw];
     let ret = parts.shift();
@@ -543,7 +542,6 @@ class OopCore extends EventEmitter {
         ]);
 
         schedule.relations = relations.data;
-        console.log(schedule);
 
         return schedule;
     }
