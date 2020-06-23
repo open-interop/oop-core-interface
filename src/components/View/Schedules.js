@@ -130,12 +130,12 @@ const Schedules = props => {
                             updateFilters={(key, value) => {
                                 switch (key) {
                                     case "id":
-                                        return setId(value);
-                                    case "name":
+                                    return setId(value);
+                                case "name":
                                         return setName(value);
-                                    case "deviceGroupId":
+                                case "deviceGroupId":
                                         return setDeviceGroupId(value);
-                                    default:
+                                default:
                                         return null;
                                 }
                             }}

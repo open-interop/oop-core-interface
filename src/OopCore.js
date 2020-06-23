@@ -539,7 +539,7 @@ class OopCore extends EventEmitter {
     async getSchedule(id) {
         const [schedule, relations] = await Promise.all([
             this.makeRequest(uri`/schedules/${id}`),
-            this.makeRequest(uri`/schedule_temprs?filter[schedule_id]=${id}`)
+            this.makeRequest(uri`/schedule_temprs?filter[schedule_id]=${id}`),
         ]);
 
         schedule.relations = relations.data;
@@ -554,22 +554,32 @@ class OopCore extends EventEmitter {
     }
 
     updateSchedule(schedule) {
-        return this.makeRequest(uri`/schedules/${schedule.id}`, RequestType.PUT, { schedule });
+        return this.makeRequest(
+            uri`/schedules/${schedule.id}`,
+            RequestType.PUT,
+            { schedule },
+        );
     }
 
     deleteSchedule(scheduleId) {
-        return this.makeRequest(uri`/schedules/${scheduleId}`, RequestType.DELETE);
+        return this.makeRequest(
+            uri`/schedules/${scheduleId}`,
+            RequestType.DELETE,
+        );
     }
 
     createScheduleTempr(scheduleId, temprId) {
         return this.makeRequest(
             uri`/schedule_temprs?tempr_id=${temprId}&schedule_id=${scheduleId}`,
-            RequestType.POST
+            RequestType.POST,
         );
     }
 
     deleteScheduleTempr(data) {
-        return this.makeRequest(uri`/schedule_temprs/${data.id}?tempr_id=${data.temprId}&schedule_id=${data.scheduleId}`, RequestType.DELETE);
+        return this.makeRequest(
+            uri`/schedule_temprs/${data.id}?tempr_id=${data.temprId}&schedule_id=${data.scheduleId}`,
+            RequestType.DELETE,
+        );
     }
 }
 

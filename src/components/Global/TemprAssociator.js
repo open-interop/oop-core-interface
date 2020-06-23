@@ -56,85 +56,53 @@ const TemprAssociator = props => {
 
                     return temprs;
                 }}
-                renderKey={
-                    [
-                        temprsPage,
-                        temprsPageSize,
-                        latestChanged,
-                        temprFilterId,
-                        temprFilterName,
-                        temprFilterSelected
-                    ].join(",")
-                }
+                renderKey={[
+                    temprsPage,
+                    temprsPageSize,
+                    latestChanged,
+                    temprFilterId,
+                    temprFilterName,
+                    temprFilterSelected,
+                ].join(",")}
                 renderData={() => (
                     <>
                         <Table
                             data={availableTemprs.data}
                             rowClassName={row =>
-                                `device-tempr${
-                                    row.selected
-                                        ? " selected"
-                                        : ""
-                                }`
+                                `device-tempr${row.selected ? " selected" : ""}`
                             }
-                            mapFunction={(
-                                columnName,
-                                content,
-                                row,
-                            ) => {
-                                if (
-                                    columnName === "action"
-                                ) {
+                            mapFunction={(columnName, content, row) => {
+                                if (columnName === "action") {
                                     return (
                                         <>
                                             <Button
-                                                kind={
-                                                    KIND.minimal
-                                                }
+                                                kind={KIND.minimal}
                                                 $as={Link}
                                                 target="_blank"
-                                                to={
-                                                    "/temprs/" +
-                                                    content
-                                                }
+                                                to={"/temprs/" + content}
                                             >
                                                 <FontAwesomeIcon
-                                                    icon={
-                                                        faExternalLinkAlt
-                                                    }
+                                                    icon={faExternalLinkAlt}
                                                 />
                                             </Button>
                                         </>
                                     );
                                 }
-                                if (
-                                    columnName ===
-                                    "selected"
-                                ) {
-                                    if (
-                                        loading === row.id
-                                    ) {
-                                        return (
-                                            <IconSpinner />
-                                        );
+                                if (columnName === "selected") {
+                                    if (loading === row.id) {
+                                        return <IconSpinner />;
                                     }
                                     return selected[row.id] ? (
-                                        <FontAwesomeIcon
-                                            icon={faCheck}
-                                        />
+                                        <FontAwesomeIcon icon={faCheck} />
                                     ) : (
-                                        <FontAwesomeIcon
-                                            icon={faTimes}
-                                        />
+                                        <FontAwesomeIcon icon={faTimes} />
                                     );
                                 }
 
                                 return content;
                             }}
                             columnContent={columnName => {
-                                if (
-                                    columnName === "action"
-                                ) {
+                                if (columnName === "action") {
                                     return "id";
                                 }
 
@@ -176,39 +144,29 @@ const TemprAssociator = props => {
                             }}
                             updateFilters={(key, value) => {
                                 switch (key) {
-                                    case "id":
-                                        return setTemprFilterId(
-                                            value,
-                                        );
-                                    case "name":
-                                        return setTemprFilterName(
-                                            value,
-                                        );
-                                    case "selected":
-                                        if (
-                                            value === null
-                                        ) {
-                                            return setTemprFilterSelected(
-                                                "",
-                                            );
-                                        }
-                                        return setTemprFilterSelected(
-                                            value,
-                                        );
-                                    default:
+                                case "id":
+                                        return setTemprFilterId(value);
+                                case "name":
+                                        return setTemprFilterName(value);
+                                case "selected":
+                                        if (value === null) {
+                                        return setTemprFilterSelected("");
+                                    }
+                                        return setTemprFilterSelected(value);
+                                default:
                                         return null;
                                 }
                             }}
                             trueText="Selected"
                             falseText="Not selected"
                             onRowClick={async (tempr, column) => {
-                                if (
-                                    column !== "action" &&
-                                    !loading
-                                ) {
+                                if (column !== "action" && !loading) {
                                     setLoading(tempr.id);
                                     if (selected[tempr.id]) {
-                                        await props.onDeselect(tempr, selected[tempr.id]);
+                                        await props.onDeselect(
+                                            tempr,
+                                            selected[tempr.id],
+                                        );
                                     } else {
                                         await props.onSelect(tempr);
                                     }
@@ -224,12 +182,8 @@ const TemprAssociator = props => {
                             updatePageNumber={pageNumber =>
                                 setTemprsPage(pageNumber)
                             }
-                            totalRecords={
-                                availableTemprs.totalRecords
-                            }
-                            numberOfPages={
-                                availableTemprs.numberOfPages
-                            }
+                            totalRecords={availableTemprs.totalRecords}
+                            numberOfPages={availableTemprs.numberOfPages}
                             currentPage={temprsPage || 1}
                         />
                     </>

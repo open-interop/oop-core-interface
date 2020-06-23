@@ -49,8 +49,8 @@ const Schedule = props => {
     }, []);
 
     const getSchedule = () => {
-        return blankSchedule ?
-            Promise.resolve({
+        return blankSchedule
+            ? Promise.resolve({
                 name: "",
                 monthOfYear: "*",
                 dayOfMonth: "*",
@@ -59,8 +59,8 @@ const Schedule = props => {
                 minute: "*",
                 active: false,
                 relations: [],
-            }) :
-            OopCore.getSchedule(props.match.params.scheduleId);
+            })
+            : OopCore.getSchedule(props.match.params.scheduleId);
     };
 
     const refreshSchedule = response => {
@@ -108,9 +108,7 @@ const Schedule = props => {
                 .then(response => {
                     SuccessToast("Created new schedule", "Success");
                     refreshSchedule(response);
-                    props.history.replace(
-                        `/schedules/${response.id}`,
-                    );
+                    props.history.replace(`/schedules/${response.id}`);
                 })
                 .catch(error => {
                     setScheduleErrors(error);
@@ -152,7 +150,9 @@ const Schedule = props => {
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </Button>
                             <h2>
-                                {blankSchedule ? "Create Schedule" : "Edit Schedule"}
+                                {blankSchedule
+                                    ? "Create Schedule"
+                                    : "Edit Schedule"}
                             </h2>
                             <div>
                                 {blankSchedule ? null : (
@@ -207,10 +207,7 @@ const Schedule = props => {
                                 id="input-active"
                                 checked={updatedSchedule.active}
                                 onChange={() =>
-                                    setValue(
-                                        "active",
-                                        !updatedSchedule.active,
-                                    )
+                                    setValue("active", !updatedSchedule.active)
                                 }
                                 checkmarkType={STYLE_TYPE.toggle_round}
                             />
@@ -228,7 +225,10 @@ const Schedule = props => {
                                 id="input-moy"
                                 value={updatedSchedule.monthOfYear}
                                 onChange={event =>
-                                    setValue("monthOfYear", event.currentTarget.value)
+                                    setValue(
+                                        "monthOfYear",
+                                        event.currentTarget.value,
+                                    )
                                 }
                                 error={scheduleErrors.monthOfYear}
                             />
@@ -246,7 +246,10 @@ const Schedule = props => {
                                 id="input-dom"
                                 value={updatedSchedule.dayOfMonth}
                                 onChange={event =>
-                                    setValue("dayOfMonth", event.currentTarget.value)
+                                    setValue(
+                                        "dayOfMonth",
+                                        event.currentTarget.value,
+                                    )
                                 }
                                 error={scheduleErrors.dayOfMonth}
                             />
@@ -264,7 +267,10 @@ const Schedule = props => {
                                 id="input-dow"
                                 value={updatedSchedule.dayOfWeek}
                                 onChange={event =>
-                                    setValue("dayOfWeek", event.currentTarget.value)
+                                    setValue(
+                                        "dayOfWeek",
+                                        event.currentTarget.value,
+                                    )
                                 }
                                 error={scheduleErrors.dayOfWeek}
                             />
@@ -301,27 +307,34 @@ const Schedule = props => {
                                 id="input-minute"
                                 value={updatedSchedule.minute}
                                 onChange={event =>
-                                    setValue("minute", event.currentTarget.value)
+                                    setValue(
+                                        "minute",
+                                        event.currentTarget.value,
+                                    )
                                 }
                                 error={scheduleErrors.minute}
                             />
                         </FormControl>
                         <TemprAssociator
                             selected={relations}
-                            onSelect={(tempr) => {
+                            onSelect={tempr => {
                                 return OopCore.createScheduleTempr(
                                     schedule.id,
-                                    tempr.id
-                                )
-                                .then(res => {
+                                    tempr.id,
+                                ).then(res => {
                                     setRelations([...relations, res]);
                                 });
                             }}
                             onDeselect={(tempr, rel) => {
-                                return OopCore.deleteScheduleTempr(rel)
-                                    .then(res => {
-                                        setRelations(relations.filter(v => v.id !== rel.id));
-                                    });
+                                return OopCore.deleteScheduleTempr(rel).then(
+                                    res => {
+                                        setRelations(
+                                            relations.filter(
+                                                v => v.id !== rel.id,
+                                            ),
+                                        );
+                                    },
+                                );
                             }}
                         />
                     </>
