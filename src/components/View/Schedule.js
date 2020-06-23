@@ -316,6 +316,7 @@ const Schedule = props => {
                             />
                         </FormControl>
                         <TemprAssociator
+                            subtitle="Select temprs to associate with this schedule."
                             selected={relations}
                             onSelect={tempr => {
                                 return OopCore.createScheduleTempr(

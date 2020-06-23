@@ -38,8 +38,8 @@ const TemprAssociator = props => {
 
     return (
         <AccordionWithCaption
-            title="Tempr associations "
-            subtitle="Select temprs to associate with this ... <TODO!>"
+            title={props.title || "Tempr Associations"}
+            subtitle={props.subtitle || "Select temprs to associate"}
             error={props.error}
         >
             <DataProvider
