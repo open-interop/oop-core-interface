@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
+import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -29,9 +30,12 @@ import {
 
 import { Timezones } from "../../resources/Timezones";
 
+import TemprAssociator from "../Global/TemprAssociator";
+
 const Schedule = props => {
     const [schedule, setSchedule] = useState({});
     const [updatedSchedule, setUpdatedSchedule] = useState({});
+    const [relations, setRelations] = useState([]);
     const [scheduleErrors, setScheduleErrors] = useState({});
 
     const blankSchedule = props.match.params.scheduleId === "new";
@@ -45,34 +49,24 @@ const Schedule = props => {
     }, []);
 
     const getSchedule = () => {
-        return blankSchedule
-            ? Promise.resolve({
-                  active: false,
-                  authenticationHeaders: [],
-                  authenticationPath: "",
-                  authenticationQuery: [],
-                  latitude: "",
-                  longitude: "",
-                  name: "",
-                  siteId: "",
-                  timeZone: "",
-              })
-            : OopCore.getSchedule(props.match.params.scheduleId);
-    };
-
-    const copyOfArray = original => {
-        const copy = [];
-        original.forEach((item, index) => {
-            copy[index] = [...item];
-        });
-
-        return copy;
+        return blankSchedule ?
+            Promise.resolve({
+                name: "",
+                monthOfYear: "*",
+                dayOfMonth: "*",
+                dayOfWeek: "*",
+                hour: "*",
+                minute: "*",
+                active: false,
+                relations: [],
+            }) :
+            OopCore.getSchedule(props.match.params.scheduleId);
     };
 
     const refreshSchedule = response => {
-        console.log(response);
         setSchedule(response);
         setUpdatedSchedule({ ...response });
+        setRelations([...response.relations]);
 
         return response;
     };
@@ -208,6 +202,19 @@ const Schedule = props => {
                                 error={scheduleErrors.name}
                             />
                         </FormControl>
+                        <FormControl label="Active">
+                            <Checkbox
+                                id="input-active"
+                                checked={updatedSchedule.active}
+                                onChange={() =>
+                                    setValue(
+                                        "active",
+                                        !updatedSchedule.active,
+                                    )
+                                }
+                                checkmarkType={STYLE_TYPE.toggle_round}
+                            />
+                        </FormControl>
                         <FormControl
                             label="Month of Year"
                             caption="required"
@@ -299,6 +306,24 @@ const Schedule = props => {
                                 error={scheduleErrors.minute}
                             />
                         </FormControl>
+                        <TemprAssociator
+                            selected={relations}
+                            onSelect={(tempr) => {
+                                return OopCore.createScheduleTempr(
+                                    schedule.id,
+                                    tempr.id
+                                )
+                                .then(res => {
+                                    setRelations([...relations, res]);
+                                });
+                            }}
+                            onDeselect={(tempr, rel) => {
+                                return OopCore.deleteScheduleTempr(rel)
+                                    .then(res => {
+                                        setRelations(relations.filter(v => v.id !== rel.id));
+                                    });
+                            }}
+                        />
                     </>
                 )}
             />

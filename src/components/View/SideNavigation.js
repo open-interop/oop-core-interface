@@ -191,6 +191,11 @@ const SideNavigation = props => {
                     pathName="Device Groups"
                     isActive={pathIncludes("/device-groups")}
                 />
+                <NavigationItem
+                    path="/schedules"
+                    pathName="Schedules"
+                    isActive={pathIncludes("/schedules")}
+                />
             </NavigationGroup>
             <div className="filler" />
         </div>
