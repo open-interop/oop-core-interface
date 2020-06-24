@@ -66,7 +66,6 @@ const Schedule = props => {
     const refreshSchedule = response => {
         setSchedule(response);
         setUpdatedSchedule({ ...response });
-        setRelations([...response.relations]);
 
         return response;
     };
@@ -131,7 +130,13 @@ const Schedule = props => {
         <div className="content-wrapper">
             <DataProvider
                 getData={() => {
-                    return getSchedule().then(refreshSchedule);
+                    return Promise.all([
+                        getSchedule().then(refreshSchedule),
+                        OopCore.getScheduleTemprs({
+                            scheduleId: props.match.params.scheduleId,
+                            pageSize: -1,
+                        }).then(sts => setRelations(sts.data)),
+                    ]);
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
@@ -319,15 +324,15 @@ const Schedule = props => {
                             subtitle="Select temprs to associate with this schedule."
                             selected={relations}
                             onSelect={tempr => {
-                                return OopCore.createScheduleTempr(
-                                    schedule.id,
-                                    tempr.id,
-                                ).then(res => {
+                                return OopCore.createScheduleTempr({
+                                    scheduleId: schedule.id,
+                                    temprId: tempr.id,
+                                }).then(res => {
                                     setRelations([...relations, res]);
                                 });
                             }}
                             onDeselect={(tempr, rel) => {
-                                return OopCore.deleteScheduleTempr(rel).then(
+                                return OopCore.deleteScheduleTempr(rel.id, rel).then(
                                     res => {
                                         setRelations(
                                             relations.filter(
