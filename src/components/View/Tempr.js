@@ -32,6 +32,10 @@ import {
     SuccessToast,
     TemprSelector,
 } from "../Global";
+
+import DeviceAssociator from "../Global/DeviceAssociator";
+import ScheduleAssociator from "../Global/ScheduleAssociator";
+
 import { arrayToObject, identicalObject } from "../../Utilities";
 import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
@@ -48,17 +52,10 @@ const Tempr = props => {
     const [updatedTempr, setUpdatedTempr] = useState({});
     const [temprErrors, setTemprErrors] = useState({});
     const [groups, setGroups] = useState([]);
-    const [availableDevices, setAvailableDevices] = useState([]);
-    const [devicesPage, setDevicesPage] = useState(1);
-    const [devicesPageSize, setDevicesPageSize] = useState(10);
-    const [latestChanged, setLatestChanged] = useState(false);
 
-    const [deviceFilterId, setDeviceFilterId] = useState("");
-    const [deviceFilterName, setDeviceFilterName] = useState("");
-    const [deviceFilterSite, setDeviceFilterSite] = useState("");
-    const [deviceFilterSelected, setDeviceFilterSelected] = useState("");
+    const [deviceTemprs, setDeviceTemprs] = useState([]);
+    const [scheduleTemprs, setScheduleTemprs] = useState([]);
 
-    const [deviceTemprLoading, setDeviceTemprLoading] = useState(false);
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false);
 
@@ -74,17 +71,6 @@ const Tempr = props => {
             : "Edit Tempr | Settings | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    useEffect(() => {
-        setDevicesPage(1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        devicesPageSize,
-        deviceFilterId,
-        deviceFilterName,
-        deviceFilterSite,
-        deviceFilterSelected,
-    ]);
 
     const getTempr = () => {
         return blankTempr
@@ -114,10 +100,23 @@ const Tempr = props => {
     };
 
     const getData = () => {
-        return Promise.all([getTempr(), OopCore.getDeviceGroups()]).then(
-            ([tempr, groups]) => {
+        return Promise.all([
+            getTempr(),
+            OopCore.getDeviceGroups(),
+            OopCore.getDeviceTemprs({
+                temprId: props.match.params.temprId,
+                pageSize: -1,
+            }),
+            OopCore.getScheduleTemprs({
+                temprId: props.match.params.temprId,
+                pageSize: -1,
+            }),
+        ]).then(
+            ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
                 refreshTempr(tempr);
                 setGroups(groups.data);
+                setDeviceTemprs(deviceTemprs.data);
+                setScheduleTemprs(scheduleTemprs.data);
                 return tempr;
             },
         );
@@ -155,83 +154,7 @@ const Tempr = props => {
     };
 
     const toggleDeviceTempr = device => {
-        setDeviceTemprLoading(device.id);
         temprErrors.deviceTemprs = "";
-        if (device.selected) {
-            setLatestChanged(device.id, false);
-            return OopCore.deleteDeviceTempr(device.selected.id, {
-                deviceId: device.id,
-                temprId: updatedTempr.id,
-            })
-                .then(() => {
-                    setDeviceTemprLoading(false);
-                    getDeviceTemprData();
-                })
-                .catch(error => {
-                    setDeviceTemprLoading(false);
-                    temprErrors.deviceTemprs = error.errors;
-                });
-        } else {
-            setLatestChanged(device.id, true);
-            return OopCore.createDeviceTempr({
-                deviceId: device.id,
-                temprId: updatedTempr.id,
-            })
-                .then(() => {
-                    setDeviceTemprLoading(false);
-                    getDeviceTemprData();
-                })
-                .catch(error => {
-                    setDeviceTemprLoading(false);
-                    temprErrors.deviceTemprs = error.errors;
-                });
-        }
-    };
-
-    const getDeviceTemprData = () => {
-        return Promise.all([
-            OopCore.getDevices({
-                deviceGroupId: updatedTempr.deviceGroupId,
-                pageSize: devicesPageSize,
-                page: devicesPage,
-                id: deviceFilterId,
-                name: deviceFilterName,
-                siteId: deviceFilterSite,
-            }),
-            OopCore.getDeviceTemprs({
-                temprId: props.match.params.temprId,
-                pageSize: -1,
-            }),
-            OopCore.getSites({ pageSize: -1 }),
-        ]).then(([availableDevices, deviceTemprs, sites]) => {
-            const deviceTemprsObject = arrayToObject(
-                deviceTemprs.data,
-                "deviceId",
-            );
-
-            const sitesObject = arrayToObject(sites.data, "id");
-
-            availableDevices.data.forEach(device => {
-                device.selected = deviceTemprsObject[device.id];
-                device.siteName = sitesObject[device.siteId]
-                    ? sitesObject[device.siteId].fullName
-                    : "";
-            });
-
-            if (deviceFilterSelected === true) {
-                availableDevices.data = availableDevices.data.filter(
-                    device => device.selected,
-                );
-                setAvailableDevices(availableDevices);
-            } else if (deviceFilterSelected === false) {
-                availableDevices.data = availableDevices.data.filter(
-                    device => !device.selected,
-                );
-                setAvailableDevices(availableDevices);
-            } else {
-                setAvailableDevices(availableDevices);
-            }
-        });
     };
 
     const calculateOutput = () => {
@@ -323,137 +246,6 @@ const Tempr = props => {
             });
     };
 
-    const renderDeviceAssociations = () => {
-        return (
-            <>
-                <Table
-                    data={availableDevices.data}
-                    rowClassName={row =>
-                        `device-tempr${row.selected ? " selected" : ""}`
-                    }
-                    mapFunction={(columnName, content, row) => {
-                        if (columnName === "action") {
-                            return (
-                                <>
-                                    <Button
-                                        kind={KIND.minimal}
-                                        $as={Link}
-                                        target="_blank"
-                                        to={"/devices/" + content}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={faExternalLinkAlt}
-                                        />
-                                    </Button>
-                                </>
-                            );
-                        }
-
-                        if (columnName === "selected") {
-                            if (deviceTemprLoading === row.id) {
-                                return <IconSpinner />;
-                            }
-                            return content ? (
-                                <FontAwesomeIcon icon={faCheck} />
-                            ) : (
-                                <FontAwesomeIcon icon={faTimes} />
-                            );
-                        }
-
-                        return content;
-                    }}
-                    columnContent={columnName => {
-                        if (columnName === "action") {
-                            return "id";
-                        }
-
-                        return columnName;
-                    }}
-                    columns={[
-                        {
-                            id: "selected",
-                            name: "",
-                            type: "bool",
-                            hasFilter: true,
-                            width: "20px",
-                        },
-                        {
-                            id: "id",
-                            name: "Id",
-                            type: "text",
-                            hasFilter: true,
-                        },
-                        {
-                            id: "name",
-                            name: "Name",
-                            type: "text",
-                            hasFilter: true,
-                        },
-                        {
-                            id: "siteId",
-                            name: "Site ID",
-                            type: "text",
-                            hasFilter: true,
-                        },
-                        {
-                            id: "siteName",
-                            name: "Site",
-                            type: "text",
-                            hasFilter: false,
-                        },
-
-                        {
-                            id: "action",
-                            name: "",
-                            type: "action",
-                            hasFilter: false,
-                            width: "30px",
-                        },
-                    ]}
-                    filters={{
-                        id: deviceFilterId,
-                        name: deviceFilterName,
-                        siteId: deviceFilterSite,
-                        selected: deviceFilterSelected,
-                    }}
-                    updateFilters={(key, value) => {
-                        switch (key) {
-                            case "id":
-                                return setDeviceFilterId(value);
-                            case "name":
-                                return setDeviceFilterName(value);
-                            case "siteId":
-                                return setDeviceFilterSite(value);
-                            case "selected":
-                                if (value === null) {
-                                    return setDeviceFilterSelected("");
-                                }
-                                return setDeviceFilterSelected(value);
-                            default:
-                                return null;
-                        }
-                    }}
-                    trueText="Selected"
-                    falseText="Not selected"
-                    onRowClick={(device, column) => {
-                        if (column !== "action" && !deviceTemprLoading) {
-                            return toggleDeviceTempr(device);
-                        }
-                    }}
-                />
-                <Pagination
-                    updatePageSize={pageSize => {
-                        setDevicesPageSize(pageSize);
-                    }}
-                    currentPageSize={devicesPageSize}
-                    updatePageNumber={pageNumber => setDevicesPage(pageNumber)}
-                    totalRecords={availableDevices.totalRecords}
-                    numberOfPages={availableDevices.numberOfPages}
-                    currentPage={devicesPage || 1}
-                />
-            </>
-        );
-    };
 
     const saveTempr = () => {
         clearToast();
@@ -864,28 +656,65 @@ const Tempr = props => {
                                 />
                             </FormControl>
                             {blankTempr ? null : (
-                                <AccordionWithCaption
-                                    title="Device associations "
-                                    subtitle="Select devices to associate with this tempr"
-                                    error={temprErrors.deviceTemprs}
-                                    startOpen
-                                >
-                                    <DataProvider
-                                        getData={() => {
-                                            return getDeviceTemprData();
+                                <>
+                                    <DeviceAssociator
+                                        selected={deviceTemprs}
+                                        onSelect={device => {
+                                            return OopCore.createDeviceTempr({
+                                                deviceId: device.id,
+                                                temprId: updatedTempr.id,
+                                            })
+                                                .then(res => {
+                                                    setDeviceTemprs([...deviceTemprs, res]);
+                                                })
+                                                .catch(error => {
+                                                    temprErrors.deviceTemprs = error.errors;
+                                                });
                                         }}
-                                        renderKey={
-                                            devicesPage +
-                                            devicesPageSize +
-                                            latestChanged +
-                                            deviceFilterId +
-                                            deviceFilterName +
-                                            deviceFilterSite +
-                                            deviceFilterSelected
-                                        }
-                                        renderData={renderDeviceAssociations}
+                                        onDeselect={(device, dt) => {
+                                            return OopCore.deleteDeviceTempr(dt.id, {
+                                                deviceId: device.id,
+                                                temprId: updatedTempr.id,
+                                            })
+                                                .then(() => {
+                                                    setDeviceTemprs(deviceTemprs.filter(v => v.id !== dt.id));
+                                                })
+                                                .catch(error => {
+                                                    temprErrors.deviceTemprs = error.errors;
+                                                });
+                                        }}
+                                        error={temprErrors.deviceTemprs}
                                     />
-                                </AccordionWithCaption>
+                                    <ScheduleAssociator
+                                        selected={scheduleTemprs}
+                                        onSelect={schedule => {
+                                            return OopCore.createScheduleTempr({
+                                                scheduleId: schedule.id,
+                                                temprId: updatedTempr.id,
+                                            })
+                                                .then(res => {
+                                                    setScheduleTemprs([...scheduleTemprs, res]);
+                                                })
+                                                .catch(error => {
+                                                    temprErrors.scheduleTemprs = error.errors;
+                                                });
+                                        }}
+                                        onDeselect={(schedule, st) => {
+                                            console.log(schedule, st);
+                                            return OopCore.deleteScheduleTempr(st.id, {
+                                                scheduleId: schedule.id,
+                                                temprId: updatedTempr.id,
+                                            })
+                                                .then(() => {
+                                                    setScheduleTemprs(scheduleTemprs.filter(v => v.id !== st.id));
+                                                })
+                                                .catch(error => {
+                                                    temprErrors.scheduleTemprs = error.errors;
+                                                });
+                                        }}
+                                        error={temprErrors.scheduleTemprs}
+                                    />
+                                </>
                             )}
                             <Button
                                 onClick={() => {

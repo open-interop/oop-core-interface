@@ -535,15 +535,8 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    async getSchedule(id) {
-        const [schedule, relations] = await Promise.all([
-            this.makeRequest(uri`/schedules/${id}`),
-            this.makeRequest(uri`/schedule_temprs?filter[schedule_id]=${id}`),
-        ]);
-
-        schedule.relations = relations.data;
-
-        return schedule;
+    getSchedule(id) {
+        return this.makeRequest(uri`/schedules/${id}`);
     }
 
     createSchedule(data) {
@@ -566,16 +559,26 @@ class OopCore extends EventEmitter {
         );
     }
 
-    createScheduleTempr(scheduleId, temprId) {
+    getScheduleTemprs(params) {
+        const parameters = this.getParameters(params);
+        let path = `/schedule_temprs`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    createScheduleTempr({ scheduleId, temprId }) {
         return this.makeRequest(
             uri`/schedule_temprs?tempr_id=${temprId}&schedule_id=${scheduleId}`,
             RequestType.POST,
         );
     }
 
-    deleteScheduleTempr(data) {
+    deleteScheduleTempr(id, data) {
         return this.makeRequest(
-            uri`/schedule_temprs/${data.id}?tempr_id=${data.temprId}&schedule_id=${data.scheduleId}`,
+            uri`/schedule_temprs/${id}?tempr_id=${data.temprId}&schedule_id=${data.scheduleId}`,
             RequestType.DELETE,
         );
     }
