@@ -1,8 +1,8 @@
 import React from "react";
-import { FormControl } from "baseui/form-control";
-import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { PairInput } from ".";
+
+import TemplateInput from "../Global/TemplateInput";
 
 const protocolOptions = [{ id: "http" }, { id: "https" }];
 const requestMethodOptions = [
@@ -16,100 +16,102 @@ const requestMethodOptions = [
 const HttpTemprTemplate = props => {
     const setValue = (key, value) => {
         const updatedTemplate = { ...props.template };
-        updatedTemplate[key] = value;
+        if (value.language === "text") {
+            updatedTemplate[key] = value.script;
+        } else {
+            updatedTemplate[key] = value;
+        }
         props.updateTemplate(updatedTemplate);
     };
 
     return (
         <>
-            <FormControl
-                label="Host"
-                key={"form-control-group-host"}
-                caption="required"
-            >
-                <Input
-                    id={"input-host"}
-                    value={props.template.host || ""}
-                    onChange={event =>
-                        setValue("host", event.currentTarget.value)
+            <TemplateInput
+                label={"Host"}
+                value={props.template.host}
+                onChange={val => setValue("host", val)}
+            />
+            <TemplateInput
+                label={"Port"}
+                value={props.template.port}
+                onChange={val => {
+                    if (val.language === "text") {
+                        val.script = Number(val.script);
                     }
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Port"
-                key={"form-control-group-port"}
-                caption="required"
-            >
-                <Input
-                    id={"input-port"}
-                    value={props.template.port}
-                    onChange={event =>
-                        setValue("port", Number(event.currentTarget.value))
-                    }
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Path"
-                key={"form-control-group-path"}
-                caption="required"
-            >
-                <Input
-                    id={"input-path"}
-                    value={props.template.path}
-                    onChange={event =>
-                        setValue("path", event.currentTarget.value)
-                    }
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Protocol"
-                key={"form-control-group-protocol"}
-                caption="required"
-            >
-                <Select
-                    options={protocolOptions}
-                    labelKey="id"
-                    valueKey="id"
-                    searchable={false}
-                    onChange={event => {
-                        setValue("protocol", event.option.id);
-                    }}
-                    value={protocolOptions.find(
-                        item => item.id === props.template.protocol,
-                    )}
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Request Method"
-                key={"form-control-group-request-method"}
-                caption="required"
-            >
-                <Select
-                    options={requestMethodOptions}
-                    labelKey="id"
-                    valueKey="id"
-                    searchable={false}
-                    onChange={event => {
-                        setValue("requestMethod", event.option.id);
-                    }}
-                    value={requestMethodOptions.find(
-                        item => item.id === props.template.requestMethod,
-                    )}
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl label="Headers" key={"form-control-group-headers"}>
-                <PairInput
-                    data={props.template.headers || {}}
-                    updateData={data => {
-                        setValue("headers", data);
-                    }}
-                />
-            </FormControl>
+                    setValue("port", val);
+                }}
+            />
+            <TemplateInput
+                label={"Path"}
+                value={props.template.path}
+                onChange={val => setValue("path", val)}
+            />
+            <TemplateInput
+                label={"Protocol"}
+                value={props.template.protocol}
+                onChange={val => setValue("protocol", val)}
+                basic={({ language, script }) => {
+                    return (
+                        <Select
+                            options={protocolOptions}
+                            labelKey="id"
+                            valueKey="id"
+                            searchable={false}
+                            clearable={false}
+                            onChange={event => {
+                                setValue("protocol", event.option.id);
+                            }}
+                            value={[protocolOptions.find(
+                                item => item.id === script,
+                            )]}
+                            error={props.error}
+                        />
+                    );
+                }}
+            />
+            <TemplateInput
+                label={"Request Method"}
+                value={props.template.requestMethod}
+                onChange={val => setValue("requestMethod", val)}
+                basic={({ language, script }) => {
+                    return (
+                        <Select
+                            options={requestMethodOptions}
+                            labelKey="id"
+                            valueKey="id"
+                            searchable={false}
+                            clearable={false}
+                            onChange={event => {
+                                setValue("requestMethod", event.option.id);
+                            }}
+                            value={[requestMethodOptions.find(
+                                item => item.id === props.template.requestMethod,
+                            )]}
+                            error={props.error}
+                        />
+                    );
+                }}
+            />
+            <TemplateInput
+                label={"Headers"}
+                value={props.template.headers}
+                onChange={val => setValue("headers", val)}
+                basic={({ language, script }) => {
+                    return (
+                        <PairInput
+                            data={props.template.headers || {}}
+                            updateData={data => {
+                                setValue("headers", data);
+                            }}
+                        />
+                    );
+                }}
+            />
+            <TemplateInput
+                label={"Body"}
+                value={props.template.body}
+                onChange={val => setValue("body", val)}
+            />
         </>
     );
 };

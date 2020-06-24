@@ -1,34 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import {
-    faChevronLeft,
-    faExternalLinkAlt,
-    faCheck,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
-import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
-import {
-    AccordionWithCaption,
     ConfirmModal,
     DataProvider,
-    IconSpinner,
-    Pagination,
-    Table,
 } from "../Universal";
 import OopCore from "../../OopCore";
-import {
-    arrayToObject,
-    identicalArray,
-    identicalObject,
-} from "../../Utilities";
-
-import { Timezones } from "../../resources/Timezones";
 
 import TemprAssociator from "../Global/TemprAssociator";
 
@@ -39,7 +22,6 @@ const Schedule = props => {
     const [scheduleErrors, setScheduleErrors] = useState({});
 
     const blankSchedule = props.match.params.scheduleId === "new";
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         document.title = blankSchedule
@@ -291,7 +273,6 @@ const Schedule = props => {
                         >
                             <Input
                                 id="input-hour"
-                                value={updatedSchedule.dayOfWeek}
                                 value={updatedSchedule.hour}
                                 onChange={event =>
                                     setValue("hour", event.currentTarget.value)

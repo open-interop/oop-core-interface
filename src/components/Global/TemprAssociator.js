@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChevronLeft,
     faExternalLinkAlt,
     faCheck,
     faTimes,
@@ -12,7 +11,6 @@ import { Button, KIND } from "baseui/button";
 
 import {
     AccordionWithCaption,
-    ConfirmModal,
     DataProvider,
     IconSpinner,
     Pagination,
@@ -25,7 +23,6 @@ const TemprAssociator = props => {
     const [availableTemprs, setAvailableTemprs] = useState([]);
     const [temprsPage, setTemprsPage] = useState(1);
     const [temprsPageSize, setTemprsPageSize] = useState(10);
-    const [latestChanged, setLatestChanged] = useState(false);
     const [temprFilterId, setTemprFilterId] = useState("");
     const [temprFilterName, setTemprFilterName] = useState("");
     const [temprFilterSelected, setTemprFilterSelected] = useState("");
@@ -59,7 +56,6 @@ const TemprAssociator = props => {
                 renderKey={[
                     temprsPage,
                     temprsPageSize,
-                    latestChanged,
                     temprFilterId,
                     temprFilterName,
                     temprFilterSelected,
