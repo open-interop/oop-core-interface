@@ -12,7 +12,6 @@ import {
 
 import {
     AccordionWithCaption,
-    BaseuiSpinner,
     DataProvider,
     IconSpinner,
     Pagination,
@@ -34,8 +33,6 @@ const ScheduleAssociator = props => {
     for (const scheduleTempr of props.selected) {
         selected[scheduleTempr.scheduleId] = scheduleTempr;
     }
-
-    console.log(selected);
 
     const renderScheduleAssociations = schedules => {
         return (

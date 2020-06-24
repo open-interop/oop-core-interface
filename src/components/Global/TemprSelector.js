@@ -13,9 +13,6 @@ const TemprSelector = props => {
         });
     }, [props.deviceGroup]);
 
-    console.log(props.value);
-    console.log(temprs);
-
     return (
         <Select
             {...props}

@@ -7,24 +7,15 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faChevronLeft,
-    faExternalLinkAlt,
-    faCheck,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
     AccordionWithCaption,
     ConfirmModal,
     DataProvider,
-    IconSpinner,
-    Pagination,
-    Table,
 } from "../Universal";
 import OopCore from "../../OopCore";
 import {
-    arrayToObject,
     identicalArray,
     identicalObject,
 } from "../../Utilities";
@@ -138,14 +129,6 @@ const Device = props => {
             identicalArray(authenticationQuery, updatedQuery) &&
             identicalObject(rest, updatedRest)
         );
-    };
-
-    const toggleDeviceTempr = tempr => {
-        deviceErrors.deviceTemprs = "";
-
-        if (tempr.selected) {
-        } else {
-        }
     };
 
     const getDeviceTemprData = () => {

@@ -9,9 +9,6 @@ import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Textarea } from "baseui/textarea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faExternalLinkAlt,
-    faCheck,
-    faTimes,
     faChevronLeft,
     faExpandArrowsAlt,
     faCompressArrowsAlt,
@@ -21,9 +18,6 @@ import {
     BaseuiSpinner,
     ConfirmModal,
     DataProvider,
-    IconSpinner,
-    Pagination,
-    Table,
 } from "../Universal";
 import {
     clearToast,
@@ -36,7 +30,7 @@ import {
 import DeviceAssociator from "../Global/DeviceAssociator";
 import ScheduleAssociator from "../Global/ScheduleAssociator";
 
-import { arrayToObject, identicalObject } from "../../Utilities";
+import { identicalObject } from "../../Utilities";
 import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
@@ -151,10 +145,6 @@ const Tempr = props => {
             identicalObject(template, updatedTemplate) &&
             identicalObject(restOfTempr, restOfUpdatedTempr)
         );
-    };
-
-    const toggleDeviceTempr = device => {
-        temprErrors.deviceTemprs = "";
     };
 
     const calculateOutput = () => {
@@ -293,69 +283,6 @@ const Tempr = props => {
         );
     };
 
-    const MappingEditor = () => {
-        return (
-            <>
-                <div className="flex-row mb-10">
-                    <label>Basic mapping</label>
-                    <div className="toggle">
-                        <Checkbox
-                            isIndeterminate={true}
-                            checked={
-                                updatedTempr.template.body &&
-                                updatedTempr.template.body.language === "js"
-                            }
-                            onChange={event => {
-                                const updatedData = {
-                                    ...updatedTempr,
-                                };
-                                updatedData.template.body = {
-                                    language: event.target.checked
-                                        ? "js"
-                                        : "handlebars",
-                                    script: updatedData.template.body.script,
-                                };
-                                setUpdatedTempr(updatedData);
-                            }}
-                            checkmarkType={STYLE_TYPE.toggle_round}
-                        />
-                    </div>
-                    <label>Advanced mapping</label>
-                </div>
-                <AceEditor
-                    mode={
-                        updatedTempr.template.body &&
-                        updatedTempr.template.body.language === "js"
-                            ? "javascript"
-                            : "handlebars"
-                    }
-                    theme="kuroir"
-                    width="100%"
-                    height={mappingFullScreen ? "75vh" : "500px"}
-                    showPrintMargin={false}
-                    onChange={value => {
-                        const updatedData = {
-                            ...updatedTempr,
-                        };
-                        updatedData.template.body = {
-                            language: "js",
-                            script: value,
-                        };
-                        setUpdatedTempr(updatedData);
-                    }}
-                    editorProps={{
-                        $blockScrolling: true,
-                    }}
-                    value={
-                        updatedTempr.template.body
-                            ? updatedTempr.template.body.script
-                            : ""
-                    }
-                />
-            </>
-        );
-    };
-
     const renderBody = () => {
         if (mappingFullScreen) {
             return (
@@ -378,8 +305,7 @@ const Tempr = props => {
                         }}
                         activeKey={fullScreenActiveTab}
                     >
-                        <Tab title="Example">{ExampleEditor()}</Tab>
-                        <Tab title="Mapping">{MappingEditor()}</Tab>
+                        <Tab title="Example Message">{ExampleEditor()}</Tab>
                         <Tab title="Output">
                             <Button
                                 kind={KIND.primary}
@@ -407,12 +333,9 @@ const Tempr = props => {
                             <FontAwesomeIcon icon={faExpandArrowsAlt} />
                         </Button>
                     </div>
-                    <div className="flex-row mb-20">
-                        <div className="w-50">
-                            <div className="mb-10">Example</div>
-                            {ExampleEditor()}
-                        </div>
-                        <div className="w-50">{MappingEditor()}</div>
+                    <div className="mb-20">
+                        <div className="mb-10">Example Message</div>
+                        {ExampleEditor()}
                     </div>
                     <Button
                         kind={KIND.secondary}
@@ -585,12 +508,12 @@ const Tempr = props => {
                                             event.option.id,
                                         );
                                     }}
-                                    value={endpointTypeOptions.find(
+                                    value={[endpointTypeOptions.find(
                                         item =>
                                             item.id ===
                                                 updatedTempr.endpointType ||
                                             item.id === "http",
-                                    )}
+                                    )]}
                                     error={props.error}
                                     disabled
                                 />
@@ -631,7 +554,7 @@ const Tempr = props => {
                                 caption="required"
                                 error={temprErrors.base}
                                 subtitle="Please provide a host, port, path, protocol and request method"
-                                // startOpen
+                                startOpen
                             >
                                 <div className="content-wrapper">
                                     <HttpTemprTemplate
@@ -643,7 +566,7 @@ const Tempr = props => {
                                     />
                                 </div>
                             </AccordionWithCaption>
-                            <AccordionWithCaption title="Body" startOpen>
+                            <AccordionWithCaption title="Test">
                                 {renderBody()}
                             </AccordionWithCaption>
                             <FormControl
@@ -652,7 +575,7 @@ const Tempr = props => {
                             >
                                 <Textarea
                                     value={updatedTempr.notes || ""}
-                                    onChange={e => setValue(e.target.value)}
+                                    onChange={e => setValue("notes", e.target.value)}
                                 />
                             </FormControl>
                             {blankTempr ? null : (

@@ -29,7 +29,11 @@ import { GifSpinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 import { QueryParamProvider } from "use-query-params";
+import { ThemeProvider, createTheme } from "baseui";
+
 const queryString = require("query-string");
+
+const oopTheme = createTheme({}, { grid: { margins: 0 } });
 
 class App extends Component {
     constructor(props) {
@@ -297,7 +301,9 @@ class App extends Component {
             return <GifSpinner />;
         }
         if (!this.state.isLoading) {
-            return this.renderRoutes();
+            return <ThemeProvider theme={oopTheme}>
+                {this.renderRoutes()}
+            </ThemeProvider>;
         }
     }
 }
