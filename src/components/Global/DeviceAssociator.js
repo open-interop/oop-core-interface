@@ -12,7 +12,6 @@ import {
 
 import {
     AccordionWithCaption,
-    BaseuiSpinner,
     DataProvider,
     IconSpinner,
     Pagination,
@@ -35,8 +34,6 @@ const DeviceAssociator = props => {
     for (const deviceTempr of props.selected) {
         selected[deviceTempr.deviceId] = deviceTempr;
     }
-
-    console.log(selected);
 
     const renderDeviceAssociations = devices => {
         return (
