@@ -44,7 +44,7 @@ const Layers = props => {
                     $as={Link}
                     to={`${props.location.pathname}/new`}
                     kind={KIND.minimal}
-                    aria-label="Create new tempr"
+                    aria-label="Create new layer"
                     endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
                 >
                     New
@@ -70,7 +70,7 @@ const Layers = props => {
                                                 kind={KIND.tertiary}
                                                 $as={Link}
                                                 to={`${props.location.pathname}/${content}`}
-                                                aria-label="Edit tempr"
+                                                aria-label="Edit Layer"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faEdit}
