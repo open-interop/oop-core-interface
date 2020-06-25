@@ -15,6 +15,8 @@ import {
     Profile,
     Schedules,
     Schedule,
+    Layers,
+    Layer,
     SideNavigation,
     Site,
     Sites,
@@ -242,6 +244,20 @@ class App extends Component {
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Schedule, props)
+                        }
+                    />
+                    <Route
+                        path="/layers"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Layers, props)
+                        }
+                    />
+                    <Route
+                        path="/layers/:layerId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Layer, props)
                         }
                     />
                     <Route

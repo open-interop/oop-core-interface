@@ -582,6 +582,64 @@ class OopCore extends EventEmitter {
             RequestType.DELETE,
         );
     }
+
+    getLayers(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/layers`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getLayer(id) {
+        return this.makeRequest(uri`/layers/${id}`);
+    }
+
+    createLayer(data) {
+        const payload = { layer: data };
+        return this.makeRequest(`/layers`, RequestType.POST, payload);
+    }
+
+    updateLayer(layer) {
+        return this.makeRequest(
+            uri`/layers/${layer.id}`,
+            RequestType.PUT,
+            { layer },
+        );
+    }
+
+    deleteLayer(layerId) {
+        return this.makeRequest(
+            uri`/layers/${layerId}`,
+            RequestType.DELETE,
+        );
+    }
+
+    getTemprLayers(params) {
+        const parameters = this.getParameters(params);
+        let path = `/tempr_layers`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    createTemprLayer({ temprId, layerId }) {
+        return this.makeRequest(
+            uri`/tempr_layers?tempr_id=${temprId}&layer_id=${layerId}`,
+            RequestType.POST,
+        );
+    }
+
+    deleteTemprLayer(id, data) {
+        return this.makeRequest(
+            uri`/tempr_layers/${id}?tempr_id=${data.temprId}&layer_id=${data.layerId}`,
+            RequestType.DELETE,
+        );
+    }
 }
 
 export default new OopCore();

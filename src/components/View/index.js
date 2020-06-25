@@ -11,6 +11,8 @@ export * from "./ResetPassword";
 export * from "./Profile";
 export * from "./Schedules";
 export * from "./Schedule";
+export * from "./Layers";
+export * from "./Layer";
 export * from "./SideNavigation";
 export * from "./Site";
 export * from "./Sites";
