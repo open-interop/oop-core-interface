@@ -18,16 +18,12 @@ const Schedules = props => {
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
     const [id, setId] = useQueryParam("id", StringParam);
     const [name, setName] = useQueryParam("name", StringParam);
-    const [deviceGroupId, setDeviceGroupId] = useQueryParam(
-        "deviceGroupId",
-        StringParam,
-    );
 
     // reset page number when the search query is changed
     useEffect(() => {
         setPage(null);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageSize, id, name, deviceGroupId]);
+    }, [pageSize, id, name]);
 
     const getData = () => {
         return OopCore.getSchedules({
@@ -35,19 +31,18 @@ const Schedules = props => {
             pageSize,
             id,
             name,
-            deviceGroupId,
         });
     };
 
     return (
         <div className="content-wrapper">
             <div className="space-between">
-                <h2>Temprs</h2>
+                <h2>Schedules</h2>
                 <Button
                     $as={Link}
                     to={`${props.location.pathname}/new`}
                     kind={KIND.minimal}
-                    aria-label="Create new tempr"
+                    aria-label="Create new Schedule"
                     endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
                 >
                     New
@@ -73,7 +68,7 @@ const Schedules = props => {
                                                 kind={KIND.tertiary}
                                                 $as={Link}
                                                 to={`${props.location.pathname}/${content}`}
-                                                aria-label="Edit tempr"
+                                                aria-label="Edit Schedule"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faEdit}
@@ -106,17 +101,34 @@ const Schedules = props => {
                                     hasFilter: true,
                                 },
                                 {
-                                    id: "group",
-                                    name: "Group",
+                                    id: "monthOfYear",
+                                    name: "Month of Year",
                                     type: "text",
                                     hasFilter: false,
                                 },
                                 {
-                                    id: "deviceGroupId",
-                                    name: "Group ID",
+                                    id: "dayOfMonth",
+                                    name: "Day of Month",
                                     type: "text",
-                                    hasFilter: true,
-                                    width: "100px",
+                                    hasFilter: false,
+                                },
+                                {
+                                    id: "dayOfWeek",
+                                    name: "Day of Week",
+                                    type: "text",
+                                    hasFilter: false,
+                                },
+                                {
+                                    id: "hour",
+                                    name: "Hour",
+                                    type: "text",
+                                    hasFilter: false,
+                                },
+                                {
+                                    id: "minute",
+                                    name: "Minute",
+                                    type: "text",
+                                    hasFilter: false,
                                 },
                                 {
                                     id: "action",
@@ -126,15 +138,13 @@ const Schedules = props => {
                                     width: "50px",
                                 },
                             ]}
-                            filters={{ id, name, deviceGroupId }}
+                            filters={{ id, name }}
                             updateFilters={(key, value) => {
                                 switch (key) {
                                     case "id":
                                     return setId(value);
                                 case "name":
                                         return setName(value);
-                                case "deviceGroupId":
-                                        return setDeviceGroupId(value);
                                 default:
                                         return null;
                                 }

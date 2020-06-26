@@ -126,7 +126,7 @@ const Layer = props => {
                             <Button
                                 $as={Link}
                                 kind={KIND.minimal}
-                                to={props.location.prevPath}
+                                to={props.location.prevPath || "/layers"}
                                 aria-label={
                                     props.location.prevPath
                                         ? "Go back to layers"
@@ -215,7 +215,7 @@ const Layer = props => {
                                 value={updatedLayer.script}
                             />
                         </FormControl>
-                        <TemprAssociator
+                        {blankLayer || <TemprAssociator
                             subtitle="Select temprs to associate with this layer."
                             selected={relations}
                             onSelect={tempr => {
@@ -237,7 +237,7 @@ const Layer = props => {
                                     },
                                 );
                             }}
-                        />
+                        />}
                     </>
                 )}
             />

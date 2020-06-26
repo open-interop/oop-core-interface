@@ -24,11 +24,11 @@ const Pagination = props => {
                     props.updatePageSize(value.option.id);
                 }}
                 value={
-                    pageSizeOptions.find(
+                    [pageSizeOptions.find(
                         option => option.id === props.currentPageSize,
                     ) || {
                         id: 20,
-                    }
+                    }]
                 }
             />
             <div className="pagination-label">per page</div>

@@ -45,6 +45,15 @@ const Schedule = props => {
             : OopCore.getSchedule(props.match.params.scheduleId);
     };
 
+    const getScheduleTemprs = () => {
+        return blankSchedule
+            ? Promise.resolve([])
+            : OopCore.getScheduleTemprs({
+                scheduleId: props.match.params.scheduleId,
+                pageSize: -1,
+            }).then(res => res.data);
+    };
+
     const refreshSchedule = response => {
         setSchedule(response);
         setUpdatedSchedule({ ...response });
@@ -114,10 +123,7 @@ const Schedule = props => {
                 getData={() => {
                     return Promise.all([
                         getSchedule().then(refreshSchedule),
-                        OopCore.getScheduleTemprs({
-                            scheduleId: props.match.params.scheduleId,
-                            pageSize: -1,
-                        }).then(sts => setRelations(sts.data)),
+                        getScheduleTemprs().then(setRelations),
                     ]);
                 }}
                 renderKey={props.location.pathname}
@@ -127,7 +133,7 @@ const Schedule = props => {
                             <Button
                                 $as={Link}
                                 kind={KIND.minimal}
-                                to={props.location.prevPath}
+                                to={props.location.prevPath || "/schedules"}
                                 aria-label={
                                     props.location.prevPath
                                         ? "Go back to schedules"
@@ -301,6 +307,7 @@ const Schedule = props => {
                                 error={scheduleErrors.minute}
                             />
                         </FormControl>
+                        {blankSchedule ||
                         <TemprAssociator
                             subtitle="Select temprs to associate with this schedule."
                             selected={relations}
@@ -323,7 +330,7 @@ const Schedule = props => {
                                     },
                                 );
                             }}
-                        />
+                        />}
                     </>
                 )}
             />
