@@ -77,17 +77,17 @@ const Tempr = props => {
                 queueResponse: false,
                 queueRequest: false,
                 notes: "",
-                body: {
-                    language: "js",
-                    script: "",
-                },
                 template: {
                     headers: {},
                     host: "",
-                    path: "",
-                    port: 0,
-                    protocol: "",
-                    requestMethod: "",
+                    path: "/",
+                    port: "",
+                    protocol: "http",
+                    requestMethod: "GET",
+                    body: {
+                        language: "js",
+                        script: "",
+                    },
                 },
             })
             : OopCore.getTempr(props.match.params.temprId);
@@ -133,15 +133,13 @@ const Tempr = props => {
     };
 
     const saveButtonDisabled = () => {
-        const { body, template, ...restOfTempr } = tempr;
+        const { template, ...restOfTempr } = tempr;
         const {
-            body: updatedBody,
             template: updatedTemplate,
             ...restOfUpdatedTempr
         } = updatedTempr;
 
         return (
-            identicalObject(body, updatedBody) &&
             identicalObject(template, updatedTemplate) &&
             identicalObject(restOfTempr, restOfUpdatedTempr)
         );
@@ -553,7 +551,6 @@ const Tempr = props => {
                                 title="Template"
                                 caption="required"
                                 error={temprErrors.base}
-                                subtitle="Please provide a host, port, path, protocol and request method"
                                 startOpen
                             >
                                 <div className="content-wrapper">
