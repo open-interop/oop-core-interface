@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
+import { Heading, HeadingLevel } from "baseui/heading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCircle,
@@ -135,7 +136,7 @@ const DeviceDashboard = props => {
                 >
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </Button>
-                <h2>Device Dashboard</h2>
+                <Heading>Device Dashboard</Heading>
                 <Button
                     $as={Link}
                     kind={KIND.minimal}
@@ -153,7 +154,7 @@ const DeviceDashboard = props => {
                 renderKey={props.location.pathname}
                 renderData={() => {
                     return (
-                        <>
+                        <HeadingLevel>
                             <div className="space-between wrap">
                                 <div className="width-49">
                                     <Card
@@ -358,7 +359,7 @@ const DeviceDashboard = props => {
                                     )}
                                 </div>
                             </div>
-                        </>
+                        </HeadingLevel>
                     );
                 }}
             />

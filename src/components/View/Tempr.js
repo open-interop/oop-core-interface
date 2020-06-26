@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, Prompt } from "react-router-dom";
 import AceEditor from "react-ace";
+
 import { Button, KIND } from "baseui/button";
+import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { FormControl } from "baseui/form-control";
+import { Heading, HeadingLevel } from "baseui/heading";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Textarea } from "baseui/textarea";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChevronLeft,
@@ -361,7 +364,7 @@ const Tempr = props => {
                         return getData();
                     }}
                     renderData={() => (
-                        <>
+                        <HeadingLevel>
                             <div className="space-between">
                                 <Button
                                     $as={Link}
@@ -371,9 +374,9 @@ const Tempr = props => {
                                 >
                                     <FontAwesomeIcon icon={faChevronLeft} />
                                 </Button>
-                                <h2>
+                                <Heading>
                                     {blankTempr ? "Create Tempr" : "Edit Tempr"}
-                                </h2>
+                                </Heading>
                                 <div>
                                     {blankTempr ? null : (
                                         <ConfirmModal
@@ -688,7 +691,7 @@ const Tempr = props => {
                                 {blankTempr ? "Create" : "Save"}
                             </Button>
                             {props.error && <div>{props.error}</div>}
-                        </>
+                        </HeadingLevel>
                     )}
                 />
             </div>

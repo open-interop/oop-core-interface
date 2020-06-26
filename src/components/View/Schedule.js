@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import { Button, KIND } from "baseui/button";
-import { FormControl } from "baseui/form-control";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
+import { FormControl } from "baseui/form-control";
+import { Heading, HeadingLevel } from "baseui/heading";
 import { Input } from "baseui/input";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
@@ -128,7 +131,7 @@ const Schedule = props => {
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
-                    <>
+                    <HeadingLevel>
                         <div className="space-between">
                             <Button
                                 $as={Link}
@@ -142,11 +145,11 @@ const Schedule = props => {
                             >
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </Button>
-                            <h2>
+                            <Heading>
                                 {blankSchedule
                                     ? "Create Schedule"
                                     : "Edit Schedule"}
-                            </h2>
+                            </Heading>
                             <div>
                                 {blankSchedule ? null : (
                                     <ConfirmModal
@@ -331,7 +334,7 @@ const Schedule = props => {
                                 );
                             }}
                         />}
-                    </>
+                    </HeadingLevel>
                 )}
             />
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
+import { Heading, HeadingLevel } from "baseui/heading";
 import { Select } from "baseui/select";
 import { FormControl } from "baseui/form-control";
 import { Accordion, Panel } from "baseui/accordion";
@@ -127,7 +128,7 @@ const Site = props => {
                     return getData().then(response => refreshSite(response));
                 }}
                 renderData={() => (
-                    <>
+                    <HeadingLevel>
                         <div className="space-between">
                             <Button
                                 $as={Link}
@@ -137,7 +138,7 @@ const Site = props => {
                             >
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </Button>
-                            <h2>{blankSite ? "Create Site" : "Edit Site"}</h2>
+                            <Heading>blankSite ? "Create Site" : "Edit Site"}</Heading>
                             <div>
                                 {blankSite ? null : (
                                     <ConfirmModal
@@ -386,7 +387,7 @@ const Site = props => {
                                 }
                             />
                         </FormControl>
-                    </>
+                    </HeadingLevel>
                 )}
             />
         </div>

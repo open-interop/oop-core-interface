@@ -117,9 +117,9 @@ const SideNavigation = props => {
                                             />
                                         ))
                                 ) : (
-                                    <div className="navigation-item no-devices">
+                                    <NavigationItem disabled>
                                         No devices
-                                    </div>
+                                    </NavigationItem>
                                 )}
                             </React.Fragment>
                         ))}

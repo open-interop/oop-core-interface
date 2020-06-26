@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
+import { Heading, HeadingLevel } from "baseui/heading";
 import { FormControl } from "baseui/form-control";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
@@ -121,7 +122,7 @@ const Layer = props => {
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
-                    <>
+                    <HeadingLevel>
                         <div className="space-between">
                             <Button
                                 $as={Link}
@@ -135,11 +136,11 @@ const Layer = props => {
                             >
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </Button>
-                            <h2>
+                            <Heading>
                                 {blankLayer
                                     ? "Create Layer"
                                     : "Edit Layer"}
-                            </h2>
+                            </Heading>
                             <div>
                                 {blankLayer ? null : (
                                     <ConfirmModal
@@ -238,7 +239,7 @@ const Layer = props => {
                                 );
                             }}
                         />}
-                    </>
+                    </HeadingLevel>
                 )}
             />
         </div>

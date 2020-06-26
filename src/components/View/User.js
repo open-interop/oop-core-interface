@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
+import { Heading, HeadingLevel } from "baseui/heading";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 import { ConfirmModal, DataProvider } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
 const User = props => {
@@ -120,7 +124,7 @@ const User = props => {
                     });
                 }}
                 renderData={() => (
-                    <>
+                    <HeadingLevel>
                         <div className="space-between">
                             <Button
                                 $as={Link}
@@ -130,7 +134,7 @@ const User = props => {
                             >
                                 <FontAwesomeIcon icon={faChevronLeft} />
                             </Button>
-                            <h2>{blankUser ? "Create User" : "Edit User"}</h2>
+                            <Heading>{blankUser ? "Create User" : "Edit User"}</Heading>
                             <div>
                                 {blankUser ? null : (
                                     <ConfirmModal
@@ -261,7 +265,7 @@ const User = props => {
                                 error={userErrors.timeZone}
                             />
                         </FormControl>
-                    </>
+                    </HeadingLevel>
                 )}
             />
         </div>
