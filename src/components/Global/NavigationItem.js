@@ -19,7 +19,20 @@ const NavigationItem = props => {
                 <span>{props.pathName}</span>
             </Button>
         );
-    } else {
+    } else if (props.disabled) {
+        return (
+            <Button
+                className={`navigation-item ${props.className || ""}`}
+                size={SIZE.compact}
+                disabled
+            >
+                {props.icon && (
+                    <div className="size-xxl navigation-icon">{props.icon}</div>
+                )}
+                <span>{props.children}</span>
+            </Button>
+        );
+    }else {
         return (
             <>
                 <Button

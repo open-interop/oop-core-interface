@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
-import { DataProvider, Pagination, Table } from "../Universal";
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import { ErrorToast } from "../Global";
 import OopCore from "../../OopCore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,7 +16,6 @@ import { arrayToObject } from "../../Utilities";
 
 const Devices = props => {
     useEffect(() => {
-        document.title = "Devices | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const [devices, setDevices] = useState([]);
@@ -75,9 +74,9 @@ const Devices = props => {
     };
 
     return (
-        <div className="content-wrapper">
-            <div className="space-between">
-                <h2>Devices</h2>
+        <Page
+            heading="Devices"
+            actions={
                 <Button
                     $as={Link}
                     to={`/devices/new${
@@ -89,7 +88,9 @@ const Devices = props => {
                 >
                     New
                 </Button>
-            </div>
+            }
+            title="Devices | Open Interop"
+        >
             <DataProvider
                 getData={() => getData()}
                 renderKey={props.location.search}
@@ -223,7 +224,7 @@ const Devices = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

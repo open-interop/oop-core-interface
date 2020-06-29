@@ -9,7 +9,7 @@ import {
     faEdit,
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { DataProvider, Table } from "../Universal";
+import { DataProvider, Table, Page } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody, StyledAction } from "baseui/card";
 import { Map, TileLayer, Marker } from "react-leaflet";
@@ -18,10 +18,6 @@ import styles from "./../../styles/_variables.scss";
 import OopCore from "../../OopCore";
 
 const DeviceDashboard = props => {
-    useEffect(() => {
-        document.title = "Device Dashboard | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
     const [device, setDevice] = useState({});
     const allDevicesPath = props.location.pathname.substr(
         0,
@@ -125,17 +121,11 @@ const DeviceDashboard = props => {
     };
 
     return (
-        <div className="content-wrapper">
-            <div className="space-between title">
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={allDevicesPath}
-                    aria-label="Go back to all devices"
-                >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                </Button>
-                <h2>Device Dashboard</h2>
+        <Page
+            title="Device Dashboard | Open Interop"
+            heading="Device Dashboard"
+            backlink={allDevicesPath}
+            actions={
                 <Button
                     $as={Link}
                     kind={KIND.minimal}
@@ -145,7 +135,8 @@ const DeviceDashboard = props => {
                 >
                     Edit
                 </Button>
-            </div>
+            }
+        >
             <DataProvider
                 getData={() => {
                     return getData();
@@ -153,216 +144,214 @@ const DeviceDashboard = props => {
                 renderKey={props.location.pathname}
                 renderData={() => {
                     return (
-                        <>
-                            <div className="space-between wrap">
-                                <div className="width-49">
+                        <div className="space-between wrap">
+                            <div className="width-49">
+                                <Card
+                                    className="mb-20 fixed-height"
+                                    title={
+                                        <div className="space-between">
+                                            Details
+                                            {device.active ? (
+                                                <div className="active-device smaller">
+                                                    <FontAwesomeIcon
+                                                        className="blink smaller"
+                                                        icon={faCircle}
+                                                    />{" "}
+                                                    ACTIVE
+                                                </div>
+                                            ) : (
+                                                <div className="inactive-device smaller">
+                                                    <FontAwesomeIcon
+                                                        className="smaller"
+                                                        icon={faCircle}
+                                                    />{" "}
+                                                    INACTIVE
+                                                </div>
+                                            )}
+                                        </div>
+                                    }
+                                >
+                                    <StyledBody>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Name">
+                                                    {device.name}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Site">
+                                                    {device.site
+                                                        ? device.site
+                                                              .fullName
+                                                        : ""}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Group">
+                                                    {device.group.name}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Device Temprs">
+                                                    {device.deviceTemprs
+                                                        ? device.deviceTemprs
+                                                        : "No"}{" "}
+                                                    device temprs associated
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </StyledBody>
+                                </Card>
+                            </div>
+
+                            <div className="width-49 fixed-height">
+                                <Card title="Location">
+                                    {device.longitude && device.latitude ? (
+                                        <Map
+                                            center={[
+                                                device.latitude,
+                                                device.longitude,
+                                            ]}
+                                            zoom={10}
+                                            className="map-component"
+                                        >
+                                            <TileLayer
+                                                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            />
+                                            <Marker
+                                                position={[
+                                                    device.latitude,
+                                                    device.longitude,
+                                                ]}
+                                            ></Marker>
+                                        </Map>
+                                    ) : (
+                                        <div className="map-component-placeholder">
+                                            No location data
+                                        </div>
+                                    )}
+                                </Card>
+                            </div>
+
+                            <div className="width-60">
+                                {device.transmissions &&
+                                device.transmissions.length ? (
                                     <Card
-                                        className="mb-20 fixed-height"
                                         title={
                                             <div className="space-between">
-                                                Details
-                                                {device.active ? (
-                                                    <div className="active-device smaller">
-                                                        <FontAwesomeIcon
-                                                            className="blink smaller"
-                                                            icon={faCircle}
-                                                        />{" "}
-                                                        ACTIVE
-                                                    </div>
-                                                ) : (
-                                                    <div className="inactive-device smaller">
-                                                        <FontAwesomeIcon
-                                                            className="smaller"
-                                                            icon={faCircle}
-                                                        />{" "}
-                                                        INACTIVE
-                                                    </div>
-                                                )}
+                                                Latest Transmissions
+                                                <Button
+                                                    kind={KIND.secondary}
+                                                    $as={Link}
+                                                    to={`/devices/${device.id}/transmissions`}
+                                                >
+                                                    View All
+                                                </Button>
                                             </div>
                                         }
                                     >
                                         <StyledBody>
-                                            <ListItem>
-                                                <div className="card-label">
-                                                    <ListItemLabel description="Name">
-                                                        {device.name}
-                                                    </ListItemLabel>
-                                                </div>
-                                            </ListItem>
-                                            <ListItem>
-                                                <div className="card-label">
-                                                    <ListItemLabel description="Site">
-                                                        {device.site
-                                                            ? device.site
-                                                                  .fullName
-                                                            : ""}
-                                                    </ListItemLabel>
-                                                </div>
-                                            </ListItem>
-                                            <ListItem>
-                                                <div className="card-label">
-                                                    <ListItemLabel description="Group">
-                                                        {device.group.name}
-                                                    </ListItemLabel>
-                                                </div>
-                                            </ListItem>
-                                            <ListItem>
-                                                <div className="card-label">
-                                                    <ListItemLabel description="Device Temprs">
-                                                        {device.deviceTemprs
-                                                            ? device.deviceTemprs
-                                                            : "No"}{" "}
-                                                        device temprs associated
-                                                    </ListItemLabel>
-                                                </div>
-                                            </ListItem>
-                                        </StyledBody>
-                                    </Card>
-                                </div>
-
-                                <div className="width-49 fixed-height">
-                                    <Card title="Location">
-                                        {device.longitude && device.latitude ? (
-                                            <Map
-                                                center={[
-                                                    device.latitude,
-                                                    device.longitude,
+                                            <Table
+                                                data={device.transmissions}
+                                                mapFunction={(
+                                                    columnName,
+                                                    content,
+                                                ) => {
+                                                    if (
+                                                        columnName ===
+                                                        "success"
+                                                    ) {
+                                                        return content ? (
+                                                            <FontAwesomeIcon
+                                                                icon={
+                                                                    faCheck
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <FontAwesomeIcon
+                                                                icon={
+                                                                    faTimes
+                                                                }
+                                                            />
+                                                        );
+                                                    }
+                                                    return content;
+                                                }}
+                                                columns={[
+                                                    {
+                                                        id:
+                                                            "transmissionUuid",
+                                                        name:
+                                                            "Transmission UUID",
+                                                    },
+                                                    {
+                                                        id: "success",
+                                                        name: "Success",
+                                                    },
+                                                    {
+                                                        id: "transmittedAt",
+                                                        name:
+                                                            "Transmitted at",
+                                                    },
                                                 ]}
-                                                zoom={10}
-                                                className="map-component"
-                                            >
-                                                <TileLayer
-                                                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                />
-                                                <Marker
-                                                    position={[
-                                                        device.latitude,
-                                                        device.longitude,
-                                                    ]}
-                                                ></Marker>
-                                            </Map>
-                                        ) : (
-                                            <div className="map-component-placeholder">
-                                                No location data
-                                            </div>
-                                        )}
+                                            />
+                                        </StyledBody>
+                                        <StyledAction></StyledAction>
                                     </Card>
-                                </div>
-
-                                <div className="width-60">
-                                    {device.transmissions &&
-                                    device.transmissions.length ? (
-                                        <Card
-                                            title={
-                                                <div className="space-between">
-                                                    Latest Transmissions
-                                                    <Button
-                                                        kind={KIND.secondary}
-                                                        $as={Link}
-                                                        to={`/devices/${device.id}/transmissions`}
-                                                    >
-                                                        View All
-                                                    </Button>
-                                                </div>
-                                            }
-                                        >
-                                            <StyledBody>
-                                                <Table
-                                                    data={device.transmissions}
-                                                    mapFunction={(
-                                                        columnName,
-                                                        content,
-                                                    ) => {
-                                                        if (
-                                                            columnName ===
-                                                            "success"
-                                                        ) {
-                                                            return content ? (
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faCheck
-                                                                    }
-                                                                />
-                                                            ) : (
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faTimes
-                                                                    }
-                                                                />
-                                                            );
-                                                        }
-                                                        return content;
-                                                    }}
-                                                    columns={[
-                                                        {
-                                                            id:
-                                                                "transmissionUuid",
-                                                            name:
-                                                                "Transmission UUID",
-                                                        },
-                                                        {
-                                                            id: "success",
-                                                            name: "Success",
-                                                        },
-                                                        {
-                                                            id: "transmittedAt",
-                                                            name:
-                                                                "Transmitted at",
-                                                        },
-                                                    ]}
-                                                />
-                                            </StyledBody>
-                                            <StyledAction></StyledAction>
-                                        </Card>
-                                    ) : (
-                                        <Card title="No transmissions available" />
-                                    )}
-                                </div>
-                                <div className="width-39">
-                                    {device.transmissions &&
-                                    device.transmissions.length ? (
-                                        <Card title="Transmission Status">
-                                            <div className="flex-row center">
-                                                <Pie
-                                                    data={{
-                                                        labels: device.stats.map(
-                                                            stat => stat.label,
-                                                        ),
-                                                        datasets: [
-                                                            {
-                                                                data: device.stats.map(
-                                                                    stat =>
-                                                                        stat.value,
-                                                                ),
-                                                                backgroundColor: device.stats.map(
-                                                                    stat =>
-                                                                        stat.backgroundColor,
-                                                                ),
-                                                            },
-                                                        ],
-                                                    }}
-                                                    options={{
-                                                        legend: {
-                                                            position: "right",
-                                                            labels: {
-                                                                generateLabels: generateCustomLabels,
-                                                            },
-                                                        },
-                                                    }}
-                                                />
-                                            </div>
-                                        </Card>
-                                    ) : (
-                                        <Card title="No transmission status available" />
-                                    )}
-                                </div>
+                                ) : (
+                                    <Card title="No transmissions available" />
+                                )}
                             </div>
-                        </>
+                            <div className="width-39">
+                                {device.transmissions &&
+                                device.transmissions.length ? (
+                                    <Card title="Transmission Status">
+                                        <div className="flex-row center">
+                                            <Pie
+                                                data={{
+                                                    labels: device.stats.map(
+                                                        stat => stat.label,
+                                                    ),
+                                                    datasets: [
+                                                        {
+                                                            data: device.stats.map(
+                                                                stat =>
+                                                                    stat.value,
+                                                            ),
+                                                            backgroundColor: device.stats.map(
+                                                                stat =>
+                                                                    stat.backgroundColor,
+                                                            ),
+                                                        },
+                                                    ],
+                                                }}
+                                                options={{
+                                                    legend: {
+                                                        position: "right",
+                                                        labels: {
+                                                            generateLabels: generateCustomLabels,
+                                                        },
+                                                    },
+                                                }}
+                                            />
+                                        </div>
+                                    </Card>
+                                ) : (
+                                    <Card title="No transmission status available" />
+                                )}
+                            </div>
+                        </div>
                     );
                 }}
             />
-        </div>
+        </Page>
     );
 };
 

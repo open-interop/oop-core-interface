@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+
 import { Button, KIND } from "baseui/button";
-import { DataProvider, Pagination, Table } from "../Universal";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Sites = props => {
-    useEffect(() => {
-        document.title = "Sites | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
     const [sites, setSites] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
@@ -20,9 +19,10 @@ const Sites = props => {
     const [fullName, setFullName] = useQueryParam("fullName", StringParam);
 
     return (
-        <div className="content-wrapper">
-            <div className="space-between">
-                <h2>Sites</h2>
+        <Page
+            title="Sites | Settings | Open Interop"
+            heading="Sites"
+            actions={
                 <Button
                     $as={Link}
                     to={`/sites/new`}
@@ -32,7 +32,8 @@ const Sites = props => {
                 >
                     New
                 </Button>
-            </div>
+            }
+        >
             <DataProvider
                 getData={() =>
                     OopCore.getSites({
@@ -129,7 +130,7 @@ const Sites = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

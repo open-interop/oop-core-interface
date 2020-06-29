@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import { Button, KIND } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody } from "baseui/card";
-import { DataProvider, Modal } from "../Universal";
-import OopCore from "../../OopCore";
+
+import JSONPretty from "react-json-pretty";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-var JSONPretty = require("react-json-pretty");
+
+import { DataProvider, Modal, Page } from "../Universal";
+import OopCore from "../../OopCore";
+
 
 const Transmission = props => {
     useEffect(() => {
-        document.title = "Transmission | Settings | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -23,19 +26,11 @@ const Transmission = props => {
     );
 
     return (
-        <div className="content-wrapper">
-            <div className="flex-left">
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={allTransmissionsPath}
-                    aria-label="Go back to all transmissions"
-                >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                </Button>
-                <h2>Transmissions details</h2>
-            </div>
-
+        <Page
+            title="Transmission | Settings | Open Interop"
+            heading="Transmission details"
+            backlink={allTransmissionsPath}
+        >
             <DataProvider
                 getData={() => {
                     return OopCore.getTransmission(
@@ -134,7 +129,7 @@ const Transmission = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

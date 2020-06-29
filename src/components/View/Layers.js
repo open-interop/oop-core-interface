@@ -4,15 +4,10 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
-import { DataProvider, Pagination, Table } from "../Universal";
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Layers = props => {
-    useEffect(() => {
-        document.title = "Layers | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const [layers, setLayers] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
@@ -37,9 +32,10 @@ const Layers = props => {
     };
 
     return (
-        <div className="content-wrapper">
-            <div className="space-between">
-                <h2>Layers</h2>
+        <Page
+            title="Layers | Settings | Open Interop"
+            heading="Layers"
+            actions={
                 <Button
                     $as={Link}
                     to={`${props.location.pathname}/new`}
@@ -49,7 +45,8 @@ const Layers = props => {
                 >
                     New
                 </Button>
-            </div>
+            }
+        >
             <DataProvider
                 renderKey={props.location.search}
                 getData={() => {
@@ -143,7 +140,7 @@ const Layers = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

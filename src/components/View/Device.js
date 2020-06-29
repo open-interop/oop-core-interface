@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import {
     AccordionWithCaption,
     ConfirmModal,
     DataProvider,
+    Page,
 } from "../Universal";
 import OopCore from "../../OopCore";
 import {
@@ -25,8 +24,8 @@ import TemprAssociator from "../Global/TemprAssociator";
 import { Timezones } from "../../resources/Timezones";
 
 const Device = props => {
-    const [device, setDevice] = useState({});
-    const [updatedDevice, setUpdatedDevice] = useState({});
+    const [device, setDevice] = useState(null);
+    const [updatedDevice, setUpdatedDevice] = useState(null);
     const [deviceErrors, setDeviceErrors] = useState({});
     const [sites, setSites] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -42,9 +41,6 @@ const Device = props => {
     const [relations, setRelations] = useState([]);
 
     useEffect(() => {
-        document.title = blankDevice
-            ? "New Device | Open Interop"
-            : "Edit Device | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -118,6 +114,10 @@ const Device = props => {
     );
 
     const saveButtonDisabled = () => {
+        if (!(device && updatedDevice)) {
+            return true;
+        }
+
         const { authenticationHeaders, authenticationQuery, ...rest } = device;
         const {
             authenticationHeaders: updatedHeaders,
@@ -187,7 +187,45 @@ const Device = props => {
     };
 
     return (
-        <div className="content-wrapper">
+        <Page
+            title={
+                blankDevice
+                    ? "New Device | Open Interop"
+                    : "Edit Device | Open Interop"
+            }
+            heading={blankDevice ? "Create Device" : "Edit Device"}
+            backlink={props.location.prevPath || deviceDashboardPath}
+            actions={
+                <>
+                    {blankDevice ? null : (
+                        <ConfirmModal
+                            buttonText="Delete"
+                            title="Confirm Deletion"
+                            mainText={
+                                <>
+                                    <div>
+                                        Are you sure you want to
+                                        delete this device?
+                                    </div>
+                                    <div>
+                                        This action can't be undone.
+                                    </div>
+                                </>
+                            }
+                            primaryAction={deleteDevice}
+                            primaryActionText="Delete"
+                            secondaryActionText="Cancel"
+                        />
+                    )}
+                    <Button
+                        onClick={saveDevice}
+                        disabled={saveButtonDisabled()}
+                    >
+                        {blankDevice ? "Create" : "Save"}
+                    </Button>
+                </>
+            }
+        >
             <DataProvider
                 getData={() => {
                     return getData();
@@ -195,55 +233,6 @@ const Device = props => {
                 renderKey={props.location.pathname}
                 renderData={() => (
                     <>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                kind={KIND.minimal}
-                                to={
-                                    props.location.prevPath ||
-                                    deviceDashboardPath
-                                }
-                                aria-label={
-                                    props.location.prevPath
-                                        ? "Go back to devices"
-                                        : "Go back to device dashboard"
-                                }
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </Button>
-                            <h2>
-                                {blankDevice ? "Create Device" : "Edit Device"}
-                            </h2>
-                            <div>
-                                {blankDevice ? null : (
-                                    <ConfirmModal
-                                        buttonText="Delete"
-                                        title="Confirm Deletion"
-                                        mainText={
-                                            <>
-                                                <div>
-                                                    Are you sure you want to
-                                                    delete this device?
-                                                </div>
-                                                <div>
-                                                    This action can't be undone.
-                                                </div>
-                                            </>
-                                        }
-                                        primaryAction={deleteDevice}
-                                        primaryActionText="Delete"
-                                        secondaryActionText="Cancel"
-                                    />
-                                )}
-                                <Button
-                                    onClick={saveDevice}
-                                    disabled={saveButtonDisabled()}
-                                >
-                                    {blankDevice ? "Create" : "Save"}
-                                </Button>
-                            </div>
-                        </div>
-
                         <FormControl
                             label="Name"
                             key={`form-control-name`}
@@ -514,7 +503,7 @@ const Device = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

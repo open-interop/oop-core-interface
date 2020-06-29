@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+
 import { Button, KIND } from "baseui/button";
-import { DataProvider, Pagination, Table } from "../Universal";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Users = props => {
-    useEffect(() => {
-        document.title = "Users | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     const [users, setUsers] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
     const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
@@ -26,19 +24,21 @@ const Users = props => {
     }, [pageSize]);
 
     return (
-        <div className="content-wrapper">
-            <div className="space-between">
-                <h2>Users</h2>
-                <Button
-                    $as={Link}
-                    to={`/users/new`}
-                    kind={KIND.minimal}
-                    aria-label="Create new user"
-                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
-                >
-                    New
-                </Button>
-            </div>
+        <Page
+            title="Users | Settings | Open Interop"
+            heading="Users"
+            actions={
+                    <Button
+                        $as={Link}
+                        to={`/users/new`}
+                        kind={KIND.minimal}
+                        aria-label="Create new user"
+                        endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                    >
+                        New
+                    </Button>
+            }
+        >
             <DataProvider
                 getData={() =>
                     OopCore.getUsers({ page, pageSize, id, email }).then(
@@ -122,7 +122,7 @@ const Users = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

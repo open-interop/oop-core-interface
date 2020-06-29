@@ -4,7 +4,7 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
-import { DataProvider, Pagination, Table } from "../Universal";
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const DeviceGroups = props => {
@@ -20,14 +20,11 @@ const DeviceGroups = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize, id]);
 
-    useEffect(() => {
-        document.title = "Device Groups | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
     return (
-        <div className="content-wrapper">
-            <div className="space-between">
-                <h2>Device Groups</h2>
+        <Page
+            title="Device Groups | Settings | Open Interop"
+            heading="Device Groups"
+            actions={
                 <Button
                     $as={Link}
                     to={`/device-groups/new`}
@@ -37,8 +34,8 @@ const DeviceGroups = props => {
                 >
                     New
                 </Button>
-            </div>
-
+            }
+        >
             <DataProvider
                 getData={() => {
                     return OopCore.getDeviceGroups({
@@ -146,7 +143,7 @@ const DeviceGroups = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, Prompt } from "react-router-dom";
 import AceEditor from "react-ace";
+
 import { Button, KIND } from "baseui/button";
+import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Textarea } from "baseui/textarea";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChevronLeft,
     faExpandArrowsAlt,
     faCompressArrowsAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -18,6 +19,7 @@ import {
     BaseuiSpinner,
     ConfirmModal,
     DataProvider,
+    Page,
 } from "../Universal";
 import {
     clearToast,
@@ -60,9 +62,6 @@ const Tempr = props => {
     const blankTempr = props.match.params.temprId === "new";
 
     useEffect(() => {
-        document.title = blankTempr
-            ? "New Tempr | Settings | Open Interop"
-            : "Edit Tempr | Settings | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -349,12 +348,54 @@ const Tempr = props => {
     };
 
     return (
-        <>
+        <Page
+            title={
+                blankTempr
+                    ? "New Tempr | Settings | Open Interop"
+                    : "Edit Tempr | Settings | Open Interop"
+            }
+            heading={blankTempr ? "Create Tempr" : "Edit Tempr"}
+            backlink={allTemprsPath}
+            actions={
+                <>
+                    {blankTempr ? null : (
+                        <ConfirmModal
+                            buttonText="Delete"
+                            title="Confirm Deletion"
+                            mainText={
+                                <>
+                                    <div>
+                                        Are you sure you want to
+                                        delete this tempr?
+                                    </div>
+                                    <div>
+                                        This action can't be
+                                        undone.
+                                    </div>
+                                </>
+                            }
+                            primaryAction={deleteTempr}
+                            primaryActionText="Delete"
+                            secondaryActionText="Cancel"
+                        />
+                    )}
+                    <Button
+                        onClick={saveTempr}
+                        disabled={saveButtonDisabled()}
+                        aria-label={
+                            blankTempr
+                                ? "Create tempr"
+                                : "Update tempr"
+                        }
+                    >
+                        {blankTempr ? "Create" : "Save"}
+                    </Button>
+                </>
+            }
+        >
             <Prompt message="Are you sure you want to leave this page?" />
             <div
-                className={`content-wrapper ${
-                    mappingFullScreen ? "no-scroll" : ""
-                }`}
+                className={mappingFullScreen ? "no-scroll" : ""}
             >
                 <DataProvider
                     getData={() => {
@@ -362,53 +403,6 @@ const Tempr = props => {
                     }}
                     renderData={() => (
                         <>
-                            <div className="space-between">
-                                <Button
-                                    $as={Link}
-                                    kind={KIND.minimal}
-                                    to={allTemprsPath}
-                                    aria-label="Go back to all temprs"
-                                >
-                                    <FontAwesomeIcon icon={faChevronLeft} />
-                                </Button>
-                                <h2>
-                                    {blankTempr ? "Create Tempr" : "Edit Tempr"}
-                                </h2>
-                                <div>
-                                    {blankTempr ? null : (
-                                        <ConfirmModal
-                                            buttonText="Delete"
-                                            title="Confirm Deletion"
-                                            mainText={
-                                                <>
-                                                    <div>
-                                                        Are you sure you want to
-                                                        delete this tempr?
-                                                    </div>
-                                                    <div>
-                                                        This action can't be
-                                                        undone.
-                                                    </div>
-                                                </>
-                                            }
-                                            primaryAction={deleteTempr}
-                                            primaryActionText="Delete"
-                                            secondaryActionText="Cancel"
-                                        />
-                                    )}
-                                    <Button
-                                        onClick={saveTempr}
-                                        disabled={saveButtonDisabled()}
-                                        aria-label={
-                                            blankTempr
-                                                ? "Create tempr"
-                                                : "Update tempr"
-                                        }
-                                    >
-                                        {blankTempr ? "Create" : "Save"}
-                                    </Button>
-                                </div>
-                            </div>
                             <FormControl
                                 label="Name"
                                 key={"form-control-group-name"}
@@ -692,7 +686,7 @@ const Tempr = props => {
                     )}
                 />
             </div>
-        </>
+        </Page>
     );
 };
 

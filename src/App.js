@@ -1,4 +1,10 @@
 import React, { Component } from "react";
+
+import { BaseProvider } from "baseui";
+import { Client as Styletron } from "styletron-engine-atomic";
+import { Provider as StyletronProvider } from "styletron-react";
+import oopTheme from "./theme";
+
 import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
@@ -31,11 +37,9 @@ import { GifSpinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 import { QueryParamProvider } from "use-query-params";
-import { ThemeProvider, createTheme } from "baseui";
 
+const engine = new Styletron();
 const queryString = require("query-string");
-
-const oopTheme = createTheme({}, { grid: { margins: 0 } });
 
 class App extends Component {
     constructor(props) {
@@ -313,14 +317,14 @@ class App extends Component {
     };
 
     render() {
-        if (this.state.isLoading) {
-            return <GifSpinner />;
-        }
-        if (!this.state.isLoading) {
-            return <ThemeProvider theme={oopTheme}>
-                {this.renderRoutes()}
-            </ThemeProvider>;
-        }
+        return <StyletronProvider value={engine}>
+            <BaseProvider theme={oopTheme}>
+                { this.state.isLoading
+                    ? <GifSpinner />
+                    : this.renderRoutes()
+                }
+            </BaseProvider>
+        </StyletronProvider>;
     }
 }
 
