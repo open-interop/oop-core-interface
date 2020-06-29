@@ -37,7 +37,6 @@ import { GifSpinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 import { QueryParamProvider } from "use-query-params";
-import { Heading, HeadingLevel } from "baseui/heading";
 
 const engine = new Styletron();
 const queryString = require("query-string");

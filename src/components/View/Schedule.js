@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { FormControl } from "baseui/form-control";
-import { Heading, HeadingLevel } from "baseui/heading";
 import { Input } from "baseui/input";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +12,7 @@ import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import {
     ConfirmModal,
     DataProvider,
+    Page,
 } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -27,9 +27,6 @@ const Schedule = props => {
     const blankSchedule = props.match.params.scheduleId === "new";
 
     useEffect(() => {
-        document.title = blankSchedule
-            ? "New Schedule | Open Interop"
-            : "Edit Schedule | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -121,7 +118,49 @@ const Schedule = props => {
     };
 
     return (
-        <div className="content-wrapper">
+        <Page
+            title={
+                blankSchedule
+                    ? "New Schedule | Open Interop"
+                    : "Edit Schedule | Open Interop"
+            }
+            heading={
+                blankSchedule
+                    ? "Create Schedule"
+                    : "Edit Schedule"
+            }
+            backlink={props.location.prevPath || "/schedules"}
+            actions={
+                <>
+                    {blankSchedule ? null : (
+                        <ConfirmModal
+                            buttonText="Delete"
+                            title="Confirm Deletion"
+                            mainText={
+                                <>
+                                    <div>
+                                        Are you sure you want to
+                                        delete this schedule?
+                                    </div>
+                                    <div>
+                                        This action can't be undone.
+                                    </div>
+                                </>
+                            }
+                            primaryAction={deleteSchedule}
+                            primaryActionText="Delete"
+                            secondaryActionText="Cancel"
+                        />
+                    )}
+                    <Button
+                        onClick={saveSchedule}
+                        disabled={saveButtonDisabled()}
+                    >
+                        {blankSchedule ? "Create" : "Save"}
+                    </Button>
+                </>
+            }
+        >
             <DataProvider
                 getData={() => {
                     return Promise.all([
@@ -131,55 +170,7 @@ const Schedule = props => {
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
-                    <HeadingLevel>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                kind={KIND.minimal}
-                                to={props.location.prevPath || "/schedules"}
-                                aria-label={
-                                    props.location.prevPath
-                                        ? "Go back to schedules"
-                                        : "Go back to schedule dashboard"
-                                }
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </Button>
-                            <Heading>
-                                {blankSchedule
-                                    ? "Create Schedule"
-                                    : "Edit Schedule"}
-                            </Heading>
-                            <div>
-                                {blankSchedule ? null : (
-                                    <ConfirmModal
-                                        buttonText="Delete"
-                                        title="Confirm Deletion"
-                                        mainText={
-                                            <>
-                                                <div>
-                                                    Are you sure you want to
-                                                    delete this schedule?
-                                                </div>
-                                                <div>
-                                                    This action can't be undone.
-                                                </div>
-                                            </>
-                                        }
-                                        primaryAction={deleteSchedule}
-                                        primaryActionText="Delete"
-                                        secondaryActionText="Cancel"
-                                    />
-                                )}
-                                <Button
-                                    onClick={saveSchedule}
-                                    disabled={saveButtonDisabled()}
-                                >
-                                    {blankSchedule ? "Create" : "Save"}
-                                </Button>
-                            </div>
-                        </div>
-
+                    <>
                         <FormControl
                             label="Name"
                             caption="required"
@@ -334,10 +325,10 @@ const Schedule = props => {
                                 );
                             }}
                         />}
-                    </HeadingLevel>
+                    </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

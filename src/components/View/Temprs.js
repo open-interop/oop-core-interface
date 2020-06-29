@@ -2,20 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button, KIND } from "baseui/button";
-import { Heading, HeadingLevel } from "baseui/heading";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 
-import { DataProvider, Pagination, Table } from "../Universal";
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Temprs = props => {
-    useEffect(() => {
-        document.title = "Temprs | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const [temprs, setTemprs] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
@@ -59,122 +54,122 @@ const Temprs = props => {
     };
 
     return (
-        <div className="content-wrapper">
-            <HeadingLevel>
-                <div className="space-between">
-                    <Heading>Temprs</Heading>
-                    <Button
-                        $as={Link}
-                        to={`${props.location.pathname}/new`}
-                        kind={KIND.minimal}
-                        aria-label="Create new tempr"
-                        endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
-                    >
-                        New
-                    </Button>
-                </div>
-                <DataProvider
-                    renderKey={props.location.search}
-                    getData={() => {
-                        return getData().then(response => {
-                            setTemprs(response);
-                            return response;
-                        });
-                    }}
-                    renderData={() => (
-                        <>
-                            <Table
-                                data={temprs.data}
-                                mapFunction={(columnName, content) => {
-                                    if (columnName === "action") {
-                                        return (
-                                            <>
-                                                <Button
-                                                    kind={KIND.tertiary}
-                                                    $as={Link}
-                                                    to={`${props.location.pathname}/${content}`}
-                                                    aria-label="Edit tempr"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faEdit}
-                                                    />
-                                                </Button>
-                                            </>
-                                        );
-                                    }
+        <Page
+            title="Temprs | Settings | Open Interop"
+            heading="Temprs"
+            actions={
+                <Button
+                    $as={Link}
+                    to={`${props.location.pathname}/new`}
+                    kind={KIND.minimal}
+                    aria-label="Create new tempr"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
+                    New
+                </Button>
+            }
+        >
+            <DataProvider
+                renderKey={props.location.search}
+                getData={() => {
+                    return getData().then(response => {
+                        setTemprs(response);
+                        return response;
+                    });
+                }}
+                renderData={() => (
+                    <>
+                        <Table
+                            data={temprs.data}
+                            mapFunction={(columnName, content) => {
+                                if (columnName === "action") {
+                                    return (
+                                        <>
+                                            <Button
+                                                kind={KIND.tertiary}
+                                                $as={Link}
+                                                to={`${props.location.pathname}/${content}`}
+                                                aria-label="Edit tempr"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                />
+                                            </Button>
+                                        </>
+                                    );
+                                }
 
-                                    return content;
-                                }}
-                                columnContent={columnName => {
-                                    if (columnName === "action") {
-                                        return "id";
-                                    }
-                                    return columnName;
-                                }}
-                                columns={[
-                                    {
-                                        id: "id",
-                                        name: "Id",
-                                        type: "text",
-                                        hasFilter: true,
-                                        width: "50px",
-                                    },
-                                    {
-                                        id: "name",
-                                        name: "Name",
-                                        type: "text",
-                                        hasFilter: true,
-                                    },
-                                    {
-                                        id: "group",
-                                        name: "Group",
-                                        type: "text",
-                                        hasFilter: false,
-                                    },
-                                    {
-                                        id: "deviceGroupId",
-                                        name: "Group ID",
-                                        type: "text",
-                                        hasFilter: true,
-                                        width: "100px",
-                                    },
-                                    {
-                                        id: "action",
-                                        name: "",
-                                        type: "action",
-                                        hasFilter: false,
-                                        width: "50px",
-                                    },
-                                ]}
-                                filters={{ id, name, deviceGroupId }}
-                                updateFilters={(key, value) => {
-                                    switch (key) {
-                                        case "id":
-                                            return setId(value);
-                                        case "name":
-                                            return setName(value);
-                                        case "deviceGroupId":
-                                            return setDeviceGroupId(value);
-                                        default:
-                                            return null;
-                                    }
-                                }}
-                            />
-                            <Pagination
-                                updatePageSize={pageSize => {
-                                    setPageSize(pageSize);
-                                }}
-                                currentPageSize={pageSize}
-                                updatePageNumber={pageNumber => setPage(pageNumber)}
-                                totalRecords={temprs.totalRecords}
-                                numberOfPages={temprs.numberOfPages}
-                                currentPage={page || 1}
-                            />
-                        </>
-                    )}
-                />
-            </HeadingLevel>
-        </div>
+                                return content;
+                            }}
+                            columnContent={columnName => {
+                                if (columnName === "action") {
+                                    return "id";
+                                }
+                                return columnName;
+                            }}
+                            columns={[
+                                {
+                                    id: "id",
+                                    name: "Id",
+                                    type: "text",
+                                    hasFilter: true,
+                                    width: "50px",
+                                },
+                                {
+                                    id: "name",
+                                    name: "Name",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
+                                {
+                                    id: "group",
+                                    name: "Group",
+                                    type: "text",
+                                    hasFilter: false,
+                                },
+                                {
+                                    id: "deviceGroupId",
+                                    name: "Group ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                    width: "100px",
+                                },
+                                {
+                                    id: "action",
+                                    name: "",
+                                    type: "action",
+                                    hasFilter: false,
+                                    width: "50px",
+                                },
+                            ]}
+                            filters={{ id, name, deviceGroupId }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "id":
+                                        return setId(value);
+                                    case "name":
+                                        return setName(value);
+                                    case "deviceGroupId":
+                                        return setDeviceGroupId(value);
+                                    default:
+                                        return null;
+                                }
+                            }}
+                        />
+                        <Pagination
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={temprs.totalRecords}
+                            numberOfPages={temprs.numberOfPages}
+                            currentPage={page || 1}
+                        />
+                    </>
+                )}
+            />
+        </Page>
     );
 };
 

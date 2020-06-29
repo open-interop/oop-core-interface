@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 
 import { Button, KIND } from "baseui/button";
-import { Heading, HeadingLevel } from "baseui/heading";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,7 +11,7 @@ import {
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { DataProvider, Pagination, Table } from "../Universal";
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
@@ -68,24 +67,16 @@ const Transmissions = props => {
     );
 
     return (
-        <div className="content-wrapper">
-            <HeadingLevel>
-                <div className="flex-left">
-                    <Button
-                        $as={Link}
-                        kind={KIND.minimal}
-                        to={deviceDashboardPath}
-                        aria-label="Go back to device dashboard"
-                    >
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </Button>
-                    <Heading>
-                        {`Transmissions ${
-                            device.name
-                            ? "- " + device.name
-                            : ""}`}
-                    </Heading>
-                </div>
+        <Page
+            heading={
+                `Transmissions ${
+                    device.name
+                        ? "- " + device.name
+                        : ""}`
+            }
+            backlink={deviceDashboardPath}
+        >
+            <>
                 <DataProvider
                     getData={() => {
                         return getData();
@@ -207,8 +198,8 @@ const Transmissions = props => {
                     )}
                     renderKey={props.location.search}
                 />
-            </HeadingLevel>
-        </div>
+            </>
+        </Page>
     );
 };
 

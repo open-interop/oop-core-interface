@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
-import { Heading, HeadingLevel } from "baseui/heading";
 import { FormControl } from "baseui/form-control";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
@@ -11,6 +10,7 @@ import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import {
     ConfirmModal,
     DataProvider,
+    Page,
 } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -24,13 +24,6 @@ const Layer = props => {
     const [layerErrors, setLayerErrors] = useState({});
 
     const blankLayer = props.match.params.layerId === "new";
-
-    useEffect(() => {
-        document.title = blankLayer
-            ? "New Layer | Open Interop"
-            : "Edit Layer | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const getLayer = () => {
         return blankLayer
@@ -112,7 +105,49 @@ const Layer = props => {
     };
 
     return (
-        <div className="content-wrapper">
+        <Page
+            title={
+                blankLayer
+                    ? "New Layer | Open Interop"
+                    : "Edit Layer | Open Interop"
+            }
+            heading={
+                blankLayer
+                    ? "Create Layer"
+                    : "Edit Layer"
+            }
+            backlink={props.location.prevPath || "/layers"}
+            actions={
+                <>
+                    {blankLayer ? null : (
+                        <ConfirmModal
+                            buttonText="Delete"
+                            title="Confirm Deletion"
+                            mainText={
+                                <>
+                                    <div>
+                                        Are you sure you want to
+                                        delete this layer?
+                                    </div>
+                                    <div>
+                                        This action can't be undone.
+                                    </div>
+                                </>
+                            }
+                            primaryAction={deleteLayer}
+                            primaryActionText="Delete"
+                            secondaryActionText="Cancel"
+                        />
+                    )}
+                    <Button
+                        onClick={saveLayer}
+                        disabled={saveButtonDisabled()}
+                    >
+                        {blankLayer ? "Create" : "Save"}
+                    </Button>
+                </>
+            }
+        >
             <DataProvider
                 getData={() => {
                     return Promise.all([
@@ -122,55 +157,7 @@ const Layer = props => {
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
-                    <HeadingLevel>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                kind={KIND.minimal}
-                                to={props.location.prevPath || "/layers"}
-                                aria-label={
-                                    props.location.prevPath
-                                        ? "Go back to layers"
-                                        : "Go back to layer dashboard"
-                                }
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </Button>
-                            <Heading>
-                                {blankLayer
-                                    ? "Create Layer"
-                                    : "Edit Layer"}
-                            </Heading>
-                            <div>
-                                {blankLayer ? null : (
-                                    <ConfirmModal
-                                        buttonText="Delete"
-                                        title="Confirm Deletion"
-                                        mainText={
-                                            <>
-                                                <div>
-                                                    Are you sure you want to
-                                                    delete this layer?
-                                                </div>
-                                                <div>
-                                                    This action can't be undone.
-                                                </div>
-                                            </>
-                                        }
-                                        primaryAction={deleteLayer}
-                                        primaryActionText="Delete"
-                                        secondaryActionText="Cancel"
-                                    />
-                                )}
-                                <Button
-                                    onClick={saveLayer}
-                                    disabled={saveButtonDisabled()}
-                                >
-                                    {blankLayer ? "Create" : "Save"}
-                                </Button>
-                            </div>
-                        </div>
-
+                    <>
                         <FormControl
                             label="Name"
                             caption="required"
@@ -239,10 +226,10 @@ const Layer = props => {
                                 );
                             }}
                         />}
-                    </HeadingLevel>
+                    </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

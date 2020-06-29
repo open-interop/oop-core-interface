@@ -5,6 +5,7 @@ export * from "./DataCircle";
 export * from "./DataProvider";
 export * from "./LineWrapper";
 export * from "./Modal";
+export * from "./Page";
 export * from "./Pagination";
 export * from "./PopoverWithButton";
 export * from "./SearchBar";

@@ -1,6 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
+
+import { useStyletron } from "baseui";
 import { Spinner } from "baseui/spinner";
 
 const GifSpinner = () => {
@@ -12,9 +14,11 @@ const GifSpinner = () => {
 };
 
 const InPlaceGifSpinner = () => {
+    const [css] = useStyletron();
+
     return (
-        <div className="center">
-            <img alt="loading-spinner" src="loading.gif" />
+        <div className={css({ margin: "0 auto" })}>
+            <img alt="loading-spinner" src="loading.gif" className={css({ display: "block", margin: "0 auto" })} />
         </div>
     );
 };

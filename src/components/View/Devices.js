@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
-import { Heading, HeadingLevel } from "baseui/heading";
-import { DataProvider, Pagination, Table } from "../Universal";
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import { ErrorToast } from "../Global";
 import OopCore from "../../OopCore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +16,6 @@ import { arrayToObject } from "../../Utilities";
 
 const Devices = props => {
     useEffect(() => {
-        document.title = "Devices | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const [devices, setDevices] = useState([]);
@@ -76,157 +74,157 @@ const Devices = props => {
     };
 
     return (
-        <div className="content-wrapper">
-            <HeadingLevel>
-                <div className="space-between">
-                    <Heading>Devices</Heading>
-                    <Button
-                        $as={Link}
-                        to={`/devices/new${
-                            deviceGroupId ? "?deviceGroupId=" + deviceGroupId : ""
-                        }`}
-                        kind={KIND.minimal}
-                        aria-label="Create new device"
-                        endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
-                    >
-                        New
-                    </Button>
-                </div>
-                <DataProvider
-                    getData={() => getData()}
-                    renderKey={props.location.search}
-                    renderData={() => (
-                        <>
-                            <Table
-                                data={devices.data}
-                                mapFunction={(columnName, content) => {
-                                    if (columnName === "action") {
-                                        return (
-                                            <>
-                                                <Button
-                                                    $as={Link}
-                                                    kind={KIND.minimal}
-                                                    to={`/devices/${content}`}
-                                                    aria-label="View device dashboard"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faChartPie}
-                                                    />
-                                                </Button>
-                                                <Button
-                                                    $as={Link}
-                                                    kind={KIND.minimal}
-                                                    to={{
-                                                        pathname: `/devices/${content}/edit`,
-                                                        prevPath: props.location,
-                                                    }}
-                                                    aria-label="Edit device"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faEdit}
-                                                    />
-                                                </Button>
-                                                <Button
-                                                    $as={Link}
-                                                    kind={KIND.minimal}
-                                                    to={`/devices/${content}/transmissions`}
-                                                    aria-label="View device transmissions"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faListUl}
-                                                    />
-                                                </Button>
-                                            </>
-                                        );
-                                    } else {
-                                        return content;
-                                    }
-                                }}
-                                columns={[
-                                    {
-                                        id: "id",
-                                        name: "ID",
-                                        type: "text",
-                                        hasFilter: true,
-                                        width: "50px",
-                                    },
-                                    {
-                                        id: "name",
-                                        name: "Name",
-                                        type: "text",
-                                        hasFilter: true,
-                                    },
+        <Page
+            heading="Devices"
+            actions={
+                <Button
+                    $as={Link}
+                    to={`/devices/new${
+                        deviceGroupId ? "?deviceGroupId=" + deviceGroupId : ""
+                    }`}
+                    kind={KIND.minimal}
+                    aria-label="Create new device"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
+                    New
+                </Button>
+            }
+            title="Devices | Open Interop"
+        >
+            <DataProvider
+                getData={() => getData()}
+                renderKey={props.location.search}
+                renderData={() => (
+                    <>
+                        <Table
+                            data={devices.data}
+                            mapFunction={(columnName, content) => {
+                                if (columnName === "action") {
+                                    return (
+                                        <>
+                                            <Button
+                                                $as={Link}
+                                                kind={KIND.minimal}
+                                                to={`/devices/${content}`}
+                                                aria-label="View device dashboard"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faChartPie}
+                                                />
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                kind={KIND.minimal}
+                                                to={{
+                                                    pathname: `/devices/${content}/edit`,
+                                                    prevPath: props.location,
+                                                }}
+                                                aria-label="Edit device"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faEdit}
+                                                />
+                                            </Button>
+                                            <Button
+                                                $as={Link}
+                                                kind={KIND.minimal}
+                                                to={`/devices/${content}/transmissions`}
+                                                aria-label="View device transmissions"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faListUl}
+                                                />
+                                            </Button>
+                                        </>
+                                    );
+                                } else {
+                                    return content;
+                                }
+                            }}
+                            columns={[
+                                {
+                                    id: "id",
+                                    name: "ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                    width: "50px",
+                                },
+                                {
+                                    id: "name",
+                                    name: "Name",
+                                    type: "text",
+                                    hasFilter: true,
+                                },
 
-                                    {
-                                        id: "deviceGroupName",
-                                        name: "Group",
-                                    },
-                                    {
-                                        id: "deviceGroupId",
-                                        name: "Group ID",
-                                        type: "text",
-                                        hasFilter: true,
-                                        width: "100px",
-                                    },
+                                {
+                                    id: "deviceGroupName",
+                                    name: "Group",
+                                },
+                                {
+                                    id: "deviceGroupId",
+                                    name: "Group ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                    width: "100px",
+                                },
 
-                                    {
-                                        id: "siteName",
-                                        name: "Site",
-                                    },
-                                    {
-                                        id: "siteId",
-                                        name: "Site ID",
-                                        type: "text",
-                                        hasFilter: true,
-                                        width: "100px",
-                                    },
-                                    { id: "action", name: "", width: "150px" },
-                                ]}
-                                columnContent={columnName => {
-                                    if (columnName === "action") {
-                                        return "id";
-                                    }
-                                    return columnName;
-                                }}
-                                filters={{ deviceGroupId, id, name, siteId }}
-                                updateFilters={(key, value) => {
-                                    switch (key) {
-                                        case "deviceGroupId":
-                                            return setDeviceGroupId(value);
-                                        case "id":
-                                            return setId(value);
-                                        case "name":
-                                            return setName(value);
-                                        case "siteId":
-                                            if (!props.site || !props.site.id) {
-                                                return setSiteId(value);
-                                            } else {
-                                                return ErrorToast(
-                                                    "Please disable global site filtering (header) to allow table filter",
-                                                    "Site selection",
-                                                );
-                                            }
+                                {
+                                    id: "siteName",
+                                    name: "Site",
+                                },
+                                {
+                                    id: "siteId",
+                                    name: "Site ID",
+                                    type: "text",
+                                    hasFilter: true,
+                                    width: "100px",
+                                },
+                                { id: "action", name: "", width: "150px" },
+                            ]}
+                            columnContent={columnName => {
+                                if (columnName === "action") {
+                                    return "id";
+                                }
+                                return columnName;
+                            }}
+                            filters={{ deviceGroupId, id, name, siteId }}
+                            updateFilters={(key, value) => {
+                                switch (key) {
+                                    case "deviceGroupId":
+                                        return setDeviceGroupId(value);
+                                    case "id":
+                                        return setId(value);
+                                    case "name":
+                                        return setName(value);
+                                    case "siteId":
+                                        if (!props.site || !props.site.id) {
+                                            return setSiteId(value);
+                                        } else {
+                                            return ErrorToast(
+                                                "Please disable global site filtering (header) to allow table filter",
+                                                "Site selection",
+                                            );
+                                        }
 
-                                        default:
-                                            return null;
-                                    }
-                                }}
-                            />
-                            <Pagination
-                                updatePageSize={pageSize => {
-                                    setPageSize(pageSize);
-                                }}
-                                currentPageSize={pageSize}
-                                updatePageNumber={pageNumber => setPage(pageNumber)}
-                                totalRecords={devices.totalRecords}
-                                numberOfPages={devices.numberOfPages}
-                                currentPage={page || 1}
-                            />
-                        </>
-                    )}
-                />
-            </HeadingLevel>
-        </div>
+                                    default:
+                                        return null;
+                                }
+                            }}
+                        />
+                        <Pagination
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={devices.totalRecords}
+                            numberOfPages={devices.numberOfPages}
+                            currentPage={page || 1}
+                        />
+                    </>
+                )}
+            />
+        </Page>
     );
 };
 

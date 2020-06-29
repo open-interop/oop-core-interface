@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
-import { Heading, HeadingLevel } from "baseui/heading";
 import { Select } from "baseui/select";
 import { FormControl } from "baseui/form-control";
 import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
-import { ConfirmModal, DataProvider } from "../Universal";
+import { ConfirmModal, DataProvider, Page } from "../Universal";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
 import { Timezones } from "../../resources/Timezones";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Site = props => {
     const [site, setSite] = useState({});
@@ -27,12 +24,6 @@ const Site = props => {
         };
     });
 
-    useEffect(() => {
-        document.title = blankSite
-            ? "New Site | Settings | Open Interop"
-            : "Edit Site | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
     const getSite = () => {
         return blankSite
             ? Promise.resolve({
@@ -122,60 +113,59 @@ const Site = props => {
     };
 
     return (
-        <div className="content-wrapper">
+        <Page
+            title={
+                blankSite
+                    ? "New Site | Settings | Open Interop"
+                    : "Edit Site | Settings | Open Interop"
+            }
+            heading={blankSite ? "Create Site" : "Edit Site"}
+            actions={
+                <>
+                    {blankSite ? null : (
+                        <ConfirmModal
+                            buttonText="Delete"
+                            title="Confirm Deletion"
+                            mainText={
+                                <>
+                                    <div>
+                                        Are you sure you want to
+                                        delete this site?
+                                    </div>
+                                    <div>
+                                        This action can't be undone.
+                                    </div>
+                                </>
+                            }
+                            primaryAction={deleteSite}
+                            primaryActionText="Delete"
+                            secondaryActionText="Cancel"
+                        />
+                    )}
+                    <Button
+                        onClick={saveSite}
+                        disabled={identicalObject(
+                            site,
+                            updatedSite,
+                        )}
+                        aria-label={
+                            blankSite
+                                ? "Create site"
+                                : "Update site"
+                        }
+                    >
+                        {blankSite ? "Create" : "Save"}
+                    </Button>
+                </>
+            }
+            backlink={allSitesPath}
+        >
             <DataProvider
                 getData={() => {
                     return getData().then(response => refreshSite(response));
                 }}
                 renderData={() => (
-                    <HeadingLevel>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                kind={KIND.minimal}
-                                to={allSitesPath}
-                                aria-label="Go back to all sites"
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </Button>
-                            <Heading>blankSite ? "Create Site" : "Edit Site"}</Heading>
-                            <div>
-                                {blankSite ? null : (
-                                    <ConfirmModal
-                                        buttonText="Delete"
-                                        title="Confirm Deletion"
-                                        mainText={
-                                            <>
-                                                <div>
-                                                    Are you sure you want to
-                                                    delete this site?
-                                                </div>
-                                                <div>
-                                                    This action can't be undone.
-                                                </div>
-                                            </>
-                                        }
-                                        primaryAction={deleteSite}
-                                        primaryActionText="Delete"
-                                        secondaryActionText="Cancel"
-                                    />
-                                )}
-                                <Button
-                                    onClick={saveSite}
-                                    disabled={identicalObject(
-                                        site,
-                                        updatedSite,
-                                    )}
-                                    aria-label={
-                                        blankSite
-                                            ? "Create site"
-                                            : "Update site"
-                                    }
-                                >
-                                    {blankSite ? "Create" : "Save"}
-                                </Button>
-                            </div>
-                        </div>
+                    <>
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
@@ -387,10 +377,10 @@ const Site = props => {
                                 }
                             />
                         </FormControl>
-                    </HeadingLevel>
+                    </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 
