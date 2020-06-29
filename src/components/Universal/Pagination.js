@@ -1,6 +1,7 @@
 import React from "react";
 import { Pagination as PaginationUI } from "baseui/pagination";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
+import { useStyletron } from "baseui";
 import { Select } from "baseui/select";
 
 const pageSizeOptions = [
@@ -13,37 +14,55 @@ const pageSizeOptions = [
 ];
 
 const Pagination = props => {
+    const [css, theme] = useStyletron();
+
+    const Centered = props => {
+        return (
+            <div className={css({
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: theme.sizing.scale100,
+                ...theme.typography.font350,
+            })}>
+                {props.children}
+            </div>
+        );
+    };
+
     return (
-        <Grid behavior={BEHAVIOR.fluid} >
-            <Cell span={1}>
-                <Select
-                    options={pageSizeOptions}
-                    labelKey="id"
-                    valueKey="id"
-                    searchable={false}
-                    clearable={false}
-                    onChange={value => {
-                        props.updatePageSize(value.option.id);
-                    }}
-                    value={
-                        [pageSizeOptions.find(
-                            option => option.id === props.currentPageSize,
-                        ) || {
-                            id: 20,
-                        }]
-                    }
-                />
-            </Cell>
-            <Cell span={1}>
-                per page
-            </Cell>
-            <Cell span={1}>
-                {props.totalRecords}
+        <div className={css({ display: "flex", flexDirection: "row", justifyContent: "space-between" })}>
+            <div className={css({ display: "flex", flexDirection: "row" })}>
+                <div>
+                    <Select
+                        options={pageSizeOptions}
+                        labelKey="id"
+                        valueKey="id"
+                        searchable={false}
+                        clearable={false}
+                        onChange={value => {
+                            props.updatePageSize(value.option.id);
+                        }}
+                        value={
+                            [pageSizeOptions.find(
+                                option => option.id === props.currentPageSize,
+                            ) || {
+                                id: 20,
+                            }]
+                        }
+                    />
+                </div>
+                <Centered>
+                    Items per page
+                </Centered>
+            </div>
+            <Centered>
+                {props.totalRecords || 1}
                 {props.totalRecords > 1 || props.totalRecords === 0
                     ? " records"
                     : " record"}
-            </Cell>
-            <Cell span={3} skip={6}>
+            </Centered>
+            <div>
                 <PaginationUI
                     numPages={props.numberOfPages}
                     currentPage={props.currentPage}
@@ -51,8 +70,8 @@ const Pagination = props => {
                         props.updatePageNumber(event.nextPage);
                     }}
                 />
-            </Cell>
-        </Grid>
+            </div>
+        </div>
     );
 };
 
