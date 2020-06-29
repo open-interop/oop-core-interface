@@ -1,4 +1,6 @@
 import React from "react";
+
+import { styled } from "styletron-react";
 import {
     StyledTable,
     StyledHead,
@@ -7,100 +9,127 @@ import {
     StyledCell,
     StyledHeadCell,
 } from "baseui/table";
-import { withStyle } from "baseui";
+
+import { useStyletron, withStyle } from "baseui";
 import { TableFilter } from "../Global";
 
+import { GifSpinner } from ".";
+
+const LoadingOverlay = styled("div", props => ({
+    top: 0,
+    left: 0,
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    background: "rgba(255, 255, 255, 0.8)",
+}));
+
 const Table = props => {
+    const [css, theme] = useStyletron();
     const data = props.data;
 
+    const noItems = css({
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: theme.sizing.scale700,
+        ...theme.typography.font350,
+    });
+
     function TableRows() {
+        if (!(props.data instanceof Array)) {
+            return <GifSpinner />;
+        }
+
         if (props.data.length) {
             return (
-                <StyledBody>
-                    {data.map((row, index) => {
-                        return (
-                            <StyledRow
-                                key={index}
-                                className={
-                                    props.rowClassName
-                                        ? props.rowClassName(row)
-                                        : ""
-                                }
-                            >
-                                {props.columns.map(column => {
-                                    if (column.width) {
-                                        const CustomWidthCell = withStyle(
-                                            StyledCell,
-                                            {
-                                                maxWidth: column.width,
-                                            },
-                                        );
+                data.map((row, index) => {
+                    return (
+                        <StyledRow
+                            key={index}
+                            className={
+                                props.rowClassName
+                                    ? props.rowClassName(row)
+                                    : ""
+                            }
+                        >
+                            {props.columns.map(column => {
+                                if (column.width) {
+                                    const CustomWidthCell = withStyle(
+                                        StyledCell,
+                                        {
+                                            maxWidth: column.width,
+                                        },
+                                    );
 
-                                        return (
-                                            <CustomWidthCell
-                                                key={`table-cell-${index}-${column.id}`}
-                                                className={`${
-                                                    column.id === "action"
-                                                        ? "action-column"
-                                                        : ""
-                                                }`}
-                                                onClick={() => {
-                                                    if (props.onRowClick) {
-                                                        props.onRowClick(
-                                                            row,
-                                                            column.id,
-                                                        );
-                                                    }
-                                                }}
-                                            >
-                                                {props.mapFunction(
-                                                    column.id,
-                                                    row[
-                                                        props.columnContent
-                                                            ? props.columnContent(
-                                                                  column.id,
-                                                              )
-                                                            : column.id
-                                                    ],
-                                                    row,
-                                                )}
-                                            </CustomWidthCell>
-                                        );
-                                    } else {
-                                        return (
-                                            <StyledCell
-                                                key={`table-cell-${index}-${column.id}`}
-                                                onClick={() => {
-                                                    if (props.onRowClick) {
-                                                        props.onRowClick(
-                                                            row,
-                                                            column.id,
-                                                        );
-                                                    }
-                                                }}
-                                            >
-                                                {props.mapFunction(
-                                                    column.id,
-                                                    row[
-                                                        props.columnContent
-                                                            ? props.columnContent(
-                                                                  column.id,
-                                                              )
-                                                            : column.id
-                                                    ],
-                                                    row,
-                                                )}
-                                            </StyledCell>
-                                        );
-                                    }
-                                })}
-                            </StyledRow>
-                        );
-                    })}
-                </StyledBody>
+                                    return (
+                                        <CustomWidthCell
+                                            key={`table-cell-${index}-${column.id}`}
+                                            className={`${
+                                                column.id === "action"
+                                                    ? "action-column"
+                                                    : ""
+                                            }`}
+                                            onClick={() => {
+                                                if (props.onRowClick) {
+                                                    props.onRowClick(
+                                                        row,
+                                                        column.id,
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            {props.mapFunction(
+                                                column.id,
+                                                row[
+                                                    props.columnContent
+                                                        ? props.columnContent(
+                                                              column.id,
+                                                          )
+                                                        : column.id
+                                                ],
+                                                row,
+                                            )}
+                                        </CustomWidthCell>
+                                    );
+                                } else {
+                                    return (
+                                        <StyledCell
+                                            key={`table-cell-${index}-${column.id}`}
+                                            onClick={() => {
+                                                if (props.onRowClick) {
+                                                    props.onRowClick(
+                                                        row,
+                                                        column.id,
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            {props.mapFunction(
+                                                column.id,
+                                                row[
+                                                    props.columnContent
+                                                        ? props.columnContent(
+                                                              column.id,
+                                                          )
+                                                        : column.id
+                                                ],
+                                                row,
+                                            )}
+                                        </StyledCell>
+                                    );
+                                }
+                            })}
+                        </StyledRow>
+                    );
+                })
             );
         } else {
-            return <StyledBody>No items to show</StyledBody>;
+            return (
+                <div className={noItems}>
+                    No items to show
+                </div>
+            );
         }
     }
 
@@ -144,7 +173,14 @@ const Table = props => {
                     </StyledHeadCell>
                 ))}
             </StyledHead>
-            {TableRows()}
+            <StyledBody className={css({ position: "relative" })}>
+                {TableRows()}
+                {props.data && props.loading && (
+                    <LoadingOverlay>
+                        <GifSpinner />
+                    </LoadingOverlay>
+                )}
+            </StyledBody>
         </StyledTable>
     );
 };

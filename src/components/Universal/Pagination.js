@@ -16,8 +16,6 @@ const pageSizeOptions = [
 const Pagination = props => {
     const [css, theme] = useStyletron();
 
-    console.log(theme);
-
     const Centered = props => {
         return (
             <div className={css({

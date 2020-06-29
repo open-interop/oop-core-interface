@@ -11,7 +11,7 @@ import {
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { DataProvider, Pagination, Table, Page } from "../Universal";
+import { DataProvider, PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
@@ -22,8 +22,6 @@ const Transmissions = props => {
 
     const [transmissions, setTransmissions] = useState(null);
     const [device, setDevice] = useState({});
-    const [page, setPage] = useQueryParam("page", NumberParam);
-    const [pageSize, setPageSize] = useQueryParam("pageSize", NumberParam);
     const [id, setId] = useQueryParam("id", StringParam);
     const [transmissionUuid, setTransmissionUuid] = useQueryParam(
         "transmissionUuid",
@@ -36,29 +34,8 @@ const Transmissions = props => {
     const [status, setStatus] = useQueryParam("status", StringParam);
     const [success, setSuccess] = useQueryParam("success", StringParam);
 
-    // reset page number when the search query is changed
-    useEffect(() => {
-        setPage(null);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageSize, transmissionUuid, messageUuid, success]);
-
     const getData = () => {
-        return Promise.all([
-            OopCore.getTransmissions(props.match.params.deviceId, {
-                id,
-                page,
-                pageSize,
-                transmissionUuid,
-                messageUuid,
-                status,
-                success,
-            }),
-            OopCore.getDevice(props.match.params.deviceId),
-        ]).then(([transmissions, device]) => {
-            setTransmissions(transmissions);
-            setDevice(device);
-            return transmissions;
-        });
+        return OopCore.getDevice(props.match.params.deviceId).then(setDevice);
     };
 
     const deviceDashboardPath = props.location.pathname.substr(
@@ -82,9 +59,18 @@ const Transmissions = props => {
                         return getData();
                     }}
                     renderData={() => (
-                        <>
-                            <Table
-                                data={transmissions.data}
+                            <PaginatedTable
+                                getData={(page, pageSize) => {
+                                    return OopCore.getTransmissions(props.match.params.deviceId, {
+                                        id,
+                                        page,
+                                        pageSize,
+                                        transmissionUuid,
+                                        messageUuid,
+                                        status,
+                                        success,
+                                    });
+                                }}
                                 mapFunction={(columnName, content) => {
                                     if (columnName === "action") {
                                         return (
@@ -184,17 +170,6 @@ const Transmissions = props => {
                                     }
                                 }}
                             />
-                            <Pagination
-                                updatePageSize={pageSize => {
-                                    setPageSize(pageSize);
-                                }}
-                                currentPageSize={pageSize}
-                                updatePageNumber={pageNumber => setPage(pageNumber)}
-                                totalRecords={transmissions.totalRecords}
-                                numberOfPages={transmissions.numberOfPages}
-                                currentPage={page || 1}
-                            />
-                        </>
                     )}
                     renderKey={props.location.search}
                 />
