@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { styled } from "styletron-react";
 import {
@@ -24,7 +24,7 @@ const LoadingOverlay = styled("div", props => ({
     background: "rgba(255, 255, 255, 0.8)",
 }));
 
-const Table = props => {
+const Table = memo(props => {
     const [css, theme] = useStyletron();
     const data = props.data;
 
@@ -37,11 +37,11 @@ const Table = props => {
     });
 
     function TableRows() {
-        if (!(props.data instanceof Array)) {
+        if (!(data instanceof Array)) {
             return <GifSpinner />;
         }
 
-        if (props.data.length) {
+        if (data.length) {
             return (
                 data.map((row, index) => {
                     return (
@@ -183,6 +183,6 @@ const Table = props => {
             </StyledBody>
         </StyledTable>
     );
-};
+});
 
 export { Table };

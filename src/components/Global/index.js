@@ -7,3 +7,5 @@ export * from "./TableFilter";
 export * from "./Toast";
 export * from "./TrueFalseCheckboxes";
 export * from "./TemprSelector";
+export * from "./TemprForm";
+export * from "./TemprPreview";

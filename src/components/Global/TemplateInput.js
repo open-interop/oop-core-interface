@@ -24,7 +24,7 @@ const editorTypeMap = {
 const TemplateInput = props => {
     const [fullScreen, setFullScreen] = useState(false);
 
-    const language = props.value.language || "text";
+    const language = props.value && props.value.language || "text";
     const script = language === "text" && typeof props.value !== "object" ? props.value : props.value.script || "";
 
     const getControlElement = () => {
