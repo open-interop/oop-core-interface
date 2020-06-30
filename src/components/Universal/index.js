@@ -4,6 +4,7 @@ export * from "./Error";
 export * from "./DataCircle";
 export * from "./DataProvider";
 export * from "./LineWrapper";
+export * from "./MaxCard";
 export * from "./Modal";
 export * from "./Page";
 export * from "./Pagination";

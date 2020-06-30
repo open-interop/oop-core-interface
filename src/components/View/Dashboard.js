@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 import { useStyletron } from "baseui";
-import { Card, StyledTitle } from "baseui/card";
+import { StyledTitle } from "baseui/card";
 import { Select } from "baseui/select";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
@@ -13,7 +13,7 @@ import OopCore from "../../OopCore";
 import chartStyles from "./../../styles/_chartColours.scss";
 import styles from "./../../styles/_variables.scss";
 
-import { DataCircle, DataProvider, InPlaceGifSpinner } from "../Universal";
+import { DataCircle, DataProvider, InPlaceGifSpinner, MaxCard } from "../Universal";
 
 const availableColours = [
     chartStyles.chart01,
@@ -88,21 +88,6 @@ const CenteredTitle = props => {
     return <StyledTitle className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
         {props.children}
     </StyledTitle>
-};
-
-const MaxCard = props => {
-    const [css] = useStyletron();
-
-    return <Card
-        className={css({ width: "100%", height: "100%", display: "flex", flexDirection: "column" })}
-        overrides={{
-            Contents: { style: { flex: "1", display: "flex", flexDirection: "column" } },
-            Body: { style: { flex: "1", display: "flex", justifyContent: "center", alignItems: "stretch", flexDirection: "column" } }
-        }}
-        title={props.title}
-    >
-        {props.children}
-    </Card>
 };
 
 const FailedTransmissions = props => {
