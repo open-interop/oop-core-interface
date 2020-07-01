@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
@@ -12,20 +12,22 @@ import {
 
 import {
     AccordionWithCaption,
-    DataProvider,
     IconSpinner,
-    Pagination,
-    Table,
+    PaginatedTable,
 } from "../Universal";
 
 import OopCore from "../../OopCore";
 
-const ScheduleAssociator = props => {
-    const [schedulesPage, setSchedulesPage] = useState(1);
-    const [schedulesPageSize, setSchedulesPageSize] = useState(10);
-    const [scheduleFilterId, setScheduleFilterId] = useState("");
-    const [scheduleFilterName, setScheduleFilterName] = useState("");
-    const [scheduleFilterSelected, setScheduleFilterSelected] = useState("");
+const getData = (page, pageSize, filters) => {
+    return OopCore.getSchedules({
+        //scheduleGroupId: updatedTempr.scheduleGroupId,
+        page,
+        pageSize,
+        ...filters,
+    });
+};
+
+const ScheduleAssociator = memo(props => {
     const [scheduleTemprLoading, setScheduleTemprLoading] = useState(false);
 
     const selected = {};
@@ -34,157 +36,103 @@ const ScheduleAssociator = props => {
         selected[scheduleTempr.scheduleId] = scheduleTempr;
     }
 
-    const renderScheduleAssociations = schedules => {
-        return (
-            <>
-                <Table
-                    data={schedules.data}
-                    rowClassName={row =>
-                        `schedule-tempr${row.selected ? " selected" : ""}`
+    return (
+        <AccordionWithCaption
+            title="Schedule Associations "
+            subtitle="Select schedules to associate with this tempr"
+            error={props.error}
+            startOpen={props.startOpen || false}
+        >
+            <PaginatedTable
+                prefix="schedule-"
+                getData={getData}
+                rowClassName={row =>
+                    `schedule-tempr${row.selected ? " selected" : ""}`
+                }
+                mapFunction={(columnName, content, row) => {
+                    if (columnName === "action") {
+                        return (
+                            <>
+                                <Button
+                                    kind={KIND.minimal}
+                                    $as={Link}
+                                    target="_blank"
+                                    to={"/schedules/" + content}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faExternalLinkAlt}
+                                    />
+                                </Button>
+                            </>
+                        );
                     }
-                    mapFunction={(columnName, content, row) => {
-                        if (columnName === "action") {
-                            return (
-                                <>
-                                    <Button
-                                        kind={KIND.minimal}
-                                        $as={Link}
-                                        target="_blank"
-                                        to={"/schedules/" + content}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={faExternalLinkAlt}
-                                        />
-                                    </Button>
-                                </>
-                            );
+
+                    if (columnName === "selected") {
+                        if (scheduleTemprLoading === row.id) {
+                            return <IconSpinner />;
+                        }
+                        return selected[row.id] ? (
+                            <FontAwesomeIcon icon={faCheck} />
+                        ) : (
+                            <FontAwesomeIcon icon={faTimes} />
+                        );
+                    }
+
+                    return content;
+                }}
+                columnContent={columnName => {
+                    if (columnName === "action") {
+                        return "id";
+                    }
+
+                    return columnName;
+                }}
+                columns={[
+                    {
+                        id: "selected",
+                        name: "",
+                        type: "bool",
+                        hasFilter: true,
+                        width: "20px",
+                    },
+                    {
+                        id: "id",
+                        name: "Id",
+                        type: "text",
+                        hasFilter: true,
+                    },
+                    {
+                        id: "name",
+                        name: "Name",
+                        type: "text",
+                        hasFilter: true,
+                    },
+                    {
+                        id: "action",
+                        name: "",
+                        type: "action",
+                        hasFilter: false,
+                        width: "30px",
+                    },
+                ]}
+                trueText="Selected"
+                falseText="Not selected"
+                onRowClick={async (schedule, column) => {
+                    if (column !== "action" && !scheduleTemprLoading) {
+                        setScheduleTemprLoading(schedule.id);
+
+                        if (selected[schedule.id]) {
+                            await props.onDeselect(schedule, selected[schedule.id]);
+                        } else {
+                            await props.onSelect(schedule);
                         }
 
-                        if (columnName === "selected") {
-                            if (scheduleTemprLoading === row.id) {
-                                return <IconSpinner />;
-                            }
-                            return selected[row.id] ? (
-                                <FontAwesomeIcon icon={faCheck} />
-                            ) : (
-                                <FontAwesomeIcon icon={faTimes} />
-                            );
-                        }
-
-                        return content;
-                    }}
-                    columnContent={columnName => {
-                        if (columnName === "action") {
-                            return "id";
-                        }
-
-                        return columnName;
-                    }}
-                    columns={[
-                        {
-                            id: "selected",
-                            name: "",
-                            type: "bool",
-                            hasFilter: true,
-                            width: "20px",
-                        },
-                        {
-                            id: "id",
-                            name: "Id",
-                            type: "text",
-                            hasFilter: true,
-                        },
-                        {
-                            id: "name",
-                            name: "Name",
-                            type: "text",
-                            hasFilter: true,
-                        },
-                        {
-                            id: "action",
-                            name: "",
-                            type: "action",
-                            hasFilter: false,
-                            width: "30px",
-                        },
-                    ]}
-                    filters={{
-                        id: scheduleFilterId,
-                        name: scheduleFilterName,
-                        selected: scheduleFilterSelected,
-                    }}
-                    updateFilters={(key, value) => {
-                        switch (key) {
-                            case "id":
-                                return setScheduleFilterId(value);
-                            case "name":
-                                return setScheduleFilterName(value);
-                            case "selected":
-                                if (value === null) {
-                                    return setScheduleFilterSelected("");
-                                }
-                                return setScheduleFilterSelected(value);
-                            default:
-                                return null;
-                        }
-                    }}
-                    trueText="Selected"
-                    falseText="Not selected"
-                    onRowClick={async (schedule, column) => {
-                        if (column !== "action" && !scheduleTemprLoading) {
-                            setScheduleTemprLoading(schedule.id);
-
-                            if (selected[schedule.id]) {
-                                await props.onDeselect(schedule, selected[schedule.id]);
-                            } else {
-                                await props.onSelect(schedule);
-                            }
-
-                            setScheduleTemprLoading(false);
-                        }
-                    }}
-                />
-                <Pagination
-                    updatePageSize={pageSize => {
-                        setSchedulesPageSize(pageSize);
-                    }}
-                    currentPageSize={schedulesPageSize}
-                    updatePageNumber={pageNumber => setSchedulesPage(pageNumber)}
-                    totalRecords={schedules.totalRecords}
-                    numberOfPages={schedules.numberOfPages}
-                    currentPage={schedulesPage || 1}
-                />
-            </>
-        );
-    };
-
-    return <AccordionWithCaption
-        title="Schedule Associations "
-        subtitle="Select schedules to associate with this tempr"
-        error={props.error}
-        startOpen
-    >
-    <DataProvider
-        getData={() => {
-            return OopCore.getSchedules({
-                //scheduleGroupId: updatedTempr.scheduleGroupId,
-                pageSize: schedulesPageSize,
-                page: schedulesPage,
-                id: scheduleFilterId,
-                name: scheduleFilterName,
-            });
-        }}
-        renderKey={
-            schedulesPage +
-                schedulesPageSize +
-                scheduleFilterId +
-                scheduleFilterName +
-                scheduleFilterSelected
-        }
-        renderData={renderScheduleAssociations}
-    />
-    </AccordionWithCaption>
-    ;
-};
+                        setScheduleTemprLoading(false);
+                    }
+                }}
+            />
+        </AccordionWithCaption>
+    );
+});
 
 export default ScheduleAssociator;

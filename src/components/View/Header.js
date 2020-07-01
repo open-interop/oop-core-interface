@@ -37,7 +37,7 @@ const Header = props => {
                 </NavigationList>
                 <NavigationList $align={ALIGN.right}>
                     <NavigationItem>
-                        <StyledLink $as={Link} to={"/profile"}>
+                        <StyledLink $as={Link} to={"/profile"} $style={{ textDecoration: "none" }}>
                             {props.user.email}
                         </StyledLink>
                     </NavigationItem>

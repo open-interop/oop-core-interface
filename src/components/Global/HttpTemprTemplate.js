@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Select } from "baseui/select";
 import { PairInput } from ".";
 
@@ -13,7 +13,7 @@ const requestMethodOptions = [
     { id: "PUT" },
 ];
 
-const HttpTemprTemplate = props => {
+const HttpTemprTemplate = memo(props => {
     const setValue = (key, value) => {
         const updatedTemplate = { ...props.template };
         if (value.language === "text") {
@@ -63,7 +63,7 @@ const HttpTemprTemplate = props => {
                             }}
                             value={[protocolOptions.find(
                                 item => item.id === script,
-                            )]}
+                            ) || "http"]}
                             error={props.error}
                         />
                     );
@@ -86,7 +86,7 @@ const HttpTemprTemplate = props => {
                             }}
                             value={[requestMethodOptions.find(
                                 item => item.id === props.template.requestMethod,
-                            )]}
+                            ) || "GET"]}
                             error={props.error}
                         />
                     );
@@ -114,6 +114,6 @@ const HttpTemprTemplate = props => {
             />
         </>
     );
-};
+});
 
 export { HttpTemprTemplate };
