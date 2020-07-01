@@ -22,6 +22,8 @@ import {
 import DeviceAssociator from "../Global/DeviceAssociator";
 import ScheduleAssociator from "../Global/ScheduleAssociator";
 
+import { identicalObject } from "../../Utilities";
+
 import OopCore from "../../OopCore";
 import "brace/mode/json";
 import "brace/mode/javascript";
@@ -154,6 +156,8 @@ const Tempr = props => {
 
     const [loading, setLoading] = useState(true);
 
+    const [originalTempr, setOriginalTempr] = useState(null);
+
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [deviceGroupId, setDeviceGroupId] = useState(Number(props.match.params.deviceGroupId) || null);
@@ -179,6 +183,7 @@ const Tempr = props => {
     const blankTempr = temprId === "new";
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
+        setOriginalTempr(tempr);
         setTemprFromObject(tempr);
         setGroups(groups.data);
         setDeviceTemprs(deviceTemprs.data);
@@ -197,6 +202,21 @@ const Tempr = props => {
         setNotes(tempr.notes);
         setTemplate(tempr.template);
         setExampleTransmission(tempr.exampleTransmission);
+    };
+
+    const temprToObject = () => {
+        return {
+            name,
+            description,
+            deviceGroupId,
+            temprId: parentTemprId,
+            endpointType,
+            queueResponse,
+            queueRequest,
+            notes,
+            template,
+            exampleTransmission,
+        };
     };
 
     const allTemprsPath = props.location.pathname.substr(
@@ -221,18 +241,7 @@ const Tempr = props => {
         clearToast();
         setTemprErrors({});
 
-        const tempr = {
-            name,
-            description,
-            deviceGroupId,
-            temprId: parentTemprId,
-            endpointType,
-            queueResponse,
-            queueRequest,
-            notes,
-            template,
-            exampleTransmission,
-        };
+        const tempr = temprToObject();
 
         if (blankTempr) {
             return OopCore.createTempr(tempr)
@@ -312,7 +321,10 @@ const Tempr = props => {
             {loading ?
                 <InPlaceGifSpinner /> :
                 <>
-                    <Prompt message="Are you sure you want to leave this page?" />
+                    {
+                        identicalObject(originalTempr, temprToObject()) &&
+                            <Prompt message="Are you sure you want to leave this page?" />
+                    }
                     <div>
                         <TemprForm
                             name={[name, setName]}
