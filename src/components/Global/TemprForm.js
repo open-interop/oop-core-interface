@@ -21,7 +21,6 @@ const TemprForm = memo(props => {
 
     const setValue = setter => {
         return event => {
-            props.setValueChanged(true);
             setter(event.currentTarget.value);
         };
     };

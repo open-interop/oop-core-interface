@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, memo } from "react";
 import JSONPretty from "react-json-pretty";
 import AceEditor from "react-ace";
 
@@ -16,19 +16,16 @@ import { BaseuiSpinner } from "../Universal";
 
 import OopCore from "../../OopCore";
 
-const TemprPreview = props => {
+const TemprPreview = memo(props => {
     const [mappingFullScreen, setMappingFullScreen] = useState(false);
 
     const [previewLoading, setPreviewLoading] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false);
 
-    const [exampleTransmission, setExampleTransmission] = useState("");
     const [activeTab, setActiveTab] = useState("0");
     const [fullScreenActiveTab, setFullScreenActiveTab] = useState("0");
 
     const [rendered, setRendered] = useState(null);
-
-    const updatedTempr = {};
 
     const calculateOutput = () => {
         setPreviewLoading(true);
@@ -186,6 +183,6 @@ const TemprPreview = props => {
             </>
         );
     }
-};
+});
 
 export { TemprPreview }

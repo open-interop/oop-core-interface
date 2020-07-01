@@ -12,7 +12,6 @@ import {
 
 import {
     AccordionWithCaption,
-    DataProvider,
     IconSpinner,
     PaginatedTable,
 } from "../Universal";

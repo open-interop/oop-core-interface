@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+import { useQueryParam, StringParam } from "use-query-params";
 
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChevronLeft,
     faCheck,
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +19,6 @@ const Transmissions = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [transmissions, setTransmissions] = useState(null);
     const [device, setDevice] = useState({});
     const [id, setId] = useQueryParam("id", StringParam);
     const [transmissionUuid, setTransmissionUuid] = useQueryParam(

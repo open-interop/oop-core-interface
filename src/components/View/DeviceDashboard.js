@@ -7,11 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCircle,
     faCheck,
-    faChevronLeft,
     faEdit,
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { DataProvider, Table, Page, MaxCard, InPlaceGifSpinner } from "../Universal";
+import { Table, Page, MaxCard, InPlaceGifSpinner } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { Chart, Pie } from "react-chartjs-2";
@@ -338,15 +337,15 @@ const DeviceDashboard = props => {
     useEffect(() => {
         Promise.all([
             OopCore.getDevice(deviceId),
-            OopCore.getTransmissions(props.match.params.deviceId, {
+            OopCore.getTransmissions(deviceId, {
                 pageSize: 5,
             }),
             OopCore.getDeviceTemprs({
-                deviceId: props.match.params.deviceId,
+                deviceId: deviceId,
                 pageSize: -1,
             }),
             OopCore.getTransmissionStats({
-                deviceId: props.match.params.deviceId,
+                deviceId: deviceId,
                 group: "success",
             }),
         ])
