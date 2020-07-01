@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { useQueryParam, withDefault, NumberParam, ObjectParam } from "use-query-params";
-import { DataProvider, Pagination, Table } from ".";
+import { useQueryParam, NumberParam, ObjectParam } from "use-query-params";
+import { Pagination, Table } from ".";
 
 const PaginatedTable = withRouter(props => {
     const [data, setData] = useState(null);

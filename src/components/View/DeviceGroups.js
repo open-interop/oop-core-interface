@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,7 +6,7 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
-const DeviceGroups = props => {
+const DeviceGroups = memo(props => {
     return (
         <Page
             title="Device Groups | Settings | Open Interop"
@@ -99,6 +99,6 @@ const DeviceGroups = props => {
             />
         </Page>
     );
-};
+});
 
 export { DeviceGroups };

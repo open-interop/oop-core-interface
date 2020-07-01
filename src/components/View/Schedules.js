@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 
 import { Button, KIND } from "baseui/button";
@@ -9,7 +9,7 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
-const Schedules = props => {
+const Schedules = memo(props => {
     return (
         <Page
             title="Schedules | Settings | Open Interop"
@@ -115,6 +115,6 @@ const Schedules = props => {
             />
         </Page>
     );
-};
+});
 
 export { Schedules };

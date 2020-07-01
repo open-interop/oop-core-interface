@@ -1,7 +1,7 @@
 import React from "react";
 import { useStyletron } from "baseui";
 
-import { Card, StyledTitle } from "baseui/card";
+import { Card } from "baseui/card";
 
 const MaxCard = props => {
     const [css] = useStyletron();

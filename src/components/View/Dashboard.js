@@ -161,8 +161,6 @@ const FailedTransmissions = props => {
 const Transmissions = props => {
     const timelineRange = getDateRange(props.customStartDate, props.now);
 
-    const [css] = useStyletron();
-
     return (
         <MaxCard title={
             <CenteredTitle>
@@ -337,13 +335,11 @@ const Stats = props => {
         ]).then(([deviceGroupsResponse, temprsResponse]) => {
             setGeneralStats({
                 deviceGroups: deviceGroupsResponse.totalRecords,
-                devices: props.devices.length,
+                devices: devices.length,
                 temprs: temprsResponse.totalRecords,
             });
         });
     }, [devices]);
-
-    const [css] = useStyletron();
 
     return (
         <MaxCard title={

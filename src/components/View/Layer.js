@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button, KIND } from "baseui/button";
+import React, { useState } from "react";
+
+import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
-import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 import { Input } from "baseui/input";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import {
     ConfirmModal,

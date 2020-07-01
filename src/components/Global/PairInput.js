@@ -8,7 +8,7 @@ import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 const InputRow = props => {
     const [css, theme] = useStyletron();
 
-    const { index, pair: [key, value] } = props;
+    const { pair: [key, value] } = props;
 
     return (
         <div className={css({ display: "flex", flexDirection: "row", marginBottom: theme.sizing.scale550 })} >

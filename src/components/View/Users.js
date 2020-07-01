@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 
 import { Button, KIND } from "baseui/button";
@@ -9,7 +9,7 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
-const Users = props => {
+const Users = memo(props => {
     return (
         <Page
             title="Users | Settings | Open Interop"
@@ -75,6 +75,6 @@ const Users = props => {
             />
         </Page>
     );
-};
+});
 
 export { Users };

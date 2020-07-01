@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,8 +6,7 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
-const Layers = props => {
-
+const Layers = memo(props => {
     return (
         <Page
             title="Layers | Settings | Open Interop"
@@ -89,7 +88,7 @@ const Layers = props => {
             />
         </Page>
     );
-};
+});
 
 export { Layers };
 

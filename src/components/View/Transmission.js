@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
-import { Button, KIND } from "baseui/button";
+import { KIND } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody } from "baseui/card";
 
 import JSONPretty from "react-json-pretty";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 import { DataProvider, Modal, Page } from "../Universal";
 import OopCore from "../../OopCore";

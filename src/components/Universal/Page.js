@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { useStyletron } from "baseui";
@@ -26,8 +26,6 @@ const Actions = props => {
 };
 
 const BackLink = props => {
-    const [css] = useStyletron();
-
     if (!props.backlink) {
         return null;
     }

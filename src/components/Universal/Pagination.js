@@ -1,6 +1,5 @@
 import React from "react";
 import { Pagination as PaginationUI } from "baseui/pagination";
-import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 import { useStyletron } from "baseui";
 import { Select } from "baseui/select";
 

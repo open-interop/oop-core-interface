@@ -1,17 +1,12 @@
 import React, { useState, useEffect, memo } from "react";
-import { Link, Prompt } from "react-router-dom";
-import AceEditor from "react-ace";
+import { Prompt } from "react-router-dom";
 
-import { Button, KIND } from "baseui/button";
+import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
-import { Input } from "baseui/input";
-import { Select } from "baseui/select";
 import { Textarea } from "baseui/textarea";
 import {
     AccordionWithCaption,
-    BaseuiSpinner,
     ConfirmModal,
-    DataProvider,
     Page,
     InPlaceGifSpinner,
 } from "../Universal";
@@ -27,8 +22,6 @@ import {
 import DeviceAssociator from "../Global/DeviceAssociator";
 import ScheduleAssociator from "../Global/ScheduleAssociator";
 
-import { identicalObject } from "../../Utilities";
-import { Tabs, Tab } from "baseui/tabs";
 import OopCore from "../../OopCore";
 import "brace/mode/json";
 import "brace/mode/javascript";
@@ -123,15 +116,6 @@ const ScheduleTemprAssociator = memo(({
     temprErrors,
     setTemprErrors
 }) => {
-    const setError = error => {
-        const newErrors = {
-            ...temprErrors,
-            deviceTemprs: error.errors,
-        };
-        setTemprErrors(newErrors);
-    };
-
-
     return (
         <ScheduleAssociator
             selected={scheduleTemprs}
@@ -180,8 +164,6 @@ const Tempr = props => {
     const [notes, setNotes] = useState("");
     const [template, setTemplate] = useState({});
     const [exampleTransmission, setExampleTransmission] = useState("");
-
-    const [valueChanged, setValueChanged] = useState(false);
 
     const [temprErrors, setTemprErrors] = useState({});
 
@@ -278,7 +260,6 @@ const Tempr = props => {
 
     const setValue = setter => {
         return event => {
-            setValueChanged(true);
             setter(event.currentTarget.value);
         };
     };
@@ -341,7 +322,6 @@ const Tempr = props => {
                             endpointType={[endpointType, setEndpointType]}
                             queueResponse={[queueResponse, setQueueResponse]}
                             queueRequest={[queueRequest, setQueueRequest]}
-                            setValueChanged={setValueChanged}
                             groups={groups}
                             temprId={temprId}
                             errors={temprErrors}
