@@ -4,12 +4,14 @@ import { Prompt } from "react-router-dom";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
+
 import {
     AccordionWithCaption,
     ConfirmModal,
     Page,
     InPlaceGifSpinner,
 } from "../Universal";
+
 import {
     clearToast,
     ErrorToast,
@@ -17,6 +19,8 @@ import {
     SuccessToast,
     TemprForm,
     TemprPreview,
+    TemprOutputTest,
+    TemprModal,
 } from "../Global";
 
 import DeviceAssociator from "../Global/DeviceAssociator";
@@ -155,6 +159,7 @@ const Tempr = props => {
     const temprId = props.match.params.temprId;
 
     const [loading, setLoading] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const [originalTempr, setOriginalTempr] = useState(null);
 
@@ -273,6 +278,52 @@ const Tempr = props => {
         };
     };
 
+    const getTemprTemplateAndPreview = () => {
+        if (modalOpen) {
+            return (
+                <TemprModal
+                    exampleTransmission={exampleTransmission}
+                    setExampleTransmission={setExampleTransmission}
+                    template={template}
+                    setTemplate={setTemplate}
+                    errors={temprErrors}
+                    onClose={() => setModalOpen(false)}
+                />
+            );
+        } else {
+            return (
+                <>
+                    <AccordionWithCaption
+                        title="Template"
+                        caption="required"
+                        error={temprErrors.base}
+                        startOpen
+                    >
+                        <div className="content-wrapper">
+                            <HttpTemprTemplate
+                                template={template}
+                                updateTemplate={setTemplate}
+                                error={temprErrors.base}
+                            />
+                        </div>
+                    </AccordionWithCaption>
+                    <AccordionWithCaption title="Test">
+                        <TemprPreview
+                            value={exampleTransmission}
+                            setValue={setExampleTransmission}
+                        />
+                        <TemprOutputTest
+                            transmission={exampleTransmission}
+                            template={template}
+                            showOpenButton={true}
+                            openEditor={() => setModalOpen(true)}
+                        />
+                    </AccordionWithCaption>
+                </>
+            );
+        }
+    };
+
     return (
         <Page
             title={
@@ -338,28 +389,7 @@ const Tempr = props => {
                             temprId={temprId}
                             errors={temprErrors}
                         />
-
-                        <AccordionWithCaption
-                            title="Template"
-                            caption="required"
-                            error={temprErrors.base}
-                            startOpen
-                        >
-                            <div className="content-wrapper">
-                                <HttpTemprTemplate
-                                    template={template}
-                                    updateTemplate={setTemplate}
-                                    error={temprErrors.base}
-                                />
-                            </div>
-                        </AccordionWithCaption>
-                        <AccordionWithCaption title="Test">
-                            <TemprPreview
-                                value={exampleTransmission}
-                                setValue={setExampleTransmission}
-                                template={template}
-                            />
-                        </AccordionWithCaption>
+                        {getTemprTemplateAndPreview()}
                         <FormControl
                             label="Notes"
                             key={`form-control-notes`}
