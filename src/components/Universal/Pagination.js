@@ -12,6 +12,62 @@ const pageSizeOptions = [
     { id: 100 },
 ];
 
+const StyledSelect = props => {
+    return <Select
+        {...props}
+        overrides={{
+            ControlContainer: {
+                style: ({$theme, $disabled, $isOpen, $error}) => ({
+                    borderLeftColor: 'transparent',
+                    borderRightColor: 'transparent',
+                    borderTopColor: 'transparent',
+                    borderBottomColor: 'transparent',
+                    boxShadow: 'none',
+                    backgroundColor: $disabled
+                        ? $theme.colors.buttonDisabledFill
+                        : $isOpen
+                            ? $theme.colors.buttonTertiaryHover
+                            : $error
+                                ? $theme.colors.negative50
+                                : $theme.colors.buttonTertiaryFill,
+                                ':hover': {
+                                    backgroundColor: $theme.colors.buttonTertiaryHover,
+                                },
+                }),
+            },
+            InputContainer: {
+                style: {
+                    marginLeft: 0,
+                },
+            },
+            ValueContainer: {
+                style: ({$theme}) => ({
+                    flexBasis: 'auto',
+                }),
+            },
+            SingleValue: {
+                style: ({$theme}) => ({
+                    position: 'relative',
+                    paddingTop: '0',
+                    paddingBottom: '0',
+                    paddingLeft: $theme.sizing.scale200,
+                    paddingRight: $theme.sizing.scale500,
+                    color: $theme.colors.buttonTertiaryText,
+                    ...$theme.typography.font350,
+                    lineHeight: 'unset',
+                }),
+            },
+            SelectArrow: {
+                style: ({$theme}) => ({
+                    width: '24px',
+                    height: '24px',
+                    color: $theme.colors.buttonTertiaryText,
+                }),
+            },
+        }}
+    />;
+};
+
 const Pagination = props => {
     const [css, theme] = useStyletron();
 
@@ -33,7 +89,7 @@ const Pagination = props => {
         <div className={css({ display: "flex", flexDirection: "row", justifyContent: "space-between" })}>
             <div className={css({ display: "flex", flexDirection: "row" })}>
                 <div>
-                    <Select
+                    <StyledSelect
                         options={pageSizeOptions}
                         labelKey="id"
                         valueKey="id"
