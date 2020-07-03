@@ -151,9 +151,8 @@ const Table = memo(props => {
             <StyledHead>
                 {props.columns.map(column => (
                     <StyledHeadCell
-                        width={column.width}
+                        $style={column.width ? { flex: `0 0 ${column.width}`, } : {}}
                         key={`table-head-${column.id}`}
-                        className={`max-width-${column.width}`}
                     >
                         {column.name}
                         {column.hasFilter && (
