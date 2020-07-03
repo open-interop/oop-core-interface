@@ -4,12 +4,14 @@ import { Prompt } from "react-router-dom";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
+
 import {
     AccordionWithCaption,
     ConfirmModal,
     Page,
     InPlaceGifSpinner,
 } from "../Universal";
+
 import {
     clearToast,
     ErrorToast,
@@ -17,10 +19,14 @@ import {
     SuccessToast,
     TemprForm,
     TemprPreview,
+    TemprOutputTest,
+    TemprModal,
 } from "../Global";
 
 import DeviceAssociator from "../Global/DeviceAssociator";
 import ScheduleAssociator from "../Global/ScheduleAssociator";
+
+import { identicalObject } from "../../Utilities";
 
 import OopCore from "../../OopCore";
 import "brace/mode/json";
@@ -153,6 +159,9 @@ const Tempr = props => {
     const temprId = props.match.params.temprId;
 
     const [loading, setLoading] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const [originalTempr, setOriginalTempr] = useState(null);
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -179,6 +188,7 @@ const Tempr = props => {
     const blankTempr = temprId === "new";
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
+        setOriginalTempr(tempr);
         setTemprFromObject(tempr);
         setGroups(groups.data);
         setDeviceTemprs(deviceTemprs.data);
@@ -197,6 +207,21 @@ const Tempr = props => {
         setNotes(tempr.notes);
         setTemplate(tempr.template);
         setExampleTransmission(tempr.exampleTransmission);
+    };
+
+    const temprToObject = () => {
+        return {
+            name,
+            description,
+            deviceGroupId,
+            temprId: parentTemprId,
+            endpointType,
+            queueResponse,
+            queueRequest,
+            notes,
+            template,
+            exampleTransmission,
+        };
     };
 
     const allTemprsPath = props.location.pathname.substr(
@@ -221,18 +246,7 @@ const Tempr = props => {
         clearToast();
         setTemprErrors({});
 
-        const tempr = {
-            name,
-            description,
-            deviceGroupId,
-            temprId: parentTemprId,
-            endpointType,
-            queueResponse,
-            queueRequest,
-            notes,
-            template,
-            exampleTransmission,
-        };
+        const tempr = temprToObject();
 
         if (blankTempr) {
             return OopCore.createTempr(tempr)
@@ -262,6 +276,52 @@ const Tempr = props => {
         return event => {
             setter(event.currentTarget.value);
         };
+    };
+
+    const getTemprTemplateAndPreview = () => {
+        if (modalOpen) {
+            return (
+                <TemprModal
+                    exampleTransmission={exampleTransmission}
+                    setExampleTransmission={setExampleTransmission}
+                    template={template}
+                    setTemplate={setTemplate}
+                    errors={temprErrors}
+                    onClose={() => setModalOpen(false)}
+                />
+            );
+        } else {
+            return (
+                <>
+                    <AccordionWithCaption
+                        title="Template"
+                        caption="required"
+                        error={temprErrors.base}
+                        startOpen
+                    >
+                        <div className="content-wrapper">
+                            <HttpTemprTemplate
+                                template={template}
+                                updateTemplate={setTemplate}
+                                error={temprErrors.base}
+                            />
+                        </div>
+                    </AccordionWithCaption>
+                    <AccordionWithCaption title="Test">
+                        <TemprPreview
+                            value={exampleTransmission}
+                            setValue={setExampleTransmission}
+                        />
+                        <TemprOutputTest
+                            transmission={exampleTransmission}
+                            template={template}
+                            showOpenButton={true}
+                            openEditor={() => setModalOpen(true)}
+                        />
+                    </AccordionWithCaption>
+                </>
+            );
+        }
     };
 
     return (
@@ -312,7 +372,10 @@ const Tempr = props => {
             {loading ?
                 <InPlaceGifSpinner /> :
                 <>
-                    <Prompt message="Are you sure you want to leave this page?" />
+                    {
+                        identicalObject(originalTempr, temprToObject()) &&
+                            <Prompt message="Are you sure you want to leave this page?" />
+                    }
                     <div>
                         <TemprForm
                             name={[name, setName]}
@@ -326,28 +389,7 @@ const Tempr = props => {
                             temprId={temprId}
                             errors={temprErrors}
                         />
-
-                        <AccordionWithCaption
-                            title="Template"
-                            caption="required"
-                            error={temprErrors.base}
-                            startOpen
-                        >
-                            <div className="content-wrapper">
-                                <HttpTemprTemplate
-                                    template={template}
-                                    updateTemplate={setTemplate}
-                                    error={temprErrors.base}
-                                />
-                            </div>
-                        </AccordionWithCaption>
-                        <AccordionWithCaption title="Test">
-                            <TemprPreview
-                                value={exampleTransmission}
-                                setValue={setExampleTransmission}
-                                template={template}
-                            />
-                        </AccordionWithCaption>
+                        {getTemprTemplateAndPreview()}
                         <FormControl
                             label="Notes"
                             key={`form-control-notes`}

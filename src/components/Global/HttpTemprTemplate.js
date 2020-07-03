@@ -30,6 +30,7 @@ const HttpTemprTemplate = memo(props => {
                 label={"Host"}
                 value={props.template.host}
                 onChange={val => setValue("host", val)}
+                caption="required"
             />
             <TemplateInput
                 label={"Port"}
@@ -68,6 +69,7 @@ const HttpTemprTemplate = memo(props => {
                         />
                     );
                 }}
+                caption="required"
             />
             <TemplateInput
                 label={"Request Method"}
@@ -91,6 +93,7 @@ const HttpTemprTemplate = memo(props => {
                         />
                     );
                 }}
+                caption="required"
             />
             <TemplateInput
                 label={"Headers"}

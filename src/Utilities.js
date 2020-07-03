@@ -1,4 +1,8 @@
 export function identicalObject(oldObject, updatedObject) {
+    if (oldObject === updatedObject) {
+        return true;
+    }
+
     if (!oldObject || !updatedObject) {
         return false;
     }
