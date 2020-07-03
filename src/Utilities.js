@@ -1,3 +1,38 @@
+export function compareByValue(a, b) {
+    if (a === b) {
+        return true;
+    }
+
+    if (typeof a !== typeof b) {
+        return false;
+    }
+
+    if (a === null || b === null) {
+        return false;
+    }
+
+    const compareSet = key => compareByValue(a[key], b[key])
+    if (a instanceof Array) {
+        if (a.length !== b.length) {
+            return false;
+        }
+
+        return a.every(compareSet);
+    }
+
+    if (typeof a === "object") {
+        const keysA = Object.keys(a);
+
+        if (keysA.length !== Object.keys(b).length) {
+            return false;
+        }
+
+        return keysA.every(compareSet);
+    }
+
+    return false;
+};
+
 export function identicalObject(oldObject, updatedObject) {
     if (oldObject === updatedObject) {
         return true;
@@ -33,7 +68,6 @@ export function identicalArray(oldArray, updatedArray) {
         } else {
             if (oldArray[i] !== updatedArray[i]) {
                 foundDifferentValue = true;
-            } else {
             }
             i++;
         }

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Prompt } from "react-router-dom";
 
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
@@ -58,6 +58,7 @@ const Page = props => {
 
     return (
         <div className={contentWrapper}>
+            {props.alert && <Prompt message={props.alert} />}
             <HeadingLevel>
                 <Heading $style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                     <BackLink backlink={props.backlink} />
