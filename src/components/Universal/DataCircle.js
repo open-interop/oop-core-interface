@@ -9,7 +9,7 @@ const Circle = styled("div", props => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "4vw",
+    fontSize: `${props.fontSize}vw`,
     color: "white",
     ":after": {
         content: '""',
@@ -18,8 +18,11 @@ const Circle = styled("div", props => ({
     }
 }));
 
-const DataCircle = props => {
+const DataCircle = ({ color, value, subtitle }) => {
     const [css, theme] = useStyletron();
+
+    const string = Number(value).toLocaleString();
+    const fontSize = 4 - Math.floor((string.length - 1) / 2);
 
     return (
         <div
@@ -30,10 +33,10 @@ const DataCircle = props => {
                 alignItems: "center",
             })}
         >
-            <Circle color={props.color}>
-                {props.value}
+            <Circle color={color} fontSize={fontSize} >
+                {string}
             </Circle>
-            <div className="data-subtitle">{props.subtitle}</div>
+            <div className="data-subtitle">{subtitle}</div>
         </div>
     );
 };
