@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo } from "react";
-import { Prompt } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -26,7 +25,7 @@ import {
 import DeviceAssociator from "../Global/DeviceAssociator";
 import ScheduleAssociator from "../Global/ScheduleAssociator";
 
-import { identicalObject } from "../../Utilities";
+import { compareByValue } from "../../Utilities";
 
 import OopCore from "../../OopCore";
 import "brace/mode/json";
@@ -188,7 +187,19 @@ const Tempr = props => {
     const blankTempr = temprId === "new";
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
-        setOriginalTempr(tempr);
+        setOriginalTempr({
+            name: tempr.name,
+            description: tempr.description,
+            deviceGroupId: tempr.deviceGroupId,
+            temprId: parentTemprId,
+            endpointType: tempr.endpointType,
+            queueResponse: tempr.queueResponse,
+            queueRequest: tempr.queueRequest,
+            notes: tempr.notes,
+            template: tempr.template,
+            exampleTransmission: tempr.exampleTransmission,
+        });
+
         setTemprFromObject(tempr);
         setGroups(groups.data);
         setDeviceTemprs(deviceTemprs.data);
@@ -368,13 +379,15 @@ const Tempr = props => {
                     </Button>
                 </>
             }
+            alert={
+                !compareByValue(originalTempr, temprToObject()) &&
+                "There are unsaved changes, are you sure you want to leave?"
+            }
         >
             {loading ?
                 <InPlaceGifSpinner /> :
                 <>
                     {
-                        identicalObject(originalTempr, temprToObject()) &&
-                            <Prompt message="Are you sure you want to leave this page?" />
                     }
                     <div>
                         <TemprForm
