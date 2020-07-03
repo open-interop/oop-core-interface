@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button, KIND } from "baseui/button";
-import { FormControl } from "baseui/form-control";
+
+import { Button } from "baseui/button";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
+import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import {
     ConfirmModal,
     DataProvider,
+    Page,
 } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -24,9 +24,6 @@ const Schedule = props => {
     const blankSchedule = props.match.params.scheduleId === "new";
 
     useEffect(() => {
-        document.title = blankSchedule
-            ? "New Schedule | Open Interop"
-            : "Edit Schedule | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -43,6 +40,15 @@ const Schedule = props => {
                 relations: [],
             })
             : OopCore.getSchedule(props.match.params.scheduleId);
+    };
+
+    const getScheduleTemprs = () => {
+        return blankSchedule
+            ? Promise.resolve([])
+            : OopCore.getScheduleTemprs({
+                scheduleId: props.match.params.scheduleId,
+                pageSize: -1,
+            }).then(res => res.data);
     };
 
     const refreshSchedule = response => {
@@ -109,68 +115,59 @@ const Schedule = props => {
     };
 
     return (
-        <div className="content-wrapper">
+        <Page
+            title={
+                blankSchedule
+                    ? "New Schedule | Open Interop"
+                    : "Edit Schedule | Open Interop"
+            }
+            heading={
+                blankSchedule
+                    ? "Create Schedule"
+                    : "Edit Schedule"
+            }
+            backlink={props.location.prevPath || "/schedules"}
+            actions={
+                <>
+                    {blankSchedule ? null : (
+                        <ConfirmModal
+                            buttonText="Delete"
+                            title="Confirm Deletion"
+                            mainText={
+                                <>
+                                    <div>
+                                        Are you sure you want to
+                                        delete this schedule?
+                                    </div>
+                                    <div>
+                                        This action can't be undone.
+                                    </div>
+                                </>
+                            }
+                            primaryAction={deleteSchedule}
+                            primaryActionText="Delete"
+                            secondaryActionText="Cancel"
+                        />
+                    )}
+                    <Button
+                        onClick={saveSchedule}
+                        disabled={saveButtonDisabled()}
+                    >
+                        {blankSchedule ? "Create" : "Save"}
+                    </Button>
+                </>
+            }
+        >
             <DataProvider
                 getData={() => {
                     return Promise.all([
                         getSchedule().then(refreshSchedule),
-                        OopCore.getScheduleTemprs({
-                            scheduleId: props.match.params.scheduleId,
-                            pageSize: -1,
-                        }).then(sts => setRelations(sts.data)),
+                        getScheduleTemprs().then(setRelations),
                     ]);
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
                     <>
-                        <div className="space-between">
-                            <Button
-                                $as={Link}
-                                kind={KIND.minimal}
-                                to={props.location.prevPath}
-                                aria-label={
-                                    props.location.prevPath
-                                        ? "Go back to schedules"
-                                        : "Go back to schedule dashboard"
-                                }
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </Button>
-                            <h2>
-                                {blankSchedule
-                                    ? "Create Schedule"
-                                    : "Edit Schedule"}
-                            </h2>
-                            <div>
-                                {blankSchedule ? null : (
-                                    <ConfirmModal
-                                        buttonText="Delete"
-                                        title="Confirm Deletion"
-                                        mainText={
-                                            <>
-                                                <div>
-                                                    Are you sure you want to
-                                                    delete this schedule?
-                                                </div>
-                                                <div>
-                                                    This action can't be undone.
-                                                </div>
-                                            </>
-                                        }
-                                        primaryAction={deleteSchedule}
-                                        primaryActionText="Delete"
-                                        secondaryActionText="Cancel"
-                                    />
-                                )}
-                                <Button
-                                    onClick={saveSchedule}
-                                    disabled={saveButtonDisabled()}
-                                >
-                                    {blankSchedule ? "Create" : "Save"}
-                                </Button>
-                            </div>
-                        </div>
-
                         <FormControl
                             label="Name"
                             caption="required"
@@ -301,6 +298,7 @@ const Schedule = props => {
                                 error={scheduleErrors.minute}
                             />
                         </FormControl>
+                        {blankSchedule ||
                         <TemprAssociator
                             subtitle="Select temprs to associate with this schedule."
                             selected={relations}
@@ -323,11 +321,11 @@ const Schedule = props => {
                                     },
                                 );
                             }}
-                        />
+                        />}
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

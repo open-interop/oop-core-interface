@@ -4,7 +4,7 @@ import AceEditor from "react-ace";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpandArrowsAlt, faCompressArrowsAlt } from "@fortawesome/free-solid-svg-icons";
 
-import { Button, SIZE } from "baseui/button";
+import { Button, SIZE, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 import { Input } from "baseui/input";
@@ -24,7 +24,7 @@ const editorTypeMap = {
 const TemplateInput = props => {
     const [fullScreen, setFullScreen] = useState(false);
 
-    const language = props.value.language || "text";
+    const language = (props.value && props.value.language) || "text";
     const script = language === "text" && typeof props.value !== "object" ? props.value : props.value.script || "";
 
     const getControlElement = () => {
@@ -52,51 +52,55 @@ const TemplateInput = props => {
         }
 
         return (
-            <>
-            <Cell span={9}>
-                <AceEditor
-                    id="input-host"
-                    mode={editorTypeMap[language]}
-                    theme="kuroir"
-                    width="100%"
-                    showPrintMargin={false}
-                    onChange={value => {
-                        props.onChange({ language: language, script: value });
-                    }}
-                    height={fullScreen ? "75vh" : "100%"}
-                    editorProps={{ $blockScrolling: true }}
-                    value={String(script)}
-                />
+            <Cell span={fullScreen ? 12 : 10}>
+                <div style={{display: "flex", flexDirection: "row"}}>
+                    <AceEditor
+                        id="input-host"
+                        mode={editorTypeMap[language]}
+                        theme="kuroir"
+                        showPrintMargin={false}
+                        onChange={value => {
+                            props.onChange({ language: language, script: value });
+                        }}
+                        style={{ flex: 1 }}
+                        height={fullScreen ? "500px" : ""}
+                        editorProps={{ $blockScrolling: true }}
+                        value={String(script)}
+                    />
+                    <Button
+                        kind={KIND.tertiary}
+                        size={SIZE.large}
+                        onClick={() => setFullScreen(!fullScreen)}
+                    >
+                        <FontAwesomeIcon icon={fullScreen ? faCompressArrowsAlt : faExpandArrowsAlt} />
+                    </Button>
+                </div>
             </Cell>
-            <Cell span={1}>
-                <Button size={SIZE.large} onClick={() => setFullScreen(!fullScreen)} >
-                    <FontAwesomeIcon icon={fullScreen ? faCompressArrowsAlt : faExpandArrowsAlt} />
-                </Button>
-            </Cell>
-            </>
         );
     };
 
     return (
         <FormControl
             label={props.label}
-            caption="required"
+            caption={props.caption}
         >
             <Grid behavior={BEHAVIOR.fluid}>
             {getControlElement()}
-            <Cell span={2}>
-                <Select
-                    required={true}
-                    clearable={false}
-                    options={languages}
-                    valueKey="value"
-                    labelKey="label"
-                    value={[{ value: language }]}
-                    onChange={selected => {
-                        props.onChange({ language: selected.option.value, script: script });
-                    }}
-                />
-            </Cell>
+            {!fullScreen &&
+                <Cell span={2}>
+                    <Select
+                        required={true}
+                        clearable={false}
+                        options={languages}
+                        valueKey="value"
+                        labelKey="label"
+                        value={[{ value: language }]}
+                        onChange={selected => {
+                            props.onChange({ language: selected.option.value, script: script });
+                        }}
+                    />
+                </Cell>
+            }
         </Grid>
         </FormControl>
     );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 import { useStyletron } from "baseui";
-import { Card, StyledTitle, StyledBody } from "baseui/card";
+import { StyledTitle } from "baseui/card";
 import { Select } from "baseui/select";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
@@ -13,7 +13,7 @@ import OopCore from "../../OopCore";
 import chartStyles from "./../../styles/_chartColours.scss";
 import styles from "./../../styles/_variables.scss";
 
-import { DataCircle, DataProvider, InPlaceGifSpinner } from "../Universal";
+import { DataCircle, DataProvider, InPlaceGifSpinner, MaxCard } from "../Universal";
 
 const availableColours = [
     chartStyles.chart01,
@@ -82,6 +82,14 @@ const getDaysAgo = (now, lastTransmissionsRange, series) => {
     };
 };
 
+const CenteredTitle = props => {
+    const [css, theme] = useStyletron();
+
+    return <StyledTitle className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
+        {props.children}
+    </StyledTitle>
+};
+
 const FailedTransmissions = props => {
     const [failedTransmissions, setFailedTransmissions] = useState({});
 
@@ -111,14 +119,13 @@ const FailedTransmissions = props => {
         });
     };
 
-    const [css] = useStyletron();
-
     return (
-        <Card className={css({ width: "100%", height: "100%" })} >
-            <StyledTitle className="center">
+        <MaxCard title={
+            <CenteredTitle>
                 Failed Transmissions
-            </StyledTitle>
-            <StyledBody>
+            </CenteredTitle>
+        } >
+            <div>
                 <DataProvider
                     loadingFallback={<InPlaceGifSpinner />}
                     getData={getFailedTransmissions}
@@ -146,21 +153,29 @@ const FailedTransmissions = props => {
                         );
                     }}
                 />
-            </StyledBody>
-        </Card>
+            </div>
+        </MaxCard>
     );
 };
 
 const Transmissions = props => {
     const timelineRange = getDateRange(props.customStartDate, props.now);
 
-    const [css] = useStyletron();
-
     return (
-        <Card className={css({ width: "100%", height: "100%" })} >
-            <StyledTitle className="center">
+        <MaxCard title={
+            <CenteredTitle>
                 Transmissions
-                <div className="width-19">
+            </CenteredTitle>
+        } >
+            {props.transmissionTimeline === null ?
+                <InPlaceGifSpinner /> :
+                <>
+                    <div className="center">
+                        {!props.transmissionTimeline.length && (
+                            <div className="chart-overlay">
+                                No transmission data available
+                            </div>
+                        )}
                     <Select
                         required
                         options={[
@@ -189,53 +204,42 @@ const Transmissions = props => {
                         }}
                         value={[props.dateFrom]}
                     />
-                </div>
-            </StyledTitle>
-            <StyledBody>
-            {props.transmissionTimeline === null ?
-                <InPlaceGifSpinner /> :
-                <div className="center">
-                    {!props.transmissionTimeline.length && (
-                        <div className="chart-overlay">
-                            No transmission data available
-                        </div>
-                    )}
-                    <Bar
-                        data={{
-                            labels: timelineRange.map(date => date.label),
-                            datasets: props.transmissionTimeline.map(
-                                (series, index) => {
-                                    return {
-                                        label: series.deviceName,
-                                        data: timelineRange.map(
-                                            date =>
-                                                series.transmissions[
-                                                    date.date
-                                                ] || 0,
-                                        ),
-                                        backgroundColor:
-                                            availableColours[
-                                                index %
-                                                    availableColours.length
-                                            ],
-                                    };
+                        <Bar
+                            data={{
+                                labels: timelineRange.map(date => date.label),
+                                datasets: props.transmissionTimeline.map(
+                                    (series, index) => {
+                                        return {
+                                            label: series.deviceName,
+                                            data: timelineRange.map(
+                                                date =>
+                                                    series.transmissions[
+                                                        date.date
+                                                    ] || 0,
+                                            ),
+                                            backgroundColor:
+                                                availableColours[
+                                                    index %
+                                                        availableColours.length
+                                                ],
+                                        };
+                                    },
+                                ),
+                            }}
+                            options={{
+                                scales: {
+                                    yAxes: [{ stacked: true }],
+                                    xAxes: [{ stacked: true }],
                                 },
-                            ),
-                        }}
-                        options={{
-                            scales: {
-                                yAxes: [{ stacked: true }],
-                                xAxes: [{ stacked: true }],
-                            },
-                            tooltips: {
-                                mode: "label",
-                            },
-                        }}
-                    />
-                </div>
+                                tooltips: {
+                                    mode: "label",
+                                },
+                            }}
+                        />
+                    </div>
+                </>
             }
-            </StyledBody>
-        </Card>
+        </MaxCard>
     );
 };
 
@@ -244,15 +248,24 @@ const DaysSinceLastTransmission = props => {
 
     const [css] = useStyletron();
 
+    const center = css({
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    });
+
     return (
-        <Card className={css({ width: "100%", height: "100%" })} >
-            <StyledTitle className="center">
-                Days since last transmission
-            </StyledTitle>
-            <StyledBody>
-            {transmissionsByLastDay === null ?
-                <InPlaceGifSpinner /> :
-                <div className="center">
+        <MaxCard
+            title={
+                <CenteredTitle>
+                    Days since last transmission
+                </CenteredTitle>
+            }
+        >
+            <div className={center}>
+            {transmissionsByLastDay === null
+                ? <InPlaceGifSpinner />
+                : <>
                     {!transmissionsByLastDay.length && (
                         <div className="chart-overlay">
                             No transmission data available
@@ -299,10 +312,10 @@ const DaysSinceLastTransmission = props => {
                             },
                         }}
                     />
-                </div>
+                </>
             }
-            </StyledBody>
-        </Card>
+            </div>
+        </MaxCard>
     );
 };
 
@@ -322,18 +335,17 @@ const Stats = props => {
         ]).then(([deviceGroupsResponse, temprsResponse]) => {
             setGeneralStats({
                 deviceGroups: deviceGroupsResponse.totalRecords,
-                devices: props.devices.length,
+                devices: devices.length,
                 temprs: temprsResponse.totalRecords,
             });
         });
     }, [devices]);
 
-    const [css] = useStyletron();
-
     return (
-        <Card className={css({ width: "100%", height: "100%" })} >
-            <StyledTitle className="center">Stats</StyledTitle>
-            <StyledBody>
+        <MaxCard title={
+            <CenteredTitle>Stats</CenteredTitle>
+        } >
+            <div>
                 {generalStats === null ?
                     <InPlaceGifSpinner /> :
                     <Grid>
@@ -360,8 +372,8 @@ const Stats = props => {
                         </Cell>
                     </Grid>
                 }
-            </StyledBody>
-        </Card>
+            </div>
+        </MaxCard>
     );
 };
 
