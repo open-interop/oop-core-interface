@@ -176,6 +176,34 @@ const Transmissions = props => {
                                 No transmission data available
                             </div>
                         )}
+                    <Select
+                        required
+                        options={[
+                            {
+                                id: 1,
+                                name: "last 24 hours",
+                            },
+                            {
+                                id: 30,
+                                name: "last 30 days",
+                            },
+                            {
+                                id: 180,
+                                name: "last 180 days",
+                            },
+                            {
+                                id: 365,
+                                name: "last 365 days",
+                            },
+                        ]}
+                        labelKey="name"
+                        valueKey="id"
+                        searchable={false}
+                        onChange={event => {
+                            props.setDateFrom(event.option);
+                        }}
+                        value={[props.dateFrom]}
+                    />
                         <Bar
                             data={{
                                 labels: timelineRange.map(date => date.label),
@@ -209,34 +237,6 @@ const Transmissions = props => {
                             }}
                         />
                     </div>
-                    <Select
-                        required
-                        options={[
-                            {
-                                id: 1,
-                                name: "last 24 hours",
-                            },
-                            {
-                                id: 30,
-                                name: "last 30 days",
-                            },
-                            {
-                                id: 180,
-                                name: "last 180 days",
-                            },
-                            {
-                                id: 365,
-                                name: "last 365 days",
-                            },
-                        ]}
-                        labelKey="name"
-                        valueKey="id"
-                        searchable={false}
-                        onChange={event => {
-                            props.setDateFrom(event.option);
-                        }}
-                        value={[props.dateFrom]}
-                    />
                 </>
             }
         </MaxCard>
