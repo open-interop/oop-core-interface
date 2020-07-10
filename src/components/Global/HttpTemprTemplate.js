@@ -16,11 +16,9 @@ const requestMethodOptions = [
 const HttpTemprTemplate = memo(props => {
     const setValue = (key, value) => {
         const updatedTemplate = { ...props.template };
-        if (value.language === "text") {
-            updatedTemplate[key] = value.script;
-        } else {
-            updatedTemplate[key] = value;
-        }
+
+        updatedTemplate[key] = value;
+
         props.updateTemplate(updatedTemplate);
     };
 
