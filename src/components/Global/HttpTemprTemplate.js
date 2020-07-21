@@ -90,7 +90,7 @@ const HttpTemprTemplate = memo(props => {
                                 setValue("requestMethod", { language, "script": event.option.id});
                             }}
                             value={[requestMethodOptions.find(
-                                item => item.id === props.template.requestMethod.script,
+                                item => item.id === (props.template.requestMethod && props.template.requestMethod.script),
                             ) || "GET"]}
                             error={props.error}
                         />
