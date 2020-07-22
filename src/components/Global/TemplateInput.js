@@ -11,27 +11,39 @@ import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 
 const languages = [
-    { value: "text", label: "Basic Mapping" },
+    { value: "text", label: "Plain Text" },
+    { value: "json", label: "JSON Encoded" },
     { value: "mustache", label: "Template Mapping" },
     { value: "js", label: "Scripted Mapping" },
 ];
 
 const editorTypeMap = {
     mustache: "handlebars",
+    json: "json",
     js: "javascript",
 };
 
 const TemplateInput = props => {
     const [fullScreen, setFullScreen] = useState(false);
 
-    const language = (props.value && props.value.language) || "text";
+    const allowedLanguages = props.languages || languages.map(l => l.value);
+
+    const language = (props.value && props.value.language) || allowedLanguages[0];
     const script = language === "text" && typeof props.value !== "object" ? props.value : props.value.script || "";
 
     const getControlElement = () => {
-        if (language === "text" && props.basic) {
+        if (language === "text" && props.text) {
             return (
                 <Cell span={10}>
-                    {props.basic({ language, script })}
+                    {props.text({ language, script })}
+                </Cell>
+            );
+        }
+
+        if (language === "json" && props.json) {
+            return (
+                <Cell span={10}>
+                    {props.json({ language, script })}
                 </Cell>
             );
         }
@@ -91,7 +103,7 @@ const TemplateInput = props => {
                     <Select
                         required={true}
                         clearable={false}
-                        options={languages}
+                        options={languages.filter(l => allowedLanguages.includes(l.value))}
                         valueKey="value"
                         labelKey="label"
                         value={[{ value: language }]}

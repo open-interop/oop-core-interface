@@ -4,6 +4,7 @@ import { PairInput } from ".";
 
 import TemplateInput from "../Global/TemplateInput";
 
+const defaultAllowed = ["text", "mustache", "js"];
 const protocolOptions = [{ id: "http" }, { id: "https" }];
 const requestMethodOptions = [
     { id: "DELETE" },
@@ -29,6 +30,7 @@ const HttpTemprTemplate = memo(props => {
                 value={props.template.host}
                 onChange={val => setValue("host", val)}
                 caption="required"
+                languages={defaultAllowed}
             />
             <TemplateInput
                 label={"Port"}
@@ -39,11 +41,13 @@ const HttpTemprTemplate = memo(props => {
                     }
                     setValue("port", val);
                 }}
+                languages={defaultAllowed}
             />
             <TemplateInput
                 label={"Path"}
                 value={props.template.path}
                 onChange={val => setValue("path", val)}
+                languages={defaultAllowed}
             />
             <TemplateInput
                 label={"Protocol"}
@@ -68,12 +72,13 @@ const HttpTemprTemplate = memo(props => {
                     );
                 }}
                 caption="required"
+                languages={defaultAllowed}
             />
             <TemplateInput
                 label={"Request Method"}
                 value={props.template.requestMethod}
                 onChange={val => setValue("requestMethod", val)}
-                basic={({ language, script }) => {
+                text={({ language, script }) => {
                     return (
                         <Select
                             options={requestMethodOptions}
@@ -82,27 +87,37 @@ const HttpTemprTemplate = memo(props => {
                             searchable={false}
                             clearable={false}
                             onChange={event => {
-                                setValue("requestMethod", event.option.id);
+                                setValue("requestMethod", { language, "script": event.option.id});
                             }}
                             value={[requestMethodOptions.find(
-                                item => item.id === props.template.requestMethod,
+                                item => item.id === props.template.requestMethod.script,
                             ) || "GET"]}
                             error={props.error}
                         />
                     );
                 }}
                 caption="required"
+                languages={defaultAllowed}
             />
             <TemplateInput
                 label={"Headers"}
                 value={props.template.headers}
                 onChange={val => setValue("headers", val)}
-                basic={({ language, script }) => {
+                languages={[ "json", "js" ]}
+                json={({ language, script }) => {
+                    let headers;
+
+                    try {
+                        headers = JSON.parse(script || "{}");
+                    } catch (e) {
+                        headers = {};
+                    }
+
                     return (
                         <PairInput
-                            data={props.template.headers || {}}
+                            data={headers}
                             updateData={data => {
-                                setValue("headers", data);
+                                setValue("headers", { language, "script": JSON.stringify(data) });
                             }}
                         />
                     );
