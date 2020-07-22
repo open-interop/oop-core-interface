@@ -117,9 +117,9 @@ const SideNavigation = props => {
                                             />
                                         ))
                                 ) : (
-                                    <div className="navigation-item no-devices">
+                                    <NavigationItem disabled>
                                         No devices
-                                    </div>
+                                    </NavigationItem>
                                 )}
                             </React.Fragment>
                         ))}
@@ -190,6 +190,16 @@ const SideNavigation = props => {
                     path="/device-groups"
                     pathName="Device Groups"
                     isActive={pathIncludes("/device-groups")}
+                />
+                <NavigationItem
+                    path="/schedules"
+                    pathName="Schedules"
+                    isActive={pathIncludes("/schedules")}
+                />
+                <NavigationItem
+                    path="/layers"
+                    pathName="Layers"
+                    isActive={pathIncludes("/layers")}
                 />
             </NavigationGroup>
             <div className="filler" />

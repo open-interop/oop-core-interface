@@ -4,15 +4,17 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 
+import { Page } from "../Universal";
+
 const Profile = props => {
     useEffect(() => {
-        document.title = "User Profile | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-        <div className="content-wrapper">
-            <div className="space-between">
-                <h2>Current User Profile</h2>
+        <Page
+            title="User Profile | Open Interop"
+            heading="Current User Profile"
+            actions={
                 <Button
                     $as={Link}
                     to={`/users/${props.user.id}`}
@@ -20,7 +22,8 @@ const Profile = props => {
                 >
                     Edit
                 </Button>
-            </div>
+            }
+        >
             <FormControl label="Id" key={"form-control-group-id"}>
                 <Input id={"input-id"} value={props.user.id} disabled />
             </FormControl>
@@ -47,7 +50,7 @@ const Profile = props => {
                     disabled
                 />
             </FormControl>
-        </div>
+        </Page>
     );
 };
 

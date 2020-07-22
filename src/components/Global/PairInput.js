@@ -1,73 +1,92 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { memo } from "react";
+import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Input } from "baseui/input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 
-const PairInput = props => {
-    const dataChanged = useRef(false);
+const InputRow = props => {
+    const [css, theme] = useStyletron();
+
+    const { pair: [key, value] } = props;
+
+    return (
+        <div className={css({ display: "flex", flexDirection: "row", marginBottom: theme.sizing.scale550 })} >
+            <div className={css({ display: "flex", flexGrow: 1 })} >
+                <div className={css({ flexGrow: 1 })}>
+                    <Input
+                        error={props.error || (!key && value)}
+                        placeholder="Key"
+                        value={key || ""}
+                        onChange={props.onChangeKey}
+                    />
+                </div>
+                <div className={css({ flexGrow: 1,  marginLeft: theme.sizing.scale550 })}>
+                    <Input
+                        error={props.error || (key && !value)}
+                        placeholder="Value"
+                        value={value || ""}
+                        onChange={props.onChangeValue}
+                    />
+                </div>
+            </div>
+            <Button
+                kind={KIND.tertiary}
+                className={css({ marginLeft: "auto" })}
+                aria-label="remove-input-row"
+                onClick={props.onRemove}
+            >
+                <FontAwesomeIcon icon={faMinus} />
+            </Button>
+        </div>
+    );
+};
+
+const PairInput = memo(props => {
     const dataIsArray = Array.isArray(props.data);
 
-    const getArrayFromObject = () => {
-        return props.data && Object.keys(props.data).length
-            ? Object.entries(props.data)
-            : [["", ""]];
-    };
+    let dataArray;
+    if (dataIsArray) {
+        dataArray = props.data;
+    } else {
+        dataArray = Object.entries(props.data);
+    }
 
-    const getDataArray = () => {
-        return dataIsArray
-            ? props.data.length
-                ? props.data
-                : [["", ""]]
-            : getArrayFromObject();
-    };
+    if (!dataArray.length) {
+        dataArray = [["", ""]];
+    }
 
-    const [dataArray, setDataArray] = useState(getDataArray());
-
-    const updateDataArray = array => {
-        dataChanged.current = true;
-        setDataArray(array);
-    };
-
-    useEffect(() => {
+    const update = (data) => {
         if (dataIsArray) {
-            if (dataChanged.current) {
-                props.updateData(
-                    dataArray.find(item => item[0] && item[1])
-                        ? dataArray.filter(item => item[0] && item[1])
-                        : [["", ""]],
-                );
+            const filtered = data.filter(item => item[0] && item[1]);
+
+            if (filtered.length) {
+                props.updateData(filtered);
+            } else {
+                props.updateData([["", ""]]);
             }
         } else {
             const resultObject = {};
-            dataArray.forEach(item => {
-                if (item[0] && item[1]) {
-                    resultObject[item[0]] = item[1];
-                }
-            });
 
-            if (dataChanged.current) {
-                props.updateData(resultObject);
+            for (const [key, val] of data) {
+                resultObject[key] = val;
             }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dataArray]);
 
-    useEffect(() => {
-        const updatedArray = getDataArray();
-        setDataArray(updatedArray);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.refreshKey]);
+            props.updateData(resultObject);
+        }
+    };
 
     const removeRow = index => {
         const updatedArray = [...dataArray];
+
         if (updatedArray.length > 1) {
             updatedArray.splice(index, 1);
         } else {
             updatedArray[index][0] = "";
             updatedArray[index][1] = "";
         }
-        updateDataArray(updatedArray);
+
+        update(updatedArray);
     };
 
     const addRow = () => {
@@ -77,54 +96,34 @@ const PairInput = props => {
             updatedArray[updatedArray.length - 1][1]
         ) {
             updatedArray.push(["", ""]);
-            updateDataArray(updatedArray);
+            update(updatedArray);
         }
     };
 
-    const setData = (index, position) => event => {
-        const updatedArray = [...dataArray];
-        updatedArray[index][position] = event.currentTarget.value;
-        updateDataArray(updatedArray);
-    };
+    const setData = (index, position) => {
+        return event => {
+            const updatedArray = [...dataArray];
+            updatedArray[index][position] = event.currentTarget.value;
 
-    const InputRow = (index, key, value) => {
-        return (
-            <div className="flex-row space-between mb-10" key={`row-${index}`}>
-                <div className="width-49 left-margin">
-                    <Input
-                        error={props.error || (!key && value)}
-                        placeholder="Key"
-                        id={`input-header-key-${key || "new"}`}
-                        value={key || ""}
-                        onChange={setData(index, 0)}
-                    />
-                </div>
-                <div className="width-49 left-margin">
-                    <Input
-                        error={props.error || (key && !value)}
-                        placeholder="Value"
-                        id={`input-header-value-${value || "new"}`}
-                        value={value || ""}
-                        onChange={setData(index, 1)}
-                    />
-                </div>
-                <Button
-                    kind={KIND.tertiary}
-                    className="left-margin"
-                    aria-label="remove-input-row"
-                    onClick={() => removeRow(index)}
-                >
-                    <FontAwesomeIcon icon={faMinus} />
-                </Button>
-            </div>
-        );
+            update(updatedArray);
+        }
     };
 
     return (
         <>
-            {dataArray.map((row, index) => {
-                return InputRow(index, row[0], row[1]);
-            })}
+            {
+                dataArray.map((row, index) => 
+                    <InputRow
+                        key={index}
+                        index={index}
+                        pair={row}
+                        onChangeKey={setData(index, 0)}
+                        onChangeValue={setData(index, 1)}
+                        onRemove={() => removeRow(index)}
+                        error={props.error}
+                    />
+                )
+            }
             <Button
                 kind={KIND.tertiary}
                 onClick={addRow}
@@ -134,6 +133,6 @@ const PairInput = props => {
             </Button>
         </>
     );
-};
+});
 
 export { PairInput };

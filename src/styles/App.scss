@@ -2,6 +2,10 @@
 
 @import "variables";
 
+@import "layouts/header";
+@import "layouts/side-navigation";
+@import "layouts/login";
+
 html {
     background-color: $oop-grey;
 }
@@ -13,6 +17,22 @@ body {
     font-weight: normal;
     margin: 0;
     background-color: $oop-grey;
+}
+
+div[id="root"] {
+    position: relative;
+
+    .content {
+        background-color: $oop-grey;
+        flex: 1;
+        margin-left: 9.5rem;
+        padding: 9em 2rem 2rem;
+
+        .content-wrapper {
+            background-color: $color-white;
+            padding: 1.5rem;
+        }
+    }
 }
 
 a {
@@ -33,12 +53,7 @@ a {
     margin-bottom: 1rem;
 }
 
-@import "general";
 @import "layouts/loading-overlay";
-@import "layouts/header";
-@import "layouts/side-navigation";
-@import "layouts/login";
-@import "layouts/accordion";
 @import "layouts/site-selector";
 @import "layouts/device_temprs";
 @import "layouts/device_dashboard";

@@ -9,6 +9,18 @@ const RequestType = {
     DELETE: "DELETE",
 };
 
+const uri = (strings, ...values) => {
+    const encoded = values.map(encodeURIComponent);
+    const parts = [...strings.raw];
+    let ret = parts.shift();
+
+    while (parts.length) {
+        ret += encoded.shift() + parts.shift();
+    }
+
+    return ret;
+};
+
 class OopCore extends EventEmitter {
     constructor(props) {
         super(props);
@@ -459,6 +471,22 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/users`, RequestType.POST, payload);
     }
 
+    deleteUser(userId) {
+        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
+    }
+
+    getDevicesByGroup(queryParameters) {
+        const parameters = queryString.stringify(
+            this.camelToSnake(queryParameters),
+        );
+        let path = `/sites/sidebar`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
     mapStatsParams(key) {
         switch (key) {
             case "gteq":
@@ -497,20 +525,120 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    deleteUser(userId) {
-        return this.makeRequest(`/users/${userId}`, RequestType.DELETE);
-    }
-
-    getDevicesByGroup(queryParameters) {
-        const parameters = queryString.stringify(
-            this.camelToSnake(queryParameters),
-        );
-        let path = `/sites/sidebar`;
+    getSchedules(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/schedules`;
         if (parameters) {
             path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
+    }
+
+    getSchedule(id) {
+        return this.makeRequest(uri`/schedules/${id}`);
+    }
+
+    createSchedule(data) {
+        const payload = { schedule: data };
+        return this.makeRequest(`/schedules`, RequestType.POST, payload);
+    }
+
+    updateSchedule(schedule) {
+        return this.makeRequest(
+            uri`/schedules/${schedule.id}`,
+            RequestType.PUT,
+            { schedule },
+        );
+    }
+
+    deleteSchedule(scheduleId) {
+        return this.makeRequest(
+            uri`/schedules/${scheduleId}`,
+            RequestType.DELETE,
+        );
+    }
+
+    getScheduleTemprs(params) {
+        const parameters = this.getParameters(params);
+        let path = `/schedule_temprs`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    createScheduleTempr({ scheduleId, temprId }) {
+        return this.makeRequest(
+            uri`/schedule_temprs?tempr_id=${temprId}&schedule_id=${scheduleId}`,
+            RequestType.POST,
+        );
+    }
+
+    deleteScheduleTempr(id, data) {
+        return this.makeRequest(
+            uri`/schedule_temprs/${id}?tempr_id=${data.temprId}&schedule_id=${data.scheduleId}`,
+            RequestType.DELETE,
+        );
+    }
+
+    getLayers(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/layers`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getLayer(id) {
+        return this.makeRequest(uri`/layers/${id}`);
+    }
+
+    createLayer(data) {
+        const payload = { layer: data };
+        return this.makeRequest(`/layers`, RequestType.POST, payload);
+    }
+
+    updateLayer(layer) {
+        return this.makeRequest(
+            uri`/layers/${layer.id}`,
+            RequestType.PUT,
+            { layer },
+        );
+    }
+
+    deleteLayer(layerId) {
+        return this.makeRequest(
+            uri`/layers/${layerId}`,
+            RequestType.DELETE,
+        );
+    }
+
+    getTemprLayers(params) {
+        const parameters = this.getParameters(params);
+        let path = `/tempr_layers`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    createTemprLayer({ temprId, layerId }) {
+        return this.makeRequest(
+            uri`/tempr_layers?tempr_id=${temprId}&layer_id=${layerId}`,
+            RequestType.POST,
+        );
+    }
+
+    deleteTemprLayer(id, data) {
+        return this.makeRequest(
+            uri`/tempr_layers/${id}?tempr_id=${data.temprId}&layer_id=${data.layerId}`,
+            RequestType.DELETE,
+        );
     }
 }
 

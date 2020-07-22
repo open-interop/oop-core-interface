@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import { Button, KIND } from "baseui/button";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
-import { DataProvider, Pagination, Table } from "../Universal";
+
+import { DataProvider, Pagination, Table, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Temprs = props => {
-    useEffect(() => {
-        document.title = "Temprs | Settings | Open Interop";
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const [temprs, setTemprs] = useState([]);
     const [page, setPage] = useQueryParam("page", NumberParam);
@@ -55,9 +54,10 @@ const Temprs = props => {
     };
 
     return (
-        <div className="content-wrapper">
-            <div className="space-between">
-                <h2>Temprs</h2>
+        <Page
+            title="Temprs | Settings | Open Interop"
+            heading="Temprs"
+            actions={
                 <Button
                     $as={Link}
                     to={`${props.location.pathname}/new`}
@@ -67,7 +67,8 @@ const Temprs = props => {
                 >
                     New
                 </Button>
-            </div>
+            }
+        >
             <DataProvider
                 renderKey={props.location.search}
                 getData={() => {
@@ -168,7 +169,7 @@ const Temprs = props => {
                     </>
                 )}
             />
-        </div>
+        </Page>
     );
 };
 

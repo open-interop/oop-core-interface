@@ -1,4 +1,10 @@
 import React, { Component } from "react";
+
+import { BaseProvider } from "baseui";
+import { Client as Styletron } from "styletron-engine-atomic";
+import { Provider as StyletronProvider } from "styletron-react";
+import oopTheme from "./theme";
+
 import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
@@ -13,6 +19,10 @@ import {
     Login,
     ResetPassword,
     Profile,
+    Schedules,
+    Schedule,
+    Layers,
+    Layer,
     SideNavigation,
     Site,
     Sites,
@@ -27,6 +37,8 @@ import { GifSpinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 import { QueryParamProvider } from "use-query-params";
+
+const engine = new Styletron();
 const queryString = require("query-string");
 
 class App extends Component {
@@ -225,6 +237,34 @@ class App extends Component {
                         }
                     />
                     <Route
+                        path="/schedules"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Schedules, props)
+                        }
+                    />
+                    <Route
+                        path="/schedules/:scheduleId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Schedule, props)
+                        }
+                    />
+                    <Route
+                        path="/layers"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Layers, props)
+                        }
+                    />
+                    <Route
+                        path="/layers/:layerId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, Layer, props)
+                        }
+                    />
+                    <Route
                         path="/temprs/:temprId"
                         exact
                         render={props =>
@@ -277,12 +317,14 @@ class App extends Component {
     };
 
     render() {
-        if (this.state.isLoading) {
-            return <GifSpinner />;
-        }
-        if (!this.state.isLoading) {
-            return this.renderRoutes();
-        }
+        return <StyletronProvider value={engine}>
+            <BaseProvider theme={oopTheme}>
+                { this.state.isLoading
+                    ? <GifSpinner />
+                    : this.renderRoutes()
+                }
+            </BaseProvider>
+        </StyletronProvider>;
     }
 }
 

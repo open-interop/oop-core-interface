@@ -1,9 +1,10 @@
-import React from "react";
-import { FormControl } from "baseui/form-control";
-import { Input } from "baseui/input";
+import React, { memo } from "react";
 import { Select } from "baseui/select";
 import { PairInput } from ".";
 
+import TemplateInput from "../Global/TemplateInput";
+
+const defaultAllowed = ["text", "mustache", "js"];
 const protocolOptions = [{ id: "http" }, { id: "https" }];
 const requestMethodOptions = [
     { id: "DELETE" },
@@ -13,105 +14,122 @@ const requestMethodOptions = [
     { id: "PUT" },
 ];
 
-const HttpTemprTemplate = props => {
+const HttpTemprTemplate = memo(props => {
     const setValue = (key, value) => {
         const updatedTemplate = { ...props.template };
+
         updatedTemplate[key] = value;
+
         props.updateTemplate(updatedTemplate);
     };
 
     return (
         <>
-            <FormControl
-                label="Host"
-                key={"form-control-group-host"}
+            <TemplateInput
+                label={"Host"}
+                value={props.template.host}
+                onChange={val => setValue("host", val)}
                 caption="required"
-            >
-                <Input
-                    id={"input-host"}
-                    value={props.template.host || ""}
-                    onChange={event =>
-                        setValue("host", event.currentTarget.value)
+                languages={defaultAllowed}
+            />
+            <TemplateInput
+                label={"Port"}
+                value={props.template.port}
+                onChange={val => {
+                    if (val.language === "text") {
+                        val.script = Number(val.script);
                     }
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Port"
-                key={"form-control-group-port"}
+                    setValue("port", val);
+                }}
+                languages={defaultAllowed}
+            />
+            <TemplateInput
+                label={"Path"}
+                value={props.template.path}
+                onChange={val => setValue("path", val)}
+                languages={defaultAllowed}
+            />
+            <TemplateInput
+                label={"Protocol"}
+                value={props.template.protocol}
+                onChange={val => setValue("protocol", val)}
+                basic={({ language, script }) => {
+                    return (
+                        <Select
+                            options={protocolOptions}
+                            labelKey="id"
+                            valueKey="id"
+                            searchable={false}
+                            clearable={false}
+                            onChange={event => {
+                                setValue("protocol", event.option.id);
+                            }}
+                            value={[protocolOptions.find(
+                                item => item.id === script,
+                            ) || "http"]}
+                            error={props.error}
+                        />
+                    );
+                }}
                 caption="required"
-            >
-                <Input
-                    id={"input-port"}
-                    value={props.template.port}
-                    onChange={event =>
-                        setValue("port", Number(event.currentTarget.value))
+                languages={defaultAllowed}
+            />
+            <TemplateInput
+                label={"Request Method"}
+                value={props.template.requestMethod}
+                onChange={val => setValue("requestMethod", val)}
+                text={({ language, script }) => {
+                    return (
+                        <Select
+                            options={requestMethodOptions}
+                            labelKey="id"
+                            valueKey="id"
+                            searchable={false}
+                            clearable={false}
+                            onChange={event => {
+                                setValue("requestMethod", { language, "script": event.option.id});
+                            }}
+                            value={[requestMethodOptions.find(
+                                item => item.id === (props.template.requestMethod && props.template.requestMethod.script),
+                            ) || "GET"]}
+                            error={props.error}
+                        />
+                    );
+                }}
+                caption="required"
+                languages={defaultAllowed}
+            />
+            <TemplateInput
+                label={"Headers"}
+                value={props.template.headers}
+                onChange={val => setValue("headers", val)}
+                languages={[ "json", "js" ]}
+                json={({ language, script }) => {
+                    let headers;
+
+                    try {
+                        headers = JSON.parse(script || "{}");
+                    } catch (e) {
+                        headers = {};
                     }
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Path"
-                key={"form-control-group-path"}
-                caption="required"
-            >
-                <Input
-                    id={"input-path"}
-                    value={props.template.path}
-                    onChange={event =>
-                        setValue("path", event.currentTarget.value)
-                    }
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Protocol"
-                key={"form-control-group-protocol"}
-                caption="required"
-            >
-                <Select
-                    options={protocolOptions}
-                    labelKey="id"
-                    valueKey="id"
-                    searchable={false}
-                    onChange={event => {
-                        setValue("protocol", event.option.id);
-                    }}
-                    value={protocolOptions.find(
-                        item => item.id === props.template.protocol,
-                    )}
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl
-                label="Request Method"
-                key={"form-control-group-request-method"}
-                caption="required"
-            >
-                <Select
-                    options={requestMethodOptions}
-                    labelKey="id"
-                    valueKey="id"
-                    searchable={false}
-                    onChange={event => {
-                        setValue("requestMethod", event.option.id);
-                    }}
-                    value={requestMethodOptions.find(
-                        item => item.id === props.template.requestMethod,
-                    )}
-                    error={props.error}
-                />
-            </FormControl>
-            <FormControl label="Headers" key={"form-control-group-headers"}>
-                <PairInput
-                    data={props.template.headers || {}}
-                    updateData={data => {
-                        setValue("headers", data);
-                    }}
-                />
-            </FormControl>
+
+                    return (
+                        <PairInput
+                            data={headers}
+                            updateData={data => {
+                                setValue("headers", { language, "script": JSON.stringify(data) });
+                            }}
+                        />
+                    );
+                }}
+            />
+            <TemplateInput
+                label={"Body"}
+                value={props.template.body}
+                onChange={val => setValue("body", val)}
+            />
         </>
     );
-};
+});
 
 export { HttpTemprTemplate };

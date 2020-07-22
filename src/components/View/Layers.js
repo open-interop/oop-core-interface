@@ -6,17 +6,17 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
-const DeviceGroups = memo(props => {
+const Layers = memo(props => {
     return (
         <Page
-            title="Device Groups | Settings | Open Interop"
-            heading="Device Groups"
+            title="Layers | Settings | Open Interop"
+            heading="Layers"
             actions={
                 <Button
                     $as={Link}
-                    to={`/device-groups/new`}
+                    to={`${props.location.pathname}/new`}
                     kind={KIND.minimal}
-                    aria-label="Create new tempr"
+                    aria-label="Create new layer"
                     endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
                 >
                     New
@@ -25,7 +25,7 @@ const DeviceGroups = memo(props => {
         >
             <PaginatedTable
                 getData={(page, pageSize, filters) => {
-                    return OopCore.getDeviceGroups({
+                    return OopCore.getLayers({
                         page,
                         pageSize,
                         ...filters,
@@ -38,29 +38,12 @@ const DeviceGroups = memo(props => {
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={`/device-groups/${content}`}
-                                    aria-label="Edit device group"
+                                    to={`${props.location.pathname}/${content}`}
+                                    aria-label="Edit Layer"
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
                                     />
-                                </Button>
-
-                                <Button
-                                    $as={Link}
-                                    kind={KIND.tertiary}
-                                    to={`devices?deviceGroupId=${content}`}
-                                    aria-label="View devices for this group"
-                                >
-                                    Devices
-                                </Button>
-                                <Button
-                                    $as={Link}
-                                    kind={KIND.tertiary}
-                                    to={`/temprs?deviceGroupId=${content}`}
-                                    aria-label="View temprs for this group"
-                                >
-                                    Temprs
                                 </Button>
                             </>
                         );
@@ -89,11 +72,17 @@ const DeviceGroups = memo(props => {
                         hasFilter: true,
                     },
                     {
+                        id: "reference",
+                        name: "Reference",
+                        type: "text",
+                        hasFilter: true,
+                    },
+                    {
                         id: "action",
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "250px",
+                        width: "50px",
                     },
                 ]}
             />
@@ -101,4 +90,5 @@ const DeviceGroups = memo(props => {
     );
 });
 
-export { DeviceGroups };
+export { Layers };
+
