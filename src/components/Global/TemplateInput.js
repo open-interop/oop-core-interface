@@ -29,7 +29,7 @@ const TemplateInput = props => {
     const allowedLanguages = props.languages || languages.map(l => l.value);
 
     const language = (props.value && props.value.language) || allowedLanguages[0];
-    const script = language === "text" && typeof props.value !== "object" ? props.value : props.value.script || "";
+    const script = (props.value && props.value.script) || "";
 
     const getControlElement = () => {
         if (language === "text" && props.text) {
