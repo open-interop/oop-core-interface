@@ -18,6 +18,8 @@ const TemprPreview = memo(props => {
                     $blockScrolling: true,
                 }}
                 value={props.value || ""}
+                maxLines={Infinity}
+                minLines={35}
             />
         </FormControl>
     );

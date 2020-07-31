@@ -75,9 +75,10 @@ const TemplateInput = props => {
                             props.onChange({ language: language, script: value });
                         }}
                         style={{ flex: 1 }}
-                        height={fullScreen ? "500px" : ""}
                         editorProps={{ $blockScrolling: true }}
                         value={String(script)}
+                        maxLines={fullScreen ? Infinity : 4}
+                        minLines={4}
                     />
                     <Button
                         kind={KIND.tertiary}
@@ -109,6 +110,15 @@ const TemplateInput = props => {
                         value={[{ value: language }]}
                         onChange={selected => {
                             props.onChange({ language: selected.option.value, script: script });
+                        }}
+                        overrides={{
+                            DropdownContainer: {
+                              style: () => {
+                                return {
+                                  width: "auto !important",
+                                };
+                              }
+                            }
                         }}
                     />
                 </Cell>
