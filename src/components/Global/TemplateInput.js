@@ -77,7 +77,7 @@ const TemplateInput = props => {
                         style={{ flex: 1 }}
                         editorProps={{ $blockScrolling: true }}
                         value={String(script)}
-                        maxLines={fullScreen ? Infinity : 4}
+                        maxLines={fullScreen ? Infinity : 8}
                         minLines={4}
                     />
                     <Button
