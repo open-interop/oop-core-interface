@@ -493,6 +493,7 @@ class OopCore extends EventEmitter {
             case "gt":
                 return `filter[transmitted_at[${key}]]`;
             case "siteId":
+            case "deviceId":
                 return `filter[${key}]`;
             case "field":
             case "direction":
@@ -508,9 +509,9 @@ class OopCore extends EventEmitter {
         Object.keys(filters)
             .filter(key => filters[key] !== undefined)
             .forEach(key => {
-                return (formattedFilters[
+                formattedFilters[
                     this.mapStatsParams(key)
-                ] = this.toSnakeCase(filters[key]));
+                ] = this.toSnakeCase(filters[key]);
             });
 
         var parameters = queryString.stringify(
