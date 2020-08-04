@@ -95,6 +95,7 @@ const TemprOutputTest = memo(props => {
                     kind={KIND.secondary}
                     onClick={calculateOutput}
                     isLoading={previewLoading}
+                    style={{margin: "20px"}}
                 >
                     Calculate output
                 </Button>
