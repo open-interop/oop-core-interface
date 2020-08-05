@@ -50,19 +50,28 @@ const Transmission = props => {
                 getData={() => {
                     return OopCore.getTransmission(
                         props.match.params.deviceId,
-                        props.match.params.transmissionId,
-                        ).then(transmission => {OopCore.getDevice(
-                            transmission.deviceId
-                            ).then(device => {OopCore.getTempr(
-                                transmission.temprId
-                                ).then(tempr =>{
-                                    setDevice(device);
-                                    setTempr(tempr);
-                                    setTransmission(transmission);
-                                    return transmission;
+                        props.match.params.transmissionId,)
+                        .then(transmission => {OopCore.getDevice(transmission.deviceId)
+                            .catch(error => {
+                                !transmission.errors ? setTransmission(transmission) : setTransmission(null);
                                 })
-                            })
-                        });
+                                .then(device => {OopCore.getTempr(transmission.temprId)
+                                    .catch(error => {
+                                        !transmission.errors ? setTransmission(transmission) : setTransmission(null);
+                                        })
+                                        .then(tempr => {
+                                            setTransmission(transmission);
+                                            setDevice(device);
+                                            setTempr(tempr);
+                                            return transmission;
+                                            })
+                                            .catch(error => {
+                                                !tempr.status ? setTempr(tempr) : setTempr(null);
+                                                !device.status ? setDevice(device) : setDevice(null);
+                                                !transmission.errors ? setTransmission(transmission) : setTransmission(null);
+                                                })
+                                    })
+                            });
                 }}
                 renderData={() => (
                     <FlexGrid
@@ -114,7 +123,7 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Device Name">
-                                        {device.name || "No data available"}
+                                        {device ? <a href={`/devices/${transmission.deviceId}`}>{device.name}</a> : "No data available"}
                                     </ListItemLabel>
                                 </div>
                             </ListItem>
@@ -123,7 +132,7 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Tempr Name">
-                                        {tempr.name || "No data available"}
+                                        {tempr ? <a href={`/temprs/${transmission.temprId}`}>{tempr.name}</a> : "No data available"}
                                     </ListItemLabel>
                                 </div>
                             </ListItem>
@@ -132,7 +141,7 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Status">
-                                        {transmission.status
+                                        {transmission.success
                                             ? "Successful"
                                             : "Failed"}
                                     </ListItemLabel>
@@ -176,7 +185,7 @@ const Transmission = props => {
                                     showGutter={true}
                                     highlightActiveLine={true}
                                     maxLines={Infinity}
-                                    minLines={6}
+                                    minLines={Math.max(transmission.requestBody.split(/\r\n|\r|\n/).length + 2, 8)}
                                     value={transmission.requestBody}
                                     style={{ width: '80%' }}
                                 />
@@ -194,7 +203,7 @@ const Transmission = props => {
                                     showGutter={true}
                                     highlightActiveLine={true}
                                     maxLines={Infinity}
-                                    minLines={6}
+                                    minLines={Math.max(transmission.responseBody.split(/\r\n|\r|\n/).length + 2, 8)}
                                     value={transmission.responseBody}
                                     style={{ width: '80%' }}
                                 />
