@@ -35,6 +35,16 @@ const Transmission = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
+    const formatISODate = (date) => {
+        if(date) {
+            var b = date.split(/\D+/);
+            var date_obj =  new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+            return date_obj.toLocaleString('en-GB', {timeZone: 'UTC'})
+        }else{
+            return null;
+        }
+    }
+
     const itemProps = {
       height: 'scale1000',
       display: 'flex'
@@ -152,7 +162,7 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Transmitted at">
-                                        {transmission.transmittedAt ||
+                                        {formatISODate(transmission.transmittedAt) ||
                                             "No data available"}
                                     </ListItemLabel>
                                 </div>
