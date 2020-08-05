@@ -1,6 +1,8 @@
 import React, { useState, memo } from "react";
 import AceEditor from "react-ace";
 
+import 'brace/ext/searchbox';
+
 import { FormControl } from "baseui/form-control";
 
 const TemprPreview = memo(props => {
