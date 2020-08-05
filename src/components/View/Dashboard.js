@@ -400,8 +400,7 @@ const Dashboard = props => {
 
     const transmissionsByLastDay = transmissionTimeline ?
         transmissionTimeline
-            .map(series => getDaysAgo(now, lastTransmissionsRange, series))
-            .filter(device => device.daysAgo !== 0) :
+            .map(series => getDaysAgo(now, lastTransmissionsRange, series)) :
             null;
 
     const getAllDevices = () => {
