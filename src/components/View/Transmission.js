@@ -6,6 +6,8 @@ import 'brace/ext/searchbox';
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 
+import parseISO from "date-fns/parseISO";
+
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody } from "baseui/card";
@@ -37,8 +39,7 @@ const Transmission = props => {
 
     const formatISODate = (date) => {
         if(date) {
-            var b = date.split(/\D+/);
-            var date_obj =  new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+            var date_obj =  parseISO(date);
             return date_obj.toLocaleString('en-GB', {timeZone: 'UTC'})
         }else{
             return null;
