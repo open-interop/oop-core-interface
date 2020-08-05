@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AceEditor from "react-ace";
 
-import 'brace/ext/searchbox';
+import "brace/ext/searchbox";
 
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -11,13 +11,13 @@ import parseISO from "date-fns/parseISO";
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody } from "baseui/card";
-import { FlexGrid, FlexGridItem } from 'baseui/flex-grid';
+import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
+import { StatefulTooltip } from "baseui/tooltip";
 
 import JSONPretty from "react-json-pretty";
 
 import { DataProvider, Modal, Page } from "../Universal";
 import OopCore from "../../OopCore";
-
 
 const Transmission = props => {
     useEffect(() => {
@@ -25,8 +25,8 @@ const Transmission = props => {
     }, []);
 
     const [transmission, setTransmission] = useState({});
-    const [device, setDevice] = useState({})
-    const [tempr, setTempr] = useState({})
+    const [device, setDevice] = useState({});
+    const [tempr, setTempr] = useState({});
 
     const [showRequest, setShowRequest] = React.useState(false);
 
@@ -37,18 +37,18 @@ const Transmission = props => {
         props.location.pathname.lastIndexOf("/"),
     );
 
-    const formatISODate = (date) => {
-        if(date) {
-            var date_obj =  parseISO(date);
-            return date_obj.toLocaleString('en-GB', {timeZone: 'UTC'})
-        }else{
+    const formatISODate = date => {
+        if (date) {
+            var date_obj = parseISO(date);
+            return date_obj.toLocaleString("en-GB");
+        } else {
             return null;
         }
-    }
+    };
 
     const itemProps = {
-      height: 'scale1000',
-      display: 'flex'
+        height: "scale1000",
+        display: "flex",
     };
 
     return (
@@ -61,35 +61,47 @@ const Transmission = props => {
                 getData={() => {
                     return OopCore.getTransmission(
                         props.match.params.deviceId,
-                        props.match.params.transmissionId,)
-                        .then(transmission => {OopCore.getDevice(transmission.deviceId)
+                        props.match.params.transmissionId,
+                    ).then(transmission => {
+                        OopCore.getDevice(transmission.deviceId)
                             .catch(error => {
-                                !transmission.errors ? setTransmission(transmission) : setTransmission(null);
-                                })
-                                .then(device => {OopCore.getTempr(transmission.temprId)
+                                !transmission.errors
+                                    ? setTransmission(transmission)
+                                    : setTransmission(null);
+                            })
+                            .then(device => {
+                                OopCore.getTempr(transmission.temprId)
                                     .catch(error => {
-                                        !transmission.errors ? setTransmission(transmission) : setTransmission(null);
-                                        })
-                                        .then(tempr => {
-                                            setTransmission(transmission);
-                                            setDevice(device);
-                                            setTempr(tempr);
-                                            return transmission;
-                                            })
-                                            .catch(error => {
-                                                !tempr.status ? setTempr(tempr) : setTempr(null);
-                                                !device.status ? setDevice(device) : setDevice(null);
-                                                !transmission.errors ? setTransmission(transmission) : setTransmission(null);
-                                                })
+                                        !transmission.errors
+                                            ? setTransmission(transmission)
+                                            : setTransmission(null);
                                     })
+                                    .then(tempr => {
+                                        setTransmission(transmission);
+                                        setDevice(device);
+                                        setTempr(tempr);
+                                        return transmission;
+                                    })
+                                    .catch(error => {
+                                        !tempr.status
+                                            ? setTempr(tempr)
+                                            : setTempr(null);
+                                        !device.status
+                                            ? setDevice(device)
+                                            : setDevice(null);
+                                        !transmission.errors
+                                            ? setTransmission(transmission)
+                                            : setTransmission(null);
+                                    });
                             });
+                    });
                 }}
                 renderData={() => (
                     <FlexGrid
                         flexGridColumnCount={[1, 2]}
                         flexGridColumnGap="scale400"
                         flexGridRowGap="scale1000"
-                      >
+                    >
                         <FlexGridItem {...itemProps}>
                             <ListItem>
                                 <div className="card-label">
@@ -134,7 +146,15 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Device Name">
-                                        {device ? <a href={`/devices/${transmission.deviceId}`}>{device.name}</a> : "No data available"}
+                                        {device ? (
+                                            <a
+                                                href={`/devices/${transmission.deviceId}`}
+                                            >
+                                                {device.name}
+                                            </a>
+                                        ) : (
+                                            "No data available"
+                                        )}
                                     </ListItemLabel>
                                 </div>
                             </ListItem>
@@ -143,7 +163,15 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Tempr Name">
-                                        {tempr ? <a href={`/temprs/${transmission.temprId}`}>{tempr.name}</a> : "No data available"}
+                                        {tempr ? (
+                                            <a
+                                                href={`/temprs/${transmission.temprId}`}
+                                            >
+                                                {tempr.name}
+                                            </a>
+                                        ) : (
+                                            "No data available"
+                                        )}
                                     </ListItemLabel>
                                 </div>
                             </ListItem>
@@ -163,24 +191,93 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Transmitted at">
-                                        {formatISODate(transmission.transmittedAt) ||
-                                            "No data available"}
+                                        <StatefulTooltip
+                                            accessibilityType={"tooltip"}
+                                            content={
+                                                transmission.transmittedAt || ""
+                                            }
+                                            showArrow={true}
+                                            placement="right"
+                                            overrides={{
+                                                Arrow: {
+                                                    style: ({ $theme }) => ({
+                                                        backgroundColor:
+                                                            $theme.colors.black,
+                                                    }),
+                                                },
+                                                Body: {
+                                                    style: ({ $theme }) => ({
+                                                        backgroundColor:
+                                                            $theme.colors.black,
+                                                        borderTopLeftRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                        borderTopRightRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                        borderBottomRightRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                        borderBottomLeftRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                    }),
+                                                },
+                                                Inner: {
+                                                    style: ({ $theme }) => ({
+                                                        backgroundColor:
+                                                            $theme.colors.black,
+                                                        borderTopLeftRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                        borderTopRightRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                        borderBottomRightRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                        borderBottomLeftRadius:
+                                                            $theme.borders
+                                                                .radius200,
+                                                        color:
+                                                            $theme.colors.white,
+                                                        fontSize: "14px",
+                                                    }),
+                                                },
+                                            }}
+                                        >
+                                            {formatISODate(
+                                                transmission.transmittedAt,
+                                            ) || "No data available"}
+                                        </StatefulTooltip>
                                     </ListItemLabel>
                                 </div>
                             </ListItem>
                         </FlexGridItem>
                         {transmission.requestBody && (
                             <FlexGridItem {...itemProps}>
-                                <Button kind={KIND.secondary} onClick={() => setShowRequest(!showRequest)}>
-                                    {showRequest ? "Hide request body" : "View request body"}
+                                <Button
+                                    kind={KIND.secondary}
+                                    onClick={() => setShowRequest(!showRequest)}
+                                >
+                                    {showRequest
+                                        ? "Hide request body"
+                                        : "View request body"}
                                 </Button>
                             </FlexGridItem>
                         )}
 
                         {transmission.responseBody && (
                             <FlexGridItem {...itemProps}>
-                                <Button kind={KIND.secondary} onClick={() => setShowResponse(!showResponse)}>
-                                    {showResponse ? "Hide response body" : "View response body"}
+                                <Button
+                                    kind={KIND.secondary}
+                                    onClick={() =>
+                                        setShowResponse(!showResponse)
+                                    }
+                                >
+                                    {showResponse
+                                        ? "Hide response body"
+                                        : "View response body"}
                                 </Button>
                             </FlexGridItem>
                         )}
@@ -196,9 +293,14 @@ const Transmission = props => {
                                     showGutter={true}
                                     highlightActiveLine={true}
                                     maxLines={Infinity}
-                                    minLines={Math.max(transmission.requestBody.split(/\r\n|\r|\n/).length + 2, 8)}
+                                    minLines={Math.max(
+                                        transmission.requestBody.split(
+                                            /\r\n|\r|\n/,
+                                        ).length + 2,
+                                        8,
+                                    )}
                                     value={transmission.requestBody}
-                                    style={{ width: '80%' }}
+                                    style={{ width: "80%" }}
                                 />
                             )}
                         </FlexGridItem>
@@ -214,9 +316,14 @@ const Transmission = props => {
                                     showGutter={true}
                                     highlightActiveLine={true}
                                     maxLines={Infinity}
-                                    minLines={Math.max(transmission.responseBody.split(/\r\n|\r|\n/).length + 2, 8)}
+                                    minLines={Math.max(
+                                        transmission.responseBody.split(
+                                            /\r\n|\r|\n/,
+                                        ).length + 2,
+                                        8,
+                                    )}
                                     value={transmission.responseBody}
-                                    style={{ width: '80%' }}
+                                    style={{ width: "80%" }}
                                 />
                             )}
                         </FlexGridItem>
