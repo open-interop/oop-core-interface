@@ -40,7 +40,7 @@ const Transmission = props => {
     const formatISODate = date => {
         if (date) {
             var date_obj = parseISO(date);
-            return date_obj.toLocaleString("en-GB");
+            return date_obj.toString();
         } else {
             return null;
         }
