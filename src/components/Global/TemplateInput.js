@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import AceEditor from "react-ace";
 
+import 'brace/ext/searchbox';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpandArrowsAlt, faCompressArrowsAlt } from "@fortawesome/free-solid-svg-icons";
 

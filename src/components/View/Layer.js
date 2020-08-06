@@ -15,6 +15,8 @@ import OopCore from "../../OopCore";
 import TemprAssociator from "../Global/TemprAssociator";
 import AceEditor from "react-ace";
 
+import 'brace/ext/searchbox';
+
 const Layer = props => {
     const [layer, setLayer] = useState({});
     const [updatedLayer, setUpdatedLayer] = useState({});
