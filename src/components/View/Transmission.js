@@ -51,6 +51,28 @@ const Transmission = props => {
         display: "flex",
     };
 
+    let requestBody;
+    try {
+        requestBody = JSON.stringify(
+            JSON.parse(transmission.requestBody),
+            null,
+            "    "
+        );
+    } catch (e) {
+        requestBody = transmission.requestBody;
+    }
+
+    let responseBody;
+    try {
+        responseBody = JSON.stringify(
+            JSON.parse(transmission.responseBody),
+            null,
+            "    "
+        );
+    } catch (e) {
+        responseBody = transmission.responseBody;
+    }
+
     return (
         <Page
             title="Transmission | Settings | Open Interop"
@@ -254,7 +276,7 @@ const Transmission = props => {
                                 </div>
                             </ListItem>
                         </FlexGridItem>
-                        {transmission.requestBody && (
+                        {requestBody && (
                             <FlexGridItem {...itemProps}>
                                 <Button
                                     kind={KIND.secondary}
@@ -267,7 +289,7 @@ const Transmission = props => {
                             </FlexGridItem>
                         )}
 
-                        {transmission.responseBody && (
+                        {responseBody && (
                             <FlexGridItem {...itemProps}>
                                 <Button
                                     kind={KIND.secondary}
@@ -294,12 +316,12 @@ const Transmission = props => {
                                     highlightActiveLine={true}
                                     maxLines={Infinity}
                                     minLines={Math.max(
-                                        transmission.requestBody.split(
+                                        requestBody.split(
                                             /\r\n|\r|\n/,
                                         ).length + 2,
                                         8,
                                     )}
-                                    value={transmission.requestBody}
+                                    value={requestBody}
                                     style={{ width: "80%" }}
                                 />
                             )}
@@ -317,12 +339,12 @@ const Transmission = props => {
                                     highlightActiveLine={true}
                                     maxLines={Infinity}
                                     minLines={Math.max(
-                                        transmission.responseBody.split(
+                                        responseBody.split(
                                             /\r\n|\r|\n/,
                                         ).length + 2,
                                         8,
                                     )}
-                                    value={transmission.responseBody}
+                                    value={responseBody}
                                     style={{ width: "80%" }}
                                 />
                             )}
