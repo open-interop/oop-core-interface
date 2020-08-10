@@ -1,3 +1,5 @@
+export * from "./BlacklistEntry";
+export * from "./BlacklistEntries";
 export * from "./Dashboard";
 export * from "./Device";
 export * from "./DeviceDashboard";

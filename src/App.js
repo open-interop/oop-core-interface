@@ -8,6 +8,8 @@ import oopTheme from "./theme";
 import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
+    BlacklistEntries,
+    BlacklistEntry,
     Dashboard,
     Device,
     DeviceDashboard,
@@ -262,6 +264,20 @@ class App extends Component {
                         exact
                         render={props =>
                             this.getComponent(!hasUser, Layer, props)
+                        }
+                    />
+                    <Route
+                        path="/blacklist-entries"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, BlacklistEntries, props)
+                        }
+                    />
+                    <Route
+                        path="/blacklist-entries/:blacklistEntryId"
+                        exact
+                        render={props =>
+                            this.getComponent(!hasUser, BlacklistEntry, props)
                         }
                     />
                     <Route
