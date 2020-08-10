@@ -584,6 +584,40 @@ class OopCore extends EventEmitter {
         );
     }
 
+    getBlacklistEntries(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/blacklist_entries`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getBlacklistEntry(id) {
+        return this.makeRequest(uri`/blacklist_entries/${id}`);
+    }
+
+    createBlacklistEntry(data) {
+        const payload = { blacklistEntry: data };
+        return this.makeRequest(`/blacklist_entries`, RequestType.POST, payload);
+    }
+
+    updateBlacklistEntry(id, blacklistEntry) {
+        return this.makeRequest(
+            uri`/blacklist_entries/${id}`,
+            RequestType.PUT,
+            { blacklistEntry },
+        );
+    }
+
+    deleteBlacklistEntry(id) {
+        return this.makeRequest(
+            uri`/blacklist_entries/${id}`,
+            RequestType.DELETE,
+        );
+    }
+
     getLayers(queryParameters) {
         const parameters = this.getParameters(queryParameters);
         let path = `/layers`;
