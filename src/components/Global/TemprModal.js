@@ -37,7 +37,7 @@ const TemprModal = props => {
             role={ROLE.dialog}
         >
             <HeadingLevel>
-                <Grid behavior={BEHAVIOR.fluid}>
+                <Grid behavior={BEHAVIOR.fluid} gridColumns={[6,6,12]}>
                     <Cell span={6}>
                         <Heading>Transmission</Heading>
                         <div style={{ height: "100%", overflowY: "visible" }} >

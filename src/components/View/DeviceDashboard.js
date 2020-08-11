@@ -400,14 +400,14 @@ const DeviceDashboard = props => {
                 </Button>
             }
         >
-            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} >
+            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,12]} >
                 <Cell span={5}>
                     <DeviceDetails device={device} />
                 </Cell>
-                <Cell span={7}>
+                <Cell span={[5,5,7]}>
                     <DeviceLocation device={device} />
                 </Cell>
-                <Cell span={7}>
+                <Cell span={[5,5,7]}>
                     <DeviceTransmissions device={device} />
                 </Cell>
                 <Cell span={5}>
