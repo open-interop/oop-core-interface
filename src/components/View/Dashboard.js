@@ -132,8 +132,8 @@ const FailedTransmissions = props => {
                     renderKey={props.site ? props.site.id : ""}
                     renderData={() => {
                         return (
-                            <Grid>
-                                <Cell span={[12, 12, 4]} skip={[0, 0, 1]}>
+                            <Grid gridColumns={12}>
+                                <Cell span={[12, 4, 4]} skip={[0, 1, 1]}>
                                     <DataCircle
                                         value={
                                             failedTransmissions.thirtyDays
@@ -142,7 +142,7 @@ const FailedTransmissions = props => {
                                         subtitle="in the last 30 days"
                                     />
                                 </Cell>
-                                <Cell span={[12, 12, 4]} skip={[0, 0, 2]}>
+                                <Cell span={[12, 4, 4]} skip={[0, 2, 2]}>
                                 <DataCircle
                                     value={failedTransmissions.oneDay}
                                     color={styles.orange}
@@ -348,22 +348,22 @@ const Stats = props => {
             <div>
                 {generalStats === null ?
                     <InPlaceGifSpinner /> :
-                    <Grid>
-                        <Cell span={[12, 12, 4]}>
+                    <Grid gridColumns={12}>
+                        <Cell span={[12, 4, 4]}>
                             <DataCircle
                                 value={generalStats.deviceGroups}
                                 color={styles.teal}
                                 subtitle="Device Groups"
                             />
                         </Cell>
-                        <Cell span={[12, 12, 4]}>
+                        <Cell span={[12, 4, 4]}>
                             <DataCircle
                                 value={generalStats.devices}
                                 color={styles.lightBlue}
                                 subtitle="Devices"
                             />
                         </Cell>
-                        <Cell span={[12, 12, 4]}>
+                        <Cell span={[12, 4, 4]}>
                             <DataCircle
                                 value={generalStats.temprs}
                                 color={chartStyles.chart04}
@@ -450,6 +450,7 @@ const Dashboard = props => {
         <Grid
             behavior={BEHAVIOR.fluid}
             gridGaps={[32]}
+            gridColumns={[6,6,12]}
         >
             <Cell span={6}>
                 <Transmissions
