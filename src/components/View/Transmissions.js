@@ -58,8 +58,16 @@ const Transmissions = props => {
                     }}
                     renderData={() => (
                             <PaginatedTable
-                                getData={(page, pageSize, filters) => {
-                                    return OopCore.getTransmissions(props.match.params.deviceId, filters);
+                                getData={(page, pageSize) => {
+                                    return OopCore.getTransmissions(props.match.params.deviceId, {
+                                        id,
+                                        page,
+                                        pageSize,
+                                        transmissionUuid,
+                                        messageUuid,
+                                        status,
+                                        success,
+                                    });
                                 }}
                                 mapFunction={(columnName, content) => {
                                     if (columnName === "action") {
