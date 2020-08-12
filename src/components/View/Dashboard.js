@@ -381,6 +381,11 @@ const Dashboard = props => {
     const [devices, setDevices] = useState(null);
     const [transmissionTimeline, setTransmissionTimeline] = useState(null);
 
+    useEffect(() => {
+        document.title = "Dashboard | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const dateFrom = props.dateFrom || {
         id: 1,
         name: "last 24 hours",

@@ -5,7 +5,7 @@ import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
 import oopTheme from "./theme";
 
-import { BrowserRouter, Route, Redirect, withRouter } from "react-router-dom";
+import { BrowserRouter, Route, Redirect, withRouter, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
     BlacklistEntries,
@@ -25,6 +25,7 @@ import {
     Schedule,
     Layers,
     Layer,
+    PageNotFound,
     SideNavigation,
     Site,
     Sites,
@@ -128,27 +129,6 @@ class App extends Component {
         return (
             <BrowserRouter basename={process.env.REACT_APP_BASE_PATH}>
                 <QueryParamProvider ReactRouterRoute={Route}>
-                    <Route
-                        path="/login"
-                        exact
-                        render={props =>
-                            this.getComponent(hasUser, Login, props)
-                        }
-                    />
-                    <Route
-                        path="/forgot-password"
-                        exact
-                        render={props =>
-                            this.getComponent(hasUser, ForgotPassword, props)
-                        }
-                    />
-                    <Route
-                        path="/reset-password"
-                        exact
-                        render={props =>
-                            this.getComponent(hasUser, ResetPassword, props)
-                        }
-                    />
                     {hasUser && (
                         <this.HeaderWithRouter
                             user={this.state.user}
@@ -159,174 +139,203 @@ class App extends Component {
                     {hasUser && (
                         <this.SideNavigationWithRouter site={this.state.site} />
                     )}
-                    <Route
-                        path="/"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Dashboard, {
-                                ...props,
-                                site: this.state.site,
-                                selectSite: this.selectSite,
-                                dateFrom: this.state.timeRange,
-                                setDateFrom: this.selectTimeRange,
-                            })
-                        }
-                    />
-                    <Route
-                        path="/devices"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Devices, {
-                                ...props,
-                                site: this.state.site,
-                                selectSite: this.selectSite,
-                            })
-                        }
-                    />
-                    <Route
-                        path="/devices/:deviceId"
-                        exact
-                        render={props =>
-                            this.getComponent(
-                                !hasUser,
-                                props.match.params.deviceId === "new"
-                                    ? Device
-                                    : DeviceDashboard,
-                                props,
-                            )
-                        }
-                    />
-                    <Route
-                        path="/devices/:deviceId/edit"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Device, props)
-                        }
-                    />
-                    <Route
-                        path="/devices/:deviceId/transmissions"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Transmissions, props)
-                        }
-                    />
-                    <Route
-                        path="/devices/:deviceId/transmissions/:transmissionId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Transmission, props)
-                        }
-                    />
-                    <Route
-                        path="/device-groups"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, DeviceGroups, props)
-                        }
-                    />
-                    <Route
-                        path="/device-groups/:deviceGroupId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, DeviceGroup, props)
-                        }
-                    />
-                    <Route
-                        path="/temprs"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Temprs, props)
-                        }
-                    />
-                    <Route
-                        path="/schedules"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Schedules, props)
-                        }
-                    />
-                    <Route
-                        path="/schedules/:scheduleId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Schedule, props)
-                        }
-                    />
-                    <Route
-                        path="/layers"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Layers, props)
-                        }
-                    />
-                    <Route
-                        path="/layers/:layerId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Layer, props)
-                        }
-                    />
-                    <Route
-                        path="/blacklist-entries"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, BlacklistEntries, props)
-                        }
-                    />
-                    <Route
-                        path="/blacklist-entries/:blacklistEntryId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, BlacklistEntry, props)
-                        }
-                    />
-                    <Route
-                        path="/temprs/:temprId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Tempr, props)
-                        }
-                    />
-                    <Route
-                        path="/users"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Users, props)
-                        }
-                    />
-                    <Route
-                        path="/users/:userId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, User, props)
-                        }
-                    />
-                    <Route
-                        path="/profile"
-                        exact
-                        render={props => {
-                            const user = this.state.user;
+                    <Switch>
+                        <Route
+                            path="/login"
+                            exact
+                            render={props =>
+                                this.getComponent(hasUser, Login, props)
+                            }
+                        />
+                        <Route
+                            path="/forgot-password"
+                            exact
+                            render={props =>
+                                this.getComponent(hasUser, ForgotPassword, props)
+                            }
+                        />
+                        <Route
+                            path="/reset-password"
+                            exact
+                            render={props =>
+                                this.getComponent(hasUser, ResetPassword, props)
+                            }
+                        />
+                        <Route
+                            path="/"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Dashboard, {
+                                    ...props,
+                                    site: this.state.site,
+                                    selectSite: this.selectSite,
+                                    dateFrom: this.state.timeRange,
+                                    setDateFrom: this.selectTimeRange,
+                                })
+                            }
+                        />
+                        <Route
+                            path="/devices"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Devices, {
+                                    ...props,
+                                    site: this.state.site,
+                                    selectSite: this.selectSite,
+                                })
+                            }
+                        />
+                        <Route
+                            path="/devices/:deviceId"
+                            exact
+                            render={props =>
+                                this.getComponent(
+                                    !hasUser,
+                                    props.match.params.deviceId === "new"
+                                        ? Device
+                                        : DeviceDashboard,
+                                    props,
+                                )
+                            }
+                        />
+                        <Route
+                            path="/devices/:deviceId/edit"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Device, props)
+                            }
+                        />
+                        <Route
+                            path="/devices/:deviceId/transmissions"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Transmissions, props)
+                            }
+                        />
+                        <Route
+                            path="/devices/:deviceId/transmissions/:transmissionId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Transmission, props)
+                            }
+                        />
+                        <Route
+                            path="/device-groups"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, DeviceGroups, props)
+                            }
+                        />
+                        <Route
+                            path="/device-groups/:deviceGroupId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, DeviceGroup, props)
+                            }
+                        />
+                        <Route
+                            path="/temprs"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Temprs, props)
+                            }
+                        />
+                        <Route
+                            path="/schedules"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Schedules, props)
+                            }
+                        />
+                        <Route
+                            path="/schedules/:scheduleId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Schedule, props)
+                            }
+                        />
+                        <Route
+                            path="/layers"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Layers, props)
+                            }
+                        />
+                        <Route
+                            path="/layers/:layerId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Layer, props)
+                            }
+                        />
+                        <Route
+                            path="/blacklist-entries"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, BlacklistEntries, props)
+                            }
+                        />
+                        <Route
+                            path="/blacklist-entries/:blacklistEntryId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, BlacklistEntry, props)
+                            }
+                        />
+                        <Route
+                            path="/temprs/:temprId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Tempr, props)
+                            }
+                        />
+                        <Route
+                            path="/users"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Users, props)
+                            }
+                        />
+                        <Route
+                            path="/users/:userId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, User, props)
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            exact
+                            render={props => {
+                                const user = this.state.user;
 
-                            return this.getComponent(!hasUser, Profile, {
-                                ...props,
-                                user,
-                            });
-                        }}
-                    />
-                    <Route
-                        path="/sites"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Sites, props)
-                        }
-                    />
-                    <Route
-                        path="/sites/:siteId"
-                        exact
-                        render={props =>
-                            this.getComponent(!hasUser, Site, props)
-                        }
-                    />
+                                return this.getComponent(!hasUser, Profile, {
+                                    ...props,
+                                    user,
+                                });
+                            }}
+                        />
+                        <Route
+                            path="/sites"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Sites, props)
+                            }
+                        />
+                        <Route
+                            path="/sites/:siteId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Site, props)
+                            }
+                        />
+                        <Route
+                            exact
+                            render={props => 
+                                this.getComponent(!hasUser, PageNotFound, props)
+                            }
+                        />
+                    </Switch>
                 </QueryParamProvider>
             </BrowserRouter>
         );
