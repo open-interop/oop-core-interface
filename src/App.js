@@ -330,7 +330,6 @@ class App extends Component {
                             }
                         />
                         <Route
-                            exact
                             render={props => 
                                 this.getComponent(!hasUser, PageNotFound, props)
                             }

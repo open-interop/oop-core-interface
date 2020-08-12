@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Error, LineWrapper, MaxCard } from "../Universal";
+import { Error, MaxCard } from "../Universal";
 
 import { useStyletron } from "baseui";
 import { StyledTitle } from "baseui/card";
