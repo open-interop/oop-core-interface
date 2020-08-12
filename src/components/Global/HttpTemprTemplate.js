@@ -53,7 +53,7 @@ const HttpTemprTemplate = memo(props => {
                 label={"Protocol"}
                 value={props.template.protocol}
                 onChange={val => setValue("protocol", val)}
-                basic={({ language, script }) => {
+                text={({ language, script }) => {
                     return (
                         <Select
                             options={protocolOptions}
@@ -62,10 +62,10 @@ const HttpTemprTemplate = memo(props => {
                             searchable={false}
                             clearable={false}
                             onChange={event => {
-                                setValue("protocol", event.option.id);
+                                setValue("protocol", { language, "script": event.option.id});
                             }}
                             value={[protocolOptions.find(
-                                item => item.id === script,
+                                item => item.id === (props.template.protocol && props.template.protocol.script),
                             ) || "http"]}
                             error={props.error}
                         />
