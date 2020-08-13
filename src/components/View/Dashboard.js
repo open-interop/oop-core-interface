@@ -228,7 +228,14 @@ const Transmissions = props => {
                             }}
                             options={{
                                 scales: {
-                                    yAxes: [{ stacked: true }],
+                                    yAxes: [
+                                        {
+                                            stacked: true,
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }
+                                    ],
                                     xAxes: [{ stacked: true }],
                                 },
                                 tooltips: {
