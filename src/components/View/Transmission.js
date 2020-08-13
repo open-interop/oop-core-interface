@@ -3,22 +3,18 @@ import AceEditor from "react-ace";
 
 import "brace/ext/searchbox";
 
-import moment from "moment";
-
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 
-import parseISO from "date-fns/parseISO";
 
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Card, StyledBody } from "baseui/card";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
-import { StatefulTooltip } from "baseui/tooltip";
 
 import JSONPretty from "react-json-pretty";
 
-import { DataProvider, Modal, Page } from "../Universal";
+import { DataProvider, Modal, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmission = props => {
@@ -38,19 +34,6 @@ const Transmission = props => {
         0,
         props.location.pathname.lastIndexOf("/"),
     );
-
-    const formatISODate = date => {
-        const d = new Date();
-        const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'short'});
-        const timezone = " " + dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value;
-
-        if (date) {
-            const date_obj = parseISO(date);
-            return moment(date_obj).format('YYYY-MM-DD HH:mm:ss') + timezone;
-        } else {
-            return null;
-        }
-    };
 
     const itemProps = {
         height: "scale1000",
@@ -219,59 +202,10 @@ const Transmission = props => {
                             <ListItem>
                                 <div className="card-label">
                                     <ListItemLabel description="Transmitted at">
-                                        <StatefulTooltip
-                                            accessibilityType={"tooltip"}
-                                            content={
-                                                transmission.transmittedAt || ""
-                                            }
-                                            showArrow={true}
-                                            placement="right"
-                                            overrides={{
-                                                Body: {
-                                                    style: ({ $theme }) => ({
-                                                        backgroundColor:
-                                                            $theme.colors.black,
-                                                        borderTopLeftRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                        borderTopRightRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                        borderBottomRightRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                        borderBottomLeftRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                    }),
-                                                },
-                                                Inner: {
-                                                    style: ({ $theme }) => ({
-                                                        backgroundColor:
-                                                            $theme.colors.black,
-                                                        borderTopLeftRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                        borderTopRightRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                        borderBottomRightRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                        borderBottomLeftRadius:
-                                                            $theme.borders
-                                                                .radius200,
-                                                        color:
-                                                            $theme.colors.white,
-                                                        fontSize: "14px",
-                                                    }),
-                                                },
-                                            }}
+                                        <DatetimeTooltip 
+                                            time={transmission.transmittedAt}
                                         >
-                                            {formatISODate(
-                                                transmission.transmittedAt,
-                                            ) || "No data available"}
-                                        </StatefulTooltip>
+                                        </DatetimeTooltip>
                                     </ListItemLabel>
                                 </div>
                             </ListItem>
