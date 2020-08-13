@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
+import { StatefulTooltip } from "baseui/tooltip";
+
+import parseISO from "date-fns/parseISO";
+
+import moment from "moment";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCircle,
@@ -24,6 +30,19 @@ const Waiting = props => {
             <InPlaceGifSpinner />
         </MaxCard>
     );
+};
+
+const formatISODate = date => {
+    const d = new Date();
+    const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'short'});
+    const timezone = " " + dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value;
+
+    if (date) {
+        const date_obj = parseISO(date);
+        return moment(date_obj).format('YYYY-MM-DD HH:mm:ss') + timezone;
+    } else {
+        return null;
+    }
 };
 
 const StatusIndicator = props => {
@@ -205,6 +224,63 @@ const DeviceTransmissions = props => {
                                 }
                             />
                         );
+                    }
+                    if (columnName === "transmittedAt") {
+                        return (
+                            <StatefulTooltip
+                                accessibilityType={"tooltip"}
+                                content={
+                                    content || ""
+                                }
+                                showArrow={true}
+                                placement="right"
+                                overrides={{
+                                    Body: {
+                                        style: ({ $theme }) => ({
+                                            backgroundColor:
+                                                $theme.colors.black,
+                                            borderTopLeftRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                            borderTopRightRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                            borderBottomRightRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                            borderBottomLeftRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                        }),
+                                    },
+                                    Inner: {
+                                        style: ({ $theme }) => ({
+                                            backgroundColor:
+                                                $theme.colors.black,
+                                            borderTopLeftRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                            borderTopRightRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                            borderBottomRightRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                            borderBottomLeftRadius:
+                                                $theme.borders
+                                                    .radius200,
+                                            color:
+                                                $theme.colors.white,
+                                            fontSize: "14px",
+                                        }),
+                                    },
+                                }}
+                            >
+                                {formatISODate(
+                                    content,
+                                ) || "No data available"}
+                            </StatefulTooltip>
+                            );
                     }
                     return content;
                 }}

@@ -3,6 +3,8 @@ import AceEditor from "react-ace";
 
 import "brace/ext/searchbox";
 
+import moment from "moment";
+
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 
@@ -38,9 +40,13 @@ const Transmission = props => {
     );
 
     const formatISODate = date => {
+        const d = new Date();
+        const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'short'});
+        const timezone = " " + dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value;
+
         if (date) {
-            var date_obj = parseISO(date);
-            return date_obj.toString();
+            const date_obj = parseISO(date);
+            return moment(date_obj).format('YYYY-MM-DD HH:mm:ss') + timezone;
         } else {
             return null;
         }
@@ -221,12 +227,6 @@ const Transmission = props => {
                                             showArrow={true}
                                             placement="right"
                                             overrides={{
-                                                Arrow: {
-                                                    style: ({ $theme }) => ({
-                                                        backgroundColor:
-                                                            $theme.colors.black,
-                                                    }),
-                                                },
                                                 Body: {
                                                     style: ({ $theme }) => ({
                                                         backgroundColor:
