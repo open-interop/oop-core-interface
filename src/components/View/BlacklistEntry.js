@@ -22,7 +22,6 @@ const BlacklistEntry = props => {
     const getBlacklistEntry = () => {
         return blankBlacklistEntry
             ? Promise.resolve({
-                  id: "",
                   ipLiteral: "",
                   ipRange: "",
                   pathLiteral: "",
