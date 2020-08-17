@@ -228,7 +228,14 @@ const Transmissions = props => {
                             }}
                             options={{
                                 scales: {
-                                    yAxes: [{ stacked: true }],
+                                    yAxes: [
+                                        {
+                                            stacked: true,
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }
+                                    ],
                                     xAxes: [{ stacked: true }],
                                 },
                                 tooltips: {
@@ -380,6 +387,11 @@ const Stats = props => {
 const Dashboard = props => {
     const [devices, setDevices] = useState(null);
     const [transmissionTimeline, setTransmissionTimeline] = useState(null);
+
+    useEffect(() => {
+        document.title = "Dashboard | Open Interop";
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const dateFrom = props.dateFrom || {
         id: 1,
