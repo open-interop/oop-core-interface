@@ -17,7 +17,7 @@ const BlacklistEntries = memo(props => {
             actions={
                     <Button
                         $as={Link}
-                        to={`/blacklist-entry/new`}
+                        to={"/blacklist-entries/new"}
                         kind={KIND.minimal}
                         aria-label="Create new Blacklist Entry"
                         endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
