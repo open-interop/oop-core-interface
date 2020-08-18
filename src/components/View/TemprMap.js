@@ -123,6 +123,8 @@ const TemprMap = props => {
 				        	`digraph {
 				       			${Object.values(nodes).join('\n')}
 				       			${paths.join('\n')}
+				       			splines=ortho
+				       			nodesep=1
 							}`
 						}
 						options={{
