@@ -6,7 +6,7 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-import { PaginatedTable, Page } from "../Universal";
+import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Users = memo(props => {
@@ -44,9 +44,13 @@ const Users = memo(props => {
                                 </Button>
                             </>
                         );
-                    } else {
-                        return content;
                     }
+                    if (columnName === "createdAt" || columnName === "updatedAt") {
+                        return (
+                            <DatetimeTooltip time={content}></DatetimeTooltip>
+                        );
+                    }
+                    return content;
                 }}
                 columns={[
                     {
