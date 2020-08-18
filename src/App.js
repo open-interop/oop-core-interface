@@ -31,6 +31,7 @@ import {
     Sites,
     Tempr,
     Temprs,
+    TemprMap,
     Transmission,
     Transmissions,
     User,
@@ -238,6 +239,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Temprs, props)
+                            }
+                        />
+                        <Route
+                            path="/temprs/:temprId/map"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, TemprMap, props)
                             }
                         />
                         <Route

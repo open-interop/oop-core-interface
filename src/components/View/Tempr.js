@@ -1,4 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -346,6 +347,15 @@ const Tempr = props => {
             backlink={allTemprsPath}
             actions={
                 <>
+                    {blankTempr ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/map`}
+                            aria-label={"Tempr Map"}
+                        >
+                            View Map
+                        </Button>
+                    )}
                     {blankTempr ? null : (
                         <ConfirmModal
                             buttonText="Delete"
