@@ -59,6 +59,7 @@ const Table = memo(props => {
                                         StyledCell,
                                         {
                                             maxWidth: column.width,
+                                            flex: `0 0 ${column.width}`,
                                         },
                                     );
 
