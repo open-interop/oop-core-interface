@@ -201,6 +201,11 @@ const SideNavigation = props => {
                     pathName="Layers"
                     isActive={pathIncludes("/layers")}
                 />
+                <NavigationItem
+                    path="/blacklist-entries"
+                    pathName="Blacklist"
+                    isActive={pathIncludes("/blacklist-entries")}
+                />
             </NavigationGroup>
             <div className="filler" />
         </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
 import { useQueryParam, StringParam } from "use-query-params";
 
@@ -10,7 +11,7 @@ import {
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { DataProvider, PaginatedTable, Page } from "../Universal";
+import { DataProvider, PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
@@ -58,16 +59,8 @@ const Transmissions = props => {
                     }}
                     renderData={() => (
                             <PaginatedTable
-                                getData={(page, pageSize) => {
-                                    return OopCore.getTransmissions(props.match.params.deviceId, {
-                                        id,
-                                        page,
-                                        pageSize,
-                                        transmissionUuid,
-                                        messageUuid,
-                                        status,
-                                        success,
-                                    });
+                                getData={(page, pageSize, filters) => {
+                                    return OopCore.getTransmissions(props.match.params.deviceId, filters);
                                 }}
                                 mapFunction={(columnName, content) => {
                                     if (columnName === "action") {
@@ -88,6 +81,12 @@ const Transmissions = props => {
                                             <FontAwesomeIcon icon={faCheck} />
                                         ) : (
                                             <FontAwesomeIcon icon={faTimes} />
+                                        );
+                                    }
+
+                                    if (columnName === "transmittedAt") {
+                                        return (
+                                            <DatetimeTooltip time={content}></DatetimeTooltip>
                                         );
                                     }
                                     return content;

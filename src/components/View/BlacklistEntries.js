@@ -9,17 +9,17 @@ import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
-const Users = memo(props => {
+const BlacklistEntries = memo(props => {
     return (
         <Page
-            title="Users | Settings | Open Interop"
-            heading="Users"
+            title="Blacklist Entries | Settings | Open Interop"
+            heading="Blacklist Entries"
             actions={
                     <Button
                         $as={Link}
-                        to={`/users/new`}
+                        to={"/blacklist-entries/new"}
                         kind={KIND.minimal}
-                        aria-label="Create new user"
+                        aria-label="Create new Blacklist Entry"
                         endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
                     >
                         New
@@ -27,16 +27,16 @@ const Users = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => OopCore.getUsers({ page, pageSize, ...filters })}
-                mapFunction={(columnName, content) => {
+                getData={(page, pageSize, filters) => OopCore.getBlacklistEntries({ page, pageSize, ...filters })}
+                mapFunction={(columnName, content, row) => {
                     if (columnName === "action") {
                         return (
                             <>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={`/users/${content}`}
-                                    aria-label="Edit user"
+                                    to={`/blacklist-entries/${content}`}
+                                    aria-label="Edit Blacklist Entry"
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
@@ -44,13 +44,34 @@ const Users = memo(props => {
                                 </Button>
                             </>
                         );
-                    }
-                    if (columnName === "createdAt" || columnName === "updatedAt") {
+                    } else if (columnName === "entry") {
+                        const { ipLiteral, ipRange, pathLiteral, pathRegex, headers } = row;
+                        const parts = [];
+
+                        if (ipLiteral) {
+                            parts.push(`IP = ${ipLiteral}`);
+                        }
+                        if (ipRange) {
+                            parts.push(`IP in ${ipRange}`);
+                        }
+                        if (pathLiteral) {
+                            parts.push(`Path = ${pathLiteral}`);
+                        }
+                        if (pathRegex) {
+                            parts.push(`Path matches ${pathRegex}`);
+                        }
+                        if (headers) {
+                            parts.push(`Headers contain ${Object.entries(headers).map(([k, v]) => `${k}: ${v}`)}`);
+                        }
+
+                        return parts.join(" and ");
+                    } else if (columnName == "createdAt" || columnName === "updatedAt") {
                         return (
                             <DatetimeTooltip time={content}></DatetimeTooltip>
                         );
+                    }else {
+                        return content;
                     }
-                    return content;
                 }}
                 columns={[
                     {
@@ -60,12 +81,7 @@ const Users = memo(props => {
                         hasFilter: true,
                         width: "50px",
                     },
-                    {
-                        id: "email",
-                        name: "Email",
-                        type: "text",
-                        hasFilter: true,
-                    },
+                    { id: "entry", name: "Entry", width: "50%" },
                     { id: "createdAt", name: "Created At" },
                     { id: "updatedAt", name: "Updated At" },
                     { id: "action", name: "", width: "50px" },
@@ -81,4 +97,5 @@ const Users = memo(props => {
     );
 });
 
-export { Users };
+export { BlacklistEntries };
+

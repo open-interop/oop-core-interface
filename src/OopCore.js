@@ -493,6 +493,7 @@ class OopCore extends EventEmitter {
             case "gt":
                 return `filter[transmitted_at[${key}]]`;
             case "siteId":
+            case "deviceId":
                 return `filter[${key}]`;
             case "field":
             case "direction":
@@ -508,9 +509,9 @@ class OopCore extends EventEmitter {
         Object.keys(filters)
             .filter(key => filters[key] !== undefined)
             .forEach(key => {
-                return (formattedFilters[
+                formattedFilters[
                     this.mapStatsParams(key)
-                ] = this.toSnakeCase(filters[key]));
+                ] = this.toSnakeCase(filters[key]);
             });
 
         var parameters = queryString.stringify(
@@ -579,6 +580,40 @@ class OopCore extends EventEmitter {
     deleteScheduleTempr(id, data) {
         return this.makeRequest(
             uri`/schedule_temprs/${id}?tempr_id=${data.temprId}&schedule_id=${data.scheduleId}`,
+            RequestType.DELETE,
+        );
+    }
+
+    getBlacklistEntries(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/blacklist_entries`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getBlacklistEntry(id) {
+        return this.makeRequest(uri`/blacklist_entries/${id}`);
+    }
+
+    createBlacklistEntry(data) {
+        const payload = { blacklistEntry: data };
+        return this.makeRequest(`/blacklist_entries`, RequestType.POST, payload);
+    }
+
+    updateBlacklistEntry(id, blacklistEntry) {
+        return this.makeRequest(
+            uri`/blacklist_entries/${id}`,
+            RequestType.PUT,
+            { blacklistEntry },
+        );
+    }
+
+    deleteBlacklistEntry(id) {
+        return this.makeRequest(
+            uri`/blacklist_entries/${id}`,
             RequestType.DELETE,
         );
     }

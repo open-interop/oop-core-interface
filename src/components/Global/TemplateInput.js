@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import AceEditor from "react-ace";
 
+import 'brace/ext/searchbox';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpandArrowsAlt, faCompressArrowsAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -75,9 +77,10 @@ const TemplateInput = props => {
                             props.onChange({ language: language, script: value });
                         }}
                         style={{ flex: 1 }}
-                        height={fullScreen ? "500px" : ""}
                         editorProps={{ $blockScrolling: true }}
                         value={String(script)}
+                        maxLines={fullScreen ? Infinity : 8}
+                        minLines={4}
                     />
                     <Button
                         kind={KIND.tertiary}
@@ -109,6 +112,15 @@ const TemplateInput = props => {
                         value={[{ value: language }]}
                         onChange={selected => {
                             props.onChange({ language: selected.option.value, script: script });
+                        }}
+                        overrides={{
+                            DropdownContainer: {
+                              style: () => {
+                                return {
+                                  width: "auto !important",
+                                };
+                              }
+                            }
                         }}
                     />
                 </Cell>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCircle,
@@ -10,7 +11,7 @@ import {
     faEdit,
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { Table, Page, MaxCard, InPlaceGifSpinner } from "../Universal";
+import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { Chart, Pie } from "react-chartjs-2";
@@ -204,6 +205,11 @@ const DeviceTransmissions = props => {
                                     faTimes
                                 }
                             />
+                        );
+                    }
+                    if (columnName === "transmittedAt") {
+                        return (
+                            <DatetimeTooltip time={content}></DatetimeTooltip>
                         );
                     }
                     return content;
@@ -400,14 +406,14 @@ const DeviceDashboard = props => {
                 </Button>
             }
         >
-            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} >
+            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,12]} >
                 <Cell span={5}>
                     <DeviceDetails device={device} />
                 </Cell>
-                <Cell span={7}>
+                <Cell span={[5,5,7]}>
                     <DeviceLocation device={device} />
                 </Cell>
-                <Cell span={7}>
+                <Cell span={[5,5,7]}>
                     <DeviceTransmissions device={device} />
                 </Cell>
                 <Cell span={5}>

@@ -27,6 +27,7 @@ const TemprModal = props => {
                     style: () => ({ position: "fixed", zIndex: "200" })
                 }
             }}
+            shouldCloseOnOverlayClick={false}
             onClose={props.onClose}
             closeable
             isOpen={true}
@@ -36,10 +37,10 @@ const TemprModal = props => {
             role={ROLE.dialog}
         >
             <HeadingLevel>
-                <Grid behavior={BEHAVIOR.fluid}>
+                <Grid behavior={BEHAVIOR.fluid} gridColumns={[6,6,12]}>
                     <Cell span={6}>
                         <Heading>Transmission</Heading>
-                        <div style={{ height: "548px", overflowY: "auto" }} >
+                        <div style={{ height: "100%", overflowY: "visible" }} >
                             <TemprPreview
                                 value={props.exampleTransmission}
                                 setValue={props.setExampleTransmission}
@@ -48,7 +49,7 @@ const TemprModal = props => {
                     </Cell>
                     <Cell span={6}>
                         <Heading>Template</Heading>
-                        <div style={{ height: "548px", overflowY: "auto" }} >
+                        <div style={{ height: "100%", overflowY: "visible" }} >
                             <HttpTemprTemplate
                                 template={props.template}
                                 updateTemplate={props.setTemplate}
