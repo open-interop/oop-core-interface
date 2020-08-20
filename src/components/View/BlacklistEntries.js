@@ -6,7 +6,7 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-import { PaginatedTable, Page } from "../Universal";
+import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const BlacklistEntries = memo(props => {
@@ -17,7 +17,7 @@ const BlacklistEntries = memo(props => {
             actions={
                     <Button
                         $as={Link}
-                        to={`/blacklist-entry/new`}
+                        to={"/blacklist-entries/new"}
                         kind={KIND.minimal}
                         aria-label="Create new Blacklist Entry"
                         endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
@@ -65,7 +65,11 @@ const BlacklistEntries = memo(props => {
                         }
 
                         return parts.join(" and ");
-                    } else {
+                    } else if (columnName == "createdAt" || columnName === "updatedAt") {
+                        return (
+                            <DatetimeTooltip time={content}></DatetimeTooltip>
+                        );
+                    }else {
                         return content;
                     }
                 }}
@@ -77,7 +81,7 @@ const BlacklistEntries = memo(props => {
                         hasFilter: true,
                         width: "50px",
                     },
-                    { id: "entry", name: "Entry", },
+                    { id: "entry", name: "Entry", width: "50%" },
                     { id: "createdAt", name: "Created At" },
                     { id: "updatedAt", name: "Updated At" },
                     { id: "action", name: "", width: "50px" },

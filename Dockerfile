@@ -7,7 +7,6 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
-COPY .env ./
 COPY src src
 COPY public public
 COPY nginx nginx

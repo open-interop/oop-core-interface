@@ -4,7 +4,7 @@
   "license": "AGPL-3.0",
   "author": "Sara Graves <sara.graves@bluefrontier.co.uk>, Daniel Young <daniel.young@bluefrontier.co.uk>, Jack Regnart <jack.regnart@bluefrontier.co.uk>",
   "private": false,
-  "homepage": ".",
+  "homepage": "/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.24",
     "@fortawesome/free-solid-svg-icons": "^5.11.1",
