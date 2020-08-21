@@ -108,182 +108,191 @@ const Transmission = props => {
                     });
                 }}
                 renderData={() => (
-                    <FlexGrid
-                        flexGridColumnCount={[1, 2]}
-                        flexGridColumnGap="scale400"
-                        flexGridRowGap="scale1000"
-                    >
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Transmission UUID">
-                                        {transmission.transmissionUuid ||
-                                            "No data available"}
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Message UUID">
-                                        {transmission.messageUuid ||
-                                            "No data available"}
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Device ID">
-                                        {transmission.deviceId ||
-                                            "No data available"}
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Tempr ID">
-                                        {transmission.temprId ||
-                                            "No data available"}
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Device Name">
-                                        {device ? (
-                                            <a
-                                                href={`/devices/${transmission.deviceId}`}
-                                            >
-                                                {device.name}
-                                            </a>
-                                        ) : (
-                                            "No data available"
-                                        )}
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Tempr Name">
-                                        {tempr ? (
-                                            <a
-                                                href={`/temprs/${transmission.temprId}`}
-                                            >
-                                                {tempr.name}
-                                            </a>
-                                        ) : (
-                                            "No data available"
-                                        )}
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Status">
-                                        {transmission.success
-                                            ? "Successful"
-                                            : "Failed"}
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        <FlexGridItem {...itemProps}>
-                            <ListItem>
-                                <div className="card-label">
-                                    <ListItemLabel description="Transmitted at">
-                                        <DatetimeTooltip 
-                                            time={transmission.transmittedAt}
-                                        >
-                                        </DatetimeTooltip>
-                                    </ListItemLabel>
-                                </div>
-                            </ListItem>
-                        </FlexGridItem>
-                        {requestBody && (
+                    <>
+                        <FlexGrid
+                            flexGridColumnCount={[1, 2]}
+                            flexGridColumnGap="scale400"
+                            flexGridRowGap="scale1000"
+                        >
                             <FlexGridItem {...itemProps}>
-                                <Button
-                                    kind={KIND.secondary}
-                                    onClick={() => setShowRequest(!showRequest)}
-                                >
-                                    {showRequest
-                                        ? "Hide request body"
-                                        : "View request body"}
-                                </Button>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Transmission UUID">
+                                            {transmission.transmissionUuid ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
                             </FlexGridItem>
-                        )}
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Message UUID">
+                                            {transmission.messageUuid ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Device ID">
+                                            {transmission.deviceId ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Tempr ID">
+                                            {transmission.temprId ||
+                                                "No data available"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Device Name">
+                                            {device ? (
+                                                <a
+                                                    href={`/devices/${transmission.deviceId}`}
+                                                >
+                                                    {device.name}
+                                                </a>
+                                            ) : (
+                                                "No data available"
+                                            )}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Tempr Name">
+                                            {tempr ? (
+                                                <a
+                                                    href={`/temprs/${transmission.temprId}`}
+                                                >
+                                                    {tempr.name}
+                                                </a>
+                                            ) : (
+                                                "No data available"
+                                            )}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Status">
+                                            {transmission.success
+                                                ? "Successful"
+                                                : "Failed"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Transmitted at">
+                                            <DatetimeTooltip
+                                                time={transmission.transmittedAt}
+                                            >
+                                            </DatetimeTooltip>
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            {requestBody && (
+                                <FlexGridItem {...itemProps}>
+                                    <Button
+                                        kind={KIND.secondary}
+                                        onClick={() => setShowRequest(!showRequest)}
+                                    >
+                                        {showRequest
+                                            ? "Hide request body"
+                                            : "View request body"}
+                                    </Button>
+                                </FlexGridItem>
+                            )}
 
-                        {responseBody && (
-                            <FlexGridItem {...itemProps}>
-                                <Button
-                                    kind={KIND.secondary}
-                                    onClick={() =>
-                                        setShowResponse(!showResponse)
-                                    }
-                                >
-                                    {showResponse
-                                        ? "Hide response body"
-                                        : "View response body"}
-                                </Button>
+                            {responseBody && (
+                                <FlexGridItem {...itemProps}>
+                                    <Button
+                                        kind={KIND.secondary}
+                                        onClick={() =>
+                                            setShowResponse(!showResponse)
+                                        }
+                                    >
+                                        {showResponse
+                                            ? "Hide response body"
+                                            : "View response body"}
+                                    </Button>
+                                </FlexGridItem>
+                            )}
+                        </FlexGrid>
+                        <br></br>
+                        <FlexGrid flexGridRowGap="scale1000">
+                            <FlexGridItem>
+                                {showRequest && (
+                                    <>
+                                    <h2>Request Body</h2>
+                                        <AceEditor
+                                            placeholder=""
+                                            mode="json"
+                                            theme="monokai"
+                                            name="requestAce"
+                                            fontSize={14}
+                                            readOnly={true}
+                                            highlightActiveLine={true}
+                                            maxLines={25}
+                                            minLines={Math.max(
+                                                requestBody.split(
+                                                    /\r\n|\r|\n/,
+                                                ).length + 2,
+                                                8,
+                                            )}
+                                            value={requestBody}
+                                            style={{ width: "100%" }}
+                                        />
+                                    </>
+                                )}
                             </FlexGridItem>
-                        )}
-                        <FlexGridItem>
-                            {showRequest && (
-                                <AceEditor
-                                    placeholder=""
-                                    mode="json"
-                                    theme="monokai"
-                                    name="requestAce"
-                                    fontSize={14}
-                                    readOnly={true}
-                                    showGutter={true}
-                                    highlightActiveLine={true}
-                                    maxLines={Infinity}
-                                    minLines={Math.max(
-                                        requestBody.split(
-                                            /\r\n|\r|\n/,
-                                        ).length + 2,
-                                        8,
-                                    )}
-                                    value={requestBody}
-                                    style={{ width: "80%" }}
-                                />
-                            )}
-                        </FlexGridItem>
-                        <FlexGridItem>
-                            {showResponse && (
-                                <AceEditor
-                                    placeholder=""
-                                    mode="json"
-                                    theme="monokai"
-                                    name="responseAce"
-                                    fontSize={14}
-                                    readOnly={true}
-                                    showGutter={true}
-                                    highlightActiveLine={true}
-                                    maxLines={Infinity}
-                                    minLines={Math.max(
-                                        responseBody.split(
-                                            /\r\n|\r|\n/,
-                                        ).length + 2,
-                                        8,
-                                    )}
-                                    value={responseBody}
-                                    style={{ width: "80%" }}
-                                />
-                            )}
-                        </FlexGridItem>
-                    </FlexGrid>
+                            <FlexGridItem>
+                                {showResponse && (
+                                    <>
+                                        <h2>Response Body</h2>
+                                        <AceEditor
+                                            placeholder=""
+                                            mode="json"
+                                            theme="monokai"
+                                            name="responseAce"
+                                            fontSize={14}
+                                            readOnly={true}
+                                            highlightActiveLine={true}
+                                            maxLines={25}
+                                            minLines={Math.max(
+                                                responseBody.split(
+                                                    /\r\n|\r|\n/,
+                                                ).length + 2,
+                                                8,
+                                            )}
+                                            value={responseBody}
+                                            style={{ width: "100%" }}
+                                        />
+                                    </>
+                                )}
+                            </FlexGridItem>
+                        </FlexGrid>
+                    </>
                 )}
             />
         </Page>
