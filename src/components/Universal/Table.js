@@ -58,8 +58,9 @@ const Table = memo(props => {
                                     const CustomWidthCell = withStyle(
                                         StyledCell,
                                         {
-                                            maxWidth: column.width,
+                                            maxWidth: '100%',
                                             flex: `0 0 ${column.width}`,
+                                            overflow: 'scroll',
                                         },
                                     );
 
