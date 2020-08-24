@@ -24,12 +24,8 @@ const DeviceGroups = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => {
-                    return OopCore.getDeviceGroups({
-                        page,
-                        pageSize,
-                        ...filters,
-                    });
+                getData={(pagination) => {
+                    return OopCore.getDeviceGroups(pagination);
                 }}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {

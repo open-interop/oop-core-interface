@@ -138,7 +138,7 @@ const Device = props => {
 
         return OopCore.getDeviceTemprs({
             deviceId: props.match.params.deviceId,
-            pageSize: -1,
+            "page[size]": -1,
         })
         .then(deviceTemprs => {
             setRelations(deviceTemprs.data);

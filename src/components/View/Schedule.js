@@ -47,7 +47,7 @@ const Schedule = props => {
             ? Promise.resolve([])
             : OopCore.getScheduleTemprs({
                 scheduleId: props.match.params.scheduleId,
-                pageSize: -1,
+                "page[size]": -1,
             }).then(res => res.data);
     };
 

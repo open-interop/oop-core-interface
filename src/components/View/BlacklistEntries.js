@@ -27,7 +27,7 @@ const BlacklistEntries = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => OopCore.getBlacklistEntries({ page, pageSize, ...filters })}
+                getData={(pagination) => OopCore.getBlacklistEntries(pagination)}
                 mapFunction={(columnName, content, row) => {
                     if (columnName === "action") {
                         return (
