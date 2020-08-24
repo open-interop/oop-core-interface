@@ -54,73 +54,32 @@ const Table = memo(props => {
                             }
                         >
                             {props.columns.map(column => {
-                                if (column.width) {
-                                    const CustomWidthCell = withStyle(
-                                        StyledCell,
-                                        {
-                                            maxWidth: '100%',
-                                            flex: `0 0 ${column.width}`,
-                                            overflow: 'scroll',
-                                        },
-                                    );
-
-                                    return (
-                                        <CustomWidthCell
-                                            key={`table-cell-${index}-${column.id}`}
-                                            className={`${
-                                                column.id === "action"
-                                                    ? "action-column"
-                                                    : ""
-                                            }`}
-                                            onClick={() => {
-                                                if (props.onRowClick) {
-                                                    props.onRowClick(
-                                                        row,
-                                                        column.id,
-                                                    );
-                                                }
-                                            }}
-                                        >
-                                            {props.mapFunction(
-                                                column.id,
-                                                row[
-                                                    props.columnContent
-                                                        ? props.columnContent(
-                                                              column.id,
-                                                          )
-                                                        : column.id
-                                                ],
-                                                row,
-                                            )}
-                                        </CustomWidthCell>
-                                    );
-                                } else {
-                                    return (
-                                        <StyledCell
-                                            key={`table-cell-${index}-${column.id}`}
-                                            onClick={() => {
-                                                if (props.onRowClick) {
-                                                    props.onRowClick(
-                                                        row,
-                                                        column.id,
-                                                    );
-                                                }
-                                            }}
-                                        >
-                                            {props.mapFunction(
-                                                column.id,
-                                                row[
-                                                    props.columnContent
-                                                        ? props.columnContent(
-                                                              column.id,
-                                                          )
-                                                        : column.id
-                                                ],
-                                                row,
-                                            )}
-                                        </StyledCell>
-                                    );
-                                }
+                                return (
+                                    <StyledCell
+                                        $style={column.width ? { flex: `0 0 ${column.width}`, } : {}}
+                                        key={`table-cell-${index}-${column.id}`}
+                                        onClick={() => {
+                                            if (props.onRowClick) {
+                                                props.onRowClick(
+                                                    row,
+                                                    column.id,
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        {props.mapFunction(
+                                            column.id,
+                                            row[
+                                                props.columnContent
+                                                    ? props.columnContent(
+                                                          column.id,
+                                                      )
+                                                    : column.id
+                                            ],
+                                            row,
+                                        )}
+                                    </StyledCell>
+                                );
                             })}
                         </StyledRow>
                     );
