@@ -58,11 +58,11 @@ const getData = (temprId, deviceGroupId) => {
         OopCore.getDeviceGroups(),
         OopCore.getDeviceTemprs({
             temprId: temprId,
-            pageSize: -1,
+            "page[size]": -1,
         }),
         OopCore.getScheduleTemprs({
             temprId: temprId,
-            pageSize: -1,
+            "page[size]": -1,
         }),
     ]);
 };

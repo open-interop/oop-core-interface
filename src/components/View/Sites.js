@@ -27,13 +27,7 @@ const Sites = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) =>
-                    OopCore.getSites({
-                        page,
-                        pageSize,
-                        ...filters
-                    })
-                }
+                getData={(pagination) => OopCore.getSites(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (

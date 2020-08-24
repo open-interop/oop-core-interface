@@ -27,13 +27,7 @@ const Schedules = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => {
-                    return OopCore.getSchedules({
-                        page,
-                        pageSize,
-                        ...filters,
-                    });
-                }}
+                getData={(pagination) => OopCore.getSchedules(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (

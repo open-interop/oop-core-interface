@@ -18,12 +18,10 @@ import {
 
 import OopCore from "../../OopCore";
 
-const getData = (page, pageSize, filters) => {
+const getData = (pagination) => {
     return OopCore.getSchedules({
         //scheduleGroupId: updatedTempr.scheduleGroupId,
-        page,
-        pageSize,
-        ...filters,
+        ...pagination,
     });
 };
 
