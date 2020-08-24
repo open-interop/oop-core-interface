@@ -24,13 +24,7 @@ const Layers = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => {
-                    return OopCore.getLayers({
-                        page,
-                        pageSize,
-                        ...filters,
-                    });
-                }}
+                getData={(pagination) => OopCore.getLayers(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (

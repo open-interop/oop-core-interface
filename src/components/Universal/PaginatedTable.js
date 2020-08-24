@@ -11,11 +11,18 @@ const PaginatedTable = withRouter(props => {
 
     const [page, setPage] = useQueryParam(`${props.prefix || ""}page`, NumberParam);
     const [pageSize, setPageSize] = useQueryParam(`${props.prefix || ""}pageSize`, NumberParam);
-    const [filters, setFilters] = useQueryParam(`${props.prefix || ""}filters`, ObjectParam);
+    const [filters, setFilters] = useQueryParam(`${props.prefix || ""}filter`, ObjectParam);
 
     useEffect(() => {
         setLoading(true);
-        props.getData(page, pageSize, filters || {})
+        const args = {
+            page: {
+                number: page,
+                size: pageSize,
+            },
+            filter: { ...(filters || {}) },
+        };
+        props.getData(args)
             .then(d => {
                 setData(d);
                 setLoading(false);

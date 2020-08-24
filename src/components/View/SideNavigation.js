@@ -47,8 +47,8 @@ const SideNavigation = props => {
             );
         } else {
             return Promise.all([
-                OopCore.getDevices({ pageSize: -1 }),
-                OopCore.getDeviceGroups({ pageSize: -1 }),
+                OopCore.getDevices({ "page[size]": -1 }),
+                OopCore.getDeviceGroups({ "page[size]": -1 }),
             ]).then(([devices, deviceGroups]) =>
                 createDevicesAccordion(deviceGroups.data, devices.data),
             );
