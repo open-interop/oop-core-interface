@@ -239,7 +239,6 @@ const Transmission = props => {
                                 </FlexGridItem>
                             )}
                         </FlexGrid>
-                        <br></br>
                         <FlexGrid flexGridRowGap="scale1000">
                             <FlexGridItem>
                                 {showRequest && (
