@@ -37,15 +37,12 @@ const DeviceAssociator = memo(props => {
             <PaginatedTable
                 prefix="device-"
                 refresh={props.deviceGroupId}
-                getData={(page, pageSize, filters) => {
-                    console.log(props.deviceGroupId);
+                getData={(pagination) => {
                     return Promise.all([
-                        OopCore.getSites({ pageSize: -1 }),
+                        OopCore.getSites({ "page[size]": -1 }),
                         OopCore.getDevices({
                             deviceGroupId: props.deviceGroupId,
-                            page,
-                            pageSize,
-                            ...filters,
+                            pagination,
                         }),
                     ])
                     .then(([sites, devices]) => {

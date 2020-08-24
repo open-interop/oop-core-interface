@@ -292,38 +292,29 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/device_groups/${deviceGroupId}`);
     }
 
-    mapQueryParameter(key) {
-        switch (key) {
-            case "pageSize":
-                return "page[size]";
-            case "page":
-                return "page[number]";
-            default:
-                return `filter[${this.toSnakeCase(key)}]`;
-        }
-    }
-
     getParameters(params) {
-        // extract the parameters found in filters into the base queryParameters object
-        const queryParameters = { ...params };
-        if (queryParameters && queryParameters.filters) {
-            Object.keys(queryParameters.filters).forEach(filter => {
-                queryParameters[filter] = queryParameters.filters[filter];
-            });
-            delete queryParameters.filters;
+        const queryParams = {};
+        const items = Object.entries(params || {});
+
+        for (const [key, val] of items) {
+            if (!key) {
+                continue;
+            }
+
+            const snake = this.toSnakeCase(key);
+
+            if (typeof val === "string") {
+                queryParams[snake] = val;
+            } else if (val) {
+                for (const [k, v] of Object.entries(val)) {
+                    queryParams[`${snake}[${this.toSnakeCase(k)}]`] = v;
+                }
+            } else {
+                queryParams[snake] = val;
+            }
         }
 
-        const parametersObject = {};
-
-        Object.keys(queryParameters)
-            .filter(key => queryParameters[key] !== undefined)
-            .forEach(
-                key =>
-                    (parametersObject[this.mapQueryParameter(key)] =
-                        queryParameters[key]),
-            );
-
-        return queryString.stringify(parametersObject);
+        return queryString.stringify(queryParams);
     }
 
     getTransmissions(deviceId, queryParameters) {
@@ -343,7 +334,7 @@ class OopCore extends EventEmitter {
     }
 
     getSites(queryParameters) {
-        const parameters = this.getParameters({ filters: queryParameters });
+        const parameters = this.getParameters(queryParameters);
         let path = `/sites`;
         if (parameters) {
             path += `?${parameters}`;

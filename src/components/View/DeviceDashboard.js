@@ -344,11 +344,11 @@ const DeviceDashboard = props => {
         Promise.all([
             OopCore.getDevice(deviceId),
             OopCore.getTransmissions(deviceId, {
-                pageSize: 5,
+                "page[size]": 5,
             }),
             OopCore.getDeviceTemprs({
                 deviceId: deviceId,
-                pageSize: -1,
+                "page[size]": -1,
             }),
             OopCore.getTransmissionStats({
                 deviceId: deviceId,
