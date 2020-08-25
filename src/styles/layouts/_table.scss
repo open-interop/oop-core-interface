@@ -6,7 +6,9 @@ div {
         &:nth-child(odd) {
             background-color: $oop-lighter-grey;
         }
+        overflow-x:scroll;
     }
+
 
     &[role="columnheader"] {
         background-color: $color-white;

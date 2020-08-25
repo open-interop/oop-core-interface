@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { BaseProvider } from "baseui";
+import { Block } from 'baseui/block';
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
 import oopTheme from "./theme";
@@ -25,12 +26,15 @@ import {
     Schedule,
     Layers,
     Layer,
+    MobileHeader,
+    MobileNavigation,
     PageNotFound,
     SideNavigation,
     Site,
     Sites,
     Tempr,
     Temprs,
+    TemprMap,
     Transmission,
     Transmissions,
     User,
@@ -94,6 +98,10 @@ class App extends Component {
 
     SideNavigationWithRouter = withRouter(SideNavigation);
 
+    MobileHeaderWithRouter = withRouter(MobileHeader);
+
+    MobileNavigationWithRouter = withRouter(MobileNavigation);
+
     getComponent = (shouldRedirect, Component, props) => {
         const currentPath = props.match.url;
 
@@ -117,9 +125,18 @@ class App extends Component {
                 <Component {...props} />
             </div>
         ) : (
-            <div className="content">
-                <Component {...props} />
-            </div>
+            <>
+                <Block display={['none', 'none', 'block']}>
+                    <div className="content">
+                        <Component {...props} />
+                    </div>
+                </Block>
+                <Block display={['block', 'block', 'none']}>
+                    <div className="content-mobile">
+                        <Component {...props} />
+                    </div>
+                </Block>
+            </>
         );
     };
 
@@ -130,14 +147,30 @@ class App extends Component {
             <BrowserRouter basename={process.env.REACT_APP_BASE_PATH}>
                 <QueryParamProvider ReactRouterRoute={Route}>
                     {hasUser && (
-                        <this.HeaderWithRouter
-                            user={this.state.user}
-                            site={this.state.site}
-                            selectSite={this.selectSite}
-                        />
-                    )}
-                    {hasUser && (
-                        <this.SideNavigationWithRouter site={this.state.site} />
+                        <>
+                            <Block display={['none', 'none', 'block']}>
+                                <this.HeaderWithRouter
+                                    user={this.state.user}
+                                    site={this.state.site}
+                                    selectSite={this.selectSite}
+                                />
+                                <this.SideNavigationWithRouter 
+                                    selectSite={this.selectSite} 
+                                    site={this.state.site} 
+                                    user={this.state.user} />
+                            </Block>
+                            <Block display={['block', 'block', 'none']}>
+                                <this.MobileHeaderWithRouter
+                                    user={this.state.user}
+                                    site={this.state.site}
+                                    selectSite={this.selectSite}
+                                />
+                                <this.MobileNavigationWithRouter 
+                                    selectSite={this.selectSite} 
+                                    site={this.state.site} 
+                                    user={this.state.user} />
+                            </Block>
+                        </>
                     )}
                     <Switch>
                         <Route
@@ -238,6 +271,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Temprs, props)
+                            }
+                        />
+                        <Route
+                            path="/temprs/:temprId/map"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, TemprMap, props)
                             }
                         />
                         <Route
