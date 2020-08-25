@@ -27,7 +27,7 @@ const Users = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => OopCore.getUsers({ page, pageSize, ...filters })}
+                getData={(pagination) => OopCore.getUsers(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (

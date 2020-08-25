@@ -417,7 +417,7 @@ const Dashboard = props => {
 
     const getAllDevices = () => {
         return OopCore.getDevices({
-            pageSize: -1,
+            "page[size]": -1,
         }).then(response => {
             setDevices(response.data);
         });

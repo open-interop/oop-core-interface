@@ -59,8 +59,8 @@ const Transmissions = props => {
                     }}
                     renderData={() => (
                             <PaginatedTable
-                                getData={(page, pageSize, filters) => {
-                                    return OopCore.getTransmissions(props.match.params.deviceId, filters);
+                                getData={(pagination) => {
+                                    return OopCore.getTransmissions(props.match.params.deviceId, pagination);
                                 }}
                                 mapFunction={(columnName, content) => {
                                     if (columnName === "action") {
