@@ -42,17 +42,17 @@ div[id="root"] .header {
 
 div[id="root"] .mobile-header {
     background-color: $oop-dark-blue;
-    height: 14vh;
+    height: 12vh;
     position: fixed;
     width: 100%;
     z-index: 10;
-    overflow: scroll;
 
     nav {
         display: flex;
         justify-content: space-between;
         flex-direction: row;
         border-bottom: 0;
+        padding-top: 0px;
 
         a {
             &[data-baseweb="link"] {
@@ -67,6 +67,11 @@ div[id="root"] .mobile-header {
             &:hover {
                 background-color: initial;
             }
+        }
+
+        p {
+            color: $color-white;
+            padding: 0 0 2vh 0;
         }
 
         img {
@@ -89,8 +94,7 @@ div[id="root"] .mobile-nav {
     position: fixed;
     width: 100%;
     z-index: 500;
-    overflow: scroll;
-    margin-top: 14vh;
+    margin-top: 12vh;
     align-items: center;
 
     .size-xxl {

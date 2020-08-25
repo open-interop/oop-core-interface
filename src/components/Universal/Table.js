@@ -36,6 +36,12 @@ const Table = memo(props => {
         ...theme.typography.font350,
     });
 
+    var widthPixels = false;
+
+    if (props.mobile) {
+        widthPixels = '930px';
+    }
+
     function TableRows() {
         if (!(data instanceof Array)) {
             return <GifSpinner />;
@@ -109,7 +115,7 @@ const Table = memo(props => {
 
     return (
         <StyledTable>
-            <StyledHead>
+            <StyledHead $width={widthPixels ? widthPixels : 'auto'}>
                 {props.columns.map(column => (
                     <StyledHeadCell
                         $style={column.width ? { flex: `0 0 ${column.width}`, } : {}}
@@ -133,7 +139,7 @@ const Table = memo(props => {
                     </StyledHeadCell>
                 ))}
             </StyledHead>
-            <StyledBody className={css({ position: "relative" })}>
+            <StyledBody className={css({ position: "relative" })} $width={widthPixels ? widthPixels : 'auto'}>
                 {TableRows()}
                 {props.data && props.loading && (
                     <LoadingOverlay>
