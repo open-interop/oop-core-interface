@@ -23,6 +23,7 @@ export * from "./Site";
 export * from "./Sites";
 export * from "./Tempr";
 export * from "./Temprs";
+export * from "./TemprMap";
 export * from "./Transmission";
 export * from "./Transmissions";
 export * from "./User";
