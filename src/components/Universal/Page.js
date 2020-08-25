@@ -60,7 +60,7 @@ const Page = props => {
         <div className={contentWrapper}>
             {props.alert && <Prompt message={props.alert} />}
             <HeadingLevel>
-                <Heading $style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                <Heading $style={{ display: "flex", fontSize: "8vmin", flexDirection: "row", alignItems: "center" }}>
                     <BackLink backlink={props.backlink} />
                     {props.heading}
                     <Actions actions={props.actions} />

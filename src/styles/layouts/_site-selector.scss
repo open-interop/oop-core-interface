@@ -1,12 +1,16 @@
 .site-selector {
-    min-width: 12rem;
+    max-width: 28vw;
+    font-size: 3vmin;
 }
 
 .selected-site {
     color: white;
+    font-size: 3vmin;
+    max-width: 28vw;
 }
 
 .icon {
     cursor: pointer;
     color: white;
+    font-size: 3vmin;
 }

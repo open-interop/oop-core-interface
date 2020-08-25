@@ -43,6 +43,16 @@ const overrides = {
     heading: {
         fontFamily: "system-ui, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     },
+    breakpoints: {
+        small: 380,
+        medium: 650,
+        large: 1100,
+    },
+    mediaQuery: {
+        small: "@media screen and (min-width: 380px)",
+        medium: "@media screen and (min-width: 650px)",
+        large: "@media screen and (min-width: 1100px)",
+    },
 };
 
 const theme = createTheme(primitives, overrides);
