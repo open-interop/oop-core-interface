@@ -107,6 +107,37 @@ class OopCore extends EventEmitter {
         return o;
     }
 
+    getParameters(params) {
+        const items = Object.entries(params || {});
+
+        const built = {};
+
+        for (const [key, val] of items) {
+            if (!key || val === undefined) {
+                continue;
+            }
+
+            const buildParam = (base, value) => {
+                if (value === undefined) {
+                    return;
+                }
+
+                if (typeof value === "object" && value !== null) {
+                    for (const [k, v] of Object.entries(value)) {
+                        const newBase = `${base}[${this.toSnakeCase(k)}]`;
+                        buildParam(newBase, v);
+                    }
+                } else {
+                    built[base] = value;
+                }
+            };
+
+            buildParam(this.toSnakeCase(key), val);
+        }
+
+        return queryString.stringify(built);
+    }
+
     makeRequest(
         endpoint,
         requestType = RequestType.GET,
@@ -292,31 +323,6 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/device_groups/${deviceGroupId}`);
     }
 
-    getParameters(params) {
-        const queryParams = {};
-        const items = Object.entries(params || {});
-
-        for (const [key, val] of items) {
-            if (!key) {
-                continue;
-            }
-
-            const snake = this.toSnakeCase(key);
-
-            if (typeof val === "string") {
-                queryParams[snake] = val;
-            } else if (val) {
-                for (const [k, v] of Object.entries(val)) {
-                    queryParams[`${snake}[${this.toSnakeCase(k)}]`] = v;
-                }
-            } else {
-                queryParams[snake] = val;
-            }
-        }
-
-        return queryString.stringify(queryParams);
-    }
-
     getTransmissions(deviceId, queryParameters) {
         const parameters = this.getParameters(queryParameters);
         let path = `/devices/${deviceId}/transmissions`;
@@ -494,20 +500,8 @@ class OopCore extends EventEmitter {
         }
     }
 
-    getTransmissionStats(filters) {
-        const formattedFilters = {};
-
-        Object.keys(filters)
-            .filter(key => filters[key] !== undefined)
-            .forEach(key => {
-                formattedFilters[
-                    this.mapStatsParams(key)
-                ] = this.toSnakeCase(filters[key]);
-            });
-
-        var parameters = queryString.stringify(
-            this.camelToSnake(formattedFilters),
-        );
+    getTransmissionStats(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
 
         let path = "/dashboards/transmissions";
         if (parameters) {

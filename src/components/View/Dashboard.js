@@ -103,13 +103,17 @@ const FailedTransmissions = props => {
         return Promise.all([
             OopCore.getTransmissionStats({
                 group: "success",
-                gteq: formatDateTime(thirtyDaysAgo),
-                siteId: props.site ? props.site.id : undefined,
+                filter: {
+                    transmittedAt: { gteq: formatDateTime(thirtyDaysAgo) },
+                    siteId: props.site ? props.site.id : undefined,
+                },
             }),
             OopCore.getTransmissionStats({
                 group: "success",
-                gteq: formatDateTime(oneDayAgo),
-                siteId: props.site ? props.site.id : undefined,
+                filter: {
+                    transmittedAt: { gteq: formatDateTime(oneDayAgo) },
+                    siteId: props.site ? props.site.id : undefined,
+                },
             }),
         ]).then(([thirtyDayResponse, oneDayResponse]) => {
             setFailedTransmissions({
@@ -426,8 +430,10 @@ const Dashboard = props => {
     const getTransmissionsByDate = device => {
         return OopCore.getTransmissionStats({
             group: "transmitted_at",
-            deviceId: device.id,
-            gteq: formatDateTime(oneYearAgo),
+            filter: {
+                deviceId: device.id,
+                transmittedAt: { gteq: formatDateTime(oneYearAgo) },
+            },
         }).then(response => {
             response.deviceId = device.id;
             response.deviceName = device.name;
