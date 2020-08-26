@@ -79,12 +79,14 @@ div[id="root"] .mobile-header {
             padding-right: 5vw;
             width: 20vw;
         }
+        &[data-baseweb="header-navigation"] {
+            padding-right: 4vw;
+            vertical-align: middle;
+            line-height: 7vh;
+        }
     }
 
-    &[data-baseweb="header-navigation"] {
-        border: 0;
-        padding-right: 10vw;
-    }
+    
 }
 
 div[id="root"] .mobile-nav {
