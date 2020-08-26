@@ -24,18 +24,9 @@ const MobileHeader = props => {
                             <img src={logo} alt="logo"/>
                         </a>
                     </NavigationItem>
-                    {!props.history.location.pathname.includes("/sites") &&
-                        !props.history.location.pathname.includes("/temprs") &&
-                        !props.history.location.pathname.includes("/users") &&
-                        !props.history.location.pathname.includes(
-                            "/device-groups",
-                        ) && (
-                            <SiteSelector
-                                selectedSite={props.site}
-                                selectSite={props.selectSite}
-                                wrapper={NavigationItem}
-                            />
-                        )}
+                    <NavigationItem>
+                        <p>All Sites</p>
+                    </NavigationItem>
                 </NavigationList>
                 <NavigationList $align={ALIGN.right}>
                     <NavigationItem>

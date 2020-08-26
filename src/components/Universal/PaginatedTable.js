@@ -31,25 +31,26 @@ const PaginatedTable = withRouter(props => {
 
     return (
         <>
-            <Table
-                {...props}
-                loading={loading}
-                data={data && data.data}
-                filters={filters}
-                updateFilters={(colId, value) => {
-                    if (filters) {
-                        if (value === "") {
-                            delete filters[colId];
-                        } else {
-                            filters[colId] = value;
-                        }
-                        setFilters(filters);
-                    } else {
-                        setFilters({ [colId]: value });
-                    }
-                }}
-            />
             <Block display={['none', 'none', 'block']}>
+                <Table
+                    {...props}
+                    loading={loading}
+                    data={data && data.data}
+                    filters={filters}
+                    mobile={false}
+                    updateFilters={(colId, value) => {
+                        if (filters) {
+                            if (value === "") {
+                                delete filters[colId];
+                            } else {
+                                filters[colId] = value;
+                            }
+                            setFilters(filters);
+                        } else {
+                            setFilters({ [colId]: value });
+                        }
+                    }}
+                />
                 <Pagination
                     updatePageSize={pageSize => {
                         setPageSize(pageSize);
@@ -59,6 +60,27 @@ const PaginatedTable = withRouter(props => {
                     totalRecords={data ? data.totalRecords : "-"}
                     numberOfPages={data ? data.numberOfPages : "-"}
                     currentPage={page || 1}
+                />
+            </Block>
+            <Block display={['block', 'block', 'none']}>
+                <Table
+                    {...props}
+                    loading={loading}
+                    data={data && data.data}
+                    filters={filters}
+                    mobile={true}
+                    updateFilters={(colId, value) => {
+                        if (filters) {
+                            if (value === "") {
+                                delete filters[colId];
+                            } else {
+                                filters[colId] = value;
+                            }
+                            setFilters(filters);
+                        } else {
+                            setFilters({ [colId]: value });
+                        }
+                    }}
                 />
             </Block>
         </>
