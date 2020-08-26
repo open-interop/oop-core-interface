@@ -53,7 +53,7 @@ const getTempr = (temprId, deviceGroupId) => {
     }
 };
 
-const getData = (temprId, deviceGroupId) => {
+const getData = (temprId, deviceGroupId, setParents, setChildren) => {
     return Promise.all([
         getTempr(temprId, deviceGroupId),
         OopCore.getDeviceGroups(),
@@ -65,6 +65,8 @@ const getData = (temprId, deviceGroupId) => {
             temprId: temprId,
             "page[size]": -1,
         }),
+        setParents(temprId),
+        setChildren(temprId),
     ]);
 };
 
@@ -163,6 +165,9 @@ const Tempr = props => {
 
     const [originalTempr, setOriginalTempr] = useState(null);
 
+    const [noChildren, setNoChildren] = useState(true);
+    const [noParents, setNoParents] = useState(true);
+
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [deviceGroupId, setDeviceGroupId] = useState(Number(props.match.params.deviceGroupId) || null);
@@ -181,11 +186,32 @@ const Tempr = props => {
     const [scheduleTemprs, setScheduleTemprs] = useState([]);
 
     useEffect(
-        () => { getData(temprId, props.match.params.deviceGroupId).then(setData); },
+        () => { getData(temprId, props.match.params.deviceGroupId, setParents, setChildren).then(setData); },
         [temprId, props.match.params.deviceGroupId]
     ); 
 
     const blankTempr = temprId === "new";
+
+
+    const setChildren = (temprId) => {
+        OopCore.getTemprs({temprId: temprId})
+        .then(response => {
+            var none = true;
+            for (var i = response.data.length - 1; i >= 0; i--) {
+                if (response.data[i].temprId == temprId) {
+                    none = false;
+                }
+            }
+            setNoChildren(none);
+        })
+    };
+
+    const setParents = (temprId) => {
+        OopCore.getTempr(temprId)
+        .then(response => {
+            setNoParents(!response.temprId);
+        })
+    };
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
         setOriginalTempr({
@@ -347,7 +373,7 @@ const Tempr = props => {
             backlink={allTemprsPath}
             actions={
                 <>
-                    {blankTempr ? null : (
+                    {blankTempr || (noParents && noChildren) ? null : (
                         <Button
                             $as={Link}
                             to={`${props.location.pathname}/map`}
