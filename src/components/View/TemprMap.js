@@ -1,5 +1,7 @@
 import React, { useState, useEffect, memo } from "react";
 
+import { Redirect  } from 'react-router';
+
 import {
     AccordionWithCaption,
     ConfirmModal,
@@ -17,11 +19,33 @@ import OopCore from "../../OopCore";
 
 
 const TemprMap = props => {
+    const [noMap, setNoMap] = useState(false);
+
     const [nodes, setNodes] = useState({});
     const [paths, setPaths] = useState([]);
     const [title, setTitle] = useState("");
 
+
     const temprOriginPath = '/temprs/' + props.match.params.temprId;
+
+
+	async function getChildren(temprId) {
+        const ts = await OopCore.getTemprs({temprId: temprId});
+        var none = true;
+        if (ts) {
+        	for (var i = ts.data.length - 1; i >= 0; i--) {
+	            if (ts.data[i].temprId == temprId) {
+	                none = false;
+	            }
+	        }
+        }
+       return none;
+    };
+
+    async function getParents(temprId) {
+        const t = await OopCore.getTempr(temprId);
+        return (!t.temprId);
+    };
 
     const formatNode = (temprObj) => {
     	return `${temprObj.id}[shape=plain, fontname=Helvetica,
@@ -65,64 +89,75 @@ const TemprMap = props => {
 			   	>]`;
     };
 
-	async function getData(temprId){
-		var tempr = await OopCore.getTempr(temprId);
-		var children = await OopCore.getTemprs({temprId: temprId});
-		var childrenData = [];
-        for (var i = children.data.length - 1; i >= 0; i--) {
-            if (children.data[i].temprId == temprId) {
-                childrenData.push(children.data[i]);
-            }
-        }
-		const titleNode = tempr.name;
-		while (tempr) {
-			if (!nodes[tempr.id]) {
-				nodes[tempr.id] = formatNode(tempr);
-			}
-			if (tempr.temprId) {
-				paths.push(`${tempr.temprId}->${tempr.id}`);
-				if (nodes[tempr.temprId]){
-					tempr = null;
+	async function getData(temprId) {
+		var ps = await getParents(temprId);
+		var cs = await getChildren(temprId);
+		if (ps && cs) {
+			return null;
+		} else {
+			var tempr = await OopCore.getTempr(temprId);
+			var children = await OopCore.getTemprs({temprId: temprId});
+			var childrenData = [];
+	        for (var i = children.data.length - 1; i >= 0; i--) {
+	            if (children.data[i].temprId == temprId) {
+	                childrenData.push(children.data[i]);
+	            }
+	        }
+			const titleNode = tempr.name;
+			while (tempr) {
+				if (!nodes[tempr.id]) {
+					nodes[tempr.id] = formatNode(tempr);
+				}
+				if (tempr.temprId) {
+					paths.push(`${tempr.temprId}->${tempr.id}`);
+					if (nodes[tempr.temprId]){
+						tempr = null;
+					} else {
+						tempr = await OopCore.getTempr(tempr.temprId);
+						childrenData.push(tempr);
+					}
 				} else {
-					tempr = await OopCore.getTempr(tempr.temprId);
-					childrenData.push(tempr);
+					tempr = null;
 				}
-			} else {
-				tempr = null;
 			}
-		}
-		while (childrenData.length > 0) {
-			const c = childrenData.shift();
-			if (c.temprId) {
-				if (!nodes[c.id]) {
-					nodes[c.id] = formatNode(c);
-				}
-				paths.push(`${c.temprId}->${c.id}`);
-				var new_children = await OopCore.getTemprs({temprId: c.id});
-				new_children = new_children.data;
-				for (var i = new_children.length - 1; i >= 0; i--) {
-					if (!nodes[new_children[i].id] && new_children[i].temprId == c.id) {
-						childrenData.push(new_children[i]);
+			while (childrenData.length > 0) {
+				const c = childrenData.shift();
+				if (c.temprId) {
+					if (!nodes[c.id]) {
+						nodes[c.id] = formatNode(c);
+					}
+					paths.push(`${c.temprId}->${c.id}`);
+					var new_children = await OopCore.getTemprs({temprId: c.id});
+					new_children = new_children.data;
+					for (var i = new_children.length - 1; i >= 0; i--) {
+						if (!nodes[new_children[i].id] && new_children[i].temprId == c.id) {
+							childrenData.push(new_children[i]);
+						}
 					}
 				}
 			}
+			const unique_paths = [...new Set(paths)];
+			let response = {nodes:nodes,paths:unique_paths,title:titleNode};
+			return (response);
 		}
-		const unique_paths = [...new Set(paths)];
-		let response = {nodes:nodes,paths:unique_paths,title:titleNode};
-		return (response);
 	};
 
 	return (
     	<DataProvider
             getData={() => {
                 return getData(props.match.params.temprId).then(response => {
-                    setNodes(response.nodes);
-                    setPaths(response.paths);
-                    setTitle(response.title);
-                    return response;
+                	if (response) {
+                		setNodes(response.nodes);
+	                    setPaths(response.paths);
+	                    setTitle(response.title);
+	                    return response;
+                	} else {
+                		setNoMap(true);
+                		return false;
+                	}
                 });
             }}
-            renderData={() => (
+            renderData={() => (!(noMap) ?
                 <Page
 					title={"Tempr Map | Settings | Open Interop"}
 		            heading={"Tempr: " + title + "'s Map"}
@@ -145,6 +180,7 @@ const TemprMap = props => {
 						}}
 					/>
 				</Page>
+				: <Redirect to={`/temprs/${props.match.params.temprId}`} />
 			)}
         />
 	);
