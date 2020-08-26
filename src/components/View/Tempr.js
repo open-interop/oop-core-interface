@@ -197,12 +197,13 @@ const Tempr = props => {
         OopCore.getTemprs({temprId: temprId})
         .then(response => {
             var none = true;
-            for (var i = response.data.length - 1; i >= 0; i--) {
-                if (response.data[i].temprId == temprId) {
-                    none = false;
+            for (const tempr of response.data) {
+                if (tempr.temprId == temprId) {
+                    setNoChildren(true);
+                    break;
                 }
             }
-            setNoChildren(none);
+            setNoChildren(false); 
         })
     };
 

@@ -29,17 +29,18 @@ const TemprMap = props => {
     const temprOriginPath = '/temprs/' + props.match.params.temprId;
 
 
-	async function getChildren(temprId) {
+    async function getChildren(temprId) {
         const ts = await OopCore.getTemprs({temprId: temprId});
         var none = true;
         if (ts) {
-        	for (var i = ts.data.length - 1; i >= 0; i--) {
-	            if (ts.data[i].temprId == temprId) {
-	                none = false;
-	            }
-	        }
+            for (const tempr of ts.data) {
+                if (tempr.temprId == temprId) {
+                    none = false;
+                    break;
+                }
+            }
         }
-       return none;
+        return none;
     };
 
     async function getParents(temprId) {
@@ -48,7 +49,7 @@ const TemprMap = props => {
     };
 
     const formatNode = (temprObj) => {
-    	return `${temprObj.id}[shape=plain, fontname=Helvetica,
+        return `${temprObj.id}[shape=plain, fontname=Helvetica,
 				label=<
 				<table border="${temprObj.id == props.match.params.temprId ? '2' : '1'}" color="${temprObj.id == props.match.params.temprId ? '#177692' : 'black'}" cellborder="0" cellspacing="0" cellpadding="2">
 			    	<tr>
@@ -89,101 +90,103 @@ const TemprMap = props => {
 			   	>]`;
     };
 
-	async function getData(temprId) {
-		var ps = await getParents(temprId);
-		var cs = await getChildren(temprId);
-		if (ps && cs) {
-			return null;
-		} else {
-			var tempr = await OopCore.getTempr(temprId);
-			var children = await OopCore.getTemprs({temprId: temprId});
-			var childrenData = [];
-	        for (var i = children.data.length - 1; i >= 0; i--) {
-	            if (children.data[i].temprId == temprId) {
-	                childrenData.push(children.data[i]);
-	            }
-	        }
-			const titleNode = tempr.name;
-			while (tempr) {
-				if (!nodes[tempr.id]) {
-					nodes[tempr.id] = formatNode(tempr);
-				}
-				if (tempr.temprId) {
-					paths.push(`${tempr.temprId}->${tempr.id}`);
-					if (nodes[tempr.temprId]){
-						tempr = null;
-					} else {
-						tempr = await OopCore.getTempr(tempr.temprId);
-						childrenData.push(tempr);
-					}
-				} else {
-					tempr = null;
-				}
-			}
-			while (childrenData.length > 0) {
-				const c = childrenData.shift();
-				if (c.temprId) {
-					if (!nodes[c.id]) {
-						nodes[c.id] = formatNode(c);
-					}
-					paths.push(`${c.temprId}->${c.id}`);
-					var new_children = await OopCore.getTemprs({temprId: c.id});
-					new_children = new_children.data;
-					for (var i = new_children.length - 1; i >= 0; i--) {
-						if (!nodes[new_children[i].id] && new_children[i].temprId == c.id) {
-							childrenData.push(new_children[i]);
-						}
-					}
-				}
-			}
-			const unique_paths = [...new Set(paths)];
-			let response = {nodes:nodes,paths:unique_paths,title:titleNode};
-			return (response);
-		}
-	};
+    async function getData(temprId) {
+        var ps = await getParents(temprId);
+        var cs = await getChildren(temprId);
+        var nodeData = [];
+        var pathData = new Set();
+        if (ps && cs) {
+            return null;
+        } else {
+            var tempr = await OopCore.getTempr(temprId);
+            var children = await OopCore.getTemprs({temprId: temprId});
+            var childrenData = [];
+            for (var i = children.data.length - 1; i >= 0; i--) {
+                if (children.data[i].temprId == temprId) {
+                    childrenData.push(children.data[i]);
+                }
+            }
+            const titleNode = tempr.name;
+            while (tempr) {
+                if (!nodeData[tempr.id]) {
+                    nodeData[tempr.id] = formatNode(tempr);
+                }
+                if (tempr.temprId) {
+                    pathData.add(`${tempr.temprId}->${tempr.id}`);
+                    if (nodeData[tempr.temprId]){
+                        tempr = null;
+                    } else {
+                        tempr = await OopCore.getTempr(tempr.temprId);
+                        childrenData.push(tempr);
+                    }
+                } else {
+                    tempr = null;
+                }
+            }
+            while (childrenData.length > 0) {
+                const c = childrenData.shift();
+                if (c.temprId) {
+                    if (!nodeData[c.id]) {
+                        nodeData[c.id] = formatNode(c);
+                    }
+                    pathData.add(`${c.temprId}->${c.id}`);
+                    var new_children = await OopCore.getTemprs({temprId: c.id});
+                    new_children = new_children.data;
+                    for (var i = new_children.length - 1; i >= 0; i--) {
+                        if (!nodes[new_children[i].id] && new_children[i].temprId == c.id) {
+                            childrenData.push(new_children[i]);
+                        }
+                    }
+                }
+            }
+            const pathArray = [...pathData];
+            let response = {nodes:nodeData,paths:pathArray,title:titleNode};
+            return (response);
+        }
+    };
 
-	return (
-    	<DataProvider
+    return (
+        <DataProvider
             getData={() => {
                 return getData(props.match.params.temprId).then(response => {
-                	if (response) {
-                		setNodes(response.nodes);
-	                    setPaths(response.paths);
-	                    setTitle(response.title);
-	                    return response;
-                	} else {
-                		setNoMap(true);
-                		return false;
-                	}
+                    if (response) {
+                        setNodes(response.nodes);
+                        setPaths(response.paths);
+                        setTitle(response.title);
+                        return response;
+                    } else {
+                        setNoMap(true);
+                        return false;
+                    }
                 });
             }}
             renderData={() => (!(noMap) ?
                 <Page
-					title={"Tempr Map | Settings | Open Interop"}
-		            heading={"Tempr: " + title + "'s Map"}
-					backlink={props.location.prevPath || temprOriginPath}
-		        >	
-			        <Graphviz 
-				        dot={
-				        	`digraph {
-				       			${Object.values(nodes).join('\n')}
-				       			${paths.join('\n')}
-				       			splines=ortho
-				       			nodesep=1
-							}`
-						}
-						options={{
-							fit:true,
-							height:'auto',
-							width:'auto',
-							zoom:false,
-						}}
-					/>
-				</Page>
-				: <Redirect to={`/temprs/${props.match.params.temprId}`} />
-			)}
+                    title={"Tempr Map | Settings | Open Interop"}
+                    heading={"Tempr: " + title + "'s Map"}
+                    backlink={props.location.prevPath || temprOriginPath}
+                >
+                    <Graphviz
+                        dot={
+                            `digraph {
+                                ${Object.values(nodes).join('\n')}
+                                ${paths.join('\n')}
+                                splines=ortho
+                                nodesep=1
+                            }`
+                        }
+                        options={{
+                            fit:true,
+                            height:'auto',
+                            width:'auto',
+                            zoom:false,
+                        }}
+                    />
+                </Page>
+                : <Redirect to={`/temprs/${props.match.params.temprId}`} />
+            )}
         />
-	);
+    );
 };
 
 export { TemprMap };
