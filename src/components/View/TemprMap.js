@@ -71,7 +71,7 @@ const TemprMap = props => {
 		var childrenData = [];
         for (var i = children.data.length - 1; i >= 0; i--) {
             if (children.data[i].temprId == temprId) {
-                return childrenData.push(children.data[i]);
+                childrenData.push(children.data[i]);
             }
         }
 		const titleNode = tempr.name;
