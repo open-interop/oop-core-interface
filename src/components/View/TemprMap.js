@@ -101,7 +101,7 @@ const TemprMap = props => {
 				var new_children = await OopCore.getTemprs({temprId: c.id});
 				new_children = new_children.data;
 				for (var i = new_children.length - 1; i >= 0; i--) {
-					if (!nodes[new_children[i].id]){
+					if (!nodes[new_children[i].id] && new_children[i].temprId == c.id) {
 						childrenData.push(new_children[i]);
 					}
 				}
