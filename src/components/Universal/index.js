@@ -9,6 +9,7 @@ export * from "./MaxCard";
 export * from "./Modal";
 export * from "./Page";
 export * from "./Pagination";
+export * from "./PaginationMobile";
 export * from "./PopoverWithButton";
 export * from "./SearchBar";
 export * from "./Spinner";
