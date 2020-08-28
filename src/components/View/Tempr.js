@@ -58,7 +58,7 @@ const getData = (temprId, deviceGroupId, setParents, setChildren) => {
         getTempr(temprId, deviceGroupId),
         OopCore.getDeviceGroups(),
         OopCore.getDeviceTemprs({
-            temprId: temprId,
+            filter: { temprId: temprId },
             "page[size]": -1,
         }),
         OopCore.getScheduleTemprs({

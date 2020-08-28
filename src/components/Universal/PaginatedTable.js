@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { useQueryParam, NumberParam, ObjectParam } from "use-query-params";
-import { Pagination, Table } from ".";
+import { Pagination, PaginationMobile, Table } from ".";
 import { Block } from 'baseui/block';
 
 const PaginatedTable = withRouter(props => {
@@ -81,6 +81,16 @@ const PaginatedTable = withRouter(props => {
                             setFilters({ [colId]: value });
                         }
                     }}
+                />
+                <PaginationMobile
+                    updatePageSize={pageSize => {
+                        setPageSize(pageSize);
+                    }}
+                    currentPageSize={pageSize}
+                    updatePageNumber={pageNumber => setPage(pageNumber)}
+                    totalRecords={data ? data.totalRecords : "-"}
+                    numberOfPages={data ? data.numberOfPages : "-"}
+                    currentPage={page || 1}
                 />
             </Block>
         </>
