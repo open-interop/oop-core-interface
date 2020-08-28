@@ -41,7 +41,7 @@ const DeviceAssociator = memo(props => {
                     return Promise.all([
                         OopCore.getSites({ "page[size]": -1 }),
                         OopCore.getDevices({
-                            deviceGroupId: props.deviceGroupId,
+                            filter: { deviceGroupId: props.deviceGroupId },
                             pagination,
                         }),
                     ])
