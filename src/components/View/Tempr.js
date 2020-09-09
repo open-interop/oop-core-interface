@@ -53,7 +53,7 @@ const getTempr = (temprId, deviceGroupId) => {
     }
 };
 
-const getData = (temprId, deviceGroupId, setParents, setChildren) => {
+const getData = (temprId, deviceGroupId, getParents, getChildren) => {
     return Promise.all([
         getTempr(temprId, deviceGroupId),
         OopCore.getDeviceGroups(),
@@ -65,8 +65,8 @@ const getData = (temprId, deviceGroupId, setParents, setChildren) => {
             temprId: temprId,
             "page[size]": -1,
         }),
-        setParents(temprId),
-        setChildren(temprId),
+        getParents(temprId),
+        getChildren(temprId),
     ]);
 };
 
@@ -186,32 +186,30 @@ const Tempr = props => {
     const [scheduleTemprs, setScheduleTemprs] = useState([]);
 
     useEffect(
-        () => { getData(temprId, props.match.params.deviceGroupId, setParents, setChildren).then(setData); },
+        () => { getData(temprId, props.match.params.deviceGroupId, getParents, getChildren).then(setData); },
         [temprId, props.match.params.deviceGroupId]
     ); 
 
     const blankTempr = temprId === "new";
 
 
-    const setChildren = (temprId) => {
-        OopCore.getTemprs({temprId: temprId})
-        .then(response => {
-            var none = true;
-            for (const tempr of response.data) {
+    async function getChildren(temprId) {
+        const ts = await OopCore.getTemprs({temprId: temprId});
+        var none = true;
+        if (ts) {
+            for (const tempr of ts.data) {
                 if (tempr.temprId == temprId) {
-                    setNoChildren(true);
+                    none = false;
                     break;
                 }
             }
-            setNoChildren(false); 
-        })
+        }
+        setNoChildren(none);
     };
 
-    const setParents = (temprId) => {
-        OopCore.getTempr(temprId)
-        .then(response => {
-            setNoParents(!response.temprId);
-        })
+    async function getParents(temprId) {
+        const t = await OopCore.getTempr(temprId);
+        setNoChildren(!t.temprId);
     };
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
