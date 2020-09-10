@@ -194,13 +194,15 @@ const Tempr = props => {
 
 
     async function getChildren(temprId) {
-        const ts = await OopCore.getTemprs({temprId: temprId});
         var none = true;
-        if (ts) {
-            for (const tempr of ts.data) {
-                if (tempr.temprId == temprId) {
-                    none = false;
-                    break;
+        if (!blankTempr) {
+            const ts = await OopCore.getTemprs({temprId: temprId});
+            if (ts) {
+                for (const tempr of ts.data) {
+                    if (tempr.temprId == temprId) {
+                        none = false;
+                        break;
+                    }
                 }
             }
         }
@@ -208,8 +210,8 @@ const Tempr = props => {
     };
 
     async function getParents(temprId) {
-        const t = await OopCore.getTempr(temprId);
-        setNoChildren(!t.temprId);
+        const t = blankTempr ? false : await OopCore.getTempr(temprId);
+        setNoParents(!t.temprId);
     };
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
