@@ -347,7 +347,7 @@ const DeviceDashboard = props => {
                 "page[size]": 5,
             }),
             OopCore.getDeviceTemprs({
-                deviceId: deviceId,
+                filter: { deviceId: deviceId },
                 "page[size]": -1,
             }),
             OopCore.getTransmissionStats({
