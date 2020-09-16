@@ -188,6 +188,10 @@ const Transmissions = props => {
                                 name: "last 24 hours",
                             },
                             {
+                                id: 7,
+                                name: "last 7 days",
+                            },
+                            {
                                 id: 30,
                                 name: "last 30 days",
                             },
