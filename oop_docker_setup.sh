@@ -25,8 +25,6 @@ services:
       - "3000:3000"
     env_file:
       - all.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   oop-authenticator:
     image: "openinterop/oop-authenticator:latest"
@@ -34,36 +32,26 @@ services:
       - all.env
     depends_on:
       - oop-core
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   oop-tempr:
     image: "openinterop/oop-tempr:latest"
     env_file:
       - all.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   oop-renderer:
     image: "openinterop/oop-renderer:latest"
     env_file:
       - all.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   oop-endpoints-http:
     image: "openinterop/oop-endpoints-http:latest"
     env_file:
       - all.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   oop-relay:
     image: "openinterop/oop-relay:latest"
     env_file:
       - all.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   #database:
   #  image: postgres
@@ -73,8 +61,8 @@ services:
   #    - db_data:/var/lib/postgresql/data
 
 volumes:
+  #db_data:
   gem_cache:
-  
 EOF
 
 cat > all.env <<EOF
