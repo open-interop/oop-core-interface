@@ -164,9 +164,9 @@ EOF
 docker run -d --hostname some-rabbit --name some-rabbit -e RABBITMQ_ERLANG_COOKIE='cookie' rabbitmq:3
 docker run -it --rm -e RABBITMQ_ERLANG_COOKIE='cookie' rabbitmq:3 bash
 
-rabbitmqctl add_user oop somepassword
-rabbitmqctl list_permissions --vhost /
-rabbitmqctl set_permissions -p / oop ".*" ".*" ".*"
+docker exec -it some-rabbit rabbitmqctl add_user oop somepassword
+docker exec -it some-rabbit rabbitmqctl list_permissions --vhost /
+docker exec -it some-rabbit rabbitmqctl set_permissions -p / oop ".*" ".*" ".*"
 
 docker-compose up -d
 
