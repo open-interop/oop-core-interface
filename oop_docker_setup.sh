@@ -14,9 +14,9 @@ services:
     #  - database
     volumes:
       - gem_cache:/gems
-      - './database.yml:/app/config/database.yml'
-      - './storage.yml:/app/config/storage.yml'
-      - './secrets.yml:/app/config/secrets.yml'
+      - './config/database.yml:/app/config/database.yml'
+      - './config/storage.yml:/app/config/storage.yml'
+      - './config/secrets.yml:/app/config/secrets.yml'
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -133,14 +133,15 @@ POSTGRES_DB=oop_core_development
 SECRET_KEY_BASE=RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
 EOF
 
+mkdir config
 
-cat > storage.yml <<EOF
+cat > config/storage.yml <<EOF
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 EOF
 
-cat > database.yml <<EOF
+cat > config/database.yml <<EOF
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -156,7 +157,7 @@ production:
   <<: *default
 EOF
 
-cat > secrets.yml <<EOF
+cat > config/secrets.yml <<EOF
 production:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
 EOF
