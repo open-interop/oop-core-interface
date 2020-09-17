@@ -161,7 +161,5 @@ production:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
 EOF
 
-rabbitmqctl list_users
-
 docker-compose up -d
 

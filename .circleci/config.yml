@@ -40,6 +40,12 @@ jobs:
 
       - setup_remote_docker
 
-      - run: rabbitmqctl list_users
+      - run: curl -i -u guest:guest -H "content-type:application/json" /
+             -XPUT -d'{"somepassword":"direct","tags":"administrator"}' /
+             http://0.0.0.0:15672/api/users/oop
+
+      - run: curl -i -u guest:guest -H "content-type:application/json" /
+             -XPUT -d'{"configure":".*","write":".*","read":".*"}' /
+             http://0.0.0.0:15672/api/permissions/%2F/oop
 
       - run: bash oop_docker_setup.sh
