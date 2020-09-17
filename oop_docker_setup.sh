@@ -17,7 +17,6 @@ services:
       - './database.yml:/app/config/database.yml'
       - './storage.yml:/app/config/storage.yml'
       - './secrets.yml:/app/config/secrets.yml'
-      - /var/run/docker.sock:/var/run/docker.sock
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -61,8 +60,7 @@ services:
   #    - db_data:/var/lib/postgresql/data
 
 volumes:
-  #db_data:
-  gem_cache:
+  - /var/run/docker.sock:/var/run/docker.sock
 EOF
 
 cat > all.env <<EOF
