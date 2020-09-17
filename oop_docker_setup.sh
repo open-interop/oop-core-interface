@@ -14,9 +14,6 @@ services:
       - database
     volumes:
       - gem_cache:/gems
-      - ./config/database.yml:/app/config/database.yml
-      - ./config/storage.yml:/app/config/storage.yml
-      - ./config/secrets.yml:/app/config/secrets.yml
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -162,6 +159,8 @@ production:
 EOF
 
 docker-compose up -d
+
+docker cp config repo_oop-core_1:app/config/
 
 docker exec -it repo_oop-core_1 bundle exec rails db:create
 
