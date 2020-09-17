@@ -162,7 +162,6 @@ production:
 EOF
 
 docker run -d --hostname some-rabbit --name some-rabbit -e RABBITMQ_ERLANG_COOKIE='cookie' rabbitmq:3
-docker run -it --rm -e RABBITMQ_ERLANG_COOKIE='cookie' rabbitmq:3 bash
 
 docker exec -it some-rabbit rabbitmqctl add_user oop somepassword
 docker exec -it some-rabbit rabbitmqctl list_permissions --vhost /
