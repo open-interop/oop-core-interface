@@ -69,8 +69,8 @@ NODE_ENV=production
 RAILS_ENV=production
 
 # All repos
-OOP_AMQP_ADDRESS=amqp://oop:somepasssword@host.docker.internal
-RABBITMQ_URL=amqp://oop:somepassword@host.docker.internal
+OOP_AMQP_ADDRESS=amqp://guest:guest@host.docker.internal
+RABBITMQ_URL=amqp://guest:guest@host.docker.internal
 OOP_ERROR_EXCHANGE_NAME=oop.errors
 OOP_JSON_ERROR_Q=oop.errors.json
 OOP_EXCHANGE_NAME=oop
