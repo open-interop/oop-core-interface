@@ -163,3 +163,7 @@ EOF
 
 docker-compose up -d
 
+docker exec -it repo_oop-core_1 bundle exec rails db:create
+docker exec -it repo_oop-core_1 bundle exec rails db:migrate
+
+docker exec -it repo_oop-core_1 bin/rails open_interop:setup_initial_account

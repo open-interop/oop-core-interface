@@ -41,3 +41,5 @@ jobs:
       - setup_remote_docker
 
       - run: bash oop_docker_setup.sh
+
+      - run: bash interface_setup.sh
