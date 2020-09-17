@@ -40,4 +40,6 @@ jobs:
 
       - setup_remote_docker
 
+      - run: rabbitmqctl list_users
+
       - run: bash oop_docker_setup.sh
