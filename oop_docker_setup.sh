@@ -60,9 +60,9 @@ services:
   #    - db_data:/var/lib/postgresql/data
 
 volumes:
-  #db_data:
-  gem_cache:
   - /var/run/docker.sock:/var/run/docker.sock
+  gem_cache:
+  
 EOF
 
 cat > all.env <<EOF
