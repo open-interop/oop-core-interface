@@ -163,10 +163,6 @@ EOF
 
 docker-compose up -d
 
-cat config/database.yml
-
-ls -alh config/
-
 docker exec -it repo_oop-core_1 bundle exec rails db:create
 
 docker exec -it repo_oop-core_1 bundle exec rails db:migrate
