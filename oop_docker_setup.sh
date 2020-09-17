@@ -61,7 +61,6 @@ services:
 
 volumes:
   - /var/run/docker.sock:/var/run/docker.sock
-  gem_cache:
   
 EOF
 
