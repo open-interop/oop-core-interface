@@ -161,11 +161,7 @@ production:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
 EOF
 
-docker run -d --hostname some-rabbit --name some-rabbit -e RABBITMQ_ERLANG_COOKIE='cookie' rabbitmq:3
-
-docker exec -it some-rabbit rabbitmqctl add_user oop somepassword
-docker exec -it some-rabbit rabbitmqctl list_permissions --vhost /
-docker exec -it some-rabbit rabbitmqctl set_permissions -p / oop ".*" ".*" ".*"
+rabbitmqctl list_users
 
 docker-compose up -d
 
