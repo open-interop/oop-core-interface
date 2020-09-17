@@ -14,9 +14,9 @@ services:
       - database
     volumes:
       - gem_cache:/gems
-      - './config/database.yml:/app/config/database.yml'
-      - './config/storage.yml:/app/config/storage.yml'
-      - './config/secrets.yml:/app/config/secrets.yml'
+      - ./config/database.yml:/app/config/database.yml
+      - ./config/storage.yml:/app/config/storage.yml
+      - ./config/secrets.yml:/app/config/secrets.yml
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
