@@ -79,7 +79,6 @@ OOP_QUEUE_PREFETCH_LIMIT=5
 # Gateway
 OOP_GATEWAY_OUTPUT_Q=oop.noauth.raw_messages
 OOP_LISTEN_PORT=3000
-OOP_DB_ADDRESS=http://admin:admin@host.docker.internal:5984
 
 # Authenticator
 OOP_AUTHENTICATOR_INPUT_Q=oop.noauth.raw_messages
@@ -164,10 +163,12 @@ EOF
 
 docker-compose up -d
 
-docker exec -it repo_oop-core_1 bin/rails open_interop:setup_initial_account
+cat config/database.yml
+
+ls -alh config/
 
 docker exec -it repo_oop-core_1 bundle exec rails db:create
 
 docker exec -it repo_oop-core_1 bundle exec rails db:migrate
 
-
+docker exec -it repo_oop-core_1 bin/rails open_interop:setup_initial_account
