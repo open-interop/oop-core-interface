@@ -10,8 +10,8 @@ services:
       - "9001:9001"
     env_file:
       - all.env
-    #depends_on:
-    #  - database
+    depends_on:
+      - database
     volumes:
       - gem_cache:/gems
       - './config/database.yml:/app/config/database.yml'

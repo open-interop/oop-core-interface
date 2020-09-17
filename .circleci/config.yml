@@ -15,12 +15,6 @@ jobs:
       # - image: circleci/mongo:3.4.4
 
       - image: rabbitmq:3.8.3
-      - image: circleci/postgres:latest
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: oop_core_development
-          DATABASE_HOST: host.docker.internal
 
     working_directory: ~/repo
 
