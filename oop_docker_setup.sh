@@ -60,7 +60,7 @@ services:
       - db_data:/var/lib/postgresql/data
 
 volumes:
-  #db_data:
+  db_data:
   gem_cache:
 EOF
 
