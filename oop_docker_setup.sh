@@ -52,12 +52,12 @@ services:
     env_file:
       - all.env
 
-  #database:
-  #  image: postgres
-  #  env_file:
-  #    - all.env
-  #  volumes:
-  #    - db_data:/var/lib/postgresql/data
+  database:
+    image: postgres
+    env_file:
+      - all.env
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
 volumes:
   #db_data:
