@@ -17,7 +17,7 @@ services:
       - './database.yml:/app/config/database.yml'
       - './storage.yml:/app/config/storage.yml'
       - './secrets.yml:/app/config/secrets.yml'
-  	  - /var/run/docker.sock:/var/run/docker.sock
+  	  - '/var/run/docker.sock:/var/run/docker.sock'
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -26,7 +26,7 @@ services:
     env_file:
       - all.env
     volumes:
-  	  - /var/run/docker.sock:/var/run/docker.sock
+  	  - '/var/run/docker.sock:/var/run/docker.sock'
 
   oop-authenticator:
     image: "openinterop/oop-authenticator:latest"
@@ -35,35 +35,35 @@ services:
     depends_on:
       - oop-core
     volumes:
-  	  - /var/run/docker.sock:/var/run/docker.sock
+  	  - '/var/run/docker.sock:/var/run/docker.sock'
 
   oop-tempr:
     image: "openinterop/oop-tempr:latest"
     env_file:
       - all.env
     volumes:
-  	  - /var/run/docker.sock:/var/run/docker.sock
+  	  - '/var/run/docker.sock:/var/run/docker.sock'
 
   oop-renderer:
     image: "openinterop/oop-renderer:latest"
     env_file:
       - all.env
     volumes:
-  	  - /var/run/docker.sock:/var/run/docker.sock
+  	  - '/var/run/docker.sock:/var/run/docker.sock'
 
   oop-endpoints-http:
     image: "openinterop/oop-endpoints-http:latest"
     env_file:
       - all.env
     volumes:
-  	  - /var/run/docker.sock:/var/run/docker.sock
+  	  - '/var/run/docker.sock:/var/run/docker.sock'
 
   oop-relay:
     image: "openinterop/oop-relay:latest"
     env_file:
       - all.env
     volumes:
-  	  - /var/run/docker.sock:/var/run/docker.sock
+  	  - '/var/run/docker.sock:/var/run/docker.sock'
 
   #database:
   #  image: postgres
@@ -73,7 +73,7 @@ services:
   #    - db_data:/var/lib/postgresql/data
 
 volumes:
-  gem_cache:
+  - '/var/run/docker.sock:/var/run/docker.sock'
   
 EOF
 
