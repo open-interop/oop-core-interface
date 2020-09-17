@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "Success"
+docker-compose up -f test/docker-compose.yml -d
 
