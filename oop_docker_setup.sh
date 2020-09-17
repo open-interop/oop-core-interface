@@ -73,7 +73,7 @@ services:
   #    - db_data:/var/lib/postgresql/data
 
 volumes:
-  - '/var/run/docker.sock:/var/run/docker.sock'
+  gem_cache:
   
 EOF
 
