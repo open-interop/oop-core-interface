@@ -35,3 +35,5 @@ jobs:
 
       # run tests!
       - run: yarn run test-lint
+
+      - run: bash oop_docker_setup.sh
