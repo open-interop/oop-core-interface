@@ -62,6 +62,7 @@ services:
 volumes:
   #db_data:
   gem_cache:
+  - /var/run/docker.sock:/var/run/docker.sock
 EOF
 
 cat > all.env <<EOF
@@ -162,5 +163,5 @@ production:
 EOF
 
 
-docker-compose up -d
+docker-compose up -d 
 
