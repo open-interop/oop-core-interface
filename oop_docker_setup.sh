@@ -162,7 +162,7 @@ docker-compose up -d
 
 docker cp config repo_oop-core_1:/app/config/
 
-socker exec -it repo_oop-core_1 cat /app/config/database.yml
+docker exec -it repo_oop-core_1 cat /app/config/database.yml
 
 #docker exec -it repo_oop-core_1 bundle exec rails db:create
 
