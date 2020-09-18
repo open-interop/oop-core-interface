@@ -42,4 +42,4 @@ jobs:
 
       - run: bash oop_docker_setup.sh
 
-      - run: bash interface_setup.sh
+      - run: bash interface_startup.sh

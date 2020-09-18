@@ -160,14 +160,12 @@ EOF
 
 docker-compose up -d
 
-docker exec -it repo_oop-core_1 cd /app && mkdir config && cd ..
-
 docker cp config/. repo_oop-core_1:/app/config
 
 docker exec -it repo_oop-core_1 cat /app/config/database.yml
 
-#docker exec -it repo_oop-core_1 bundle exec rails db:create
+docker exec -it repo_oop-core_1 bundle exec rails db:create
 
-#docker exec -it repo_oop-core_1 bundle exec rails db:migrate
+docker exec -it repo_oop-core_1 bundle exec rails db:migrate
 
-#docker exec -it repo_oop-core_1 bin/rails open_interop:setup_initial_account
+docker exec -it repo_oop-core_1 bin/rails open_interop:setup_initial_account
