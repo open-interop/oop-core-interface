@@ -160,7 +160,9 @@ EOF
 
 docker-compose up -d
 
-docker cp config repo_oop-core_1:/app/config/
+docker exec -it repo_oop-core_1 cd /app && mkdir config && cd ..
+
+docker cp config/. repo_oop-core_1:/app/config
 
 docker exec -it repo_oop-core_1 cat /app/config/database.yml
 
