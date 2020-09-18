@@ -66,8 +66,8 @@ NODE_ENV=production
 RAILS_ENV=production
 
 # All repos
-OOP_AMQP_ADDRESS=amqp://guest:guest@host.docker.internal
-RABBITMQ_URL=amqp://guest:guest@host.docker.internal
+OOP_AMQP_ADDRESS=amqp://guest:guest@localhost
+RABBITMQ_URL=amqp://guest:guest@localhost
 OOP_ERROR_EXCHANGE_NAME=oop.errors
 OOP_JSON_ERROR_Q=oop.errors.json
 OOP_EXCHANGE_NAME=oop
@@ -86,7 +86,7 @@ OOP_CORE_DEVICE_UPDATE_EXCHANGE=oop.core.devices
 # Tempr
 OOP_TEMPR_INPUT_Q=oop.hasauth.messages
 OOP_TEMPR_OUTPUT_Q=oop.hasauth.temprs
-OOP_CORE_API_URL=http://host.docker.internal:9001/services/v1
+OOP_CORE_API_URL=http://localhost:9001/services/v1
 
 # Scheduler
 OOP_SCHEDULER_OUTPUT_Q=oop.hasauth.messages
@@ -107,7 +107,7 @@ OOP_RECURSIVE_TEMPR_Q=oop.hasauth.temprs
 OOP_CORE_RESPONSE_Q=oop.core.transmissions
 
 # Core
-OOP_AMQP_ADDRESS=amqp://host.docker.internal
+OOP_AMQP_ADDRESS=amqp://localhost
 OOP_RENDERER_PATH=/Users/jack/Projects/OOO/oop-renderer
 
 OOP_CORE_SCHEME=http://
@@ -121,7 +121,7 @@ OOP_CORE_INTERFACE_PORT=80
 OOP_CORE_INTERFACE_PATH=/
 OOP_CORE_FROM_ADDRESS=oop@bluefrontier.co.uk
 
-DATABASE_HOST=host.docker.internal
+DATABASE_HOST=localhost
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=password
 POSTGRES_DB=oop_core_development
