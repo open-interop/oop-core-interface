@@ -68,8 +68,6 @@ jobs:
       - run: sudo chmod +x /usr/local/share/chromedriver
       - run: sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
       - run: sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
-      - run: echo "ChromeDriver installed"
-      - run: set WD_CHROME_PATH=/usr/bin/chromedriver
-      - run: echo %WD_CHROME_PATH%
+      - run: bundle exec rake webdrivers:chromedriver:update[2.46] WD_CHROME_PATH='/usr/bin/chromedriver'
 
       - run: ruby testing.rb
