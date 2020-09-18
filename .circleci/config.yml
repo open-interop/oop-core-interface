@@ -16,12 +16,12 @@ jobs:
 
       - image: rabbitmq:3.8.3
 
-      - image: postgres:latest
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: oop_core_development
-          DATABASE_HOST: host.docker.internal
+      #- image: postgres:latest
+        #environment:
+          #POSTGRES_USER: postgres
+          #POSTGRES_PASSWORD: password
+          #POSTGRES_DB: oop_core_development
+          #DATABASE_HOST: host.docker.internal
 
     working_directory: ~/repo
 
