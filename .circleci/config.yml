@@ -16,6 +16,13 @@ jobs:
 
       - image: rabbitmq:3.8.3
 
+      - image: postgres:latest
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: oop_core_development
+          DATABASE_HOST: localhost
+
     working_directory: ~/repo
 
     steps:

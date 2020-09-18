@@ -10,8 +10,6 @@ services:
       - "9001:9001"
     env_file:
       - all.env
-    depends_on:
-      - database
     volumes:
       - gem_cache:/gems
 
@@ -49,15 +47,7 @@ services:
     env_file:
       - all.env
 
-  database:
-    image: postgres
-    env_file:
-      - all.env
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
 volumes:
-  db_data:
   gem_cache:
 EOF
 
