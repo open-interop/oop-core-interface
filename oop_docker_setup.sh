@@ -158,7 +158,7 @@ production:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
 EOF
 
-#docker-compose up -d
+docker-compose up -d
 
 docker cp config repo_oop-core_1:app/config/
 
