@@ -69,7 +69,7 @@ jobs:
       - run: sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
       - run: sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
       - run: echo "ChromeDriver installed"
-      - run: SET WD_CHROME_PATH=/usr/bin/chromedriver
+      - run: set WD_CHROME_PATH=/usr/bin/chromedriver
       - run: echo %WD_CHROME_PATH%
 
       - run: ruby testing.rb
