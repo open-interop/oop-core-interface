@@ -1,4 +1,5 @@
 require 'watir'
+require 'webdrivers'
 
 browser = Watir::Browser.new
 
