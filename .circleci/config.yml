@@ -61,7 +61,7 @@ jobs:
       - run: gem install watir
 
       - run: sudo apt-get install unzip
-      - run: wget -N http://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip -P ~/Downloads
+      - run: wget -N http://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip -P ~/Downloads
       - run: unzip ~/Downloads/chromedriver_linux64.zip -d ~/Downloads
       - run: sudo mv -f ~/Downloads/chromedriver /usr/local/share/
       - run: sudo chmod +x /usr/local/share/chromedriver
