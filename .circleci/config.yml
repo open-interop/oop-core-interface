@@ -60,9 +60,12 @@ jobs:
 
       - run: gem install watir
 
-      - run: sudo curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add
-      - run: sudo echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-      - run: sudo apt-get -y update
-      - run: sudo apt-get -y install google-chrome-stable
+      - run: sudo apt-get install unzip
+      - run: wget -N http://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip -P ~/Downloads
+      - run: unzip ~/Downloads/chromedriver_linux64.zip -d ~/Downloads
+      - run: sudo mv -f ~/Downloads/chromedriver /usr/local/share/
+      - run: sudo chmod +x /usr/local/share/chromedriver
+      - run: sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+      - run: sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
 
       - run: ruby testing.rb
