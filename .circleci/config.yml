@@ -3,6 +3,10 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
+
+orbs:
+  ruby: circleci/ruby@1.0
+
 jobs:
   build:
     docker:
