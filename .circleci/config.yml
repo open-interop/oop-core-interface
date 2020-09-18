@@ -21,7 +21,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
           POSTGRES_DB: oop_core_development
-          DATABASE_HOST: localhost
+          DATABASE_HOST: host.docker.internal
 
     working_directory: ~/repo
 
