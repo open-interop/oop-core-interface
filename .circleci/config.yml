@@ -50,3 +50,7 @@ jobs:
       - run: bash oop_docker_setup.sh
 
       - run: bash interface_startup.sh
+
+      - run: gem install watir && gem install webdrivers
+
+      - run: ruby testing.rb
