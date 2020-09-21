@@ -14,6 +14,9 @@ services:
       - database
     volumes:
       - gem_cache:/gems
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.1
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -21,6 +24,9 @@ services:
       - "3000:3000"
     env_file:
       - all.env
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
 
   oop-authenticator:
     image: "openinterop/oop-authenticator:latest"
@@ -54,7 +60,9 @@ services:
     environment:
       PORT: 9001
       PROXY: http://host.docker.internal:9001
-      HOST: localhost
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.3
 
   database:
     image: postgres
@@ -66,6 +74,12 @@ services:
 volumes:
   db_data:
   gem_cache:
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 EOF
 
 cat > all.env <<EOF
@@ -93,7 +107,7 @@ OOP_CORE_DEVICE_UPDATE_EXCHANGE=oop.core.devices
 # Tempr
 OOP_TEMPR_INPUT_Q=oop.hasauth.messages
 OOP_TEMPR_OUTPUT_Q=oop.hasauth.temprs
-OOP_CORE_API_URL=http://host.docker.internal:9001/services/v1
+OOP_CORE_API_URL=http://172.20.128.1:9001/services/v1
 
 # Scheduler
 OOP_SCHEDULER_OUTPUT_Q=oop.hasauth.messages
