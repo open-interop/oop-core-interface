@@ -35,6 +35,7 @@ jobs:
       - ruby/install:
           version: '2.7'
       - run: gem install bundler
+      - run: rvm rvmrc warning ignore allGemfiles
 
       - restore_cache:
           key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
@@ -62,5 +63,7 @@ jobs:
       - run: sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
       - run: google-chrome --version
+
+      - run: sleep 100
 
       - run: curl http://localhost:3001
