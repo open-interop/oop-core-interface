@@ -20,8 +20,6 @@ jobs:
 
       - image: rabbitmq:3.8.3
 
-      - image: cimg/ruby:2.7.1-node
-
       #- image: postgres:latest
         #environment:
           #POSTGRES_USER: postgres
@@ -33,6 +31,8 @@ jobs:
 
     steps:
       - checkout
+      - ruby/install:
+          version: '2.7'
       - run: gem install bundler
       - restore_cache:
           keys:
