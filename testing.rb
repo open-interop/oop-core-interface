@@ -6,7 +6,7 @@ browser = Watir::Browser.new :chrome, args: args
 
 browser.goto 'host.docker.internal:3001/login'
 
-sleep(20)
+sleep(120)
 
 # Authenticate and Navigate to the Form
 browser.text_field(id: 'input-email').set 'test@example.com'
