@@ -59,7 +59,7 @@ jobs:
           version: '2.7'
       - run: echo "ruby 2.7 installed"
 
-      - run: gem install watir && gem install webdrivers
+      - run: gem install watir && gem install webdrivers && gem install bundler
 
       - run: sudo apt-get install unzip
       - run: wget -N http://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip -P ~/Downloads
