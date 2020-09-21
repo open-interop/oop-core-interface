@@ -32,8 +32,7 @@ jobs:
     working_directory: ~/repo
 
     steps:
-
-      - run: bundle clean --force
+      - checkout
       - restore_cache:
           keys:
             # when lock file changes, use increasingly general patterns to restore cache
