@@ -31,9 +31,11 @@ jobs:
 
     steps:
       - checkout
+
       - ruby/install:
           version: '2.7'
       - run: gem install bundler
+
       - restore_cache:
           keys:
             # when lock file changes, use increasingly general patterns to restore cache
