@@ -173,3 +173,10 @@ docker exec -it repo_oop-core_1 bundle exec rails db:create
 docker exec -it repo_oop-core_1 bundle exec rails db:migrate
 
 docker exec -it repo_oop-core_1 bin/rails runner "account = Account.create(name: 'Test Account', hostname: 'host.docker.internal'); user = User.create(email: 'test@example.com', password: 'Password123', password_confirmation: 'Password123', account: account, time_zone: 'UTC')"
+
+sleep 100 
+
+curl http://127.0.0.1:3001
+curl http://0.0.0.0:3001
+curl http://localhost:3001
+curl http://172.17.0.1:3001

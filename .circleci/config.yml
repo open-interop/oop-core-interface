@@ -63,7 +63,3 @@ jobs:
       - run: sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
       - run: google-chrome --version
-
-      - run: sleep 100
-
-      - run: curl http://127.0.0.1:3001
