@@ -63,4 +63,4 @@ jobs:
 
       - run: google-chrome --version
 
-      - run: ruby testing.rb
+      - run: curl http://localhost:3001
