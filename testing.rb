@@ -4,7 +4,7 @@ require 'webdrivers'
 args = %w[headless disable-gpu disable-dev-shm-usage disable-software-rasterizer no-sandbox]
 browser = Watir::Browser.new :chrome, args: args
 
-browser.goto 'localhost:3001/login'
+browser.goto 'host.docker.internal:3001/login'
 
 sleep(20)
 
