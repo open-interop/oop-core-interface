@@ -6,7 +6,7 @@ browser = Watir::Browser.new :chrome, args: args
 
 browser.goto 'localhost:3001/login'
 
-sleep(120)
+sleep(100)
 
 # Authenticate and Navigate to the Form
 browser.text_field(id: 'input-email').set 'test@example.com'
