@@ -4,9 +4,6 @@
 #
 version: 2.1
 
-orbs:
-  ruby: circleci/ruby@1.0
-
 jobs:
   build:
     docker:
@@ -37,16 +34,14 @@ jobs:
       - run: gem install bundler
 
       - restore_cache:
-          keys:
-            # when lock file changes, use increasingly general patterns to restore cache
-            - v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-            - v1-gem-cache-{{ arch }}-{{ .Branch }}-
-            - v1-gem-cache-{{ arch }}-
+          keys: v1-gem-cache-{{ checksum "Gemfile.lock" }}
+
       - run: bundle install
+
       - save_cache:
           paths:
             - ~/.bundle
-          key: v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
 
       - setup_remote_docker
 
@@ -62,5 +57,7 @@ jobs:
       
       - run: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
       - run: sudo apt install -y ./google-chrome-stable_current_amd64.deb
+
+      - run: google-chrome --version
 
       - run: ruby testing.rb
