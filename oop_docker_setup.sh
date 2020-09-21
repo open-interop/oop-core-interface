@@ -54,6 +54,7 @@ services:
     environment:
       PORT: 9001
       PROXY: http://host.docker.internal:9001
+      HOST: localhost
 
   database:
     image: postgres
