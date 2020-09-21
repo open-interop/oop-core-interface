@@ -20,6 +20,8 @@ jobs:
 
       - image: rabbitmq:3.8.3
 
+      - image: cimg/ruby:2.7.1-node
+
       #- image: postgres:latest
         #environment:
           #POSTGRES_USER: postgres
@@ -30,36 +32,23 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      - checkout
 
-      # Download and cache dependencies
+      - run: bundle clean --force
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: yarn install
-
+            # when lock file changes, use increasingly general patterns to restore cache
+            - v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - v1-gem-cache-{{ arch }}-{{ .Branch }}-
+            - v1-gem-cache-{{ arch }}-
+      - run: bundle install
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      # run tests!
-      - run: yarn run test-lint
+            - ~/.bundle
+          key: v1-gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
 
       - setup_remote_docker
 
       - run: bash oop_docker_setup.sh
-
-      - run: bash interface_startup.sh
-
-      - ruby/install:
-          version: '2.7'
-      - run: echo "ruby 2.7 installed"
-
-      - run: gem install watir && gem install webdrivers
 
       - run: sudo apt-get install unzip
       - run: wget -N http://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip -P ~/Downloads
@@ -68,6 +57,7 @@ jobs:
       - run: sudo chmod +x /usr/local/share/chromedriver
       - run: sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
       - run: sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
+      
       - run: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
       - run: sudo apt install -y ./google-chrome-stable_current_amd64.deb
 

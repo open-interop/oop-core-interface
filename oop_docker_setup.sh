@@ -49,6 +49,12 @@ services:
     env_file:
       - all.env
 
+  interface:
+    image: "openinterop/oop-core-interface:dev"
+    environment:
+      PORT: 9001
+      PROXY: http://host.docker.internal:9001
+
   database:
     image: postgres
     env_file:
