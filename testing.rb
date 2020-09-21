@@ -6,6 +6,8 @@ browser = Watir::Browser.new :chrome, {url: "http://127.0.0.1:9515", chromeOptio
 
 browser.goto 'localhost:3001/login'
 
+sleep(20)
+
 # Authenticate and Navigate to the Form
 browser.text_field(id: 'input-email').set 'test@example.com'
 browser.text_field(id: 'input-password').set 'testtest'
