@@ -59,7 +59,7 @@ jobs:
           version: '2.7'
       - run: echo "ruby 2.7 installed"
 
-      - run: bundle install
+      - run: gem install watir && gem install webdrivers
 
       - run: sudo apt-get install unzip
       - run: wget -N http://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip -P ~/Downloads
@@ -68,6 +68,7 @@ jobs:
       - run: sudo chmod +x /usr/local/share/chromedriver
       - run: sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
       - run: sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
-      - run: bundle exec rake webdrivers:chromedriver:update[2.46] WD_CHROME_PATH='/usr/bin/chromedriver'
+      - run: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      - run: sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
       - run: ruby testing.rb
