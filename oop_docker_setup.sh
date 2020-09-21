@@ -70,6 +70,9 @@ services:
       - all.env
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.4
 
 volumes:
   db_data:
@@ -142,7 +145,7 @@ OOP_CORE_INTERFACE_PORT=80
 OOP_CORE_INTERFACE_PATH=/
 OOP_CORE_FROM_ADDRESS=oop@bluefrontier.co.uk
 
-DATABASE_HOST=database
+DATABASE_HOST=172.20.128.4
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=password
 POSTGRES_DB=oop_core_development
