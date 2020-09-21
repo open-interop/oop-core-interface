@@ -177,7 +177,7 @@ docker exec -it repo_oop-core_1 bin/rails runner "account = Account.create(name:
 
 sleep 100 
 
-curl http://127.0.0.1:3001
-curl http://0.0.0.0:3001
-curl http://localhost:3001
-curl http://172.17.0.1:3001
+curl http://127.0.0.1:3000
+curl http://0.0.0.0:3000
+curl http://localhost:3000
+curl http://172.17.0.1:3000
