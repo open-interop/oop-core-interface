@@ -174,11 +174,3 @@ docker exec -it repo_oop-core_1 bundle exec rails db:create
 docker exec -it repo_oop-core_1 bundle exec rails db:migrate
 
 docker exec -it repo_oop-core_1 bin/rails runner "account = Account.create(name: 'Test Account', hostname: 'host.docker.internal'); user = User.create(email: 'test@example.com', password: 'Password123', password_confirmation: 'Password123', account: account, time_zone: 'UTC')"
-
-sleep 100 
-
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' repo_interface_1
-
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' repo_oop-gateway_1
-
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' repo_oop-core_1
