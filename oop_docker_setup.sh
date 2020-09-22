@@ -14,6 +14,8 @@ services:
       - database
     volumes:
       - gem_cache:/gems
+    networks:
+      - internal
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -21,6 +23,8 @@ services:
       - "3000:3000"
     env_file:
       - all.env
+    networks:
+      - internal
 
   oop-authenticator:
     image: "openinterop/oop-authenticator:latest"
@@ -56,6 +60,8 @@ services:
     environment:
       PORT: 3001
       PROXY: http://host.docker.internal:9001
+    networks:
+      - internal
 
   database:
     image: postgres
@@ -67,6 +73,10 @@ services:
 volumes:
   db_data:
   gem_cache:
+
+networks:
+  internal:
+    driver: bridge
 
 EOF
 
@@ -176,9 +186,3 @@ docker exec -it repo_oop-core_1 bundle exec rails db:create
 docker exec -it repo_oop-core_1 bundle exec rails db:migrate
 
 docker exec -it repo_oop-core_1 bin/rails runner "account = Account.create(name: 'Test Account', hostname: 'host.docker.internal'); user = User.create(email: 'test@example.com', password: 'Password123', password_confirmation: 'Password123', account: account, time_zone: 'UTC')"
-
-docker inspect repo_interface_1
-
-docker inspect repo_oop-core_1
-
-docker inspect repo_oop-gateway_1
