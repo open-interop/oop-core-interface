@@ -51,9 +51,6 @@ jobs:
 
       - run: bash oop_docker_setup.sh
 
-
-      - run: curl http://127.0.0.1:3001
-
       - run: sudo apt-get install unzip
       - run: wget -N http://chromedriver.storage.googleapis.com/85.0.4183.87/chromedriver_linux64.zip -P ~/Downloads
       - run: unzip ~/Downloads/chromedriver_linux64.zip -d ~/Downloads
