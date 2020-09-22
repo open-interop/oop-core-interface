@@ -62,4 +62,4 @@ jobs:
       - run: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
       - run: sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
-      - run: ssh remote-docker / curl http://localhost:3000
+      - run: ssh remote-docker curl http://localhost:3000
