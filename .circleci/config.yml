@@ -74,7 +74,6 @@ jobs:
           - POSTGRES_PASSWORD: password
           - POSTGRES_DB: oop_core_development
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
-        command: bin/rails runner TransmissionQueue.retrieve_transmissions
 
 
       - image: "openinterop/oop-gateway:latest"
