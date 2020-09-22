@@ -14,8 +14,6 @@ services:
       - database
     volumes:
       - gem_cache:/gems
-    networks:
-      - internal
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -23,8 +21,6 @@ services:
       - "3000:3000"
     env_file:
       - all.env
-    networks:
-      - internal
 
   oop-authenticator:
     image: "openinterop/oop-authenticator:latest"
@@ -60,8 +56,6 @@ services:
     environment:
       PORT: 3001
       PROXY: http://host.docker.internal:9001
-    networks:
-      - internal
 
   database:
     image: postgres
@@ -73,10 +67,6 @@ services:
 volumes:
   db_data:
   gem_cache:
-
-networks:
-  internal:
-    driver: bridge
 
 EOF
 
