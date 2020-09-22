@@ -14,9 +14,6 @@ services:
       - database
     volumes:
       - gem_cache:/gems
-    networks:
-      static-network:
-        ipv4_address: 172.20.128.1
 
   oop-gateway:
     image: "openinterop/oop-gateway:latest"
@@ -24,9 +21,6 @@ services:
       - "3000:3000"
     env_file:
       - all.env
-    networks:
-      static-network:
-        ipv4_address: 172.20.128.2
 
   oop-authenticator:
     image: "openinterop/oop-authenticator:latest"
@@ -57,12 +51,11 @@ services:
 
   interface:
     image: "openinterop/oop-core-interface:dev"
+    ports:
+      - "3001:3001"
     environment:
-      PORT: 9001
+      PORT: 3001
       PROXY: http://host.docker.internal:9001
-    networks:
-      static-network:
-        ipv4_address: 172.20.128.3
 
   database:
     image: postgres
@@ -70,19 +63,11 @@ services:
       - all.env
     volumes:
       - db_data:/var/lib/postgresql/data
-    networks:
-      static-network:
-        ipv4_address: 172.20.128.4
 
 volumes:
   db_data:
   gem_cache:
 
-networks:
-  static-network:
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
 EOF
 
 cat > all.env <<EOF
@@ -110,7 +95,7 @@ OOP_CORE_DEVICE_UPDATE_EXCHANGE=oop.core.devices
 # Tempr
 OOP_TEMPR_INPUT_Q=oop.hasauth.messages
 OOP_TEMPR_OUTPUT_Q=oop.hasauth.temprs
-OOP_CORE_API_URL=http://172.20.128.1:9001/services/v1
+OOP_CORE_API_URL=http://host.docker.internal:9001/services/v1
 
 # Scheduler
 OOP_SCHEDULER_OUTPUT_Q=oop.hasauth.messages
@@ -145,7 +130,7 @@ OOP_CORE_INTERFACE_PORT=80
 OOP_CORE_INTERFACE_PATH=/
 OOP_CORE_FROM_ADDRESS=oop@bluefrontier.co.uk
 
-DATABASE_HOST=172.20.128.4
+DATABASE_HOST=database
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=password
 POSTGRES_DB=oop_core_development
@@ -191,23 +176,3 @@ docker exec -it repo_oop-core_1 bundle exec rails db:create
 docker exec -it repo_oop-core_1 bundle exec rails db:migrate
 
 docker exec -it repo_oop-core_1 bin/rails runner "account = Account.create(name: 'Test Account', hostname: 'host.docker.internal'); user = User.create(email: 'test@example.com', password: 'Password123', password_confirmation: 'Password123', account: account, time_zone: 'UTC')"
-
-curl http://127.0.0.1:3000
-
-curl http://0.0.0.0:3000
-
-curl http://172.20.0.1:3000
-
-curl http://172.20.0.1
-
-curl http://172.20.128.1
-
-curl http://172.20.128.1:3000
-
-curl http://172.17.0.1
-
-curl http://172.17.0.1:3000
-
-curl http://172.17.0.2
-
-curl http://172.17.0.1:3000
