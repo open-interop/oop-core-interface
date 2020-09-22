@@ -177,18 +177,8 @@ docker exec -it repo_oop-core_1 bundle exec rails db:migrate
 
 docker exec -it repo_oop-core_1 bin/rails runner "account = Account.create(name: 'Test Account', hostname: 'host.docker.internal'); user = User.create(email: 'test@example.com', password: 'Password123', password_confirmation: 'Password123', account: account, time_zone: 'UTC')"
 
-curl http://localhost:3001/login
+docker inspect repo_interface_1
 
-curl http://localhost:3000
+docker inspect repo_oop-core_1
 
-curl http://host.docker.internal:3001/login
-
-curl http://host.docker.internal:3000
-
-curl http://127.0.0.1:3000
-
-curl http://127.0.0.1:3001/login
-
-curl http://127.0.0.1:9001/api/v1/me
-
-curl http://localhost:9001/api/v1/me
+docker inspect repo_oop-gateway_1
