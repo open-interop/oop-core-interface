@@ -76,12 +76,11 @@ jobs:
       - image: "openinterop/oop-core:latest"
         name: oop-core-transmissions
         command:  |
-                  cat > config/storage.yml \<<EOF
+                  cat > config/storage.yml '
                   local:
                     service: Disk
-                    root: <%= Rails.root.join("storage") %>
-                  EOF
-                  cat > config/database.yml \<<EOF
+                    root: <%= Rails.root.join("storage") %>'
+                  cat > config/database.yml '
                   default: &default
                     adapter: postgresql
                     encoding: unicode
@@ -94,12 +93,10 @@ jobs:
                       statement_timeout: 5000
 
                   production:
-                    <<: *default
-                  EOF
-                  cat > config/secrets.yml \<<EOF
+                    <<: *default'
+                  cat > config/secrets.yml '
                   production:
-                    secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
-                  EOF
+                    secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>'
                   bin/rails runner TransmissionQueue.retrieve_transmissions
         environment:
           - NODE_ENV: production
