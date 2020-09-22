@@ -19,14 +19,15 @@ jobs:
       # - image: circleci/mongo:3.4.4
 
       - image: rabbitmq:3.8.3
+        name: rabbit
 
       - image: "openinterop/oop-core:latest"
         name: oop-core
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -51,8 +52,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -79,8 +80,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -95,8 +96,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -113,8 +114,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -130,8 +131,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -147,8 +148,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -166,8 +167,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
-          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -182,7 +183,6 @@ jobs:
         environment:
           PORT: 3001
           PROXY: http://localhost:9001
-        command: yarn start
 
       - image: postgres
         name: database
