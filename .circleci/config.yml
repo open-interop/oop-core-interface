@@ -70,6 +70,6 @@ jobs:
 
       - run: curl http://0.0.0.0:3000
 
-      - run: curl http://172.20.128.2
+      - run: curl http://interface
 
       - run: curl http://172.20.128.1
