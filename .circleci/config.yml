@@ -23,7 +23,7 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core
-        command: ls config
+        command: cp config/database.yml.example config/database.yml
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -50,7 +50,7 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core-transmissions
-        command: echo "waiting"
+        command: cp config/database.yml.example config/database.yml
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -94,7 +94,9 @@ jobs:
 
       - image: "openinterop/oop-authenticator:latest"
         name: oop-authenticator
-        command: echo "waiting"
+        command: |
+                  sleep 10
+                  yarn start
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
