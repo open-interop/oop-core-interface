@@ -23,7 +23,7 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core
-        command: sleep 10
+        command: echo "waiting"
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -50,7 +50,7 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core-transmissions
-        command: sleep 10
+        command: echo "waiting"
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -94,7 +94,7 @@ jobs:
 
       - image: "openinterop/oop-authenticator:latest"
         name: oop-authenticator
-        command: sleep 10
+        command: echo "waiting"
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
