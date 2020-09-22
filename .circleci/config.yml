@@ -23,6 +23,10 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core
+        volumes:
+          - './config/database.yml:/app/config/database.yml'
+          - './config/storage.yml:/app/config/storage.yml'
+          - './config/secrets.yml:/app/config/secrets.yml'
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -48,7 +52,11 @@ jobs:
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
 
       - image: "openinterop/oop-core:latest"
-        name: oop-core
+        name: oop-core-transmissions
+        volumes:
+          - './config/database.yml:/app/config/database.yml'
+          - './config/storage.yml:/app/config/storage.yml'
+          - './config/secrets.yml:/app/config/secrets.yml'
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
