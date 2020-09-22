@@ -68,7 +68,7 @@ jobs:
 
       - run: docker inspect repo_oop-core_1
 
-      - run: curl http://0.0.0.0:3000
+      - run: curl http://127.0.0.1:3000
 
       - run: curl http://interface
 
