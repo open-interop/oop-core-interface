@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
 
 orbs:
   ruby: circleci/ruby@1.0
@@ -22,8 +22,6 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core
-        ports:
-          - "9001:9001"
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -49,8 +47,6 @@ jobs:
 
       - image: "openinterop/oop-gateway:latest"
         name: oop-gateway
-        ports:
-          - "3000:3000"
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -147,8 +143,6 @@ jobs:
 
       - image: "openinterop/oop-core-interface:dev"
         name: oop-core-interface
-        ports:
-          - "3001:3001"
         environment:
           PORT: 3001
           PROXY: http://localhost:9001
