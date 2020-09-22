@@ -199,7 +199,7 @@ jobs:
     steps:
       - checkout
 
-      - run: docker cp config/. repo_oop-core_1:/app/config
+      - run: docker cp config/. oop-core:/app/config
 
       - ruby/install:
           version: '2.7'
