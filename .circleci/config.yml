@@ -25,8 +25,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -51,8 +51,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -79,8 +79,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -95,8 +95,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -113,8 +113,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -130,8 +130,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -147,8 +147,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
@@ -166,8 +166,8 @@ jobs:
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@host.docker.internal
-          - RABBITMQ_URL: amqp://guest:guest@host.docker.internal
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@0.0.0.0
+          - RABBITMQ_URL: amqp://guest:guest@0.0.0.0
           - OOP_ERROR_EXCHANGE_NAME: oop.errors
           - OOP_JSON_ERROR_Q: oop.errors.json
           - OOP_EXCHANGE_NAME: oop
