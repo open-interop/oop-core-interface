@@ -51,8 +51,4 @@ jobs:
 
       - run: bash oop_docker_setup.sh
 
-      - run: scp chrome_setup.sh remote-docker
-
-      - run: ssh remote-docker ls -al
-
-      - run: ssh remote-docker curl http://localhost:3000
+      - run: ssh remote-docker curl http://localhost:3001/login
