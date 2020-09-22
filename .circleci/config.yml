@@ -62,11 +62,11 @@ jobs:
       - run: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
       - run: sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
-      - run: docker inspect -f repo_interface_1
+      - run: docker inspect repo_interface_1
 
-      - run: docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' repo_oop-gateway_1
+      - run: docker inspect repo_oop-gateway_1
 
-      - run: docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' repo_oop-core_1
+      - run: docker inspect repo_oop-core_1
 
       - run: curl http://172.20.128.3
 
