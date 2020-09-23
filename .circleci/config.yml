@@ -23,7 +23,7 @@ jobs:
 
       - image: "openinterop/oop-core:dev"
         name: oop-core
-        command: ["/app/bin/rails db:create",
+        entrypoint: ["/app/bin/rails db:create",
                   "/app/bin/rails db:migrate",
                   "/app/bin/rails server -b 0.0.0.0"]
         environment:
