@@ -204,6 +204,8 @@ jobs:
 
       - setup_remote_docker
 
+      - run: docker ps -a
+
       - run: bash core_setup.sh
 
       - ruby/install:
