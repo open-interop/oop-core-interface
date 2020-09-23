@@ -46,6 +46,7 @@ jobs:
           - POSTGRES_PASSWORD: password
           - POSTGRES_DB: oop_core_development
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+          - DATABASE_URL: http://postgres:password@database/oop_core_development
 
       - image: "openinterop/oop-core:latest"
         name: oop-core-transmissions
@@ -73,6 +74,7 @@ jobs:
           - POSTGRES_PASSWORD: password
           - POSTGRES_DB: oop_core_development
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+          - DATABASE_URL: http://postgres:password@database/oop_core_development
 
 
       - image: "openinterop/oop-gateway:latest"
@@ -216,4 +218,4 @@ jobs:
             - ~/.bundle
           key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
 
-      - run: curl http://localhost:3001
+      - run: curl http://localhost:3000
