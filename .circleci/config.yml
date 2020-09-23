@@ -21,7 +21,7 @@ jobs:
       - image: rabbitmq:3.8.3
         name: rabbit
 
-      - image: "openinterop/oop-core:latest"
+      - image: "openinterop/oop-core:dev"
         name: oop-core
         environment:
           - NODE_ENV: production
@@ -48,7 +48,7 @@ jobs:
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
           - DATABASE_URL: postgres://postgres:password@database/oop_core_development
 
-      - image: "openinterop/oop-core:latest"
+      - image: "openinterop/oop-core:dev"
         name: oop-core-transmissions
         command: bin/rails runner TransmissionQueue.retrieve_transmissions
         environment:
