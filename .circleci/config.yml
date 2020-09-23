@@ -24,7 +24,7 @@ jobs:
       - image: "openinterop/oop-core:latest"
         name: oop-core
         command: 
-          - ls -a
+          - mv config/database.yml.example config/database.yml
           - bin/rails server -b 0.0.0.0 -p 9001
         environment:
           - NODE_ENV: production
@@ -53,7 +53,7 @@ jobs:
       - image: "openinterop/oop-core:latest"
         name: oop-core-transmissions
         command: 
-          - ls -a
+          - mv config/database.yml.example config/database.yml
           - bin/rails runner TransmissionQueue.retrieve_transmissions
         environment:
           - NODE_ENV: production
