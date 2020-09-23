@@ -93,9 +93,6 @@ jobs:
 
       - image: "openinterop/oop-authenticator:latest"
         name: oop-authenticator
-        command: 
-          - /bin/sleep 10
-          - yarn start
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
