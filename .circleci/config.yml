@@ -164,8 +164,9 @@ jobs:
           - OOP_CORE_RESPONSE_Q: oop.core.transmissions
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
 
-      - image: "openinterop/oop-authenticator:latest"
+      - image: "openinterop/oop-authenticator:dev"
         name: oop-authenticator
+        entrypoint: ["sleep 20", "yarn start"]
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
