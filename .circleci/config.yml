@@ -74,7 +74,7 @@ jobs:
           - POSTGRES_PASSWORD: password
           - POSTGRES_DB: oop_core_development
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
-          - DATABASE_URL: http://postgres:password@database/oop_core_development
+          - DATABASE_URL: psql://postgres:password@database/oop_core_development
 
 
       - image: "openinterop/oop-gateway:latest"
