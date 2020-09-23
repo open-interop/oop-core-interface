@@ -23,8 +23,7 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core
-        commands: |
-                  cp config/database.yml.example config/database.yml
+        commands: cp config/database.yml.example config/database.yml,
                   bin/rails server -b 127.0.0.1 -p 9001
         environment:
           - NODE_ENV: production
@@ -52,8 +51,7 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core-transmissions
-        commands: |
-                  cp config/database.yml.example config/database.yml
+        commands: cp config/database.yml.example config/database.yml,
                   bin/rails runner TransmissionQueue.retrieve_transmissions
         environment:
           - NODE_ENV: production
@@ -98,8 +96,7 @@ jobs:
 
       - image: "openinterop/oop-authenticator:latest"
         name: oop-authenticator
-        commands: |
-                  sleep 10
+        commands: sleep 10,
                   yarn start
         environment:
           - NODE_ENV: production
