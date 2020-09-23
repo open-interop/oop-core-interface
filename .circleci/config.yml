@@ -92,24 +92,6 @@ jobs:
           - OOP_LISTEN_PORT: 3000
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
 
-      - image: "openinterop/oop-authenticator:latest"
-        name: oop-authenticator
-        environment:
-          - NODE_ENV: production
-          - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
-          - RABBITMQ_URL: amqp://guest:guest@rabbit
-          - OOP_ERROR_EXCHANGE_NAME: oop.errors
-          - OOP_JSON_ERROR_Q: oop.errors.json
-          - OOP_EXCHANGE_NAME: oop
-          - OOP_QUEUE_PREFETCH_LIMIT: 5
-          - OOP_AUTHENTICATOR_INPUT_Q: oop.noauth.raw_messages
-          - OOP_AUTHENTICATOR_OUTPUT_Q: oop.hasauth.messages
-          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
-          - OOP_CORE_TOKEN: foobar
-          - OOP_CORE_DEVICE_UPDATE_EXCHANGE: oop.core.devices
-          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
-
       - image: "openinterop/oop-tempr:latest"
         name: oop-tempr
         environment:
@@ -177,6 +159,24 @@ jobs:
           - OOP_RELAY_INPUT_Q: oop.hasauth.relay
           - OOP_RECURSIVE_TEMPR_Q: oop.hasauth.temprs
           - OOP_CORE_RESPONSE_Q: oop.core.transmissions
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+
+      - image: "openinterop/oop-authenticator:latest"
+        name: oop-authenticator
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_AUTHENTICATOR_INPUT_Q: oop.noauth.raw_messages
+          - OOP_AUTHENTICATOR_OUTPUT_Q: oop.hasauth.messages
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
+          - OOP_CORE_TOKEN: foobar
+          - OOP_CORE_DEVICE_UPDATE_EXCHANGE: oop.core.devices
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
 
       - image: "openinterop/oop-core-interface:dev"
