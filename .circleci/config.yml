@@ -200,7 +200,7 @@ jobs:
     steps:
       - checkout
 
-      - run: curl http://localhost:9001/api/v1/me
+      - run: curl oop-core/api/v1/me
 
       - ruby/install:
           version: '2.7'
