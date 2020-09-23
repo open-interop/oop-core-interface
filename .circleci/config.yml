@@ -168,9 +168,6 @@ jobs:
 
       - image: "openinterop/oop-authenticator:dev"
         name: oop-authenticator
-        entrypoint: 
-          - sleep 20
-          - yarn start
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
