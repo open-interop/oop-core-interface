@@ -25,7 +25,6 @@ jobs:
         name: oop-core
         command: [["/app/bin/rails", "db:create"],
                   ["/app/bin/rails", "db:migrate"],
-                  ["/app/bin/rails", "runner", '"account = Account.create(name:'Test Account', hostname:'host.docker.internal'); user = User.create(email:'test@example.com', password:'Password123', password_confirmation:'Password123', account:account, time_zone:'UTC')"'],
                   ["/app/bin/rails", "server", "-b", "0.0.0.0"]]
         environment:
           - NODE_ENV: production
