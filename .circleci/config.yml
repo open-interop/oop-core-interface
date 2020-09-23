@@ -49,8 +49,7 @@ jobs:
 
       - image: "openinterop/oop-core:latest"
         name: oop-core-transmissions
-        command:
-          - bin/rails runner TransmissionQueue.retrieve_transmissions
+        command: bin/rails runner TransmissionQueue.retrieve_transmissions
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
