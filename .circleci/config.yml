@@ -202,7 +202,7 @@ jobs:
 
       - run: curl oop-core:9001/api/v1/me
 
-      - run: curl http://0.0.0.0:9001/api/v1/me
+      - run: curl http://oop-core:9001/api/v1/me
 
       - ruby/install:
           version: '2.7'
