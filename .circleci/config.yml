@@ -48,34 +48,33 @@ jobs:
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
           - DATABASE_URL: postgres://postgres:password@database/oop_core_development
 
-      - image: "openinterop/oop-core:dev"
-        name: oop-core-transmissions
-        command: bin/rails runner TransmissionQueue.retrieve_transmissions
-        environment:
-          - NODE_ENV: production
-          - RAILS_ENV: production
-          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
-          - RABBITMQ_URL: amqp://guest:guest@rabbit
-          - OOP_ERROR_EXCHANGE_NAME: oop.errors
-          - OOP_JSON_ERROR_Q: oop.errors.json
-          - OOP_EXCHANGE_NAME: oop
-          - OOP_QUEUE_PREFETCH_LIMIT: 5
-          - OOP_CORE_SCHEME: http://
-          - OOP_CORE_PORT: 9001
-          - OOP_CORE_PATH: /
-          - PORT: 9001
-          - OOP_CORE_INTERFACE_SCHEME: http://
-          - OOP_CORE_INTERFACE_PORT: 80
-          - OOP_CORE_INTERFACE_PATH: /
-          - OOP_CORE_FROM_ADDRESS: oop@bluefrontier.co.uk
-          - OOP_CORE_API_URL: http://localhost:9001/services/v1
-          - DATABASE_HOST: database
-          - POSTGRES_USER: postgres
-          - POSTGRES_PASSWORD: password
-          - POSTGRES_DB: oop_core_development
-          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
-          - DATABASE_URL: postgres://postgres:password@database/oop_core_development
-
+      #- image: "openinterop/oop-core:dev"
+        #name: oop-core-transmissions
+        #command: bin/rails runner TransmissionQueue.retrieve_transmissions
+        #environment:
+          #- NODE_ENV: production
+          #- RAILS_ENV: production
+          #- OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          #- RABBITMQ_URL: amqp://guest:guest@rabbit
+          #- OOP_ERROR_EXCHANGE_NAME: oop.errors
+          #- OOP_JSON_ERROR_Q: oop.errors.json
+          #- OOP_EXCHANGE_NAME: oop
+          #- OOP_QUEUE_PREFETCH_LIMIT: 5
+          #- OOP_CORE_SCHEME: http://
+          #- OOP_CORE_PORT: 9001
+          #- OOP_CORE_PATH: /
+          #- PORT: 9001
+          #- OOP_CORE_INTERFACE_SCHEME: http://
+          #- OOP_CORE_INTERFACE_PORT: 80
+          #- OOP_CORE_INTERFACE_PATH: /
+          #- OOP_CORE_FROM_ADDRESS: oop@bluefrontier.co.uk
+          #- OOP_CORE_API_URL: http://localhost:9001/services/v1
+          #- DATABASE_HOST: database
+          #- POSTGRES_USER: postgres
+          #- POSTGRES_PASSWORD: password
+          #- POSTGRES_DB: oop_core_development
+          #- SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+          #- DATABASE_URL: postgres://postgres:password@database/oop_core_development
 
       - image: "openinterop/oop-gateway:latest"
         name: oop-gateway
