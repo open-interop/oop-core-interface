@@ -40,7 +40,7 @@ jobs:
           - OOP_CORE_INTERFACE_PORT: 80
           - OOP_CORE_INTERFACE_PATH: /
           - OOP_CORE_FROM_ADDRESS: oop@bluefrontier.co.uk
-          - OOP_CORE_API_URL: oop-core:9001/services/v1
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
           - DATABASE_HOST: database
           - POSTGRES_USER: postgres
           - POSTGRES_PASSWORD: password
@@ -88,7 +88,7 @@ jobs:
           - OOP_EXCHANGE_NAME: oop
           - OOP_QUEUE_PREFETCH_LIMIT: 5
           - OOP_GATEWAY_OUTPUT_Q: oop.noauth.raw_messages
-          - OOP_CORE_API_URL: oop-core:9001/services/v1
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
           - OOP_LISTEN_PORT: 3000
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
 
@@ -105,7 +105,7 @@ jobs:
           - OOP_QUEUE_PREFETCH_LIMIT: 5
           - OOP_AUTHENTICATOR_INPUT_Q: oop.noauth.raw_messages
           - OOP_AUTHENTICATOR_OUTPUT_Q: oop.hasauth.messages
-          - OOP_CORE_API_URL: oop-core:9001/services/v1
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
           - OOP_CORE_TOKEN: foobar
           - OOP_CORE_DEVICE_UPDATE_EXCHANGE: oop.core.devices
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
@@ -124,7 +124,7 @@ jobs:
           - OOP_TEMPR_INPUT_Q: oop.hasauth.messages
           - OOP_TEMPR_OUTPUT_Q: oop.hasauth.temprs
           - OOP_CORE_TOKEN: foobar
-          - OOP_CORE_API_URL: oop-core:9001/services/v1
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
           - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
 
       - image: "openinterop/oop-renderer:latest"
@@ -183,7 +183,7 @@ jobs:
         name: oop-core-interface
         environment:
           PORT: 3001
-          PROXY: oop-core:9001
+          PROXY: http://oop-core:9001
 
       - image: postgres
         name: database
