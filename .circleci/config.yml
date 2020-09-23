@@ -10,10 +10,20 @@ orbs:
 jobs:
   build:
     docker:
+      # specify the version you desire here
+      - image: circleci/node:lts
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+      - image: rabbitmq:3.8.3
+        name: rabbit
 
       - image: "openinterop/oop-core:dev"
         name: oop-core
-        command: [bin/rails s -b 0.0.0.0]
+        command: [bin/rails server -b 0.0.0.0]
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -186,16 +196,14 @@ jobs:
           - POSTGRES_PASSWORD: password
           - POSTGRES_DB: oop_core_development
 
-
-      - image: rabbitmq:3.8.3
-        name: rabbit
-
     working_directory: ~/repo
 
     steps:
       - checkout
 
       - run: curl http://oop-core:9001/services/v1
+
+      - run: docker ps -a
 
       - run: bash core_setup.sh
 
