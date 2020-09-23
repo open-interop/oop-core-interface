@@ -23,9 +23,10 @@ jobs:
 
       - image: "openinterop/oop-core:dev"
         name: oop-core
-        entrypoint: ["/app/bin/rails db:create",
-                  "/app/bin/rails db:migrate",
-                  "/app/bin/rails server -b 0.0.0.0"]
+        entrypoint: 
+          - /app/bin/rails db:create
+          - /app/bin/rails db:migrate
+          - /app/bin/rails server -b 0.0.0.0
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
@@ -166,7 +167,9 @@ jobs:
 
       - image: "openinterop/oop-authenticator:dev"
         name: oop-authenticator
-        entrypoint: ["sleep 20", "yarn start"]
+        entrypoint: 
+          - sleep 20
+          - yarn start
         environment:
           - NODE_ENV: production
           - RAILS_ENV: production
