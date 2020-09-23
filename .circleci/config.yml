@@ -202,8 +202,6 @@ jobs:
 
       - run: curl http://oop-core:9001/services/v1
 
-      - setup_remote_docker
-
       - run: docker ps -a
 
       - run: bash core_setup.sh
