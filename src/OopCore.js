@@ -324,8 +324,11 @@ class OopCore extends EventEmitter {
     }
 
     getTransmissions(deviceId, queryParameters) {
+        queryParameters["filter[device_id]"] = deviceId;
+
         const parameters = this.getParameters(queryParameters);
-        let path = `/devices/${deviceId}/transmissions`;
+
+        let path = `/transmissions`;
         if (parameters) {
             path += `?${parameters}`;
         }
@@ -335,7 +338,7 @@ class OopCore extends EventEmitter {
 
     getTransmission(deviceId, transmissionId) {
         return this.makeRequest(
-            `/devices/${deviceId}/transmissions/${transmissionId}`,
+            `/transmissions/${transmissionId}`,
         );
     }
 
