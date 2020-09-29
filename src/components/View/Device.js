@@ -137,7 +137,7 @@ const Device = props => {
         }
 
         return OopCore.getDeviceTemprs({
-            deviceId: props.match.params.deviceId,
+            filter: { deviceId: props.match.params.deviceId },
             "page[size]": -1,
         })
         .then(deviceTemprs => {
