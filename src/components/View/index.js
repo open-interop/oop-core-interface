@@ -9,6 +9,8 @@ export * from "./Devices";
 export * from "./ForgotPassword";
 export * from "./Header";
 export * from "./Login";
+export * from "./Message";
+export * from "./Messages";
 export * from "./MobileHeader";
 export * from "./MobileNavigation";
 export * from "./ResetPassword";

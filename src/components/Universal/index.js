@@ -14,4 +14,5 @@ export * from "./PopoverWithButton";
 export * from "./SearchBar";
 export * from "./Spinner";
 export * from "./Table";
+export * from "./TransmissionTree";
 export * from "./PaginatedTable";

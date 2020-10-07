@@ -156,13 +156,13 @@ const DeviceTransmissions = props => {
     const { device } = props;
 
     if (device === null) {
-        return <Waiting title="Latest Transmissions" />;
+        return <Waiting title="Latest Messages" />;
     }
 
-    if (!(device.transmissions && device.transmissions.length)) {
+    if (!(device.messages && device.messages.length)) {
         return (
-            <MaxCard title="Latest Transmissions">
-                No transmissions available
+            <MaxCard title="Latest Messages">
+                No messages available
             </MaxCard>
         );
     }
@@ -171,11 +171,11 @@ const DeviceTransmissions = props => {
         <MaxCard
             title={
                 <>
-                    Latest Transmissions
+                    Latest Messages
                     <Button
                         kind={KIND.secondary}
                         $as={Link}
-                        to={`/devices/${device.id}/transmissions`}
+                        to={`/messages?filter=originType-Device_originId-${device.id}`}
                         $style={{ float: "right" }}
                     >
                         View All
@@ -184,29 +184,11 @@ const DeviceTransmissions = props => {
             }
         >
             <Table
-                data={device.transmissions}
+                data={device.messages}
                 mapFunction={(
                     columnName,
                     content,
                 ) => {
-                    if (
-                        columnName ===
-                        "success"
-                    ) {
-                        return content ? (
-                            <FontAwesomeIcon
-                                icon={
-                                    faCheck
-                                }
-                            />
-                        ) : (
-                            <FontAwesomeIcon
-                                icon={
-                                    faTimes
-                                }
-                            />
-                        );
-                    }
                     if (columnName === "transmittedAt") {
                         return (
                             <DatetimeTooltip time={content}></DatetimeTooltip>
@@ -217,18 +199,18 @@ const DeviceTransmissions = props => {
                 columns={[
                     {
                         id:
-                            "transmissionUuid",
+                            "uuid",
                         name:
-                            "Transmission UUID",
+                            "Message UUID",
                     },
                     {
-                        id: "success",
-                        name: "Success",
+                        id: "transmissionCount",
+                        name: "Transmission Count",
                     },
                     {
-                        id: "transmittedAt",
+                        id: "createdAt",
                         name:
-                            "Transmitted at",
+                            "Created at",
                     },
                 ]}
             />
@@ -356,15 +338,23 @@ const DeviceDashboard = props => {
                 },
                 group: "success",
             }),
+            OopCore.getMessages({
+                filter: {
+                    originType: "Device",
+                    originId: deviceId,
+                },
+            })
         ])
             .then(([
                 device,
                 transmissions,
                 deviceTemprs,
                 deviceStats,
+                messages,
             ]) => {
                 device.transmissions = transmissions.data;
                 device.deviceTemprs = deviceTemprs.data.length;
+                device.messages = messages.data;
 
                 const successfulTransmissions = {
                     label: "Successful",

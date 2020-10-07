@@ -48,6 +48,7 @@ const Device = props => {
         return blankDevice
             ? Promise.resolve({
                   active: false,
+                  queueMessages: false,
                   authenticationHeaders: [],
                   authenticationPath: "",
                   authenticationQuery: [],
@@ -317,6 +318,15 @@ const Device = props => {
                                 checked={updatedDevice.active}
                                 onChange={() =>
                                     setValue("active", !updatedDevice.active)
+                                }
+                                checkmarkType={STYLE_TYPE.toggle_round}
+                            />
+                        </FormControl>
+                        <FormControl label="Queue Messages" key={`form-control-queueMessages`}>
+                            <Checkbox
+                                checked={updatedDevice.queueMessages}
+                                onChange={() =>
+                                    setValue("queueMessages", !updatedDevice.queueMessages)
                                 }
                                 checkmarkType={STYLE_TYPE.toggle_round}
                             />

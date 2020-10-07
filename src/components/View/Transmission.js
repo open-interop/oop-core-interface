@@ -71,7 +71,6 @@ const Transmission = props => {
             <DataProvider
                 getData={() => {
                     return OopCore.getTransmission(
-                        props.match.params.deviceId,
                         props.match.params.transmissionId,
                     ).then(transmission => {
                         OopCore.getDevice(transmission.deviceId)

@@ -26,6 +26,8 @@ import {
     Schedule,
     Layers,
     Layer,
+    Message,
+    Messages,
     MobileHeader,
     MobileNavigation,
     PageNotFound,
@@ -239,14 +241,14 @@ class App extends Component {
                             }
                         />
                         <Route
-                            path="/devices/:deviceId/transmissions"
+                            path="/transmissions"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Transmissions, props)
                             }
                         />
                         <Route
-                            path="/devices/:deviceId/transmissions/:transmissionId"
+                            path="/transmissions/:transmissionId"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Transmission, props)
@@ -367,6 +369,20 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Site, props)
+                            }
+                        />
+                        <Route
+                            path="/messages"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Messages, props)
+                            }
+                        />
+                        <Route
+                            path="/messages/:messageId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Message, props)
                             }
                         />
                         <Route
