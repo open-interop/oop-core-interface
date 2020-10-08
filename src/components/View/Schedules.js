@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faChartPie, faListUl } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
@@ -33,13 +33,36 @@ const Schedules = memo(props => {
                         return (
                             <>
                                 <Button
-                                    kind={KIND.tertiary}
                                     $as={Link}
-                                    to={`${props.location.pathname}/${content}`}
-                                    aria-label="Edit Schedule"
+                                    kind={KIND.minimal}
+                                    to={`/schedules/${content}`}
+                                    aria-label="View schedule dashboard"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faChartPie}
+                                    />
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={{
+                                        pathname: `/schedules/${content}/edit`,
+                                        prevPath: props.location,
+                                    }}
+                                    aria-label="Edit schedule"
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
+                                    />
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={`/messages?filter=originType-Schedule_originId-${content}`}
+                                    aria-label="View schedule messages"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faListUl}
                                     />
                                 </Button>
                             </>
@@ -103,7 +126,7 @@ const Schedules = memo(props => {
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "50px",
+                        width: "150px",
                     },
                 ]}
             />

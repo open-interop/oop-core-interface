@@ -17,6 +17,7 @@ export * from "./ResetPassword";
 export * from "./Profile";
 export * from "./Schedules";
 export * from "./Schedule";
+export * from "./ScheduleDashboard";
 export * from "./Layers";
 export * from "./Layer";
 export * from "./PageNotFound";

@@ -24,6 +24,7 @@ import {
     Profile,
     Schedules,
     Schedule,
+    ScheduleDashboard,
     Layers,
     Layer,
     Message,
@@ -291,6 +292,19 @@ class App extends Component {
                         />
                         <Route
                             path="/schedules/:scheduleId"
+                            exact
+                            render={props =>
+                                this.getComponent(
+                                    !hasUser,
+                                    props.match.params.scheduleId === "new"
+                                        ? Schedule
+                                        : ScheduleDashboard,
+                                    props,
+                                )
+                            }
+                        />
+                        <Route
+                            path="/schedules/:scheduleId/edit"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Schedule, props)
