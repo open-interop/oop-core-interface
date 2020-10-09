@@ -512,6 +512,17 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
+    getMessageStats(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+
+        let path = "/dashboards/messages";
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
     getSchedules(queryParameters) {
         const parameters = this.getParameters(queryParameters);
         let path = `/schedules`;
