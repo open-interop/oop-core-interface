@@ -58,7 +58,7 @@ const PairInput = memo(props => {
 
     const update = (data) => {
         if (dataIsArray) {
-            const filtered = data.filter(item => item[0] && item[1]);
+            const filtered = data.filter(item => (item[0] != null) && (item[1] != null));
 
             if (filtered.length) {
                 props.updateData(filtered);

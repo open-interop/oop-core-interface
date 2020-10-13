@@ -161,6 +161,21 @@ const Device = props => {
     const saveDevice = () => {
         clearToast();
         setDeviceErrors({});
+        var invalid = validatePairInputs();
+        if (invalid) {
+            setDeviceErrors(invalid);
+            ErrorToast("Failed to update device - " + invalid, "Error");
+            return
+        }
+        const {
+            authenticationHeaders: updatedHeaders,
+            authenticationQuery: updatedQuery,
+            ...updatedRest
+        } = updatedDevice;
+
+        updatedDevice.authenticationHeaders = updatedHeaders.filter(header => (!(header[0] == "" && header[1] == "")));
+        updatedDevice.authenticationQuery = updatedQuery.filter(query => (!(query[0] == "" && query[1] == "")));
+
         if (blankDevice) {
             return OopCore.createDevice(updatedDevice)
                 .then(response => {
@@ -186,6 +201,30 @@ const Device = props => {
                 });
         }
     };
+
+    const validatePairInputs = () => {
+        const {
+            authenticationHeaders: updatedHeaders,
+            authenticationQuery: updatedQuery,
+            ...updatedRest
+        } = updatedDevice;
+        
+        var validHeaders = false
+        updatedHeaders.map((header) => {
+            if (!(header[0] == "" && header[1] == "") && (header[0] == "" || header[1] == "")) {
+                validHeaders = "Authentication Headers must have a key and value"
+            }
+        });
+        
+        var validQuery = false
+        updatedQuery.map((query) => {
+            if (!(query[0] == "" && query[1] == "") && (query[0] == "" || query[1] == "")) {
+                validQuery = "Authentication Queries must have a key and value"
+            }
+        });
+        
+        return validHeaders || validQuery || false
+    }
 
     return (
         <Page

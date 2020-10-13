@@ -16,6 +16,7 @@ import { ListItem, ListItemLabel } from "baseui/list";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { Chart, Pie } from "react-chartjs-2";
 import styles from "./../../styles/_variables.scss";
+import chartStyles from "./../../styles/_chartColours.scss";
 import OopCore from "../../OopCore";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
@@ -26,6 +27,31 @@ const Waiting = props => {
         </MaxCard>
     );
 };
+
+const availableColours = [
+    chartStyles.chart01,
+    chartStyles.chart02,
+    chartStyles.chart03,
+    chartStyles.chart04,
+    chartStyles.chart05,
+    chartStyles.chart06,
+    chartStyles.chart07,
+    chartStyles.chart08,
+    chartStyles.chart09,
+    chartStyles.chart10,
+    chartStyles.chart11,
+    chartStyles.chart12,
+    chartStyles.chart13,
+    chartStyles.chart14,
+    chartStyles.chart15,
+    chartStyles.chart16,
+    chartStyles.chart17,
+    chartStyles.chart18,
+    chartStyles.chart19,
+    chartStyles.chart20,
+    chartStyles.chart21,
+    chartStyles.chart22,
+];
 
 const StatusIndicator = props => {
     const device = props.device;
@@ -336,7 +362,7 @@ const DeviceDashboard = props => {
                 filter: {
                     deviceId: deviceId,
                 },
-                group: "success",
+                group: "state",
             }),
             OopCore.getMessages({
                 filter: {
@@ -359,16 +385,22 @@ const DeviceDashboard = props => {
 
                 const successfulTransmissions = {
                     label: "Successful",
-                    value: deviceStats.transmissions.true || 0,
+                    value: deviceStats.transmissions.successful || 0,
                     backgroundColor: styles.green,
                 };
                 const failedTransmissions = {
                     label: "Failed",
-                    value: deviceStats.transmissions.false || 0,
+                    value: deviceStats.transmissions.failed || 0,
                     backgroundColor: styles.red,
                 };
+                const skippedTransmissions = {
+                    label: "Skipped",
+                    value: deviceStats.transmissions.skipped || 0,
+                    backgroundColor: styles.orange,
+                };
 
-                device.stats = [successfulTransmissions, failedTransmissions];
+
+                device.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
 
                 setDevice(device);
 

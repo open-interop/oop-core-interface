@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faListUl } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
@@ -56,7 +56,7 @@ const Messages = props => {
                                     to={`/messages/${content}`}
                                 >
                                     <FontAwesomeIcon
-                                        icon={faEdit}
+                                        icon={faListUl}
                                     />
                                 </Button>
                             </>

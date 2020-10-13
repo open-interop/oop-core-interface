@@ -19,7 +19,8 @@ import { arrayToObject } from "../../Utilities";
 
 import JSONPretty from "react-json-pretty";
 
-import { DataProvider, MaxCard, InPlaceGifSpinner, Modal, Page, DatetimeTooltip, TransmissionTree } from "../Universal";
+import { DataProvider, MaxCard, InPlaceGifSpinner, Modal, 
+    Page, DatetimeTooltip, TransmissionTree } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Message = props => {
@@ -29,7 +30,6 @@ const Message = props => {
 
     const [message, setMessage] = useState({});
     const [transmissions, setTransmissions] = useState({});
-    const [temprs, setTemprs] = useState({});
     const [originChildren, setOriginChildren] = useState({});
     const [showBody, setShowBody] = React.useState(false);
     const [treeData, setTreeData] = useState([]);
@@ -60,11 +60,19 @@ const Message = props => {
 
     async function getOriginName(message) {
         if (message.originType === "Device") {
-            const dev = await OopCore.getDevice(message.originId);
-            return dev.name;
+            try {
+                const dev = await OopCore.getDevice(message.originId);
+                return dev.name;
+            } catch(err) {
+                return null
+            }
         } else {
-            const sched = await OopCore.getSchedule(message.originId);
-            return sched.name;
+            try {
+                const sched = await OopCore.getSchedule(message.originId);
+                return sched.name;
+            } catch(err) {
+                return null
+            }
         }
     }
 
@@ -85,8 +93,12 @@ const Message = props => {
 
         async function getChildren(child, depth) {
             if (!child.name) {
-                var temprObject = await OopCore.getTempr(child.temprId);
-                child = temprObject;
+                try {
+                    var temprObject = await OopCore.getTempr(child.temprId);
+                    child = temprObject;
+                } catch(err) {
+                    return null
+                }
             }
             var childrenOfChild = await OopCore.getTemprs({"filter[tempr_id]": child.id});
             var allChildren = null;
@@ -108,6 +120,7 @@ const Message = props => {
                     status: transmissionObject[child.id].status,
                     transmittedAt: transmissionObject[child.id].transmittedAt,
                     transmissionId: transmissionObject[child.id].id,
+                    messageId: props.match.params.messageId,
                 }
             } else {
                 node = {
@@ -115,7 +128,8 @@ const Message = props => {
                     name: child.name,
                     depth: depth,
                     isExpanded: false,
-                    transmissionMade: false
+                    transmissionMade: false,
+                    messageId: props.match.params.messageId,
                 }
             }
 

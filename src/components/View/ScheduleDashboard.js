@@ -336,7 +336,7 @@ const ScheduleDashboard = props => {
                 filter: {
                     scheduleId: scheduleId,
                 },
-                group: "success",
+                group: "state",
             }),
             OopCore.getMessages({
                 filter: {
@@ -357,18 +357,24 @@ const ScheduleDashboard = props => {
                 schedule.scheduleTemprs = scheduleTemprs.data.length;
                 schedule.messages = messages.data;
 
+
                 const successfulTransmissions = {
                     label: "Successful",
-                    value: scheduleStats.transmissions.true || 0,
+                    value: scheduleStats.transmissions.successful || 0,
                     backgroundColor: styles.green,
                 };
                 const failedTransmissions = {
                     label: "Failed",
-                    value: scheduleStats.transmissions.false || 0,
+                    value: scheduleStats.transmissions.failed || 0,
                     backgroundColor: styles.red,
                 };
+                const skippedTransmissions = {
+                    label: "Skipped",
+                    value: scheduleStats.transmissions.skipped || 0,
+                    backgroundColor: styles.orange,
+                };
 
-                schedule.stats = [successfulTransmissions, failedTransmissions];
+                schedule.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
 
                 setSchedule(schedule);
             });
