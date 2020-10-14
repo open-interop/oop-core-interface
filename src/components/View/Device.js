@@ -47,7 +47,7 @@ const Device = props => {
     const getDevice = () => {
         return blankDevice
             ? Promise.resolve({
-                  active: false,
+                  active: true,
                   queueMessages: false,
                   authenticationHeaders: [],
                   authenticationPath: "",
@@ -173,8 +173,8 @@ const Device = props => {
             ...updatedRest
         } = updatedDevice;
 
-        updatedDevice.authenticationHeaders = updatedHeaders.filter(header => (!(header[0] == "" && header[1] == "")));
-        updatedDevice.authenticationQuery = updatedQuery.filter(query => (!(query[0] == "" && query[1] == "")));
+        updatedDevice.authenticationHeaders = updatedHeaders.filter(h => (!((h[0].length === 0 || !h[0].trim()) && (h[1].length === 0 || !h[1].trim()))));
+        updatedDevice.authenticationQuery = updatedQuery.filter(q => (!((q[0].length === 0 || !q[0].trim()) && (q[1].length === 0 || !q[1].trim()))));
 
         if (blankDevice) {
             return OopCore.createDevice(updatedDevice)
@@ -304,6 +304,7 @@ const Device = props => {
                         >
                             <Select
                                 required
+                                placeholder="Select Site..."
                                 options={sites}
                                 labelKey="name"
                                 valueKey="id"
@@ -331,6 +332,7 @@ const Device = props => {
                         >
                             <Select
                                 required
+                                placeholder="Select Group..."
                                 options={groups}
                                 labelKey="name"
                                 valueKey="id"
@@ -375,6 +377,7 @@ const Device = props => {
                             key={`form-control-timezone`}
                         >
                             <Select
+                                placeholder="Select Timezone..."
                                 options={timezones}
                                 labelKey="name"
                                 valueKey="id"
