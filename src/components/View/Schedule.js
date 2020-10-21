@@ -46,7 +46,7 @@ const Schedule = props => {
         return blankSchedule
             ? Promise.resolve([])
             : OopCore.getScheduleTemprs({
-                scheduleId: props.match.params.scheduleId,
+                filter: { scheduleId: props.match.params.scheduleId },
                 "page[size]": -1,
             }).then(res => res.data);
     };
