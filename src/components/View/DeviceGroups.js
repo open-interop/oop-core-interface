@@ -45,7 +45,7 @@ const DeviceGroups = memo(props => {
                                 <Button
                                     $as={Link}
                                     kind={KIND.tertiary}
-                                    to={`devices?deviceGroupId=${content}`}
+                                    to={`devices?filter=deviceGroupId-${content}`}
                                     aria-label="View devices for this group"
                                 >
                                     Devices
@@ -53,7 +53,7 @@ const DeviceGroups = memo(props => {
                                 <Button
                                     $as={Link}
                                     kind={KIND.tertiary}
-                                    to={`/temprs?deviceGroupId=${content}`}
+                                    to={`/temprs?filter=deviceGroupId-${content}`}
                                     aria-label="View temprs for this group"
                                 >
                                     Temprs

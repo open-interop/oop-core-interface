@@ -88,7 +88,7 @@ const TemprAssociator = props => {
                         id: "selected",
                         name: "",
                         type: "bool",
-                        hasFilter: true,
+                        hasFilter: false,
                         width: "20px",
                     },
                     {

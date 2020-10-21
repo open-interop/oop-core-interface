@@ -43,7 +43,7 @@ const PopoverWithButton = props => {
             accessibilityType={"tooltip"}
             content={PopoverContent()}
         >
-            <div>
+            <div style={{zIndex: '1'}}>
                 <FontAwesomeIcon
                     icon={faFilter}
                     onClick={() => {

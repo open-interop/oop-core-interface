@@ -31,7 +31,7 @@ const PaginatedTable = withRouter(props => {
 
     return (
         <>
-            <Block display={['none', 'none', 'block']}>
+            <Block display={['none', 'none', 'none', 'block']}>
                 <Table
                     {...props}
                     loading={loading}
@@ -52,6 +52,37 @@ const PaginatedTable = withRouter(props => {
                     }}
                 />
                 <Pagination
+                    updatePageSize={pageSize => {
+                        setPageSize(pageSize);
+                    }}
+                    currentPageSize={pageSize}
+                    updatePageNumber={pageNumber => setPage(pageNumber)}
+                    totalRecords={data ? data.totalRecords : "-"}
+                    numberOfPages={data ? data.numberOfPages : "-"}
+                    currentPage={page || 1}
+                />
+            </Block>
+            <Block display={['none', 'none', 'block', 'none']}>
+                <Table
+                    {...props}
+                    loading={loading}
+                    data={data && data.data}
+                    filters={filters}
+                    mobile={false}
+                    updateFilters={(colId, value) => {
+                        if (filters) {
+                            if (value === "") {
+                                delete filters[colId];
+                            } else {
+                                filters[colId] = value;
+                            }
+                            setFilters(filters);
+                        } else {
+                            setFilters({ [colId]: value });
+                        }
+                    }}
+                />
+                <PaginationMobile
                     updatePageSize={pageSize => {
                         setPageSize(pageSize);
                     }}

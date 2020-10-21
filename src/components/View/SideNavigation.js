@@ -78,7 +78,7 @@ const SideNavigation = props => {
                         }}
                         icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     >
-                        {props.site && props.site.fullName ? (
+                        {props.site && props.site.fullName && (
                             <>
                                 <div className="site-name">
                                     <FontAwesomeIcon
@@ -88,14 +88,7 @@ const SideNavigation = props => {
                                     {props.site.fullName}
                                 </div>
                             </>
-                        ) : (
-                            <NavigationItem
-                                className="bottom"
-                                path={`/devices`}
-                                pathName="View All"
-                            />
                         )}
-
                         {deviceGroups.map((group, index) => (
                             <React.Fragment key={`device-group-${index}`}>
                                 <NavigationItem
