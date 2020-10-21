@@ -61,6 +61,7 @@ const Login = () => {
                         />
                     </FormControl>
                     <Button
+                        id="login-submit"
                         type="submit"
                         className="submit-button"
                         onClick={handleSubmit}
