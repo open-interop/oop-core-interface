@@ -436,12 +436,10 @@ const Dashboard = props => {
             null;
 
     const getAllOrigins = () => {
-        return OopCore.getDevices({
-            "page[size]": -1,
-        }).then(devices => {
-            OopCore.getSchedules({
-                "page[size]": -1,
-            }).then(schedules => {
+        return Promise.all([
+            OopCore.getDevices({"page[size]": -1}),
+            OopCore.getSchedules({"page[size]": -1,}),
+        ]).then(([devices, schedules]) => {
                 setSchedules(schedules.data);
                 setDevices(devices.data);
                 var scheduleOrigins = schedules.data.map((s) => {
@@ -462,7 +460,6 @@ const Dashboard = props => {
                 });
                 setOrigins(scheduleOrigins.concat(deviceOrigins));
             });
-        });
     };
 
     const getMessagesByDate = origin => {

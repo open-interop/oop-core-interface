@@ -31,8 +31,6 @@ const StatusIndicator = props => {
     const schedule = props.schedule;
 
     const [css, theme] = useStyletron();
-    
-    console.log(theme);
 
     const active = css({
         float: "right",
@@ -117,7 +115,6 @@ const ScheduleMessages = props => {
             </MaxCard>
         );
     }
-    console.log(props);
     return (
         <MaxCard
             title={

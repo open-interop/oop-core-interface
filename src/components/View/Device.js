@@ -158,6 +158,20 @@ const Device = props => {
             });
     };
 
+    const bothValuesEmpty = (pair) => {
+        return (
+            (pair[0].length === 0 || !pair[0].trim()) &&
+            (pair[1].length === 0 || !pair[1].trim())
+        );
+    }
+
+    const oneValueEmpty = (pair) => {
+        return (
+            !(pair[0] == "" && pair[1] == "") && 
+            (pair[0] == "" || pair[1] == "")
+        );
+    }
+
     const saveDevice = () => {
         clearToast();
         setDeviceErrors({});
@@ -173,8 +187,8 @@ const Device = props => {
             ...updatedRest
         } = updatedDevice;
 
-        updatedDevice.authenticationHeaders = updatedHeaders.filter(h => (!((h[0].length === 0 || !h[0].trim()) && (h[1].length === 0 || !h[1].trim()))));
-        updatedDevice.authenticationQuery = updatedQuery.filter(q => (!((q[0].length === 0 || !q[0].trim()) && (q[1].length === 0 || !q[1].trim()))));
+        updatedDevice.authenticationHeaders = updatedHeaders.filter(h => !bothValuesEmpty(h));
+        updatedDevice.authenticationQuery = updatedQuery.filter(q => !bothValuesEmpty(q));
 
         if (blankDevice) {
             return OopCore.createDevice(updatedDevice)
@@ -211,15 +225,15 @@ const Device = props => {
         
         var validHeaders = false
         updatedHeaders.map((header) => {
-            if (!(header[0] == "" && header[1] == "") && (header[0] == "" || header[1] == "")) {
-                validHeaders = "Authentication Headers must have a key and value"
+            if (oneValueEmpty(header)) {
+                validHeaders = "Authentication Headers must have both a key and value"
             }
         });
         
         var validQuery = false
         updatedQuery.map((query) => {
-            if (!(query[0] == "" && query[1] == "") && (query[0] == "" || query[1] == "")) {
-                validQuery = "Authentication Queries must have a key and value"
+            if (oneValueEmpty(query)) {
+                validQuery = "Authentication Queries must have both a key and value"
             }
         });
         

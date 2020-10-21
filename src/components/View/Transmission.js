@@ -30,7 +30,7 @@ const Transmission = props => {
 
     const [showResponse, setShowResponse] = React.useState(false);
 
-    const allTransmissionsPath = props.location.state.from ? props.location.state.from
+    const allTransmissionsPath = (props.location.state && props.location.state.from) ? props.location.state.from
     : props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
