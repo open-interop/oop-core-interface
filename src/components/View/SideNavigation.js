@@ -7,6 +7,7 @@ import {
     faCircle,
     faCogs,
     faNetworkWired,
+    faInbox
 } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
@@ -159,12 +160,19 @@ const SideNavigation = props => {
                 icon={<FontAwesomeIcon icon={faChartPie} />}
             />
             {devicesSubNavigation()}
+            <NavigationItem
+                path="/messages"
+                pathName="Messages"
+                isActive={pathIncludes("/messages")}
+                icon={<FontAwesomeIcon icon={faInbox} />}
+            />
             <NavigationGroup
                 isActive={
                     pathIncludes("/users") ||
                     pathIncludes("/sites") ||
                     pathIncludes("/temprs") ||
-                    pathIncludes("/device-groups")
+                    pathIncludes("/device-groups") ||
+                    pathIncludes("/transmissions")
                 }
                 pathName="Settings"
                 isOpen={settingsAccordionOpen}
@@ -205,6 +213,11 @@ const SideNavigation = props => {
                     path="/blacklist-entries"
                     pathName="Blacklist"
                     isActive={pathIncludes("/blacklist-entries")}
+                />
+                <NavigationItem
+                    path="/transmissions"
+                    pathName="Transmissions"
+                    isActive={pathIncludes("/transmissions")}
                 />
             </NavigationGroup>
             <div className="filler" />

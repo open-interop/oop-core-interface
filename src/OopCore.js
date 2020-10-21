@@ -323,9 +323,7 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/device_groups/${deviceGroupId}`);
     }
 
-    getTransmissions(deviceId, queryParameters) {
-        queryParameters["filter[device_id]"] = deviceId;
-
+    getTransmissions(queryParameters) {
         const parameters = this.getParameters(queryParameters);
 
         let path = `/transmissions`;
@@ -336,7 +334,7 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    getTransmission(deviceId, transmissionId) {
+    getTransmission(transmissionId) {
         return this.makeRequest(
             `/transmissions/${transmissionId}`,
         );
@@ -514,6 +512,17 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
+    getMessageStats(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+
+        let path = "/dashboards/messages";
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
     getSchedules(queryParameters) {
         const parameters = this.getParameters(queryParameters);
         let path = `/schedules`;
@@ -662,6 +671,33 @@ class OopCore extends EventEmitter {
             uri`/tempr_layers/${id}?tempr_id=${data.temprId}&layer_id=${data.layerId}`,
             RequestType.DELETE,
         );
+    }
+
+    getMessages(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/messages`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getMessage(id) {
+        return this.makeRequest(uri`/messages/${id}`);
+    }
+
+    getTransmissionsByMessage(msgUuid, queryParameters) {
+        queryParameters["filter[message_uuid]"] = msgUuid;
+
+        const parameters = this.getParameters(queryParameters);
+
+        let path = `/transmissions`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
     }
 }
 

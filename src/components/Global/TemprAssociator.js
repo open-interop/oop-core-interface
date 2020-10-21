@@ -125,8 +125,8 @@ const TemprAssociator = props => {
                             return setTemprFilterName(value);
                     case "selected":
                             if (value === null) {
-                            return setTemprFilterSelected("");
-                        }
+                                return setTemprFilterSelected("");
+                            }
                             return setTemprFilterSelected(value);
                     default:
                             return null;

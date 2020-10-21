@@ -24,8 +24,11 @@ import {
     Profile,
     Schedules,
     Schedule,
+    ScheduleDashboard,
     Layers,
     Layer,
+    Message,
+    Messages,
     MobileHeader,
     MobileNavigation,
     PageNotFound,
@@ -239,14 +242,14 @@ class App extends Component {
                             }
                         />
                         <Route
-                            path="/devices/:deviceId/transmissions"
+                            path="/transmissions"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Transmissions, props)
                             }
                         />
                         <Route
-                            path="/devices/:deviceId/transmissions/:transmissionId"
+                            path="/transmissions/:transmissionId"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Transmission, props)
@@ -289,6 +292,19 @@ class App extends Component {
                         />
                         <Route
                             path="/schedules/:scheduleId"
+                            exact
+                            render={props =>
+                                this.getComponent(
+                                    !hasUser,
+                                    props.match.params.scheduleId === "new"
+                                        ? Schedule
+                                        : ScheduleDashboard,
+                                    props,
+                                )
+                            }
+                        />
+                        <Route
+                            path="/schedules/:scheduleId/edit"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Schedule, props)
@@ -367,6 +383,20 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Site, props)
+                            }
+                        />
+                        <Route
+                            path="/messages"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Messages, props)
+                            }
+                        />
+                        <Route
+                            path="/messages/:messageId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Message, props)
                             }
                         />
                         <Route

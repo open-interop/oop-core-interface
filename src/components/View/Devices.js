@@ -108,8 +108,8 @@ const Devices = props => {
                                 <Button
                                     $as={Link}
                                     kind={KIND.minimal}
-                                    to={`/devices/${content}/transmissions`}
-                                    aria-label="View device transmissions"
+                                    to={`/messages?filter=originType-Device_originId-${content}`}
+                                    aria-label="View device messages"
                                 >
                                     <FontAwesomeIcon
                                         icon={faListUl}

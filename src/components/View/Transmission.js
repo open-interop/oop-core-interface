@@ -30,7 +30,8 @@ const Transmission = props => {
 
     const [showResponse, setShowResponse] = React.useState(false);
 
-    const allTransmissionsPath = props.location.pathname.substr(
+    const allTransmissionsPath = (props.location.state && props.location.state.from) ? props.location.state.from
+    : props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
     );
@@ -71,7 +72,6 @@ const Transmission = props => {
             <DataProvider
                 getData={() => {
                     return OopCore.getTransmission(
-                        props.match.params.deviceId,
                         props.match.params.transmissionId,
                     ).then(transmission => {
                         OopCore.getDevice(transmission.deviceId)
