@@ -24,6 +24,7 @@ const Transmission = props => {
 
     const [transmission, setTransmission] = useState({});
     const [device, setDevice] = useState({});
+    const [schedule, setSchedule] = useState({});
     const [tempr, setTempr] = useState({});
 
     const [showRequest, setShowRequest] = React.useState(false);
@@ -74,37 +75,71 @@ const Transmission = props => {
                     return OopCore.getTransmission(
                         props.match.params.transmissionId,
                     ).then(transmission => {
-                        OopCore.getDevice(transmission.deviceId)
-                            .catch(error => {
-                                !transmission.errors
-                                    ? setTransmission(transmission)
-                                    : setTransmission(null);
-                            })
-                            .then(device => {
-                                OopCore.getTempr(transmission.temprId)
-                                    .catch(error => {
-                                        !transmission.errors
-                                            ? setTransmission(transmission)
-                                            : setTransmission(null);
-                                    })
-                                    .then(tempr => {
-                                        setTransmission(transmission);
-                                        setDevice(device);
-                                        setTempr(tempr);
-                                        return transmission;
-                                    })
-                                    .catch(error => {
-                                        !tempr.status
-                                            ? setTempr(tempr)
-                                            : setTempr(null);
-                                        !device.status
-                                            ? setDevice(device)
-                                            : setDevice(null);
-                                        !transmission.errors
-                                            ? setTransmission(transmission)
-                                            : setTransmission(null);
-                                    });
-                            });
+                        transmission.deviceId 
+                            ? OopCore.getDevice(transmission.deviceId)
+                                .catch(error => {
+                                    !transmission.errors
+                                        ? setTransmission(transmission)
+                                        : setTransmission(null);
+                                })
+                                .then(device => {
+                                    OopCore.getTempr(transmission.temprId)
+                                        .catch(error => {
+                                            !transmission.errors
+                                                ? setTransmission(transmission)
+                                                : setTransmission(null);
+                                        })
+                                        .then(tempr => {
+                                            setTransmission(transmission);
+                                            setDevice(device);
+                                            setSchedule(null);
+                                            setTempr(tempr);
+                                            return transmission;
+                                        })
+                                        .catch(error => {
+                                            !tempr.status
+                                                ? setTempr(tempr)
+                                                : setTempr(null);
+                                            !device.status
+                                                ? setDevice(device)
+                                                : setDevice(null);
+                                            !transmission.errors
+                                                ? setTransmission(transmission)
+                                                : setTransmission(null);
+                                        });
+                                })
+                            : OopCore.getSchedule(transmission.scheduleId)
+                                .catch(error => {
+                                    !transmission.errors
+                                        ? setTransmission(transmission)
+                                        : setTransmission(null);
+                                })
+                                .then(schedule => {
+                                    OopCore.getTempr(transmission.temprId)
+                                        .catch(error => {
+                                            !transmission.errors
+                                                ? setTransmission(transmission)
+                                                : setTransmission(null);
+                                        })
+                                        .then(tempr => {
+                                            setTransmission(transmission);
+                                            setDevice(null);
+                                            setSchedule(schedule)
+                                            setTempr(tempr);
+                                            return transmission;
+                                        })
+                                        .catch(error => {
+                                            !tempr.status
+                                                ? setTempr(tempr)
+                                                : setTempr(null);
+                                            !schedule.status
+                                                ? setSchedule(schedule)
+                                                : setSchedule(null);
+                                            !transmission.errors
+                                                ? setTransmission(transmission)
+                                                : setTransmission(null);
+                                        });
+                                });
                     });
                 }}
                 renderData={() => (
@@ -137,9 +172,10 @@ const Transmission = props => {
                             <FlexGridItem {...itemProps}>
                                 <ListItem>
                                     <div className="card-label">
-                                        <ListItemLabel description="Device ID">
-                                            {transmission.deviceId ||
-                                                "No data available"}
+                                        <ListItemLabel description={device ? "Device ID" 
+                                                : (schedule ? "Schedule ID" : "Origin ID")}>
+                                            {transmission.deviceId ? transmission.deviceId :
+                                                (transmission.scheduleId || "No data available")}
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
@@ -157,7 +193,8 @@ const Transmission = props => {
                             <FlexGridItem {...itemProps}>
                                 <ListItem>
                                     <div className="card-label">
-                                        <ListItemLabel description="Device Name">
+                                        <ListItemLabel description={device ? "Device Name" 
+                                                : (schedule ? "Schedule Name" : "Origin Name")}>
                                             {device ? (
                                                 <a
                                                     href={`/devices/${transmission.deviceId}`}
@@ -165,7 +202,15 @@ const Transmission = props => {
                                                     {device.name}
                                                 </a>
                                             ) : (
-                                                "No data available"
+                                                    schedule ? (
+                                                        <a
+                                                            href={`/schedules/${transmission.scheduleId}`}
+                                                        >
+                                                            {schedule.name}
+                                                        </a>
+                                                    ) : (
+                                                        "No data available"
+                                                    )
                                             )}
                                         </ListItemLabel>
                                     </div>
