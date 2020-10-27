@@ -232,18 +232,18 @@ const Message = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="UUID">
-                                            {message.uuid ||
+                                            {message && message.uuid ? message.uuid :
                                                 "No data available"}
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
                             </FlexGridItem>
-                            {message.originType && (
+                            {(message && message.originType) && (
                                 <FlexGridItem {...itemProps}>
                                     <ListItem>
                                         <div className="card-label">
                                             <ListItemLabel
-                                                description={message.originType}
+                                                description={message && message.originType ? message.originType : "Origin"}
                                             >
                                                 {originName ||
                                                     "No data available"}
@@ -256,7 +256,7 @@ const Message = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="Created At">
-                                            {message.createdAt ||
+                                            {message && message.createdAt ? message.createdAt :
                                                 "No data available"}
                                         </ListItemLabel>
                                     </div>
@@ -313,7 +313,7 @@ const Message = props => {
                                 />
                             </>
                         )}
-                        <TransmissionsDisplay data={originChildren} />
+                        {originChildren && <TransmissionsDisplay data={originChildren} />}
                     </>
                 )}
             />
