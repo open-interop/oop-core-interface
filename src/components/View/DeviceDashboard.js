@@ -57,8 +57,6 @@ const StatusIndicator = props => {
     const device = props.device;
 
     const [css, theme] = useStyletron();
-    
-    console.log(theme);
 
     const active = css({
         float: "right",

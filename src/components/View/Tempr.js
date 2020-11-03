@@ -140,7 +140,6 @@ const ScheduleTemprAssociator = memo(({
                     });
             }}
             onDeselect={(schedule, st) => {
-                console.log(schedule, st);
                 return OopCore.deleteScheduleTempr(st.id, {
                     scheduleId: schedule.id,
                     temprId

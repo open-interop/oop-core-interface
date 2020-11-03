@@ -21,7 +21,6 @@ const Temprs = props => {
     );
 
     const getData = (pagination) => {
-        console.log(pagination);
         return Promise.all([
             OopCore.getTemprs(pagination),
             OopCore.getDeviceGroups(),
