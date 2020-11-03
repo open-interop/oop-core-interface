@@ -35,14 +35,17 @@ export function compareByValue(a, b) {
 
 export function identicalObject(oldObject, updatedObject) {
     if (oldObject === updatedObject) {
+        console.log('1');
         return true;
     }
 
     if (!oldObject || !updatedObject) {
+        console.log('2');
         return false;
     }
 
-    if (Object.keys(oldObject).length !== Object.keys(updatedObject)) {
+    if (Object.keys(oldObject).length !== Object.keys(updatedObject).length) {
+        console.log('3');
         return false;
     }
 

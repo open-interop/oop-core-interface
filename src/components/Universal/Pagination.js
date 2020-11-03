@@ -112,7 +112,7 @@ const Pagination = props => {
                 </Centered>
             </div>
             <Centered>
-                {props.totalRecords || 1}
+                {props.totalRecords || 0}
                 {props.totalRecords > 1 || props.totalRecords === 0
                     ? " records"
                     : " record"}

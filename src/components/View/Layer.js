@@ -108,8 +108,8 @@ const Layer = props => {
         <Page
             title={
                 blankLayer
-                    ? "New Layer | Open Interop"
-                    : "Edit Layer | Open Interop"
+                    ? "New Layer | Settings | Open Interop"
+                    : "Edit Layer | Settings | Open Interop"
             }
             heading={
                 blankLayer

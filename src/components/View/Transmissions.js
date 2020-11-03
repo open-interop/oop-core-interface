@@ -104,7 +104,7 @@ const Transmissions = props => {
                 columns={[
                     {
                         id: "id",
-                        name: "Id",
+                        name: "ID",
                         type: "text",
                         hasFilter: true,
                     },
