@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -251,6 +252,15 @@ const Device = props => {
             backlink={props.location.prevPath || deviceDashboardPath}
             actions={
                 <>
+                    {blankDevice ? null : (
+                        <Button
+                            $as={Link}
+                            to={{pathname: `/devices/${props.match.params.deviceId}/history`, state: {from: `/devices/${props.match.params.deviceId}/edit`}}}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankDevice ? null : (
                         <ConfirmModal
                             buttonText="Delete"

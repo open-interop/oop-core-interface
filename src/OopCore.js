@@ -699,6 +699,21 @@ class OopCore extends EventEmitter {
 
         return this.makeRequest(path);
     }
+
+    getHistories(compType, compId, queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/${compType}/${compId}/history`
+
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path)
+    }
+
+    getHistory(compType, compId, historyId) {
+        return this.makeRequest(uri`/${compType}/${compId}/history/${historyId}`)
+    }
 }
 
 export default new OopCore();

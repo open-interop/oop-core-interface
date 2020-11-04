@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
@@ -123,6 +124,15 @@ const Schedule = props => {
             backlink={props.location.prevPath || "/schedules"}
             actions={
                 <>
+                    {blankSchedule ? null : (
+                        <Button
+                            $as={Link}
+                            to={{pathname: `/schedules/${props.match.params.scheduleId}/history`, state: {from: `/schedules/${props.match.params.scheduleId}/edit`}}}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankSchedule ? null : (
                         <ConfirmModal
                             buttonText="Delete"

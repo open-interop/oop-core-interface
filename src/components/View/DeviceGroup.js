@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -98,6 +99,15 @@ const DeviceGroup = props => {
             backlink={allDeviceGroupsPath}
             actions={
                 <>
+                    {blankDeviceGroup ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/history`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankDeviceGroup ? null : (
                         <ConfirmModal
                             buttonText="Delete"

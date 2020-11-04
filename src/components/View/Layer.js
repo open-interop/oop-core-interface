@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -119,6 +120,15 @@ const Layer = props => {
             backlink={props.location.prevPath || "/layers"}
             actions={
                 <>
+                    {blankLayer ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/history`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankLayer ? null : (
                         <ConfirmModal
                             buttonText="Delete"

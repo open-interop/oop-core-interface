@@ -19,6 +19,7 @@ import {
     Devices,
     ForgotPassword,
     Header,
+    Histories,
     Login,
     ResetPassword,
     Profile,
@@ -397,6 +398,13 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Message, props)
+                            }
+                        />
+                        <Route
+                            path="/:componentType/:componentId/history"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Histories, props)
                             }
                         />
                         <Route

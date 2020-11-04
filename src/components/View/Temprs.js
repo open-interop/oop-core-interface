@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, NumberParam, StringParam } from "use-query-params";
 
 import { PaginatedTable, Page } from "../Universal";
@@ -76,6 +76,16 @@ const Temprs = props => {
                                         icon={faEdit}
                                     />
                                 </Button>
+                                <Button
+                                    kind={KIND.tertiary}
+                                    $as={Link}
+                                    to={{pathname: `${props.location.pathname}/${content}/history`, state: {from: `${props.location.pathname}`}}}
+                                    aria-label="View tempr history"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
+                                    />
+                                </Button>
                             </>
                         );
                     }
@@ -120,7 +130,7 @@ const Temprs = props => {
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "50px",
+                        width: "100px",
                     },
                 ]}
                 filters={{ id, name, deviceGroupId }}

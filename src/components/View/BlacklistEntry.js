@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -232,6 +233,15 @@ const BlacklistEntry = props => {
             backlink={allBlacklistEntriesPath}
             actions={
                 <>
+                    {blankBlacklistEntry ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/history`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankBlacklistEntry ? null : (
                         <ConfirmModal
                             buttonText="Delete"

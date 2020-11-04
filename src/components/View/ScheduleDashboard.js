@@ -10,6 +10,7 @@ import {
     faCheck,
     faEdit,
     faTimes,
+    faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
@@ -383,15 +384,26 @@ const ScheduleDashboard = props => {
             heading="Schedule Dashboard"
             backlink={allSchedulesPath}
             actions={
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={`/schedules/${props.match.params.scheduleId}/edit`}
-                    endEnhancer={() => <FontAwesomeIcon icon={faEdit} />}
-                    aria-label="Edit this schedule"
-                >
-                    Edit
-                </Button>
+                <>
+                    <Button
+                        $as={Link}
+                        kind={KIND.minimal}
+                        to={`/schedules/${props.match.params.scheduleId}/edit`}
+                        endEnhancer={() => <FontAwesomeIcon icon={faEdit} />}
+                        aria-label="Edit this schedule"
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        $as={Link}
+                        kind={KIND.minimal}
+                        to={{pathname: `/schedules/${props.match.params.scheduleId}/history`, state: {from: `/schedules/${props.match.params.scheduleId}`}}}
+                        endEnhancer={() => <FontAwesomeIcon icon={faHistory} />}
+                        aria-label="History for this schedule"
+                    >
+                        History
+                    </Button>
+                </>
             }
         >
             <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,12]} >
