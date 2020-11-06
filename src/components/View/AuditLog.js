@@ -19,7 +19,7 @@ const formatValue = (val, field) => {
         val = JSON.stringify(val);
     }
 
-    if (val.length > 50) {
+    if (val.length > 40) {
         return <ExpandModal content={val} title={field}/> 
     }
 

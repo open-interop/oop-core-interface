@@ -6,7 +6,6 @@ import 'brace/ext/searchbox';
 import { FormControl } from "baseui/form-control";
 
 const TemprPreview = memo(props => {
-    console.log(props);
     return (
         <FormControl
             label="Example Message"

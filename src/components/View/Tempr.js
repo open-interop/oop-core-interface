@@ -214,7 +214,6 @@ const Tempr = props => {
     };
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
-        console.log(tempr.exampleTransmission);
         setOriginalTempr({
             name: tempr.name,
             description: tempr.description,

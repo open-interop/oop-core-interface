@@ -724,10 +724,6 @@ class OopCore extends EventEmitter {
     getAuditLog(auditLogId) {
         return this.makeRequest(uri`/audit_logs/${auditLogId}`);
     }
-
-    getHistory(compType, compId, historyId) {
-        return this.makeRequest(uri`/${compType}/${compId}/audit_logs/${historyId}`)
-    }
 }
 
 export default new OopCore();
