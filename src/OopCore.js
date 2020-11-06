@@ -700,9 +700,19 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    getHistories(compType, compId, queryParameters) {
+    getGlobalHistory(queryParameters) {
         const parameters = this.getParameters(queryParameters);
-        let path = `/${compType}/${compId}/history`
+        let path = `/audit_logs`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getAuditLogs(compType, compId, queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/${compType}/${compId}/audit_logs`
 
         if (parameters) {
             path += `?${parameters}`;
@@ -711,8 +721,12 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path)
     }
 
+    getAuditLog(auditLogId) {
+        return this.makeRequest(uri`/audit_logs/${auditLogId}`);
+    }
+
     getHistory(compType, compId, historyId) {
-        return this.makeRequest(uri`/${compType}/${compId}/history/${historyId}`)
+        return this.makeRequest(uri`/${compType}/${compId}/audit_logs/${historyId}`)
     }
 }
 

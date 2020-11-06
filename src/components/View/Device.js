@@ -255,7 +255,7 @@ const Device = props => {
                     {blankDevice ? null : (
                         <Button
                             $as={Link}
-                            to={{pathname: `/devices/${props.match.params.deviceId}/history`, state: {from: `/devices/${props.match.params.deviceId}/edit`}}}
+                            to={{pathname: `/devices/${props.match.params.deviceId}/audit-logs`, state: {from: `/devices/${props.match.params.deviceId}/edit`}}}
                             aria-label={"History"}
                         >
                             History

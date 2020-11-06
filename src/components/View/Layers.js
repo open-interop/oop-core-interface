@@ -42,7 +42,7 @@ const Layers = memo(props => {
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `${props.location.pathname}/${content}/history`, state: {from: `${props.location.pathname}`}}}
+                                    to={{pathname: `${props.location.pathname}/${content}/audit-logs`, state: {from: `${props.location.pathname}`}}}
                                     aria-label="View Layer history"
                                 >
                                     <FontAwesomeIcon

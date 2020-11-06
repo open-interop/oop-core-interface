@@ -9,6 +9,8 @@ import oopTheme from "./theme";
 import { BrowserRouter, Route, Redirect, withRouter, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
+    AuditLog,
+    AuditLogs,
     BlacklistEntries,
     BlacklistEntry,
     Dashboard,
@@ -19,7 +21,6 @@ import {
     Devices,
     ForgotPassword,
     Header,
-    Histories,
     Login,
     ResetPassword,
     Profile,
@@ -401,10 +402,17 @@ class App extends Component {
                             }
                         />
                         <Route
-                            path="/:componentType/:componentId/history"
+                            path="/:componentType/:componentId/audit-logs"
                             exact
                             render={props =>
-                                this.getComponent(!hasUser, Histories, props)
+                                this.getComponent(!hasUser, AuditLogs, props)
+                            }
+                        />
+                        <Route
+                            path="/:componentType/:componentId/audit-logs/:auditLogId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, AuditLog, props)
                             }
                         />
                         <Route

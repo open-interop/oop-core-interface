@@ -59,7 +59,7 @@ const Schedules = memo(props => {
                                     $as={Link}
                                     kind={KIND.minimal}
                                     to={{
-                                        pathname: `/schedules/${content}/history`,
+                                        pathname: `/schedules/${content}/audit-logs`,
                                         state: {from: `/schedules`},
                                     }}
                                     aria-label="View schedule history"

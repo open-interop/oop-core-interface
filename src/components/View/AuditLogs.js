@@ -16,7 +16,7 @@ import { useQueryParam, StringParam, NumberParam } from "use-query-params";
 import OopCore from "../../OopCore";
 
 function typeHeading(string) {
-    const capitalized = string.charAt(0).toUpperCase() + string.slice(1);
+    const capitalized = (string.charAt(0).toUpperCase() + string.slice(1)).replace('-', ' ');
     if (capitalized[capitalized.length - 1] === 's') {
         if (capitalized.slice(capitalized.length - 3) === 'ies') {
             return capitalized.slice(0, -3) + 'y';
@@ -33,7 +33,7 @@ function formatType(type) {
     return type.replace(/-/g, "_");
 }
 
-const Histories = props => {
+const AuditLogs = props => {
     const [history, setHistory] = useState([]);
     const [action, setAction] = useQueryParam("action", StringParam);
     const [version, setVersion] = useQueryParam("version", NumberParam);
@@ -41,7 +41,7 @@ const Histories = props => {
     const [notFound, setNotFound] = useState(null);
 
     const previousPath = (props.location.state && props.location.state.from) ? props.location.state.from
-        : props.location.pathname.replace('/history','');
+        : props.location.pathname.replace('/audit-logs','');
 
     const componentHeading = typeHeading(props.match.params.componentType)
 
@@ -51,7 +51,7 @@ const Histories = props => {
     };
 
     const getData = (pagination) => {
-        return OopCore.getHistories(
+        return OopCore.getAuditLogs(
             formatType(props.match.params.componentType),
             props.match.params.componentId,
             pagination
@@ -64,23 +64,31 @@ const Histories = props => {
     };
 
     if (notFound) {
-        return <PageNotFound/>
+        return <PageNotFound item="Audit Logs"/>
     }
 
     return (
         <Page
-            title={"History | Open Interop"}
-            heading={componentHeading + " history"}
+            title={"Audit Logs | Open Interop"}
+            heading={"Audit Logs - " + componentHeading}
             backlink={previousPath}
         >
             <PaginatedTable
                 getData={getData}
                 mapFunction={(columnName, content) => {
                     if (columnName === "listAll") {
-                        return <HistoryModal
-                                    title={componentHeading + " audited changes"}
-                                    changes={content}
-                                />;
+                        return (
+                            <Button
+                                kind={KIND.tertiary}
+                                $as={Link}
+                                to={{pathname: `${props.location.pathname}/${content}`, state: { from: props.location.pathname }}}
+                                aria-label={`View Audit Log - ${content}`}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faListUl}
+                                />
+                            </Button>
+                        );
                     } 
                     if (columnName === "createdAt") {
                         return (
@@ -126,7 +134,7 @@ const Histories = props => {
                 ]}
                 columnContent={columnName => {
                     if (columnName === "listAll") {
-                        return "auditedChanges";
+                        return "id";
                     }
                     return columnName;
                 }}
@@ -148,4 +156,4 @@ const Histories = props => {
     );
 };
 
-export { Histories };
+export { AuditLogs };

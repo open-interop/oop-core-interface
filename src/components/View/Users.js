@@ -45,7 +45,7 @@ const Users = memo(props => {
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/users/${content}/history`, state: {from: `/users`}}}
+                                    to={{pathname: `/users/${content}/audit-logs`, state: {from: `/users`}}}
                                     aria-label="View user history"
                                 >
                                     <FontAwesomeIcon

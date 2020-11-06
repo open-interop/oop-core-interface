@@ -127,7 +127,7 @@ const Schedule = props => {
                     {blankSchedule ? null : (
                         <Button
                             $as={Link}
-                            to={{pathname: `/schedules/${props.match.params.scheduleId}/history`, state: {from: `/schedules/${props.match.params.scheduleId}/edit`}}}
+                            to={{pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`, state: {from: `/schedules/${props.match.params.scheduleId}/edit`}}}
                             aria-label={"History"}
                         >
                             History

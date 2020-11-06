@@ -45,7 +45,7 @@ const BlacklistEntries = memo(props => {
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/blacklist-entries/${content}/history`, state: { from: `/blacklist-entries` }}}
+                                    to={{pathname: `/blacklist-entries/${content}/audit-logs`, state: { from: `/blacklist-entries` }}}
                                     aria-label="View Blacklist Entry's History"
                                 >
                                     <FontAwesomeIcon

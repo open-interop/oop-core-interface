@@ -44,7 +44,7 @@ const Sites = memo(props => {
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/sites/${content}/history`, state: { from: `/sites` }}}
+                                    to={{pathname: `/sites/${content}/audit-logs`, state: { from: `/sites` }}}
                                 >
                                     <FontAwesomeIcon
                                         icon={faHistory}

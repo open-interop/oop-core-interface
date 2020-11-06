@@ -126,7 +126,7 @@ const Site = props => {
                     {blankSite ? null : (
                         <Button
                             $as={Link}
-                            to={`${props.location.pathname}/history`}
+                            to={`${props.location.pathname}/audit-logs`}
                             aria-label={"History"}
                         >
                             History

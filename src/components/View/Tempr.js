@@ -214,6 +214,7 @@ const Tempr = props => {
     };
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
+        console.log(tempr.exampleTransmission);
         setOriginalTempr({
             name: tempr.name,
             description: tempr.description,
@@ -376,7 +377,7 @@ const Tempr = props => {
                     {blankTempr ? null : (
                         <Button
                             $as={Link}
-                            to={`${props.location.pathname}/history`}
+                            to={`${props.location.pathname}/audit-logs`}
                             aria-label={"History"}
                         >
                             History

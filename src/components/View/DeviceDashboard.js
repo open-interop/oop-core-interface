@@ -432,7 +432,7 @@ const DeviceDashboard = props => {
                     <Button
                         $as={Link}
                         kind={KIND.minimal}
-                        to={{pathname: `/devices/${props.match.params.deviceId}/history`, state: {from: `/devices/${props.match.params.deviceId}`}}}
+                        to={{pathname: `/devices/${props.match.params.deviceId}/audit-logs`, state: {from: `/devices/${props.match.params.deviceId}`}}}
                         endEnhancer={() => <FontAwesomeIcon icon={faHistory} />}
                         aria-label="History for this device"
                     >

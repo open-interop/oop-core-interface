@@ -1,3 +1,5 @@
+export * from "./AuditLog";
+export * from "./AuditLogs";
 export * from "./BlacklistEntry";
 export * from "./BlacklistEntries";
 export * from "./Dashboard";
@@ -8,7 +10,6 @@ export * from "./DeviceGroups";
 export * from "./Devices";
 export * from "./ForgotPassword";
 export * from "./Header";
-export * from "./Histories";
 export * from "./Login";
 export * from "./Message";
 export * from "./Messages";

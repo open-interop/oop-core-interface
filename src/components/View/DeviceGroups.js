@@ -44,7 +44,7 @@ const DeviceGroups = memo(props => {
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/device-groups/${content}/history`, state: { from: `/device-groups` }}}
+                                    to={{pathname: `/device-groups/${content}/audit-logs`, state: { from: `/device-groups` }}}
                                     aria-label="View device group history"
                                 >
                                     <FontAwesomeIcon

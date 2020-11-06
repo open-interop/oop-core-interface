@@ -109,7 +109,7 @@ const Devices = props => {
                                 <Button
                                     $as={Link}
                                     kind={KIND.minimal}
-                                    to={{pathname: `/devices/${content}/history`, state: {from: `/devices`}}}
+                                    to={{pathname: `/devices/${content}/audit-logs`, state: {from: `/devices`}}}
                                     aria-label="View device history"
                                 >
                                     <FontAwesomeIcon

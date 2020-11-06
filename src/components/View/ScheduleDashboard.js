@@ -397,7 +397,7 @@ const ScheduleDashboard = props => {
                     <Button
                         $as={Link}
                         kind={KIND.minimal}
-                        to={{pathname: `/schedules/${props.match.params.scheduleId}/history`, state: {from: `/schedules/${props.match.params.scheduleId}`}}}
+                        to={{pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`, state: {from: `/schedules/${props.match.params.scheduleId}`}}}
                         endEnhancer={() => <FontAwesomeIcon icon={faHistory} />}
                         aria-label="History for this schedule"
                     >
