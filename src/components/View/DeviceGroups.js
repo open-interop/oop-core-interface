@@ -73,7 +73,7 @@ const DeviceGroups = memo(props => {
                 columns={[
                     {
                         id: "id",
-                        name: "Id",
+                        name: "ID",
                         type: "text",
                         hasFilter: true,
                         width: "50px",

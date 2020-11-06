@@ -42,7 +42,7 @@ export function identicalObject(oldObject, updatedObject) {
         return false;
     }
 
-    if (Object.keys(oldObject).length !== Object.keys(updatedObject)) {
+    if (Object.keys(oldObject).length !== Object.keys(updatedObject).length) {
         return false;
     }
 

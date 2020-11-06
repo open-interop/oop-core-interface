@@ -21,7 +21,6 @@ const Temprs = props => {
     );
 
     const getData = (pagination) => {
-        console.log(pagination);
         return Promise.all([
             OopCore.getTemprs(pagination),
             OopCore.getDeviceGroups(),
@@ -92,7 +91,7 @@ const Temprs = props => {
                 columns={[
                     {
                         id: "id",
-                        name: "Id",
+                        name: "ID",
                         type: "text",
                         hasFilter: true,
                         width: "50px",

@@ -12,6 +12,7 @@ import {
     Page,
 } from "../Universal";
 import OopCore from "../../OopCore";
+import { identicalObject } from "../../Utilities";
 
 import TemprAssociator from "../Global/TemprAssociator";
 
@@ -65,14 +66,7 @@ const Schedule = props => {
     };
 
     const saveButtonDisabled = () => {
-        return !(
-            updatedSchedule.name &&
-            updatedSchedule.monthOfYear &&
-            updatedSchedule.dayOfMonth &&
-            updatedSchedule.dayOfWeek &&
-            updatedSchedule.hour &&
-            updatedSchedule.minute
-        );
+        return identicalObject(updatedSchedule, schedule);
     };
 
     const deleteSchedule = () => {
