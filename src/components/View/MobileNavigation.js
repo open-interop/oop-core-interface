@@ -54,7 +54,7 @@ const MobileNavigation = props => {
                     pathName="Sites"
                     onClick={() => {
                         setSettingsAccordionOpen();
-                        history.push("/users");
+                        history.push("/sites");
                     }}
                 />
                 <NavigationItem
@@ -62,7 +62,7 @@ const MobileNavigation = props => {
                     pathName="Temprs"
                     onClick={() => {
                         setSettingsAccordionOpen();
-                        history.push("/users");
+                        history.push("/temprs");
                     }}
                 />
                 <NavigationItem
@@ -70,7 +70,7 @@ const MobileNavigation = props => {
                     pathName="Device Groups"
                     onClick={() => {
                         setSettingsAccordionOpen();
-                        history.push("/users");
+                        history.push("/device-groups");
                     }}
                 />
                 <NavigationItem
@@ -78,7 +78,7 @@ const MobileNavigation = props => {
                     pathName="Schedules"
                     onClick={() => {
                         setSettingsAccordionOpen();
-                        history.push("/users");
+                        history.push("/schedules");
                     }}
                 />
                 <NavigationItem
@@ -86,7 +86,7 @@ const MobileNavigation = props => {
                     pathName="Layers"
                     onClick={() => {
                         setSettingsAccordionOpen();
-                        history.push("/users");
+                        history.push("/layers");
                     }}
                 />
                 <NavigationItem
@@ -94,7 +94,23 @@ const MobileNavigation = props => {
                     pathName="Blacklist"
                     onClick={() => {
                         setSettingsAccordionOpen();
-                        history.push("/users");
+                        history.push("/blacklist-entries");
+                    }}
+                />
+                <NavigationItem
+                    path="/transmissions"
+                    pathName="Transmissions"
+                    onClick={() => {
+                        setSettingsAccordionOpen();
+                        history.push("/transmissions");
+                    }}
+                />
+                <NavigationItem
+                    path="/global-history"
+                    pathName="Global History"
+                    onClick={() => {
+                        setSettingsAccordionOpen();
+                        history.push("/global-history");
                     }}
                 />
             </NavigationGroup>

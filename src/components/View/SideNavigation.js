@@ -165,7 +165,8 @@ const SideNavigation = props => {
                     pathIncludes("/sites") ||
                     pathIncludes("/temprs") ||
                     pathIncludes("/device-groups") ||
-                    pathIncludes("/transmissions")
+                    pathIncludes("/transmissions") ||
+                    pathIncludes("/global-history")
                 }
                 pathName="Settings"
                 isOpen={settingsAccordionOpen}
@@ -211,6 +212,11 @@ const SideNavigation = props => {
                     path="/transmissions"
                     pathName="Transmissions"
                     isActive={pathIncludes("/transmissions")}
+                />
+                <NavigationItem
+                    path="/global-history"
+                    pathName="Global History"
+                    isActive={pathIncludes("/global-history")}
                 />
             </NavigationGroup>
             <div className="filler" />
