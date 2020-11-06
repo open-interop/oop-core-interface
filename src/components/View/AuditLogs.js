@@ -81,7 +81,7 @@ const AuditLogs = props => {
                             <Button
                                 kind={KIND.tertiary}
                                 $as={Link}
-                                to={{pathname: `${props.location.pathname}/${content}`, state: { from: props.location.pathname }}}
+                                to={{pathname: `/audit-logs/${content}`, state: { from: props.location.pathname }}}
                                 aria-label={`View Audit Log - ${content}`}
                             >
                                 <FontAwesomeIcon

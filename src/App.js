@@ -20,6 +20,7 @@ import {
     DeviceGroups,
     Devices,
     ForgotPassword,
+    GlobalHistory,
     Header,
     Login,
     ResetPassword,
@@ -402,6 +403,13 @@ class App extends Component {
                             }
                         />
                         <Route
+                            path="/global-history"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, GlobalHistory, props)
+                            }
+                        />
+                        <Route
                             path="/:componentType/:componentId/audit-logs"
                             exact
                             render={props =>
@@ -409,7 +417,7 @@ class App extends Component {
                             }
                         />
                         <Route
-                            path="/:componentType/:componentId/audit-logs/:auditLogId"
+                            path="/audit-logs/:auditLogId"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, AuditLog, props)

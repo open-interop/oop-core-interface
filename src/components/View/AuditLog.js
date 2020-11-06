@@ -53,7 +53,7 @@ const AuditLog = props => {
     const [noUser, setNoUser] = useState(null);
 
     const previousPath = (props.location.state && props.location.state.from) ? props.location.state.from
-        : props.location.pathname.replace(props.params.match.auditLogId,'');
+        : "/global-history";
     
     const getData = (pagination) => {
         return OopCore.getAuditLog(
