@@ -5,7 +5,6 @@ export * from "./ExpandModal";
 export * from "./DataCircle";
 export * from "./DataProvider";
 export * from "./DatetimeTooltip";
-export * from "./HistoryModal";
 export * from "./LineWrapper";
 export * from "./MaxCard";
 export * from "./Modal";
