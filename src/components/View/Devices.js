@@ -11,6 +11,7 @@ import {
     faEdit,
     faListUl,
     faPlus,
+    faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { arrayToObject } from "../../Utilities";
 
@@ -108,6 +109,16 @@ const Devices = props => {
                                 <Button
                                     $as={Link}
                                     kind={KIND.minimal}
+                                    to={{pathname: `/devices/${content}/audit-logs`, state: {from: `/devices`}}}
+                                    aria-label="View device history"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
+                                    />
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
                                     to={`/messages?filter=originType-Device_originId-${content}`}
                                     aria-label="View device messages"
                                 >
@@ -159,7 +170,7 @@ const Devices = props => {
                         hasFilter: true,
                         width: "100px",
                     },
-                    { id: "action", name: "", width: "150px" },
+                    { id: "action", name: "", width: "200px" },
                 ]}
                 columnContent={columnName => {
                     if (columnName === "action") {

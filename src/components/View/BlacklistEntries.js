@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
@@ -40,6 +40,16 @@ const BlacklistEntries = memo(props => {
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
+                                    />
+                                </Button>
+                                <Button
+                                    kind={KIND.tertiary}
+                                    $as={Link}
+                                    to={{pathname: `/blacklist-entries/${content}/audit-logs`, state: { from: `/blacklist-entries` }}}
+                                    aria-label="View Blacklist Entry's History"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
                                     />
                                 </Button>
                             </>
@@ -84,7 +94,7 @@ const BlacklistEntries = memo(props => {
                     { id: "entry", name: "Entry", width: "50%" },
                     { id: "createdAt", name: "Created At" },
                     { id: "updatedAt", name: "Updated At" },
-                    { id: "action", name: "", width: "50px" },
+                    { id: "action", name: "", width: "100px" },
                 ]}
                 columnContent={columnName => {
                     if (columnName === "action") {

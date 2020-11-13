@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -39,6 +39,16 @@ const DeviceGroups = memo(props => {
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
+                                    />
+                                </Button>
+                                <Button
+                                    kind={KIND.tertiary}
+                                    $as={Link}
+                                    to={{pathname: `/device-groups/${content}/audit-logs`, state: { from: `/device-groups` }}}
+                                    aria-label="View device group history"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
                                     />
                                 </Button>
 
@@ -89,7 +99,7 @@ const DeviceGroups = memo(props => {
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "250px",
+                        width: "300px",
                     },
                 ]}
             />

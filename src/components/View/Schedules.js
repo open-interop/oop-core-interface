@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faPlus, faEdit, faChartPie, faListUl } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faChartPie, faListUl, faHistory } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
@@ -53,6 +53,19 @@ const Schedules = memo(props => {
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
+                                    />
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={{
+                                        pathname: `/schedules/${content}/audit-logs`,
+                                        state: {from: `/schedules`},
+                                    }}
+                                    aria-label="View schedule history"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
                                     />
                                 </Button>
                                 <Button
@@ -126,7 +139,7 @@ const Schedules = memo(props => {
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "150px",
+                        width: "200px",
                     },
                 ]}
             />

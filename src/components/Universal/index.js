@@ -1,6 +1,7 @@
 export * from "./AccordionWithCaption";
 export * from "./ConfirmModal";
 export * from "./Error";
+export * from "./ExpandModal";
 export * from "./DataCircle";
 export * from "./DataProvider";
 export * from "./DatetimeTooltip";

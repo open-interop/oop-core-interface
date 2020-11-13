@@ -107,7 +107,7 @@ div[id="root"] .mobile-nav {
         &[data-baseweb="button"] {
             color: $color-white;
             font-size: 5vmin;
-            height: 10vh;
+            height: 8vh;
             padding: 0vh 4vw 0vh 4vw;
         }
         &:active {
@@ -121,7 +121,7 @@ div[id="root"] .mobile-nav {
     button {
         &[data-baseweb="button"] {
             color: $color-white;
-            height: 10vh;
+            height: 8vh;
             padding: 0vh 4vw 0vh 4vw;
             font-size: 5vmin;
             float: right;

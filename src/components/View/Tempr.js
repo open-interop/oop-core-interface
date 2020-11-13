@@ -373,6 +373,15 @@ const Tempr = props => {
             backlink={allTemprsPath}
             actions={
                 <>
+                    {blankTempr ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/audit-logs`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankTempr || (noParents && noChildren) ? null : (
                         <Button
                             $as={Link}

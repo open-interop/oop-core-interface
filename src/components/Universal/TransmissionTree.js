@@ -139,7 +139,7 @@ const TransmissionTree = props => {
                                 <div className="card-label">
                                     <ListItemLabel description="Status">
                                         {node.deleted ? "Origin/Tempr has been deleted"  
-                                            : "No Transmission made for this tempr"}
+                                            : "No Transmission made for this tempr / Tempr no longer associated"}
                                     </ListItemLabel>
                                 </div>
                             </ListItem>

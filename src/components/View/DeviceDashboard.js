@@ -10,6 +10,7 @@ import {
     faCheck,
     faEdit,
     faTimes,
+    faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
@@ -418,15 +419,26 @@ const DeviceDashboard = props => {
             heading="Device Dashboard"
             backlink={allDevicesPath}
             actions={
-                <Button
-                    $as={Link}
-                    kind={KIND.minimal}
-                    to={`/devices/${props.match.params.deviceId}/edit`}
-                    endEnhancer={() => <FontAwesomeIcon icon={faEdit} />}
-                    aria-label="Edit this device"
-                >
-                    Edit
-                </Button>
+                <>
+                    <Button
+                        $as={Link}
+                        kind={KIND.minimal}
+                        to={`/devices/${props.match.params.deviceId}/edit`}
+                        endEnhancer={() => <FontAwesomeIcon icon={faEdit} />}
+                        aria-label="Edit this device"
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        $as={Link}
+                        kind={KIND.minimal}
+                        to={{pathname: `/devices/${props.match.params.deviceId}/audit-logs`, state: {from: `/devices/${props.match.params.deviceId}`}}}
+                        endEnhancer={() => <FontAwesomeIcon icon={faHistory} />}
+                        aria-label="History for this device"
+                    >
+                        History
+                    </Button>
+                </>
             }
         >
             <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,12]} >

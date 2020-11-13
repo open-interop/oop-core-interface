@@ -7,7 +7,7 @@ import { StyledTitle } from "baseui/card";
 
 const PageNotFound = props => {
     useEffect(() => {
-        document.title = "Page Not Found | Open Interop";
+        document.title = props.item ? props.item + " Not Found | Open Interop" : "Page Not Found | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const [errorMessage, setErrorMessage] = useState("");
@@ -16,7 +16,7 @@ const PageNotFound = props => {
     return (
         <MaxCard title={
             <StyledTitle>
-                Page not found
+                {props.item ? `${props.item} Not Found` : 'Page not found'}
             </StyledTitle>
         } >
             <div>

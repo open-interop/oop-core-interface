@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
@@ -42,6 +42,16 @@ const Users = memo(props => {
                                         icon={faEdit}
                                     />
                                 </Button>
+                                <Button
+                                    kind={KIND.tertiary}
+                                    $as={Link}
+                                    to={{pathname: `/users/${content}/audit-logs`, state: {from: `/users`}}}
+                                    aria-label="View user history"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
+                                    />
+                                </Button>
                             </>
                         );
                     }
@@ -68,7 +78,7 @@ const Users = memo(props => {
                     },
                     { id: "createdAt", name: "Created At" },
                     { id: "updatedAt", name: "Updated At" },
-                    { id: "action", name: "", width: "50px" },
+                    { id: "action", name: "", width: "100px" },
                 ]}
                 columnContent={columnName => {
                     if (columnName === "action") {

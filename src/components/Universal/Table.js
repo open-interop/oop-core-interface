@@ -134,6 +134,7 @@ const Table = memo(props => {
                                 }
                                 trueText={props.trueText}
                                 falseText={props.falseText}
+                                zIndex={1}
                             />
                         )}
                     </StyledHeadCell>
