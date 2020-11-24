@@ -14,6 +14,23 @@
     }
 }
 
+.schedule-tempr {
+    cursor: pointer;
+
+    div {
+        &.action-column {
+            cursor: auto;
+        }
+    }
+
+    &.selected {
+        div {
+            font-weight: bolder;
+        }
+    }
+}
+
+
 .tempr-preview {
     margin: 1rem 0;
     max-height: 500px;

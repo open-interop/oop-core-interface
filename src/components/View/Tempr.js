@@ -1,4 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -52,18 +53,20 @@ const getTempr = (temprId, deviceGroupId) => {
     }
 };
 
-const getData = (temprId, deviceGroupId) => {
+const getData = (temprId, deviceGroupId, getParents, getChildren) => {
     return Promise.all([
         getTempr(temprId, deviceGroupId),
         OopCore.getDeviceGroups(),
         OopCore.getDeviceTemprs({
-            temprId: temprId,
-            pageSize: -1,
+            filter: { temprId: temprId },
+            "page[size]": -1,
         }),
         OopCore.getScheduleTemprs({
-            temprId: temprId,
-            pageSize: -1,
+            filter: { temprId: temprId },
+            "page[size]": -1,
         }),
+        getParents(temprId),
+        getChildren(temprId),
     ]);
 };
 
@@ -137,7 +140,6 @@ const ScheduleTemprAssociator = memo(({
                     });
             }}
             onDeselect={(schedule, st) => {
-                console.log(schedule, st);
                 return OopCore.deleteScheduleTempr(st.id, {
                     scheduleId: schedule.id,
                     temprId
@@ -162,6 +164,9 @@ const Tempr = props => {
 
     const [originalTempr, setOriginalTempr] = useState(null);
 
+    const [noChildren, setNoChildren] = useState(true);
+    const [noParents, setNoParents] = useState(true);
+
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [deviceGroupId, setDeviceGroupId] = useState(Number(props.match.params.deviceGroupId) || null);
@@ -180,11 +185,33 @@ const Tempr = props => {
     const [scheduleTemprs, setScheduleTemprs] = useState([]);
 
     useEffect(
-        () => { getData(temprId, props.match.params.deviceGroupId).then(setData); },
+        () => { getData(temprId, props.match.params.deviceGroupId, getParents, getChildren).then(setData); },
         [temprId, props.match.params.deviceGroupId]
     ); 
 
     const blankTempr = temprId === "new";
+
+
+    async function getChildren(temprId) {
+        var none = true;
+        if (!blankTempr) {
+            const ts = await OopCore.getTemprs({temprId: temprId});
+            if (ts) {
+                for (const tempr of ts.data) {
+                    if (tempr.temprId == temprId) {
+                        none = false;
+                        break;
+                    }
+                }
+            }
+        }
+        setNoChildren(none);
+    };
+
+    async function getParents(temprId) {
+        const t = blankTempr ? false : await OopCore.getTempr(temprId);
+        setNoParents(!t.temprId);
+    };
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
         setOriginalTempr({
@@ -346,6 +373,24 @@ const Tempr = props => {
             backlink={allTemprsPath}
             actions={
                 <>
+                    {blankTempr ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/audit-logs`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
+                    {blankTempr || (noParents && noChildren) ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/map`}
+                            aria-label={"Tempr Map"}
+                        >
+                            View Map
+                        </Button>
+                    )}
                     {blankTempr ? null : (
                         <ConfirmModal
                             buttonText="Delete"

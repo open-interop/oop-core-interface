@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faChartPie, faListUl, faHistory } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
@@ -27,25 +27,55 @@ const Schedules = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => {
-                    return OopCore.getSchedules({
-                        page,
-                        pageSize,
-                        ...filters,
-                    });
-                }}
+                getData={(pagination) => OopCore.getSchedules(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (
                             <>
                                 <Button
-                                    kind={KIND.tertiary}
                                     $as={Link}
-                                    to={`${props.location.pathname}/${content}`}
-                                    aria-label="Edit Schedule"
+                                    kind={KIND.minimal}
+                                    to={`/schedules/${content}`}
+                                    aria-label="View schedule dashboard"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faChartPie}
+                                    />
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={{
+                                        pathname: `/schedules/${content}/edit`,
+                                        prevPath: props.location,
+                                    }}
+                                    aria-label="Edit schedule"
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
+                                    />
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={{
+                                        pathname: `/schedules/${content}/audit-logs`,
+                                        state: {from: `/schedules`},
+                                    }}
+                                    aria-label="View schedule history"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
+                                    />
+                                </Button>
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.minimal}
+                                    to={`/messages?filter=originType-Schedule_originId-${content}`}
+                                    aria-label="View schedule messages"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faListUl}
                                     />
                                 </Button>
                             </>
@@ -63,7 +93,7 @@ const Schedules = memo(props => {
                 columns={[
                     {
                         id: "id",
-                        name: "Id",
+                        name: "ID",
                         type: "text",
                         hasFilter: true,
                         width: "50px",
@@ -109,7 +139,7 @@ const Schedules = memo(props => {
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "50px",
+                        width: "200px",
                     },
                 ]}
             />

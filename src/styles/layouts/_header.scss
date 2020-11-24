@@ -39,3 +39,118 @@ div[id="root"] .header {
         padding-right: 12px;
     }
 }
+
+div[id="root"] .mobile-header {
+    background-color: $oop-dark-blue;
+    height: 12vh;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        border-bottom: 0;
+        padding-top: 0px;
+
+        a {
+            &[data-baseweb="link"] {
+                color: $color-white;
+                border-right: 1px solid $oop-teal;
+                padding-right: 1rem;
+            }
+
+            &[data-baseweb="button"] {
+                color: $color-white;
+            }
+            &:hover {
+                background-color: initial;
+            }
+        }
+
+        p {
+            color: $color-white;
+            padding: 0 0 2vh 0;
+        }
+
+        img {
+            border-right: 1px solid $oop-teal;
+            padding-right: 5vw;
+            width: 20vw;
+        }
+        &[data-baseweb="header-navigation"] {
+            padding-right: 4vw;
+            vertical-align: middle;
+            line-height: 7vh;
+        }
+    }
+
+    
+}
+
+div[id="root"] .mobile-nav {
+    background-color: $oop-teal;
+    opacity: 1;
+    height: auto;
+    position: fixed;
+    width: 100%;
+    z-index: 500;
+    margin-top: 12vh;
+    align-items: center;
+
+    .size-xxl {
+        font-size: 7vmin;
+    }
+
+    a {
+        &[data-baseweb="button"] {
+            color: $color-white;
+            font-size: 5vmin;
+            height: 8vh;
+            padding: 0vh 4vw 0vh 4vw;
+        }
+        &:active {
+            background-color: $oop-active-teal;
+        }
+        &:hover {
+            background-color: $oop-active-teal;
+        }
+    }
+
+    button {
+        &[data-baseweb="button"] {
+            color: $color-white;
+            height: 8vh;
+            padding: 0vh 4vw 0vh 4vw;
+            font-size: 5vmin;
+            float: right;
+        }
+
+        &:active {
+            background-color: $oop-active-teal;
+        }
+        &:hover {
+            background-color: $oop-active-teal;
+        }
+    }
+
+    .nested-navigation {
+        a {
+            &[data-baseweb="button"] {
+                background-color: $oop-active-teal;
+                display: none;
+                transition: 1s;
+            }
+        }
+
+        &.open {
+            a {
+                &[data-baseweb="button"] {
+                    display: flex;
+                    transition: 1s;
+                }
+            }
+        }
+    }
+}

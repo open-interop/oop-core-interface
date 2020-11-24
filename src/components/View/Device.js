@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useQueryParam, NumberParam } from "use-query-params";
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -47,7 +48,8 @@ const Device = props => {
     const getDevice = () => {
         return blankDevice
             ? Promise.resolve({
-                  active: false,
+                  active: true,
+                  queueMessages: false,
                   authenticationHeaders: [],
                   authenticationPath: "",
                   authenticationQuery: [],
@@ -137,8 +139,8 @@ const Device = props => {
         }
 
         return OopCore.getDeviceTemprs({
-            deviceId: props.match.params.deviceId,
-            pageSize: -1,
+            filter: { deviceId: props.match.params.deviceId },
+            "page[size]": -1,
         })
         .then(deviceTemprs => {
             setRelations(deviceTemprs.data);
@@ -157,9 +159,38 @@ const Device = props => {
             });
     };
 
+    const bothValuesEmpty = (pair) => {
+        return (
+            (pair[0].length === 0 || !pair[0].trim()) &&
+            (pair[1].length === 0 || !pair[1].trim())
+        );
+    }
+
+    const oneValueEmpty = (pair) => {
+        return (
+            !(pair[0] == "" && pair[1] == "") && 
+            (pair[0] == "" || pair[1] == "")
+        );
+    }
+
     const saveDevice = () => {
         clearToast();
         setDeviceErrors({});
+        var invalid = validatePairInputs();
+        if (invalid) {
+            setDeviceErrors(invalid);
+            ErrorToast("Failed to update device - " + invalid, "Error");
+            return
+        }
+        const {
+            authenticationHeaders: updatedHeaders,
+            authenticationQuery: updatedQuery,
+            ...updatedRest
+        } = updatedDevice;
+
+        updatedDevice.authenticationHeaders = updatedHeaders.filter(h => !bothValuesEmpty(h));
+        updatedDevice.authenticationQuery = updatedQuery.filter(q => !bothValuesEmpty(q));
+
         if (blankDevice) {
             return OopCore.createDevice(updatedDevice)
                 .then(response => {
@@ -186,6 +217,30 @@ const Device = props => {
         }
     };
 
+    const validatePairInputs = () => {
+        const {
+            authenticationHeaders: updatedHeaders,
+            authenticationQuery: updatedQuery,
+            ...updatedRest
+        } = updatedDevice;
+        
+        var validHeaders = false
+        updatedHeaders.map((header) => {
+            if (oneValueEmpty(header)) {
+                validHeaders = "Authentication Headers must have both a key and value"
+            }
+        });
+        
+        var validQuery = false
+        updatedQuery.map((query) => {
+            if (oneValueEmpty(query)) {
+                validQuery = "Authentication Queries must have both a key and value"
+            }
+        });
+        
+        return validHeaders || validQuery || false
+    }
+
     return (
         <Page
             title={
@@ -197,6 +252,15 @@ const Device = props => {
             backlink={props.location.prevPath || deviceDashboardPath}
             actions={
                 <>
+                    {blankDevice ? null : (
+                        <Button
+                            $as={Link}
+                            to={{pathname: `/devices/${props.match.params.deviceId}/audit-logs`, state: {from: `/devices/${props.match.params.deviceId}/edit`}}}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankDevice ? null : (
                         <ConfirmModal
                             buttonText="Delete"
@@ -264,6 +328,7 @@ const Device = props => {
                         >
                             <Select
                                 required
+                                placeholder="Select Site..."
                                 options={sites}
                                 labelKey="name"
                                 valueKey="id"
@@ -291,6 +356,7 @@ const Device = props => {
                         >
                             <Select
                                 required
+                                placeholder="Select Group..."
                                 options={groups}
                                 labelKey="name"
                                 valueKey="id"
@@ -321,11 +387,21 @@ const Device = props => {
                                 checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
+                        <FormControl label="Queue Messages" key={`form-control-queueMessages`}>
+                            <Checkbox
+                                checked={updatedDevice.queueMessages}
+                                onChange={() =>
+                                    setValue("queueMessages", !updatedDevice.queueMessages)
+                                }
+                                checkmarkType={STYLE_TYPE.toggle_round}
+                            />
+                        </FormControl>
                         <FormControl
                             label="Timezone"
                             key={`form-control-timezone`}
                         >
                             <Select
+                                placeholder="Select Timezone..."
                                 options={timezones}
                                 labelKey="name"
                                 valueKey="id"

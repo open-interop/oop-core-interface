@@ -33,6 +33,16 @@ div[id="root"] {
             padding: 1.5rem;
         }
     }
+    .content-mobile {
+        background-color: $oop-grey;
+        flex: 1;
+        padding: 26vh 0.5rem 0.5rem;
+
+        .content-wrapper {
+            background-color: $color-white;
+            padding: 1vmin;
+        }
+    }
 }
 
 a {

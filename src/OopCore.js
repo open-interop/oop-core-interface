@@ -107,6 +107,37 @@ class OopCore extends EventEmitter {
         return o;
     }
 
+    getParameters(params) {
+        const items = Object.entries(params || {});
+
+        const built = {};
+
+        for (const [key, val] of items) {
+            if (!key || val === undefined) {
+                continue;
+            }
+
+            const buildParam = (base, value) => {
+                if (value === undefined) {
+                    return;
+                }
+
+                if (typeof value === "object" && value !== null) {
+                    for (const [k, v] of Object.entries(value)) {
+                        const newBase = `${base}[${this.toSnakeCase(k)}]`;
+                        buildParam(newBase, v);
+                    }
+                } else {
+                    built[base] = value;
+                }
+            };
+
+            buildParam(this.toSnakeCase(key), val);
+        }
+
+        return queryString.stringify(built);
+    }
+
     makeRequest(
         endpoint,
         requestType = RequestType.GET,
@@ -292,43 +323,10 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/device_groups/${deviceGroupId}`);
     }
 
-    mapQueryParameter(key) {
-        switch (key) {
-            case "pageSize":
-                return "page[size]";
-            case "page":
-                return "page[number]";
-            default:
-                return `filter[${this.toSnakeCase(key)}]`;
-        }
-    }
-
-    getParameters(params) {
-        // extract the parameters found in filters into the base queryParameters object
-        const queryParameters = { ...params };
-        if (queryParameters && queryParameters.filters) {
-            Object.keys(queryParameters.filters).forEach(filter => {
-                queryParameters[filter] = queryParameters.filters[filter];
-            });
-            delete queryParameters.filters;
-        }
-
-        const parametersObject = {};
-
-        Object.keys(queryParameters)
-            .filter(key => queryParameters[key] !== undefined)
-            .forEach(
-                key =>
-                    (parametersObject[this.mapQueryParameter(key)] =
-                        queryParameters[key]),
-            );
-
-        return queryString.stringify(parametersObject);
-    }
-
-    getTransmissions(deviceId, queryParameters) {
+    getTransmissions(queryParameters) {
         const parameters = this.getParameters(queryParameters);
-        let path = `/devices/${deviceId}/transmissions`;
+
+        let path = `/transmissions`;
         if (parameters) {
             path += `?${parameters}`;
         }
@@ -336,14 +334,14 @@ class OopCore extends EventEmitter {
         return this.makeRequest(path);
     }
 
-    getTransmission(deviceId, transmissionId) {
+    getTransmission(transmissionId) {
         return this.makeRequest(
-            `/devices/${deviceId}/transmissions/${transmissionId}`,
+            `/transmissions/${transmissionId}`,
         );
     }
 
     getSites(queryParameters) {
-        const parameters = this.getParameters({ filters: queryParameters });
+        const parameters = this.getParameters(queryParameters);
         let path = `/sites`;
         if (parameters) {
             path += `?${parameters}`;
@@ -503,22 +501,21 @@ class OopCore extends EventEmitter {
         }
     }
 
-    getTransmissionStats(filters) {
-        const formattedFilters = {};
-
-        Object.keys(filters)
-            .filter(key => filters[key] !== undefined)
-            .forEach(key => {
-                formattedFilters[
-                    this.mapStatsParams(key)
-                ] = this.toSnakeCase(filters[key]);
-            });
-
-        var parameters = queryString.stringify(
-            this.camelToSnake(formattedFilters),
-        );
+    getTransmissionStats(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
 
         let path = "/dashboards/transmissions";
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getMessageStats(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+
+        let path = "/dashboards/messages";
         if (parameters) {
             path += `?${parameters}`;
         }
@@ -674,6 +671,58 @@ class OopCore extends EventEmitter {
             uri`/tempr_layers/${id}?tempr_id=${data.temprId}&layer_id=${data.layerId}`,
             RequestType.DELETE,
         );
+    }
+
+    getMessages(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/messages`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getMessage(id) {
+        return this.makeRequest(uri`/messages/${id}`);
+    }
+
+    getTransmissionsByMessage(msgUuid, queryParameters) {
+        queryParameters["filter[message_uuid]"] = msgUuid;
+
+        const parameters = this.getParameters(queryParameters);
+
+        let path = `/transmissions`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getGlobalHistory(queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/audit_logs`;
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path);
+    }
+
+    getAuditLogs(compType, compId, queryParameters) {
+        const parameters = this.getParameters(queryParameters);
+        let path = `/${compType}/${compId}/audit_logs`
+
+        if (parameters) {
+            path += `?${parameters}`;
+        }
+
+        return this.makeRequest(path)
+    }
+
+    getAuditLog(auditLogId) {
+        return this.makeRequest(uri`/audit_logs/${auditLogId}`);
     }
 }
 

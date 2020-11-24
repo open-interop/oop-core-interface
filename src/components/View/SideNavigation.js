@@ -7,6 +7,7 @@ import {
     faCircle,
     faCogs,
     faNetworkWired,
+    faInbox
 } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
@@ -47,8 +48,8 @@ const SideNavigation = props => {
             );
         } else {
             return Promise.all([
-                OopCore.getDevices({ pageSize: -1 }),
-                OopCore.getDeviceGroups({ pageSize: -1 }),
+                OopCore.getDevices({ "page[size]": -1 }),
+                OopCore.getDeviceGroups({ "page[size]": -1 }),
             ]).then(([devices, deviceGroups]) =>
                 createDevicesAccordion(deviceGroups.data, devices.data),
             );
@@ -77,7 +78,7 @@ const SideNavigation = props => {
                         }}
                         icon={<FontAwesomeIcon icon={faNetworkWired} />}
                     >
-                        {props.site && props.site.fullName ? (
+                        {props.site && props.site.fullName && (
                             <>
                                 <div className="site-name">
                                     <FontAwesomeIcon
@@ -87,14 +88,7 @@ const SideNavigation = props => {
                                     {props.site.fullName}
                                 </div>
                             </>
-                        ) : (
-                            <NavigationItem
-                                className="bottom"
-                                path={`/devices`}
-                                pathName="View All"
-                            />
                         )}
-
                         {deviceGroups.map((group, index) => (
                             <React.Fragment key={`device-group-${index}`}>
                                 <NavigationItem
@@ -159,12 +153,20 @@ const SideNavigation = props => {
                 icon={<FontAwesomeIcon icon={faChartPie} />}
             />
             {devicesSubNavigation()}
+            <NavigationItem
+                path="/messages"
+                pathName="Messages"
+                isActive={pathIncludes("/messages")}
+                icon={<FontAwesomeIcon icon={faInbox} />}
+            />
             <NavigationGroup
                 isActive={
                     pathIncludes("/users") ||
                     pathIncludes("/sites") ||
                     pathIncludes("/temprs") ||
-                    pathIncludes("/device-groups")
+                    pathIncludes("/device-groups") ||
+                    pathIncludes("/transmissions") ||
+                    pathIncludes("/global-history")
                 }
                 pathName="Settings"
                 isOpen={settingsAccordionOpen}
@@ -205,6 +207,16 @@ const SideNavigation = props => {
                     path="/blacklist-entries"
                     pathName="Blacklist"
                     isActive={pathIncludes("/blacklist-entries")}
+                />
+                <NavigationItem
+                    path="/transmissions"
+                    pathName="Transmissions"
+                    isActive={pathIncludes("/transmissions")}
+                />
+                <NavigationItem
+                    path="/global-history"
+                    pathName="Global History"
+                    isActive={pathIncludes("/global-history")}
                 />
             </NavigationGroup>
             <div className="filler" />

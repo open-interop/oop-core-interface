@@ -8,7 +8,7 @@ const TemprSelector = props => {
 
     useEffect(() => {
         const deviceGroupId = props.deviceGroup;
-        OopCore.getTemprs({ pageSize: -1, deviceGroupId }).then(temprs => {
+        OopCore.getTemprs({ "page[size]": -1, deviceGroupId }).then(temprs => {
             setTemprs(temprs.data);
         });
     }, [props.deviceGroup]);

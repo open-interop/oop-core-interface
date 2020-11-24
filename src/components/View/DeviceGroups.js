@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
@@ -24,12 +24,8 @@ const DeviceGroups = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) => {
-                    return OopCore.getDeviceGroups({
-                        page,
-                        pageSize,
-                        ...filters,
-                    });
+                getData={(pagination) => {
+                    return OopCore.getDeviceGroups(pagination);
                 }}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
@@ -45,11 +41,21 @@ const DeviceGroups = memo(props => {
                                         icon={faEdit}
                                     />
                                 </Button>
+                                <Button
+                                    kind={KIND.tertiary}
+                                    $as={Link}
+                                    to={{pathname: `/device-groups/${content}/audit-logs`, state: { from: `/device-groups` }}}
+                                    aria-label="View device group history"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
+                                    />
+                                </Button>
 
                                 <Button
                                     $as={Link}
                                     kind={KIND.tertiary}
-                                    to={`devices?deviceGroupId=${content}`}
+                                    to={`devices?filter=deviceGroupId-${content}`}
                                     aria-label="View devices for this group"
                                 >
                                     Devices
@@ -57,7 +63,7 @@ const DeviceGroups = memo(props => {
                                 <Button
                                     $as={Link}
                                     kind={KIND.tertiary}
-                                    to={`/temprs?deviceGroupId=${content}`}
+                                    to={`/temprs?filter=deviceGroupId-${content}`}
                                     aria-label="View temprs for this group"
                                 >
                                     Temprs
@@ -77,7 +83,7 @@ const DeviceGroups = memo(props => {
                 columns={[
                     {
                         id: "id",
-                        name: "Id",
+                        name: "ID",
                         type: "text",
                         hasFilter: true,
                         width: "50px",
@@ -93,7 +99,7 @@ const DeviceGroups = memo(props => {
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "250px",
+                        width: "300px",
                     },
                 ]}
             />

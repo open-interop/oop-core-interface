@@ -17,7 +17,6 @@ import { ListItem, ListItemLabel } from "baseui/list";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { Chart, Pie } from "react-chartjs-2";
 import styles from "./../../styles/_variables.scss";
-import chartStyles from "./../../styles/_chartColours.scss";
 import OopCore from "../../OopCore";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
@@ -29,33 +28,8 @@ const Waiting = props => {
     );
 };
 
-const availableColours = [
-    chartStyles.chart01,
-    chartStyles.chart02,
-    chartStyles.chart03,
-    chartStyles.chart04,
-    chartStyles.chart05,
-    chartStyles.chart06,
-    chartStyles.chart07,
-    chartStyles.chart08,
-    chartStyles.chart09,
-    chartStyles.chart10,
-    chartStyles.chart11,
-    chartStyles.chart12,
-    chartStyles.chart13,
-    chartStyles.chart14,
-    chartStyles.chart15,
-    chartStyles.chart16,
-    chartStyles.chart17,
-    chartStyles.chart18,
-    chartStyles.chart19,
-    chartStyles.chart20,
-    chartStyles.chart21,
-    chartStyles.chart22,
-];
-
 const StatusIndicator = props => {
-    const device = props.device;
+    const schedule = props.schedule;
 
     const [css, theme] = useStyletron();
 
@@ -74,19 +48,19 @@ const StatusIndicator = props => {
     });
 
     return (
-        <span className={device.active ? active : inactive}>
+        <span className={schedule.active ? active : inactive}>
             <FontAwesomeIcon
-                className={device.active ? "blink" : ""}
+                className={schedule.active ? "blink" : ""}
                 icon={faCircle}
             />
         </span>
     );
 };
 
-const DeviceDetails = props => {
-    const { device } = props;
+const ScheduleDetails = props => {
+    const { schedule } = props;
 
-    if (!(device && device.group)) {
+    if (!(schedule && schedule.id)) {
         return <Waiting title="Details" />;
     }
 
@@ -94,44 +68,33 @@ const DeviceDetails = props => {
         <MaxCard
             title={
                 <>
-                    Details <StatusIndicator device={device} />
+                    Details <StatusIndicator schedule={schedule} />
                 </>
             }
         >
             <ListItem>
                 <div className="card-label">
                     <ListItemLabel description="Name">
-                        {device.name}
+                        {schedule.name}
                     </ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Site">
+                    <ListItemLabel description="Created At">
+                        <DatetimeTooltip time={schedule.createdAt}></DatetimeTooltip>
+                    </ListItemLabel>
+                </div>
+            </ListItem>
+            <ListItem>
+                <div className="card-label">
+                    <ListItemLabel description="Schedule Temprs">
                         {
-                            device.site
-                                ? device.site.fullName
-                                : ""
-                        }
-                    </ListItemLabel>
-                </div>
-            </ListItem>
-            <ListItem>
-                <div className="card-label">
-                    <ListItemLabel description="Group">
-                        {device.group.name}
-                    </ListItemLabel>
-                </div>
-            </ListItem>
-            <ListItem>
-                <div className="card-label">
-                    <ListItemLabel description="Device Temprs">
-                        {
-                            device.deviceTemprs
-                                ? device.deviceTemprs
+                            schedule.scheduleTemprs
+                                ? schedule.scheduleTemprs
                                 : "No"
                         }{" "}
-                        device temprs associated
+                        schedule temprs associated
                     </ListItemLabel>
                 </div>
             </ListItem>
@@ -139,59 +102,20 @@ const DeviceDetails = props => {
     );
 };
 
-const DeviceLocation = props => {
-    const { device } = props;
+const ScheduleMessages = props => {
+    const { schedule } = props;
 
-    if (device === null) {
-        return <Waiting title="Location" />;
-    }
-
-    return (
-        <MaxCard title="Location">
-            {device.longitude && device.latitude ? (
-                <Map
-                    center={[
-                        device.latitude,
-                        device.longitude,
-                    ]}
-                    zoom={10}
-                    className="map-component"
-                >
-                    <TileLayer
-                        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker
-                        position={[
-                            device.latitude,
-                            device.longitude,
-                        ]}
-                    ></Marker>
-                </Map>
-            ) : (
-                <div className="map-component-placeholder">
-                    No location data
-                </div>
-            )}
-        </MaxCard>
-    );
-};
-
-const DeviceTransmissions = props => {
-    const { device } = props;
-
-    if (device === null) {
+    if (schedule === null) {
         return <Waiting title="Latest Messages" />;
     }
 
-    if (!(device.messages && device.messages.length)) {
+    if (!(schedule.messages && schedule.messages.length)) {
         return (
             <MaxCard title="Latest Messages">
                 No messages available
             </MaxCard>
         );
     }
-
     return (
         <MaxCard
             title={
@@ -200,7 +124,7 @@ const DeviceTransmissions = props => {
                     <Button
                         kind={KIND.secondary}
                         $as={Link}
-                        to={`/messages?filter=originType-Device_originId-${device.id}`}
+                        to={`/messages?filter=originType-Schedule_originId-${schedule.id}`}
                         $style={{ float: "right" }}
                     >
                         View All
@@ -209,7 +133,7 @@ const DeviceTransmissions = props => {
             }
         >
             <Table
-                data={device.messages}
+                data={schedule.messages}
                 mapFunction={(
                     columnName,
                     content,
@@ -243,14 +167,63 @@ const DeviceTransmissions = props => {
     );
 };
 
-const DeviceTransmissionStatus = props => {
-    const { device } = props;
+const ScheduleTimer = props => {
+    const { schedule } = props;
 
-    if (device === null) {
+    if (schedule === null) {
+        return <Waiting title="Schedule Timer" />;
+    }
+
+    return (
+        <MaxCard title="Schedule Timer">
+            <ListItem>
+                <div className="card-label">
+                    <ListItemLabel description="Minute">
+                        {schedule.minute}
+                    </ListItemLabel>
+                </div>
+            </ListItem>
+            <ListItem>
+                <div className="card-label">
+                    <ListItemLabel description="Hour">
+                        {schedule.hour}
+                    </ListItemLabel>
+                </div>
+            </ListItem>
+            <ListItem>
+                <div className="card-label">
+                    <ListItemLabel description="Day Of Week">
+                        {schedule.dayOfWeek}
+                    </ListItemLabel>
+                </div>
+            </ListItem>
+            <ListItem>
+                <div className="card-label">
+                    <ListItemLabel description="Day of Month">
+                        {schedule.dayOfMonth}
+                    </ListItemLabel>
+                </div>
+            </ListItem><ListItem>
+                <div className="card-label">
+                    <ListItemLabel description="Month of Year">
+                        {schedule.monthOfYear}
+                    </ListItemLabel>
+                </div>
+            </ListItem>         
+        </MaxCard>
+    );
+
+
+};
+
+const ScheduleTransmissionStatus = props => {
+    const { schedule } = props;
+
+    if (schedule === null) {
         return <Waiting title="Transmission Status" />;
     }
 
-    if (!(device.transmissions && device.transmissions.length)) {
+    if (!(schedule.transmissions && schedule.transmissions.length)) {
         return (
             <MaxCard title="Transmission Status">
                 No transmission status available
@@ -309,16 +282,16 @@ const DeviceTransmissionStatus = props => {
             <div className="flex-row center">
                 <Pie
                     data={{
-                        labels: device.stats.map(
+                        labels: schedule.stats.map(
                             stat => stat.label,
                         ),
                         datasets: [
                             {
-                                data: device.stats.map(
+                                data: schedule.stats.map(
                                     stat =>
                                         stat.value,
                                 ),
-                                backgroundColor: device.stats.map(
+                                backgroundColor: schedule.stats.map(
                                     stat =>
                                         stat.backgroundColor,
                                 ),
@@ -339,102 +312,94 @@ const DeviceTransmissionStatus = props => {
     );
 };
 
-const DeviceDashboard = props => {
-    const deviceId = props.match.params.deviceId;
-    const [device, setDevice] = useState(null);
-    const allDevicesPath = props.location.pathname.substr(
+const ScheduleDashboard = props => {
+    const scheduleId = props.match.params.scheduleId;
+    const [schedule, setSchedule] = useState(null);
+    const allSchedulesPath = props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
     );
 
     useEffect(() => {
         Promise.all([
-            OopCore.getDevice(deviceId),
-            OopCore.getTransmissions(deviceId, {
+            OopCore.getSchedule(scheduleId),
+            OopCore.getTransmissions(scheduleId, {
                 "page[size]": 5,
             }),
-            OopCore.getDeviceTemprs({
-                filter: { deviceId: deviceId },
+            OopCore.getScheduleTemprs({
+                filter: { scheduleId: scheduleId },
                 "page[size]": -1,
             }),
             OopCore.getTransmissionStats({
                 filter: {
-                    deviceId: deviceId,
+                    scheduleId: scheduleId,
                 },
                 group: "state",
             }),
             OopCore.getMessages({
                 filter: {
-                    originType: "Device",
-                    originId: deviceId,
+                    originType: "Schedule",
+                    originId: scheduleId,
                 },
                 "page[size]": 5,
             })
         ])
             .then(([
-                device,
+                schedule,
                 transmissions,
-                deviceTemprs,
-                deviceStats,
+                scheduleTemprs,
+                scheduleStats,
                 messages,
             ]) => {
-                device.transmissions = transmissions.data;
-                device.deviceTemprs = deviceTemprs.data.length;
-                device.messages = messages.data;
+                schedule.transmissions = transmissions.data;
+                schedule.scheduleTemprs = scheduleTemprs.data.length;
+                schedule.messages = messages.data;
+
 
                 const successfulTransmissions = {
                     label: "Successful",
-                    value: deviceStats.transmissions.successful || 0,
+                    value: scheduleStats.transmissions.successful || 0,
                     backgroundColor: styles.green,
                 };
                 const failedTransmissions = {
                     label: "Failed",
-                    value: deviceStats.transmissions.failed || 0,
+                    value: scheduleStats.transmissions.failed || 0,
                     backgroundColor: styles.red,
                 };
                 const skippedTransmissions = {
                     label: "Skipped",
-                    value: deviceStats.transmissions.skipped || 0,
+                    value: scheduleStats.transmissions.skipped || 0,
                     backgroundColor: styles.orange,
                 };
 
+                schedule.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
 
-                device.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
-
-                setDevice(device);
-
-                Promise.all([
-                    OopCore.getSite(device.siteId),
-                    OopCore.getDeviceGroup(device.deviceGroupId),
-                ])
-                    .then(([site, group]) => {
-                        setDevice({ ...device, site, group });
-                    });
+                setSchedule(schedule);
             });
-    }, [deviceId]);
+    }, [scheduleId]);
 
     return (
         <Page
-            title="Device Dashboard | Open Interop"
-            heading="Device Dashboard"
-            backlink={allDevicesPath}
+            title="Schedule Dashboard | Open Interop"
+            heading="Schedule Dashboard"
+            backlink={allSchedulesPath}
             actions={
                 <>
                     <Button
                         $as={Link}
                         kind={KIND.minimal}
-                        to={`/devices/${props.match.params.deviceId}/edit`}
+                        to={`/schedules/${props.match.params.scheduleId}/edit`}
                         endEnhancer={() => <FontAwesomeIcon icon={faEdit} />}
-                        aria-label="Edit this device"
+                        aria-label="Edit this schedule"
                     >
                         Edit
                     </Button>
                     <Button
                         $as={Link}
                         kind={KIND.minimal}
-                        to={{pathname: `/devices/${props.match.params.deviceId}/audit-logs`, state: {from: `/devices/${props.match.params.deviceId}`}}}
+                        to={{pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`, state: {from: `/schedules/${props.match.params.scheduleId}`}}}
                         endEnhancer={() => <FontAwesomeIcon icon={faHistory} />}
-                        aria-label="History for this device"
+                        aria-label="History for this schedule"
                     >
                         History
                     </Button>
@@ -443,20 +408,20 @@ const DeviceDashboard = props => {
         >
             <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,12]} >
                 <Cell span={5}>
-                    <DeviceDetails device={device} />
+                    <ScheduleDetails schedule={schedule} />
                 </Cell>
                 <Cell span={[5,5,7]}>
-                    <DeviceLocation device={device} />
+                    <ScheduleTransmissionStatus schedule={schedule} />
                 </Cell>
                 <Cell span={[5,5,7]}>
-                    <DeviceTransmissions device={device} />
+                    <ScheduleMessages schedule={schedule} />
                 </Cell>
                 <Cell span={5}>
-                    <DeviceTransmissionStatus device={device} />
+                    <ScheduleTimer schedule={schedule} />
                 </Cell>
             </Grid>
         </Page>
     );
 };
 
-export { DeviceDashboard };
+export { ScheduleDashboard };

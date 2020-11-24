@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -51,11 +52,11 @@ const BlacklistEntry = props => {
         return OopCore.deleteBlacklistEntry(updatedBlacklistEntry.id)
             .then(() => {
                 props.history.replace(`/blacklist-entries`);
-                SuccessToast("Deleted blacklistEntry", "Success");
+                SuccessToast("Deleted blacklist entry", "Success");
             })
             .catch(error => {
                 console.error(error);
-                ErrorToast("Could not delete blacklistEntry", "Error");
+                ErrorToast("Could not delete blacklist entry", "Error");
             });
     };
 
@@ -225,13 +226,22 @@ const BlacklistEntry = props => {
     return (
         <Page
             title={blankBlacklistEntry
-                ? "New BlacklistEntry | Settings | Open Interop"
-                : "Edit BlacklistEntry | Settings | Open Interop"
+                ? "New Blacklist Entry | Settings | Open Interop"
+                : "Edit Blacklist Entry | Settings | Open Interop"
             }
-            heading={blankBlacklistEntry ? "Create BlacklistEntry" : "Edit BlacklistEntry"}
+            heading={blankBlacklistEntry ? "Create Blacklist Entry" : "Edit Blacklist Entry"}
             backlink={allBlacklistEntriesPath}
             actions={
                 <>
+                    {blankBlacklistEntry ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/audit-logs`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankBlacklistEntry ? null : (
                         <ConfirmModal
                             buttonText="Delete"
@@ -240,7 +250,7 @@ const BlacklistEntry = props => {
                                 <>
                                     <div>
                                         Are you sure you want to
-                                        delete this blacklistEntry?
+                                        delete this Blacklist Entry?
                                     </div>
                                     <div>
                                         This action can't be undone.

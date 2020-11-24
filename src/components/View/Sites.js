@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
@@ -27,13 +27,7 @@ const Sites = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(page, pageSize, filters) =>
-                    OopCore.getSites({
-                        page,
-                        pageSize,
-                        ...filters
-                    })
-                }
+                getData={(pagination) => OopCore.getSites(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (
@@ -45,6 +39,15 @@ const Sites = memo(props => {
                                 >
                                     <FontAwesomeIcon
                                         icon={faEdit}
+                                    />
+                                </Button>
+                                <Button
+                                    kind={KIND.tertiary}
+                                    $as={Link}
+                                    to={{pathname: `/sites/${content}/audit-logs`, state: { from: `/sites` }}}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faHistory}
                                     />
                                 </Button>
                             </>

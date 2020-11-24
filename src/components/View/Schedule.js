@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
@@ -12,6 +13,7 @@ import {
     Page,
 } from "../Universal";
 import OopCore from "../../OopCore";
+import { identicalObject } from "../../Utilities";
 
 import TemprAssociator from "../Global/TemprAssociator";
 
@@ -46,8 +48,8 @@ const Schedule = props => {
         return blankSchedule
             ? Promise.resolve([])
             : OopCore.getScheduleTemprs({
-                scheduleId: props.match.params.scheduleId,
-                pageSize: -1,
+                filter: { scheduleId: props.match.params.scheduleId },
+                "page[size]": -1,
             }).then(res => res.data);
     };
 
@@ -65,14 +67,7 @@ const Schedule = props => {
     };
 
     const saveButtonDisabled = () => {
-        return !(
-            updatedSchedule.name &&
-            updatedSchedule.monthOfYear &&
-            updatedSchedule.dayOfMonth &&
-            updatedSchedule.dayOfWeek &&
-            updatedSchedule.hour &&
-            updatedSchedule.minute
-        );
+        return identicalObject(updatedSchedule, schedule);
     };
 
     const deleteSchedule = () => {
@@ -129,6 +124,15 @@ const Schedule = props => {
             backlink={props.location.prevPath || "/schedules"}
             actions={
                 <>
+                    {blankSchedule ? null : (
+                        <Button
+                            $as={Link}
+                            to={{pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`, state: {from: `/schedules/${props.match.params.scheduleId}/edit`}}}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankSchedule ? null : (
                         <ConfirmModal
                             buttonText="Delete"

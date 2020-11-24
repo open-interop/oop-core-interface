@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import { BaseProvider } from "baseui";
+import { Block } from 'baseui/block';
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
 import oopTheme from "./theme";
@@ -8,6 +9,8 @@ import oopTheme from "./theme";
 import { BrowserRouter, Route, Redirect, withRouter, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import {
+    AuditLog,
+    AuditLogs,
     BlacklistEntries,
     BlacklistEntry,
     Dashboard,
@@ -17,20 +20,27 @@ import {
     DeviceGroups,
     Devices,
     ForgotPassword,
+    GlobalHistory,
     Header,
     Login,
     ResetPassword,
     Profile,
     Schedules,
     Schedule,
+    ScheduleDashboard,
     Layers,
     Layer,
+    Message,
+    Messages,
+    MobileHeader,
+    MobileNavigation,
     PageNotFound,
     SideNavigation,
     Site,
     Sites,
     Tempr,
     Temprs,
+    TemprMap,
     Transmission,
     Transmissions,
     User,
@@ -94,6 +104,10 @@ class App extends Component {
 
     SideNavigationWithRouter = withRouter(SideNavigation);
 
+    MobileHeaderWithRouter = withRouter(MobileHeader);
+
+    MobileNavigationWithRouter = withRouter(MobileNavigation);
+
     getComponent = (shouldRedirect, Component, props) => {
         const currentPath = props.match.url;
 
@@ -117,9 +131,18 @@ class App extends Component {
                 <Component {...props} />
             </div>
         ) : (
-            <div className="content">
-                <Component {...props} />
-            </div>
+            <>
+                <Block display={['none', 'none', 'block']}>
+                    <div className="content">
+                        <Component {...props} />
+                    </div>
+                </Block>
+                <Block display={['block', 'block', 'none']}>
+                    <div className="content-mobile">
+                        <Component {...props} />
+                    </div>
+                </Block>
+            </>
         );
     };
 
@@ -130,14 +153,30 @@ class App extends Component {
             <BrowserRouter basename={process.env.REACT_APP_BASE_PATH}>
                 <QueryParamProvider ReactRouterRoute={Route}>
                     {hasUser && (
-                        <this.HeaderWithRouter
-                            user={this.state.user}
-                            site={this.state.site}
-                            selectSite={this.selectSite}
-                        />
-                    )}
-                    {hasUser && (
-                        <this.SideNavigationWithRouter site={this.state.site} />
+                        <>
+                            <Block display={['none', 'none', 'block']}>
+                                <this.HeaderWithRouter
+                                    user={this.state.user}
+                                    site={this.state.site}
+                                    selectSite={this.selectSite}
+                                />
+                                <this.SideNavigationWithRouter 
+                                    selectSite={this.selectSite} 
+                                    site={this.state.site} 
+                                    user={this.state.user} />
+                            </Block>
+                            <Block display={['block', 'block', 'none']}>
+                                <this.MobileHeaderWithRouter
+                                    user={this.state.user}
+                                    site={this.state.site}
+                                    selectSite={this.selectSite}
+                                />
+                                <this.MobileNavigationWithRouter 
+                                    selectSite={this.selectSite} 
+                                    site={this.state.site} 
+                                    user={this.state.user} />
+                            </Block>
+                        </>
                     )}
                     <Switch>
                         <Route
@@ -206,14 +245,14 @@ class App extends Component {
                             }
                         />
                         <Route
-                            path="/devices/:deviceId/transmissions"
+                            path="/transmissions"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Transmissions, props)
                             }
                         />
                         <Route
-                            path="/devices/:deviceId/transmissions/:transmissionId"
+                            path="/transmissions/:transmissionId"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Transmission, props)
@@ -241,6 +280,13 @@ class App extends Component {
                             }
                         />
                         <Route
+                            path="/temprs/:temprId/map"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, TemprMap, props)
+                            }
+                        />
+                        <Route
                             path="/schedules"
                             exact
                             render={props =>
@@ -249,6 +295,19 @@ class App extends Component {
                         />
                         <Route
                             path="/schedules/:scheduleId"
+                            exact
+                            render={props =>
+                                this.getComponent(
+                                    !hasUser,
+                                    props.match.params.scheduleId === "new"
+                                        ? Schedule
+                                        : ScheduleDashboard,
+                                    props,
+                                )
+                            }
+                        />
+                        <Route
+                            path="/schedules/:scheduleId/edit"
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Schedule, props)
@@ -327,6 +386,41 @@ class App extends Component {
                             exact
                             render={props =>
                                 this.getComponent(!hasUser, Site, props)
+                            }
+                        />
+                        <Route
+                            path="/messages"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Messages, props)
+                            }
+                        />
+                        <Route
+                            path="/messages/:messageId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, Message, props)
+                            }
+                        />
+                        <Route
+                            path="/global-history"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, GlobalHistory, props)
+                            }
+                        />
+                        <Route
+                            path="/:componentType/:componentId/audit-logs"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, AuditLogs, props)
+                            }
+                        />
+                        <Route
+                            path="/audit-logs/:auditLogId"
+                            exact
+                            render={props =>
+                                this.getComponent(!hasUser, AuditLog, props)
                             }
                         />
                         <Route

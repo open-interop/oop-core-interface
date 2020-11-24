@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
@@ -108,8 +109,8 @@ const Layer = props => {
         <Page
             title={
                 blankLayer
-                    ? "New Layer | Open Interop"
-                    : "Edit Layer | Open Interop"
+                    ? "New Layer | Settings | Open Interop"
+                    : "Edit Layer | Settings | Open Interop"
             }
             heading={
                 blankLayer
@@ -119,6 +120,15 @@ const Layer = props => {
             backlink={props.location.prevPath || "/layers"}
             actions={
                 <>
+                    {blankLayer ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/audit-logs`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankLayer ? null : (
                         <ConfirmModal
                             buttonText="Delete"

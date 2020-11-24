@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Pagination as PaginationUI } from "baseui/pagination";
 import { useStyletron } from "baseui";
 import { Select } from "baseui/select";
@@ -12,7 +12,7 @@ const pageSizeOptions = [
     { id: 100 },
 ];
 
-const StyledSelect = props => {
+const StyledSelect = memo(props => {
     return <Select
         {...props}
         overrides={{
@@ -66,7 +66,7 @@ const StyledSelect = props => {
             },
         }}
     />;
-};
+});
 
 const Pagination = props => {
     const [css, theme] = useStyletron();
@@ -112,7 +112,7 @@ const Pagination = props => {
                 </Centered>
             </div>
             <Centered>
-                {props.totalRecords || 1}
+                {props.totalRecords || 0}
                 {props.totalRecords > 1 || props.totalRecords === 0
                     ? " records"
                     : " record"}

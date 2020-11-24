@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
 import { Select } from "baseui/select";
@@ -122,6 +123,15 @@ const Site = props => {
             heading={blankSite ? "Create Site" : "Edit Site"}
             actions={
                 <>
+                    {blankSite ? null : (
+                        <Button
+                            $as={Link}
+                            to={`${props.location.pathname}/audit-logs`}
+                            aria-label={"History"}
+                        >
+                            History
+                        </Button>
+                    )}
                     {blankSite ? null : (
                         <ConfirmModal
                             buttonText="Delete"
