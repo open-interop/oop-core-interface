@@ -164,13 +164,6 @@ const Message = props => {
     }
 
     const TransmissionsDisplay = props => {
-        if (
-            Object.keys(props.data).length === 0 &&
-            props.data.constructor === Object
-        ) {
-            return <InPlaceGifSpinner />;
-        }
-
         return (
             <div>
                 <HeadingLevel>
@@ -223,97 +216,103 @@ const Message = props => {
                 }}
                 renderData={() => (
                     <>
-                        <FlexGrid
-                            flexGridColumnCount={1}
-                            flexGridRowGap="scale800"
-                            marginBottom="scale1000"
-                        >
-                            <FlexGridItem {...itemProps}>
-                                <ListItem>
-                                    <div className="card-label">
-                                        <ListItemLabel description="UUID">
-                                            {message && message.uuid ? message.uuid :
-                                                "No data available"}
-                                        </ListItemLabel>
-                                    </div>
-                                </ListItem>
-                            </FlexGridItem>
-                            {(message && message.originType) && (
-                                <FlexGridItem {...itemProps}>
-                                    <ListItem>
-                                        <div className="card-label">
-                                            <ListItemLabel
-                                                description={message && message.originType ? message.originType : "Origin"}
-                                            >
-                                                {originName ||
-                                                    "No data available"}
-                                            </ListItemLabel>
-                                        </div>
-                                    </ListItem>
-                                </FlexGridItem>
-                            )}
-                            <FlexGridItem {...itemProps}>
-                                <ListItem>
-                                    <div className="card-label">
-                                        <ListItemLabel description="Created At">
-                                            {message && message.createdAt ? message.createdAt :
-                                                "No data available"}
-                                        </ListItemLabel>
-                                    </div>
-                                </ListItem>
-                            </FlexGridItem>
-                        </FlexGrid>
-                        <FlexGrid
-                            flexGridColumnCount={3}
-                            flexGridRowGap="scale800"
-                            marginBottom="scale800"
-                        >
-                            {body && (
-                                <FlexGridItem {...wideItemProps}>
-                                    <Button
-                                        kind={KIND.secondary}
-                                        onClick={() => setShowBody(!showBody)}
-                                    >
-                                        {showBody
-                                            ? "Hide Message Body"
-                                            : "View Message Body"}
-                                    </Button>
-                                </FlexGridItem>
-                            )}
-                            <FlexGridItem display="none"></FlexGridItem>
-                            <FlexGridItem {...itemProps}>
-                                <Button
-                                    kind={KIND.secondary}
-                                    $as={Link}
-                                    to={allMessagesPath}
-                                >
-                                    {"Back to message list"}
-                                </Button>
-                            </FlexGridItem>
-                        </FlexGrid>
-                        {showBody && (
+                        {message && originChildren ?
                             <>
-                                <h2>Message Body</h2>
-                                <AceEditor
-                                    placeholder=""
-                                    mode="json"
-                                    theme="monokai"
-                                    name="responseAce"
-                                    fontSize={14}
-                                    readOnly={true}
-                                    highlightActiveLine={true}
-                                    maxLines={25}
-                                    minLines={8}
-                                    value={
-                                        typeof body === "string"
-                                            ? body
-                                            : JSON.stringify(body, null, 4)
-                                    }
-                                    style={{ width: "100%" }}
-                                />
-                            </>
-                        )}
-                        {originChildren && <TransmissionsDisplay data={originChildren} />}
+                                <FlexGrid
+                                    flexGridColumnCount={1}
+                                    flexGridRowGap="scale800"
+                                    marginBottom="scale1000"
+                                >
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="UUID">
+                                                    {message && message.uuid ? message.uuid :
+                                                        "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                    {(message && message.originType) && (
+                                        <FlexGridItem {...itemProps}>
+                                            <ListItem>
+                                                <div className="card-label">
+                                                    <ListItemLabel
+                                                        description={message && message.originType ? message.originType : "Origin"}
+                                                    >
+                                                        {originName ||
+                                                            "No data available"}
+                                                    </ListItemLabel>
+                                                </div>
+                                            </ListItem>
+                                        </FlexGridItem>
+                                    )}
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Created At">
+                                                    {message && message.createdAt ? message.createdAt :
+                                                        "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                </FlexGrid>
+                                <FlexGrid
+                                    flexGridColumnCount={3}
+                                    flexGridRowGap="scale800"
+                                    marginBottom="scale800"
+                                >
+                                    {body && (
+                                        <FlexGridItem {...wideItemProps}>
+                                            <Button
+                                                kind={KIND.secondary}
+                                                onClick={() => setShowBody(!showBody)}
+                                            >
+                                                {showBody
+                                                    ? "Hide Message Body"
+                                                    : "View Message Body"}
+                                            </Button>
+                                        </FlexGridItem>
+                                    )}
+                                    <FlexGridItem display="none"></FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <Button
+                                            kind={KIND.secondary}
+                                            $as={Link}
+                                            to={allMessagesPath}
+                                        >
+                                            {"Back to message list"}
+                                        </Button>
+                                    </FlexGridItem>
+                                </FlexGrid>
+                                {showBody && (
+                                    <>
+                                        <h2>Message Body</h2>
+                                        <AceEditor
+                                            placeholder=""
+                                            mode="json"
+                                            theme="monokai"
+                                            name="responseAce"
+                                            fontSize={14}
+                                            readOnly={true}
+                                            highlightActiveLine={true}
+                                            maxLines={25}
+                                            minLines={8}
+                                            value={
+                                                typeof body === "string"
+                                                    ? body
+                                                    : JSON.stringify(body, null, 4)
+                                            }
+                                            style={{ width: "100%" }}
+                                        />
+                                    </>
+                                )}
+                                <TransmissionsDisplay data={originChildren} />
+                            </> 
+                            :
+                            <InPlaceGifSpinner />
+                        }
                     </>
                 )}
             />
