@@ -35,7 +35,6 @@ const Messages = props => {
                     ? originDict[message.originType][message.originId].name
                     : "No data available";
             });
-            console.log(messages)
             setMessages(messages);
             return messages;
         });
