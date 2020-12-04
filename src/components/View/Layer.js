@@ -50,10 +50,11 @@ const Layer = props => {
     };
 
     const saveButtonDisabled = () => {
-        return !(
-            updatedLayer.name &&
-            updatedLayer.reference &&
-            updatedLayer.script
+        return (
+            updatedLayer.name == layer.name &&
+            updatedLayer.reference == layer.reference &&
+            updatedLayer.script == layer.script) ||
+            !(updatedLayer.name && updatedLayer.reference && updatedLayer.script
         );
     };
 

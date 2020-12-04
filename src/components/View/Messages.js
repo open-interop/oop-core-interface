@@ -17,6 +17,7 @@ const Messages = props => {
     const [uuid, setUuid] = useQueryParam("uuid", StringParam);
     const [originId, setOriginId] = useQueryParam("originId", NumberParam);
     const [originType, setOriginType] = useQueryParam("originType", StringParam);
+    const [ipAddress, setIpAddress] = useQueryParam("ipAddress", StringParam);
 
     const getData = (pagination) => {
         return Promise.all([
@@ -100,6 +101,12 @@ const Messages = props => {
                         type: "text",
                     },
                     {
+                        id: "ipAddress",
+                        name: "IP Address",
+                        type: "text",
+                        hasFilter: true,
+                    },
+                    {
                         id: "createdAt",
                         name: "Created at",
                         type: "text",
@@ -117,7 +124,7 @@ const Messages = props => {
                     }
                     return columnName;
                 }}
-                filters={{ uuid, originId, originType }}
+                filters={{ uuid, originId, originType, ipAddress }}
                 updateFilters={(key, value) => {
                     switch (key) {
                         case "uuid":
@@ -126,6 +133,8 @@ const Messages = props => {
                             return setOriginId(value);
                         case "originType":
                             return setOriginType(value);
+                        case "ipAddress":
+                            return setIpAddress(value);
                         default:
                             return null;
                     }
