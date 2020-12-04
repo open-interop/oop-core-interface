@@ -238,6 +238,7 @@ const DeviceTransmissions = props => {
                             "Created at",
                     },
                 ]}
+                maxHeight={'600px'}
             />
         </MaxCard>
     );
@@ -368,7 +369,7 @@ const DeviceDashboard = props => {
                     originType: "Device",
                     originId: deviceId,
                 },
-                "page[size]": 5,
+                "page[size]": 15,
             })
         ])
             .then(([

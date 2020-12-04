@@ -132,7 +132,7 @@ const Message = props => {
                     depth: depth,
                     isExpanded: false,
                     transmissionMade: true,
-                    messageUuid: transmissionObject[child.id].messageUuid,
+                    messageUuid: transmissionObject[child.id].transmissionUuid,
                     status: transmissionObject[child.id].status,
                     transmittedAt: transmissionObject[child.id].transmittedAt,
                     transmissionId: transmissionObject[child.id].id,
@@ -219,7 +219,7 @@ const Message = props => {
                         {message && originChildren ?
                             <>
                                 <FlexGrid
-                                    flexGridColumnCount={1}
+                                    flexGridColumnCount={[1,1,1,2]}
                                     flexGridRowGap="scale800"
                                     marginBottom="scale1000"
                                 >
@@ -252,6 +252,16 @@ const Message = props => {
                                             <div className="card-label">
                                                 <ListItemLabel description="Created At">
                                                     {message && message.createdAt ? message.createdAt :
+                                                        "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="IP Address">
+                                                    {message && message.ipAddress ? message.ipAddress :
                                                         "No data available"}
                                                 </ListItemLabel>
                                             </div>
