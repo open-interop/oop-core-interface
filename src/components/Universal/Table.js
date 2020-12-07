@@ -114,7 +114,7 @@ const Table = memo(props => {
     }
 
     return (
-        <StyledTable>
+        <StyledTable style={{maxHeight: props.maxHeight || 'auto'}}>
             <StyledHead $width={widthPixels ? widthPixels : 'auto'}>
                 {props.columns.map(column => (
                     <StyledHeadCell
