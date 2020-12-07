@@ -244,5 +244,5 @@ const Layer = props => {
     );
 };
 
-export { Layer };
+export default Layer;
 

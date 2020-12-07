@@ -424,4 +424,4 @@ const ScheduleDashboard = props => {
     );
 };
 
-export { ScheduleDashboard };
+export default ScheduleDashboard;

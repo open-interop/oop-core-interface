@@ -189,4 +189,4 @@ const TemprMap = props => {
     );
 };
 
-export { TemprMap };
+export default TemprMap;

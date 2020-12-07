@@ -36,6 +36,15 @@ const SideNavigation = props => {
         });
     };
 
+    const toggleAccordion = () => setSettingsAccordionOpen(false);
+
+    const toggleDevAccordion = () => setDevicesAccordionOpen(false);
+
+    const toggleBothAccordions = () => {
+        setDevicesAccordionOpen(false);
+        setSettingsAccordionOpen(false);
+    }
+
     const getDeviceGroups = () => {
         if (props.site) {
             return OopCore.getDevicesByGroup({ siteId: props.site.id }).then(
@@ -94,6 +103,7 @@ const SideNavigation = props => {
                                 <NavigationItem
                                     pathName={group.name}
                                     path={`/devices?filter=deviceGroupId-${group.id}`}
+                                    onClick={toggleDevAccordion}
                                     className="group-name"
                                 />
                                 {group.devices.length ? (
@@ -102,6 +112,7 @@ const SideNavigation = props => {
                                         .map(device => (
                                             <NavigationItem
                                                 className="device-name"
+                                                onClick={toggleDevAccordion}
                                                 key={`device-${device.id}-navigation-item`}
                                                 path={`/devices/${device.id}`}
                                                 pathName={device.name}
@@ -121,6 +132,7 @@ const SideNavigation = props => {
                             className="bottom"
                             path={`/devices`}
                             pathName="View All"
+                            onClick={toggleDevAccordion}
                         />
                     </NavigationGroup>
                 )}
@@ -150,6 +162,7 @@ const SideNavigation = props => {
                 path="/"
                 pathName="Home"
                 isActive={pathMatch("/")}
+                onClick={toggleBothAccordions}
                 icon={<FontAwesomeIcon icon={faChartPie} />}
             />
             {devicesSubNavigation()}
@@ -157,6 +170,7 @@ const SideNavigation = props => {
                 path="/messages"
                 pathName="Messages"
                 isActive={pathIncludes("/messages")}
+                onClick={toggleBothAccordions}
                 icon={<FontAwesomeIcon icon={faInbox} />}
             />
             <NavigationGroup
@@ -176,46 +190,55 @@ const SideNavigation = props => {
                 <NavigationItem
                     path="/users"
                     pathName="Users"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/users")}
                 />
                 <NavigationItem
                     path="/sites"
                     pathName="Sites"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/sites")}
                 />
                 <NavigationItem
                     path="/temprs"
                     pathName="Temprs"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/temprs")}
                 />
                 <NavigationItem
                     path="/device-groups"
                     pathName="Device Groups"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/device-groups")}
                 />
                 <NavigationItem
                     path="/schedules"
                     pathName="Schedules"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/schedules")}
                 />
                 <NavigationItem
                     path="/layers"
                     pathName="Layers"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/layers")}
                 />
                 <NavigationItem
                     path="/blacklist-entries"
                     pathName="Blacklist"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/blacklist-entries")}
                 />
                 <NavigationItem
                     path="/transmissions"
                     pathName="Transmissions"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/transmissions")}
                 />
                 <NavigationItem
                     path="/global-history"
                     pathName="Global History"
+                    onClick={toggleAccordion}
                     isActive={pathIncludes("/global-history")}
                 />
             </NavigationGroup>

@@ -268,4 +268,4 @@ const User = props => {
     );
 };
 
-export { User };
+export default User;

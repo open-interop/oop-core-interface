@@ -91,4 +91,4 @@ const Users = memo(props => {
     );
 });
 
-export { Users };
+export default Users;

@@ -188,4 +188,4 @@ const DeviceGroup = props => {
     );
 };
 
-export { DeviceGroup };
+export default DeviceGroup;

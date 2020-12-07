@@ -330,4 +330,4 @@ const Message = props => {
     );
 };
 
-export { Message };
+export default Message;

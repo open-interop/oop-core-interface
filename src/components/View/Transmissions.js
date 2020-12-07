@@ -190,4 +190,4 @@ const Transmissions = props => {
     );
 };
 
-export { Transmissions };
+export default Transmissions;

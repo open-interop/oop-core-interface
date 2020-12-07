@@ -144,4 +144,4 @@ const Messages = props => {
     );
 };
 
-export { Messages };
+export default Messages;

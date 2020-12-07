@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy } from "react";
 
 import { useStyletron } from "baseui";
 import { StyledTitle } from "baseui/card";
@@ -8,11 +8,12 @@ import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 
 import JSONPretty from "react-json-pretty";
 
-import { PageNotFound } from "../View";
 import { DataProvider, Page, DatetimeTooltip, MaxCard } from "../Universal";
 import OopCore from "../../OopCore";
 
 import { InPlaceGifSpinner, Table, ExpandModal } from "../Universal";
+
+const PageNotFound = lazy(() => import('../View/PageNotFound'));
 
 const formatValue = (val, field) => {
     if (typeof val != 'string') {
@@ -251,4 +252,4 @@ const AuditLog = props => {
     );
 };
 
-export { AuditLog };
+export default AuditLog;

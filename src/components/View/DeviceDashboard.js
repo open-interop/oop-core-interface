@@ -460,4 +460,4 @@ const DeviceDashboard = props => {
     );
 };
 
-export { DeviceDashboard };
+export default DeviceDashboard;

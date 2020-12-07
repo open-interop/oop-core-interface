@@ -520,4 +520,4 @@ const Tempr = props => {
     );
 };
 
-export { Tempr };
+export default Tempr;

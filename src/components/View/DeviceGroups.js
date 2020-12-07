@@ -107,4 +107,4 @@ const DeviceGroups = memo(props => {
     );
 });
 
-export { DeviceGroups };
+export default DeviceGroups;

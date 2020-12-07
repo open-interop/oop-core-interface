@@ -107,5 +107,5 @@ const BlacklistEntries = memo(props => {
     );
 });
 
-export { BlacklistEntries };
+export default BlacklistEntries;
 
