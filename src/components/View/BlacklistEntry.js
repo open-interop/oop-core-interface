@@ -313,4 +313,4 @@ const BlacklistEntry = props => {
     );
 };
 
-export { BlacklistEntry };
+export default BlacklistEntry;

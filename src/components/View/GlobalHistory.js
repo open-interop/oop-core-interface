@@ -147,4 +147,4 @@ const GlobalHistory = props => {
     );
 };
 
-export { GlobalHistory };
+export default GlobalHistory;

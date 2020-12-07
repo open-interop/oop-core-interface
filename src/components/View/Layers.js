@@ -94,5 +94,5 @@ const Layers = memo(props => {
     );
 });
 
-export { Layers };
+export default Layers;
 

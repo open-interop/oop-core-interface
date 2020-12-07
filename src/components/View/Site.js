@@ -394,4 +394,4 @@ const Site = props => {
     );
 };
 
-export { Site };
+export default Site;

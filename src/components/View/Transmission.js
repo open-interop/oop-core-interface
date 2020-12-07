@@ -343,4 +343,4 @@ const Transmission = props => {
     );
 };
 
-export { Transmission };
+export default Transmission;

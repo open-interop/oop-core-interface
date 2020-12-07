@@ -583,4 +583,4 @@ const Device = props => {
     );
 };
 
-export { Device };
+export default Device;

@@ -333,4 +333,4 @@ const Schedule = props => {
     );
 };
 
-export { Schedule };
+export default Schedule;

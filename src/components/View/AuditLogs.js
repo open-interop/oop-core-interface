@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy } from "react";
 
 import { Link } from "react-router-dom";
 
@@ -9,11 +9,11 @@ import { faListUl } from "@fortawesome/free-solid-svg-icons";
 
 import JSONPretty from "react-json-pretty";
 
-import { PageNotFound } from "../View";
-
 import { Page, PaginatedTable, DatetimeTooltip, HistoryModal } from "../Universal";
 import { useQueryParam, StringParam, NumberParam } from "use-query-params";
 import OopCore from "../../OopCore";
+
+const PageNotFound = lazy(() => import('../View/PageNotFound'));
 
 function typeHeading(string) {
     const capitalized = (string.charAt(0).toUpperCase() + string.slice(1)).replace('-', ' ');
@@ -156,4 +156,4 @@ const AuditLogs = props => {
     );
 };
 
-export { AuditLogs };
+export default AuditLogs;

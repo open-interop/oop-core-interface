@@ -206,4 +206,4 @@ const Devices = props => {
     );
 };
 
-export { Devices };
+export default Devices;
