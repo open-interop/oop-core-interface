@@ -9,7 +9,7 @@ import oopTheme from "./theme";
 import { BrowserRouter, Route, Redirect, withRouter, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
-import { InPlaceGifSpinner, GifSpinner } from "./components/Universal";
+import { GifSpinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 import { QueryParamProvider } from "use-query-params";

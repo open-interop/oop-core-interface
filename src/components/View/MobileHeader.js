@@ -9,8 +9,6 @@ import {
     StyledNavigationItem as NavigationItem,
     StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
-import { StyledLink } from "baseui/link";
-import { SiteSelector } from "../Global";
 import logo from "../../resources/open-interop-white.svg";
 import OopCore from "../../OopCore";
 

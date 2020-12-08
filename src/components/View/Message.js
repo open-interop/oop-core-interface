@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AceEditor from "react-ace";
 
@@ -9,22 +9,14 @@ import "ace-builds/src-noconflict/theme-monokai";
 
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
-import { Card, StyledBody } from "baseui/card";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { Heading, HeadingLevel } from "baseui/heading";
-import { Input } from "baseui/input";
-import { TreeView, TreeLabel, toggleIsExpanded } from "baseui/tree-view";
 import { arrayToObject } from "../../Utilities";
-
-import JSONPretty from "react-json-pretty";
 
 import {
     DataProvider,
-    MaxCard,
     InPlaceGifSpinner,
-    Modal,
     Page,
-    DatetimeTooltip,
     TransmissionTree,
 } from "../Universal";
 
@@ -32,10 +24,8 @@ import OopCore from "../../OopCore";
 
 const Message = props => {
     const [message, setMessage] = useState();
-    const [transmissions, setTransmissions] = useState();
     const [originChildren, setOriginChildren] = useState();
     const [showBody, setShowBody] = React.useState();
-    const [treeData, setTreeData] = useState([]);
 
     const [body, setBody] = useState("");
     const [originName, setOriginName] = useState("");
@@ -81,7 +71,7 @@ const Message = props => {
 
     async function getOriginChildren(originType, originId, transmissionArray) {
         var originTemprs;
-        if (originType == "Device") {
+        if (originType === "Device") {
             originTemprs = await OopCore.getDeviceTemprs({
                 "filter[device_id]": originId,
             });
@@ -206,7 +196,6 @@ const Message = props => {
                                             ? null
                                             : message.body;
                                     setBody(b);
-                                    setTransmissions(transmissions);
                                     setMessage(message);
                                     return message;
                                 });

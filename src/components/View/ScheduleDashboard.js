@@ -7,14 +7,11 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCircle,
-    faCheck,
     faEdit,
-    faTimes,
     faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
-import { Map, TileLayer, Marker } from "react-leaflet";
 import { Chart, Pie } from "react-chartjs-2";
 import styles from "./../../styles/_variables.scss";
 import OopCore from "../../OopCore";

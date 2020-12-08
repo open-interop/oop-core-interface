@@ -29,7 +29,7 @@ const ScheduleAssociator = memo(props => {
     const [scheduleTemprLoading, setScheduleTemprLoading] = useState(false);
 
     const selected = {};
-
+    // eslint-disable-next-line
     for (const scheduleTempr of props.selected) {
         selected[scheduleTempr.scheduleId] = scheduleTempr;
     }

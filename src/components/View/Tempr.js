@@ -199,8 +199,9 @@ const Tempr = props => {
         if (!blankTempr) {
             const ts = await OopCore.getTemprs({temprId: temprId});
             if (ts) {
+                // eslint-disable-next-line
                 for (const tempr of ts.data) {
-                    if (tempr.temprId == temprId) {
+                    if (tempr.temprId === temprId) {
                         none = false;
                         break;
                     }

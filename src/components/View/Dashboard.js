@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 import { useStyletron } from "baseui";
-import { StyledTitle } from "baseui/card";
 import { Select } from "baseui/select";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
@@ -86,9 +85,9 @@ const getDaysAgo = (now, lastMessagesRange, series) => {
 const CenteredTitle = props => {
     const [css, theme] = useStyletron();
 
-    return <StyledTitle className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
+    return <div className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
         {props.children}
-    </StyledTitle>
+    </div>
 };
 
 const FailedTransmissions = props => {
@@ -357,7 +356,7 @@ const Stats = props => {
                 schedules: schedules.length
             });
         });
-    }, [devices]);
+    }, [devices, schedules]);
 
     return (
         <MaxCard title={

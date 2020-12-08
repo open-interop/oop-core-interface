@@ -10,7 +10,7 @@ import {
     StyledHeadCell,
 } from "baseui/table";
 
-import { useStyletron, withStyle } from "baseui";
+import { useStyletron } from "baseui";
 import { TableFilter } from "../Global";
 
 import { GifSpinner } from ".";

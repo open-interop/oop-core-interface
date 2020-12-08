@@ -18,13 +18,13 @@ import {
 import OopCore from "../../OopCore";
 
 const TemprAssociator = props => {
-    const [availableTemprs, setAvailableTemprs] = useState([]);
     const [temprFilterId, setTemprFilterId] = useState("");
     const [temprFilterName, setTemprFilterName] = useState("");
     const [temprFilterSelected, setTemprFilterSelected] = useState("");
     const [loading, setLoading] = useState(false);
 
     const selected = {};
+    // eslint-disable-next-line
     for (const s of props.selected) {
         selected[s.temprId] = s;
     }
@@ -38,8 +38,6 @@ const TemprAssociator = props => {
             <PaginatedTable
                 getData={async (pagination) => {
                     const temprs = await OopCore.getTemprs({ ...pagination, ...(props.temprsFilter || {}) });
-
-                    setAvailableTemprs(temprs);
 
                     return temprs;
                 }}

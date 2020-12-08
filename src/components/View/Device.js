@@ -168,8 +168,8 @@ const Device = props => {
 
     const oneValueEmpty = (pair) => {
         return (
-            !(pair[0] == "" && pair[1] == "") && 
-            (pair[0] == "" || pair[1] == "")
+            !(pair[0] === "" && pair[1] === "") && 
+            (pair[0] === "" || pair[1] === "")
         );
     }
 
@@ -182,9 +182,11 @@ const Device = props => {
             ErrorToast("Failed to update device - " + invalid, "Error");
             return
         }
+       
         const {
             authenticationHeaders: updatedHeaders,
-            authenticationQuery: updatedQuery,
+            authenticationQuery: updatedQuery, 
+            // eslint-disable-next-line
             ...updatedRest
         } = updatedDevice;
 
@@ -221,6 +223,7 @@ const Device = props => {
         const {
             authenticationHeaders: updatedHeaders,
             authenticationQuery: updatedQuery,
+            // eslint-disable-next-line
             ...updatedRest
         } = updatedDevice;
         
@@ -228,7 +231,8 @@ const Device = props => {
         updatedHeaders.map((header) => {
             if (oneValueEmpty(header)) {
                 validHeaders = "Authentication Headers must have both a key and value"
-            }
+            } 
+            return header
         });
         
         var validQuery = false
@@ -236,6 +240,7 @@ const Device = props => {
             if (oneValueEmpty(query)) {
                 validQuery = "Authentication Queries must have both a key and value"
             }
+            return query
         });
         
         return validHeaders || validQuery || false

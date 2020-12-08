@@ -111,7 +111,7 @@ class OopCore extends EventEmitter {
         const items = Object.entries(params || {});
 
         const built = {};
-
+        // eslint-disable-next-line
         for (const [key, val] of items) {
             if (!key || val === undefined) {
                 continue;
@@ -123,6 +123,7 @@ class OopCore extends EventEmitter {
                 }
 
                 if (typeof value === "object" && value !== null) {
+                    // eslint-disable-next-line
                     for (const [k, v] of Object.entries(value)) {
                         const newBase = `${base}[${this.toSnakeCase(k)}]`;
                         buildParam(newBase, v);

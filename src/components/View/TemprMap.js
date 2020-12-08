@@ -1,19 +1,13 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState } from "react";
 
 import { Redirect  } from 'react-router';
 
 import {
-    AccordionWithCaption,
-    ConfirmModal,
     Page,
-    InPlaceGifSpinner,
-    MaxCard,
     DataProvider,
 } from "../Universal";
 
 import { Graphviz } from 'graphviz-react';
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import OopCore from "../../OopCore";
 
@@ -33,8 +27,9 @@ const TemprMap = props => {
         const ts = await OopCore.getTemprs({temprId: temprId});
         var none = true;
         if (ts) {
+            // eslint-disable-next-line
             for (const tempr of ts.data) {
-                if (tempr.temprId == temprId) {
+                if (tempr.temprId === temprId) {
                     none = false;
                     break;
                 }
@@ -51,10 +46,10 @@ const TemprMap = props => {
     const formatNode = (temprObj) => {
         return `${temprObj.id}[shape=plain, fontname=Helvetica,
 				label=<
-				<table border="${temprObj.id == props.match.params.temprId ? '2' : '1'}" color="${temprObj.id == props.match.params.temprId ? '#177692' : 'black'}" cellborder="0" cellspacing="0" cellpadding="2">
+				<table border="${temprObj.id === props.match.params.temprId ? '2' : '1'}" color="${temprObj.id === props.match.params.temprId ? '#177692' : 'black'}" cellborder="0" cellspacing="0" cellpadding="2">
 			    	<tr>
 			     		<td align="left" colspan="8">
-			     			<font point-size="16" color="${temprObj.id == props.match.params.temprId ? '#177692' : 'black'}"><u>${temprObj.name}</u></font>
+			     			<font point-size="16" color="${temprObj.id === props.match.params.temprId ? '#177692' : 'black'}"><u>${temprObj.name}</u></font>
 		     			</td>
 		     			<td colspan="1" align="right">
 			     			<table cellborder="0" cellspacing="1" border="0" cellpadding="0">
@@ -102,7 +97,7 @@ const TemprMap = props => {
             var children = await OopCore.getTemprs({temprId: temprId});
             var childrenData = [];
             for (var i = children.data.length - 1; i >= 0; i--) {
-                if (children.data[i].temprId == temprId) {
+                if (children.data[i].temprId === temprId) {
                     childrenData.push(children.data[i]);
                 }
             }
@@ -132,9 +127,9 @@ const TemprMap = props => {
                     pathData.add(`${c.temprId}->${c.id}`);
                     var new_children = await OopCore.getTemprs({temprId: c.id});
                     new_children = new_children.data;
-                    for (var i = new_children.length - 1; i >= 0; i--) {
-                        if (!nodes[new_children[i].id] && new_children[i].temprId == c.id) {
-                            childrenData.push(new_children[i]);
+                    for (var q = new_children.length - 1; q >= 0; q--) {
+                        if (!nodes[new_children[q].id] && new_children[q].temprId === c.id) {
+                            childrenData.push(new_children[q]);
                         }
                     }
                 }

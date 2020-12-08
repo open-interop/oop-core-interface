@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { Link } from "react-router-dom";
 import { useQueryParam, StringParam } from "use-query-params";
@@ -11,7 +11,7 @@ import {
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { DataProvider, PaginatedTable, Page, DatetimeTooltip } from "../Universal";
+import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
@@ -20,7 +20,6 @@ const Transmissions = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [device, setDevice] = useState({});
     const [id, setId] = useQueryParam("id", StringParam);
     const [deviceId, setDeviceId] = useQueryParam("deviceId", StringParam);
     const [transmissionUuid, setTransmissionUuid] = useQueryParam(
@@ -34,10 +33,6 @@ const Transmissions = props => {
     const [status, setStatus] = useQueryParam("status", StringParam);
     const [success, setSuccess] = useQueryParam("success", StringParam);
 
-    const getData = () => {
-        return OopCore.getDevice(props.match.params.deviceId).then(setDevice);
-    };
-
     const deviceDashboardPath = props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
@@ -46,10 +41,7 @@ const Transmissions = props => {
     return (
         <Page
             heading={
-                `Transmissions ${
-                    device.name
-                        ? "- " + device.name
-                        : ""}`
+                `Transmissions`
             }
             backlink={deviceDashboardPath}
         >
