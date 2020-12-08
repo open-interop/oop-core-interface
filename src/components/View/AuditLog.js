@@ -73,7 +73,7 @@ const AuditLog = props => {
                         : <CenteredTitle>Create {auditLog.auditableType}</CenteredTitle>;
 
         const changesArray = [];
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-unused-vars
         for (const property in changes) {
             if (updateBool) {
                 changesArray.push({

@@ -27,7 +27,7 @@ const TemprMap = props => {
         const ts = await OopCore.getTemprs({temprId: temprId});
         var none = true;
         if (ts) {
-            // eslint-disable-next-line
+            // eslint-disable-next-line no-unused-vars
             for (const tempr of ts.data) {
                 if (tempr.temprId === temprId) {
                     none = false;

@@ -40,9 +40,7 @@ const Transmissions = props => {
 
     return (
         <Page
-            heading={
-                `Transmissions`
-            }
+            heading="Transmissions"
             backlink={deviceDashboardPath}
         >
             <PaginatedTable

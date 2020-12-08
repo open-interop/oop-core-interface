@@ -186,7 +186,7 @@ const Device = props => {
         const {
             authenticationHeaders: updatedHeaders,
             authenticationQuery: updatedQuery, 
-            // eslint-disable-next-line
+            // eslint-disable-next-line no-unused-vars
             ...updatedRest
         } = updatedDevice;
 
@@ -223,25 +223,25 @@ const Device = props => {
         const {
             authenticationHeaders: updatedHeaders,
             authenticationQuery: updatedQuery,
-            // eslint-disable-next-line
+            // eslint-disable-next-line no-unused-vars
             ...updatedRest
         } = updatedDevice;
         
         var validHeaders = false
-        updatedHeaders.map((header) => {
+        // eslint-disable-next-line no-unused-vars
+        for (const header of updatedHeaders) {
             if (oneValueEmpty(header)) {
                 validHeaders = "Authentication Headers must have both a key and value"
-            } 
-            return header
-        });
+            }
+        };
         
         var validQuery = false
-        updatedQuery.map((query) => {
+        // eslint-disable-next-line no-unused-vars
+        for (const query of updatedQuery) {
             if (oneValueEmpty(query)) {
-                validQuery = "Authentication Queries must have both a key and value"
+                validQuery = "Authentication Query must have both a key and value"
             }
-            return query
-        });
+        };
         
         return validHeaders || validQuery || false
     }

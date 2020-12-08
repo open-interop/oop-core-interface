@@ -496,6 +496,7 @@ const Dashboard = props => {
         }
 
         getMessageTimeline(props.site, origins);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [origins, props.site]);
 
     return (

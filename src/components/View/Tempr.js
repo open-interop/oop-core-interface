@@ -186,8 +186,10 @@ const Tempr = props => {
     const [deleting, setDeleting] = useState(false);
     const [creating, setCreating] = useState(false);
 
+
     useEffect(
         () => { getData(temprId, props.match.params.deviceGroupId, getParents, getChildren).then(setData); },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [temprId, props.match.params.deviceGroupId]
     ); 
 
@@ -199,7 +201,7 @@ const Tempr = props => {
         if (!blankTempr) {
             const ts = await OopCore.getTemprs({temprId: temprId});
             if (ts) {
-                // eslint-disable-next-line
+                // eslint-disable-next-line no-unused-vars
                 for (const tempr of ts.data) {
                     if (tempr.temprId === temprId) {
                         none = false;

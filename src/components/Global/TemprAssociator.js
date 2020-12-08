@@ -24,7 +24,7 @@ const TemprAssociator = props => {
     const [loading, setLoading] = useState(false);
 
     const selected = {};
-    // eslint-disable-next-line
+    // eslint-disable-next-line no-unused-vars
     for (const s of props.selected) {
         selected[s.temprId] = s;
     }
