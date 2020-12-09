@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCogs,
     faNetworkWired,
+    faInbox
 } from "@fortawesome/free-solid-svg-icons";
 
 const MobileNavigation = props => {
@@ -16,11 +17,13 @@ const MobileNavigation = props => {
         <div className="mobile-nav">
             <NavigationItem
                 path="/devices"
-                pathName="&nbsp;&nbsp;Devices"
                 icon={<FontAwesomeIcon icon={faNetworkWired} />}
             />
+            <NavigationItem
+                path="/messages"
+                icon={<FontAwesomeIcon icon={faInbox} />}
+            />
             <NavigationGroup
-                pathName="&nbsp;&nbsp;Settings"
                 isOpen={settingsAccordionOpen}
                 setOpen={setSettingsAccordionOpen}
                 icon={<FontAwesomeIcon icon={faCogs} />}

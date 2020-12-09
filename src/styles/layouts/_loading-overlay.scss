@@ -11,3 +11,17 @@
       margin: 10% auto;
     }
 }
+
+.mobile-loading-overlay {
+  background-color: rgba(255, 255, 255, 0.4);
+  bottom:0;
+  left:0;
+  position: fixed;
+  right:0;
+  top:20vh;
+
+    img {
+      display: block;
+      margin: 10% auto;
+    }
+}

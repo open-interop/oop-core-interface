@@ -4,14 +4,24 @@ import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 
 import { useStyletron } from "baseui";
 import { Spinner } from "baseui/spinner";
+import { Block } from "baseui/block";
 
 import spinnerGif from "../../resources/loading.gif";
 
 const GifSpinner = () => {
     return (
-        <div className="loading-overlay">
-            <img alt="loading-spinner" src={spinnerGif} />
-        </div>
+        <>
+            <Block display={['none', 'none', 'block']}>
+                <div className="loading-overlay">
+                    <img alt="loading-spinner" src={spinnerGif} />
+                </div>
+            </Block>
+            <Block display={['block', 'block', 'none']}>
+                <div className="mobile-loading-overlay">
+                    <img alt="loading-spinner" src={spinnerGif} />
+                </div>
+            </Block>
+        </>
     );
 };
 

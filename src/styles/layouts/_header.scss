@@ -100,15 +100,15 @@ div[id="root"] .mobile-nav {
     align-items: center;
 
     .size-xxl {
-        font-size: 7vmin;
+        font-size: 5vh;
+        color: $color-white;
     }
 
     a {
         &[data-baseweb="button"] {
-            color: $color-white;
-            font-size: 5vmin;
             height: 8vh;
-            padding: 0vh 4vw 0vh 4vw;
+            padding: 0vh 3vw 0vh 3vw;
+            transition: 1s;
         }
         &:active {
             background-color: $oop-active-teal;
@@ -122,11 +122,9 @@ div[id="root"] .mobile-nav {
         &[data-baseweb="button"] {
             color: $color-white;
             height: 8vh;
-            padding: 0vh 4vw 0vh 4vw;
-            font-size: 5vmin;
-            float: right;
+            padding: 0vh 3vw 0vh 3vw;
+            transition: 1s;
         }
-
         &:active {
             background-color: $oop-active-teal;
         }
@@ -149,6 +147,7 @@ div[id="root"] .mobile-nav {
                 &[data-baseweb="button"] {
                     display: flex;
                     transition: 1s;
+                    font-size: 5vmin;
                 }
             }
         }
