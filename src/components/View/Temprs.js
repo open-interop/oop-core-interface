@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
-import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+import { useQueryParam, StringParam } from "use-query-params";
 
 import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Temprs = props => {
 
-    const [temprs, setTemprs] = useState([]);
     const [id, setId] = useQueryParam("id", StringParam);
     const [name, setName] = useQueryParam("name", StringParam);
     const [deviceGroupId, setDeviceGroupId] = useQueryParam(
@@ -58,7 +57,6 @@ const Temprs = props => {
             <PaginatedTable
                 getData={(pagination) => {
                     return getData(pagination).then(response => {
-                        setTemprs(response);
                         return response;
                     });
                 }}

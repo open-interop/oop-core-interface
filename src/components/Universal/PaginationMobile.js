@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo } from "react";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { ArrowLeft, ArrowRight } from "baseui/icon";

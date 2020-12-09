@@ -7,9 +7,7 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCircle,
-    faCheck,
     faEdit,
-    faTimes,
     faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
@@ -17,7 +15,6 @@ import { ListItem, ListItemLabel } from "baseui/list";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { Chart, Pie } from "react-chartjs-2";
 import styles from "./../../styles/_variables.scss";
-import chartStyles from "./../../styles/_chartColours.scss";
 import OopCore from "../../OopCore";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
@@ -28,31 +25,6 @@ const Waiting = props => {
         </MaxCard>
     );
 };
-
-const availableColours = [
-    chartStyles.chart01,
-    chartStyles.chart02,
-    chartStyles.chart03,
-    chartStyles.chart04,
-    chartStyles.chart05,
-    chartStyles.chart06,
-    chartStyles.chart07,
-    chartStyles.chart08,
-    chartStyles.chart09,
-    chartStyles.chart10,
-    chartStyles.chart11,
-    chartStyles.chart12,
-    chartStyles.chart13,
-    chartStyles.chart14,
-    chartStyles.chart15,
-    chartStyles.chart16,
-    chartStyles.chart17,
-    chartStyles.chart18,
-    chartStyles.chart19,
-    chartStyles.chart20,
-    chartStyles.chart21,
-    chartStyles.chart22,
-];
 
 const StatusIndicator = props => {
     const device = props.device;

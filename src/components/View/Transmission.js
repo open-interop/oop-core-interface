@@ -9,12 +9,9 @@ import "ace-builds/src-noconflict/theme-monokai";
 
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
-import { Card, StyledBody } from "baseui/card";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 
-import JSONPretty from "react-json-pretty";
-
-import { DataProvider, Modal, Page, DatetimeTooltip } from "../Universal";
+import { DataProvider, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmission = props => {

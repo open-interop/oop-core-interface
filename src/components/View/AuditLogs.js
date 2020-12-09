@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy } from "react";
+import React, { useState, lazy } from "react";
 
 import { Link } from "react-router-dom";
 
@@ -7,9 +7,7 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
 
-import JSONPretty from "react-json-pretty";
-
-import { Page, PaginatedTable, DatetimeTooltip, HistoryModal } from "../Universal";
+import { Page, PaginatedTable, DatetimeTooltip } from "../Universal";
 import { useQueryParam, StringParam, NumberParam } from "use-query-params";
 import OopCore from "../../OopCore";
 
@@ -34,7 +32,6 @@ function formatType(type) {
 }
 
 const AuditLogs = props => {
-    const [history, setHistory] = useState([]);
     const [action, setAction] = useQueryParam("action", StringParam);
     const [version, setVersion] = useQueryParam("version", NumberParam);
     const [userId, setUserId] = useQueryParam("userId", NumberParam);
@@ -43,12 +40,7 @@ const AuditLogs = props => {
     const previousPath = (props.location.state && props.location.state.from) ? props.location.state.from
         : props.location.pathname.replace('/audit-logs','');
 
-    const componentHeading = typeHeading(props.match.params.componentType)
-
-    const itemProps = {
-        height: "scale1000",
-        display: "flex",
-    };
+    const componentHeading = typeHeading(props.match.params.componentType);
 
     const getData = (pagination) => {
         return OopCore.getAuditLogs(
@@ -56,7 +48,6 @@ const AuditLogs = props => {
             props.match.params.componentId,
             pagination
         ).then(history => {
-            setHistory(history);
             return history;
         }).catch(e => {
             setNotFound(true);

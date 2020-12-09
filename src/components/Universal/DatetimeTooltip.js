@@ -10,7 +10,7 @@ const DatetimeTooltip = props => {
     const formatISODate = date => {
         const d = new Date();
         const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'short'});
-        const timezone = " " + dtf.formatToParts(d).find((part) => part.type == 'timeZoneName').value;
+        const timezone = " " + dtf.formatToParts(d).find((part) => part.type === 'timeZoneName').value;
 
         if (date) {
             const date_obj = parseISO(date);

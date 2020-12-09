@@ -1,12 +1,10 @@
-import React, { useState, useEffect, lazy } from "react";
+import React, { useState, lazy } from "react";
 
 import { useStyletron } from "baseui";
 import { StyledTitle } from "baseui/card";
 
 import { ListItem, ListItemLabel } from "baseui/list";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
-
-import JSONPretty from "react-json-pretty";
 
 import { DataProvider, Page, DatetimeTooltip, MaxCard } from "../Universal";
 import OopCore from "../../OopCore";
@@ -35,13 +33,6 @@ const CenteredTitle = props => {
     </StyledTitle>
 };
 
-const scriptedFields = [
-    'exampleTransmission',
-    'script',
-    'authenticationHeaders',
-    'authenticationQuery',
-];
-
 const itemProps = {
     height: "scale1000",
     display: "flex",
@@ -51,7 +42,6 @@ const AuditLog = props => {
     const [auditLog, setAuditLog] = useState({});
     const [user, setUser] = useState({});
     const [notFound, setNotFound] = useState(null);
-    const [noUser, setNoUser] = useState(null);
 
     const previousPath = (props.location.state && props.location.state.from) ? props.location.state.from
         : "/global-history";
@@ -67,7 +57,7 @@ const AuditLog = props => {
                 setUser(user);
                 return auditLog;
             }).catch(e => {
-                setNoUser(true);
+                setUser(null);
             });
         }).catch(e => {
             setNotFound(true);
@@ -83,6 +73,7 @@ const AuditLog = props => {
                         : <CenteredTitle>Create {auditLog.auditableType}</CenteredTitle>;
 
         const changesArray = [];
+        // eslint-disable-next-line no-unused-vars
         for (const property in changes) {
             if (updateBool) {
                 changesArray.push({

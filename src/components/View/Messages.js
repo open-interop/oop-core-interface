@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { Button, KIND } from "baseui/button";
@@ -13,7 +13,6 @@ import { arrayToObject } from "../../Utilities";
 
 const Messages = props => {
 
-    const [messages, setMessages] = useState([]);
     const [uuid, setUuid] = useQueryParam("uuid", StringParam);
     const [originId, setOriginId] = useQueryParam("originId", NumberParam);
     const [originType, setOriginType] = useQueryParam("originType", StringParam);
@@ -35,7 +34,6 @@ const Messages = props => {
                     ? originDict[message.originType][message.originId].name
                     : "No data available";
             });
-            setMessages(messages);
             return messages;
         });
     };
