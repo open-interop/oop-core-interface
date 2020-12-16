@@ -4,7 +4,6 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { Popover } from "baseui/popover";
 
 const useOutsideClick = (ref, closeOutside, callback) => {
-    console.log(closeOutside);
     const handleClick = e => {
         if (ref.current && !ref.current.contains(e.target) && closeOutside) {
             callback();
