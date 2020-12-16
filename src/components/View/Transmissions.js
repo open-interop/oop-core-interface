@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { Link } from "react-router-dom";
-import { useQueryParam, StringParam } from "use-query-params";
+import { useQueryParam, StringParam, ObjectParam } from "use-query-params";
 
 import { Button, KIND } from "baseui/button";
 
@@ -32,6 +32,7 @@ const Transmissions = props => {
     );
     const [status, setStatus] = useQueryParam("status", StringParam);
     const [success, setSuccess] = useQueryParam("success", StringParam);
+    const [transmittedAt, setTransmittedAt] = useQueryParam("transmittedAt", ObjectParam);
 
     const deviceDashboardPath = props.location.pathname.substr(
         0,
@@ -138,8 +139,8 @@ const Transmissions = props => {
                     {
                         id: "transmittedAt",
                         name: "Transmitted at",
-                        type: "text",
-                        hasFilter: false,
+                        type: "datetime",
+                        hasFilter: true,
                     },
                     {
                         id: "action",
@@ -156,6 +157,7 @@ const Transmissions = props => {
                     transmissionUuid,
                     status,
                     success,
+                    transmittedAt,
                 }}
                 updateFilters={(key, value) => {
                     switch (key) {
@@ -171,6 +173,8 @@ const Transmissions = props => {
                             return setStatus(value);
                         case "success":
                             return setSuccess(value);
+                        case "transmittedAt":
+                            return setTransmittedAt(value);
                         default:
                             return null;
                     }
