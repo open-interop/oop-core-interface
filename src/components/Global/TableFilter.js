@@ -7,6 +7,7 @@ const TableFilter = props => {
     return (
         <PopoverWithButton
             popoverPlacement={PLACEMENT.bottomRight}
+            outsideClick={props.contentType !== "datetime"}
             content={
                 <>
                     {props.contentType === "text" && (

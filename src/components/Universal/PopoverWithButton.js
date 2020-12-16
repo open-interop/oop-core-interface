@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { Popover } from "baseui/popover";
 
-const useOutsideClick = (ref, callback) => {
+const useOutsideClick = (ref, closeOutside, callback) => {
+    console.log(closeOutside);
     const handleClick = e => {
-        if (ref.current && !ref.current.contains(e.target)) {
-            //callback();
+        if (ref.current && !ref.current.contains(e.target) && closeOutside) {
+            callback();
         }
     };
 
@@ -25,7 +26,7 @@ const PopoverWithButton = props => {
     const PopoverContent = () => {
         const ref = useRef();
 
-        useOutsideClick(ref, () => {
+        useOutsideClick(ref, props.outsideClick, () => {
             setPopoverOpen(false);
         });
 
