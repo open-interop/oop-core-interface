@@ -54,6 +54,7 @@ const Temprs = lazy(() => import('./components/View/Temprs'));
 const Transmission = lazy(() => import('./components/View/Transmission'));
 const Transmissions = lazy(() => import('./components/View/Transmissions'));
 const User = lazy(() => import('./components/View/User'));
+const UserDashboard = lazy(() => import('./components/View/UserDashboard'));
 const Users = lazy(() => import('./components/View/Users'));
 
 class App extends Component {
@@ -359,10 +360,17 @@ class App extends Component {
                                 }
                             />
                             <Route
-                                path="/users/:userId"
+                                path="/users/:userId/edit"
                                 exact
                                 render={props =>
                                     this.getComponent(!hasUser, User, props)
+                                }
+                            />
+                            <Route
+                                path="/users/:userId"
+                                exact
+                                render={props =>
+                                    this.getComponent(!hasUser, UserDashboard, props)
                                 }
                             />
                             <Route
