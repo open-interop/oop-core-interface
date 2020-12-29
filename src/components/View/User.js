@@ -5,6 +5,8 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
+import { Textarea } from "baseui/textarea";
+import { Datepicker } from 'baseui/datepicker';
 
 import { ConfirmModal, DataProvider, Page } from "../Universal";
 import { Timezones } from "../../resources/Timezones";
@@ -14,6 +16,7 @@ import OopCore from "../../OopCore";
 
 const User = props => {
     const [user, setUser] = useState({});
+    const [dateOfBirth, setDateOfBirth] = useState(null);
     const [updatedUser, setUpdatedUser] = useState({});
     const [userErrors, setUserErrors] = useState({});
     const blankUser = props.match.params.userId === "new";
@@ -48,6 +51,13 @@ const User = props => {
         const updatedData = { ...updatedUser };
         updatedData[key] = value;
         setUpdatedUser(updatedData);
+    };
+
+    const setDate = (d) => {
+        if (d != null) {
+            setDateOfBirth(d);
+            setValue('dob', d.toISOString().slice(0,10));
+        }
     };
 
     const passwordMismatch = () => {
@@ -162,8 +172,12 @@ const User = props => {
             <DataProvider
                 getData={() => {
                     return getUser().then(response => {
+                        if (response.dob) {
+                            setDateOfBirth(new Date(response.dob));
+                        }
                         setUser(response);
                         setUpdatedUser(response);
+                        console.log(response);
                     });
                 }}
                 renderData={() => (
@@ -259,6 +273,97 @@ const User = props => {
                                     item => item.id === updatedUser.timeZone,
                                 )}
                                 error={userErrors.timeZone}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="First Name"
+                            key={"form-control-group-first-name"}
+                            error={
+                                userErrors.firstName
+                                    ? `First Name ${userErrors.firstName}`
+                                    : ""
+                            }
+                        >
+                            <Input
+                                id={"input-first-name"}
+                                value={updatedUser.firstName || ""}
+                                onChange={event =>
+                                    setValue("firstName", event.currentTarget.value)
+                                }
+                                error={userErrors.firstName}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Last Name"
+                            key={"form-control-group-last-name"}
+                            error={
+                                userErrors.lastName
+                                    ? `Last Name ${userErrors.lastName}`
+                                    : ""
+                            }
+                        >
+                            <Input
+                                id={"input-last-name"}
+                                value={updatedUser.lastName || ""}
+                                onChange={event =>
+                                    setValue("lastName", event.currentTarget.value)
+                                }
+                                error={userErrors.lastName}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Date of Birth"
+                            key={"form-control-group-dob"}
+                            error={
+                                userErrors.dob
+                                    ? `Date of Birth ${userErrors.dob}`
+                                    : ""
+                            }
+                        >
+                            <Datepicker
+                              aria-label="Select a date"
+                              value={dateOfBirth}
+                              onChange={({date}) => setDate(date)}
+                              formatString="yyyy-MM-dd"
+                              placeholder="YYYY-MM-DD"
+                              mask="9999-99-99"
+                              minDate={new Date("1900-01-01")}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Job Title"
+                            key={"form-control-group-job-title"}
+                            error={
+                                userErrors.jobTitle
+                                    ? `Job Title ${userErrors.jobTitle}`
+                                    : ""
+                            }
+                        >
+                            <Input
+                                id={"input-last-name"}
+                                value={updatedUser.jobTitle || ""}
+                                onChange={event =>
+                                    setValue("jobTitle", event.currentTarget.value)
+                                }
+                                error={userErrors.jobTitle}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Description"
+                            key="form-control-notes"
+                            error={
+                                userErrors.description
+                                    ? `Description ${userErrors.description}`
+                                    : ""
+                            }
+                        >
+                            <Textarea
+                                id={"input-description"}
+                                value={updatedUser.description ? updatedUser.description : ""}
+                                onChange={event =>
+                                    setValue("description", event.currentTarget.value)
+                                }
+                                error={userErrors.description}
                             />
                         </FormControl>
                     </>
