@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
+import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
+import { Card } from "baseui/card";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faCircle,
     faEdit,
-    faHistory,
+    faChevronCircleDown,
+    faListUl
 } from "@fortawesome/free-solid-svg-icons";
-import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
+import { Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
-import { Chart, Pie } from "react-chartjs-2";
-import styles from "./../../styles/_variables.scss";
 import OopCore from "../../OopCore";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
@@ -26,40 +25,75 @@ const Waiting = props => {
 };
 
 const UserDetails = props => {
-    const { schedule } = props;
+    const { user } = props;
+    console.log(user);
 
-    if (!(schedule && schedule.id)) {
+    if (!(user && user.id)) {
         return <Waiting title="Details" />;
     }
 
     return (
-        <MaxCard>
-            <ListItem>
-                <div className="card-label">
-                    <ListItemLabel description="Name">
-                        {schedule.name}
-                    </ListItemLabel>
-                </div>
-            </ListItem>
-            <ListItem>
-                <div className="card-label">
-                    <ListItemLabel description="Created At">
-                        <DatetimeTooltip time={schedule.createdAt}></DatetimeTooltip>
-                    </ListItemLabel>
-                </div>
-            </ListItem>
-            <ListItem>
-                <div className="card-label">
-                    <ListItemLabel description="Schedule Temprs">
-                        {
-                            schedule.scheduleTemprs
-                                ? schedule.scheduleTemprs
-                                : "No"
-                        }{" "}
-                        schedule temprs associated
-                    </ListItemLabel>
-                </div>
-            </ListItem>
+        <MaxCard title="Details">
+            <FlexGrid
+                flexGridColumnCount={[1,1,2,3]}
+                flexGridColumnGap="scale200"
+                flexGridRowGap="scale200"
+            >
+                <FlexGridItem {...{display: 'flex'}}>
+                    <ListItem>
+                        <div className="card-label">
+                            <ListItemLabel description="Full Name">
+                                {user.firstName + " " + user.lastName} 
+                            </ListItemLabel>
+                        </div>
+                    </ListItem>
+                </FlexGridItem>
+                <FlexGridItem {...{display: 'flex'}}>
+                    <ListItem>
+                        <div className="card-label">
+                            <ListItemLabel description="Email Address">
+                                {user.email} 
+                            </ListItemLabel>
+                        </div>
+                    </ListItem>
+                </FlexGridItem>
+                <FlexGridItem {...{display: 'flex'}}>
+                    <ListItem>
+                        <div className="card-label">
+                            <ListItemLabel description="Timezone">
+                                {user.timeZone || "Not available"} 
+                            </ListItemLabel>
+                        </div>
+                    </ListItem>
+                </FlexGridItem>
+                <FlexGridItem {...{display: 'flex'}}>
+                    <ListItem>
+                        <div className="card-label">
+                            <ListItemLabel description="Date of Birth">
+                                {user.dob || "Not available"} 
+                            </ListItemLabel>
+                        </div>
+                    </ListItem>
+                </FlexGridItem>
+                <FlexGridItem {...{display: 'flex'}}>
+                    <ListItem>
+                        <div className="card-label">
+                            <ListItemLabel description="Job Title">
+                                {user.jobTitle || "Not available"} 
+                            </ListItemLabel>
+                        </div>
+                    </ListItem>
+                </FlexGridItem>
+                <FlexGridItem {...{display: 'flex'}}>
+                    <ListItem>
+                        <div className="card-label">
+                            <ListItemLabel description="Full Name">
+                                {user.firstName + " " + user.lastName} 
+                            </ListItemLabel>
+                        </div>
+                    </ListItem>
+                </FlexGridItem>
+            </FlexGrid>
         </MaxCard>
     );
 };
@@ -71,8 +105,6 @@ const UserAuditLogs = props => {
         return <Waiting title="User's Audit Logs" />;
     }
 
-    console.log(logs);
-
     if (!(logs && logs.length)) {
         return (
             <MaxCard title="User's Audit Logs">
@@ -80,6 +112,73 @@ const UserAuditLogs = props => {
             </MaxCard>
         );
     }
+
+    const itemProps = {
+        display: "flex",
+    };
+
+    const children = props.logs.map((item, index) => (
+        <FlexGridItem {...itemProps} key={item.id}>
+            <Card title={`${item.action.charAt(0).toUpperCase() + item.action.slice(1)} ${item.auditableType}`} $style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column"
+            }}>
+                <FlexGrid
+                    flexGridColumnCount={[1,2,2]}
+                    flexGridColumnGap="scale200"
+                    flexGridRowGap="scale200"
+                >
+                    <FlexGridItem {...itemProps}>
+                        <ListItem>
+                            <div className="card-label">
+                                <ListItemLabel description="Audit Log ID">
+                                    {item.id ||
+                                        "No data available"}
+                                </ListItemLabel>
+                            </div>
+                        </ListItem>
+                    </FlexGridItem>
+                    <FlexGridItem {...itemProps}>
+                        <ListItem>
+                            <div className="card-label">
+                                <ListItemLabel description="Timestamp">
+                                    {item.createdAt ? <DatetimeTooltip time={item.createdAt} /> :
+                                        "No data available"}
+                                </ListItemLabel>
+                            </div>
+                        </ListItem>
+                    </FlexGridItem>
+                    <FlexGridItem {...itemProps}>
+                        <ListItem>
+                            <div className="card-label">
+                                <ListItemLabel description={`${item.auditableType} ID`}>
+                                    {item.auditableId ||
+                                        "No data available"}
+                                </ListItemLabel>
+                            </div>
+                        </ListItem>
+                    </FlexGridItem>
+                    <FlexGridItem {...itemProps}>
+                        <ListItem>
+                            <div className="card-label">
+                                <Button
+                                    $as={Link}
+                                    kind={KIND.secondary}
+                                    to={{pathname: `/audit-logs/${item.id}`, state: {from: `/users/${props.userId}`}}}
+                                    endEnhancer={() => <FontAwesomeIcon icon={faListUl} />}
+                                >
+                                    More Details
+                                </Button>
+                            </div>
+                        </ListItem>
+                    </FlexGridItem>
+                </FlexGrid>
+            </Card>
+        </FlexGridItem>
+    ));
+
     return (
         <MaxCard
             title={
@@ -96,39 +195,24 @@ const UserAuditLogs = props => {
                     </Button>
                 </>
             }
-        >
-            <Table
-                data={logs}
-                mapFunction={(
-                    columnName,
-                    content,
-                ) => {
-                    if (columnName === "auditedChanges") {
-                        return Object.keys(content).length;
-                    }
-                    return content;
-                }}
-                columns={[
-                    {
-                        id: "id",
-                        name: "ID",
-                    },
-                    {
-                        id: "auditableType",
-                        name: "Component Type",
-                    },
-                    {
-                        id: "action",
-                        name:
-                            "Action",
-                    },
-                    {
-                        id: "auditedChanges",
-                        name:
-                            "No. of Changes",
-                    },
-                ]}
-            />
+        >   
+            <FlexGrid
+                flexGridColumnCount={[1,1,1,2]}
+                flexGridColumnGap="scale800"
+                flexGridRowGap="scale800"
+                marginBottom="scale400"
+            >
+                {children}
+            </FlexGrid>
+            <Button
+                kind={KIND.minimal}
+                onClick={props.more}
+                $style={{ fontSize: "50px" }}
+            >
+                <FontAwesomeIcon
+                    icon={faChevronCircleDown}
+                />
+            </Button>
         </MaxCard>
     );
 };
@@ -142,13 +226,14 @@ const UserDashboard = props => {
         0,
         props.location.pathname.lastIndexOf("/"),
     );
+    const [logsDisplayed, setLogsDisplayed] = useState(4);
 
     useEffect(() => {
         Promise.all([
             OopCore.getUser(userId),
             OopCore.getGlobalHistory({
                 filter: { userId: userId },
-                "page[size]": 15
+                "page[size]": logsDisplayed
             })
         ])
             .then(([
@@ -158,12 +243,36 @@ const UserDashboard = props => {
                 setUser(user);
                 setLogs(logs.data);
             });
-    }, [userId]);
+    }, [userId, logsDisplayed]);
+
+    const moreLogs = () => {
+        Promise.resolve(
+            OopCore.getGlobalHistory({
+                filter: { userId: userId },
+                "page[size]": logsDisplayed + 4
+            })
+        ).then(logs => {
+            setLogs(logs.data);
+            setLogsDisplayed(logsDisplayed + 4);
+        });
+    }
+
+    const lessLogs = () => {
+        Promise.resolve(
+            OopCore.getGlobalHistory({
+                filter: { userId: userId },
+                "page[size]": logsDisplayed - 4
+            })
+        ).then(logs => {
+            setLogs(logs.data);
+            setLogsDisplayed(logsDisplayed - 4);
+        });
+    }
 
     return (
         <Page
-            title="User Dashboard | Open Interop"
-            heading="User Dashboard"
+            title="User Profile | Open Interop"
+            heading="User Profile"
             backlink={allUsersPath}
             actions={
                 <>
@@ -179,12 +288,12 @@ const UserDashboard = props => {
                 </>
             }
         >
-            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,14]} >
+            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5]} >
                 <Cell span={5}>
                     <UserDetails user={user} />
                 </Cell>
-                <Cell span={[5,5,9]}>
-                    <UserAuditLogs logs={logs} userId={userId} />
+                <Cell span={[5]}>
+                    <UserAuditLogs logs={logs} userId={userId} more={moreLogs} less={lessLogs} />
                 </Cell>
             </Grid>
         </Page>
