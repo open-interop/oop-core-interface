@@ -9,7 +9,7 @@ import { Textarea } from "baseui/textarea";
 import { Datepicker } from 'baseui/datepicker';
 
 import { ConfirmModal, DataProvider, Page } from "../Universal";
-import { Timezones } from "../../resources/Timezones";
+import { Timezones, TimeDiff } from "../../resources/Timezones";
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import { identicalObject } from "../../Utilities";
 import OopCore from "../../OopCore";
@@ -23,7 +23,7 @@ const User = props => {
     const timezones = Timezones.map(timezone => {
         return {
             id: timezone,
-            name: timezone,
+            name: timezone + " (UTC " + TimeDiff[timezone] + ")",
         };
     });
 
@@ -126,7 +126,7 @@ const User = props => {
                     {blankUser ? null : (
                         <Button
                             $as={Link}
-                            to={`${props.location.pathname}/audit-logs`}
+                            to={`${allUsersPath}/audit-logs`}
                             aria-label={"History"}
                         >
                             History
@@ -340,7 +340,7 @@ const User = props => {
                             }
                         >
                             <Input
-                                id={"input-last-name"}
+                                id={"input-job-title"}
                                 value={updatedUser.jobTitle || ""}
                                 onChange={event =>
                                     setValue("jobTitle", event.currentTarget.value)

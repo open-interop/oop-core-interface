@@ -22,7 +22,7 @@ import {
 
 import TemprAssociator from "../Global/TemprAssociator";
 
-import { Timezones } from "../../resources/Timezones";
+import { Timezones, TimeDiff } from "../../resources/Timezones";
 
 const Device = props => {
     const [device, setDevice] = useState(null);
@@ -33,7 +33,7 @@ const Device = props => {
     const timezones = Timezones.map(timezone => {
         return {
             id: timezone,
-            name: timezone,
+            name: timezone + " (UTC " + TimeDiff[timezone] + ")",
         };
     });
     const blankDevice = props.match.params.deviceId === "new";

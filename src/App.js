@@ -41,7 +41,6 @@ const Login = lazy(() => import('./components/View/Login'));
 const Message = lazy(() => import('./components/View/Message'));
 const Messages = lazy(() => import('./components/View/Messages'));
 const PageNotFound = lazy(() => import('./components/View/PageNotFound'));
-const Profile = lazy(() => import('./components/View/Profile'));
 const ResetPassword = lazy(() => import('./components/View/ResetPassword'));
 const Schedule = lazy(() => import('./components/View/Schedule'));
 const ScheduleDashboard = lazy(() => import('./components/View/ScheduleDashboard'));
@@ -370,7 +369,13 @@ class App extends Component {
                                 path="/users/:userId"
                                 exact
                                 render={props =>
-                                    this.getComponent(!hasUser, UserDashboard, props)
+                                    this.getComponent(
+                                        !hasUser,
+                                        props.match.params.userId === "new"
+                                            ? User
+                                            : UserDashboard,
+                                        props,
+                                    )
                                 }
                             />
                             <Route
@@ -379,7 +384,7 @@ class App extends Component {
                                 render={props => {
                                     const user = this.state.user;
 
-                                    return this.getComponent(!hasUser, Profile, {
+                                    return this.getComponent(!hasUser, UserDashboard, {
                                         ...props,
                                         user,
                                     });

@@ -65,7 +65,7 @@ const Users = memo(props => {
                             </>
                         );
                     }
-                    if (columnName === "createdAt" || columnName === "updatedAt") {
+                    if (columnName === "createdAt") {
                         return (
                             <DatetimeTooltip time={content}></DatetimeTooltip>
                         );
@@ -85,9 +85,21 @@ const Users = memo(props => {
                         name: "Email",
                         type: "text",
                         hasFilter: true,
+                        width: "250px",
+                    },
+                    {
+                        id: "firstName",
+                        name: "First Names",
+                        type: "text",
+                        hasFilter: false,
+                    },
+                    {
+                        id: "lastName",
+                        name: "Last Name",
+                        type: "text",
+                        hasFilter: false,
                     },
                     { id: "createdAt", name: "Created At" },
-                    { id: "updatedAt", name: "Updated At" },
                     { id: "action", name: "", width: "150px" },
                 ]}
                 columnContent={columnName => {

@@ -26,10 +26,28 @@ const Waiting = props => {
 
 const UserDetails = props => {
     const { user } = props;
-    console.log(user);
 
     if (!(user && user.id)) {
         return <Waiting title="Details" />;
+    }
+
+    const formatDate = d => {
+        const months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+        const parts = d.split("-");
+        return `${parts[2]} ${months[parseInt(parts[1])-1]} ${parts[0]}`
     }
 
     return (
@@ -43,7 +61,10 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Full Name">
-                                {user.firstName + " " + user.lastName} 
+                                {user.firstName && user.lastName
+                                    ? user.firstName + " " + user.lastName
+                                    : "Not available"
+                                }
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -70,7 +91,8 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Date of Birth">
-                                {user.dob || "Not available"} 
+                                {user.dob ? formatDate(user.dob)
+                                : "Not available"}
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -87,8 +109,8 @@ const UserDetails = props => {
                 <FlexGridItem {...{display: 'flex'}}>
                     <ListItem>
                         <div className="card-label">
-                            <ListItemLabel description="Full Name">
-                                {user.firstName + " " + user.lastName} 
+                            <ListItemLabel description="Days since creation">
+                                {Math.floor((Date.now() - Date.parse(user.createdAt)) / (1000 * 60 * 60 * 24))}
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -102,12 +124,12 @@ const UserAuditLogs = props => {
     const logs = props.logs;
 
     if (logs === null) {
-        return <Waiting title="User's Audit Logs" />;
+        return <Waiting title="Recent Audit History" />;
     }
 
     if (!(logs && logs.length)) {
         return (
-            <MaxCard title="User's Audit Logs">
+            <MaxCard title="Recent Audit History">
                 No audit logs available
             </MaxCard>
         );
@@ -183,11 +205,11 @@ const UserAuditLogs = props => {
         <MaxCard
             title={
                 <>
-                    Latest Audits
+                    Recent Audit History
                     <Button
                         $as={Link}
                         kind={KIND.secondary}
-                        to={{pathname: `/users/${props.userId}/audit-logs`, state: {from: `/users/${props.userId}`}}}
+                        to={`/global-history?filter=userId-${props.userId}`}
                         aria-label="History for this user"
                         $style={{ float: "right" }}
                     >
@@ -204,22 +226,24 @@ const UserAuditLogs = props => {
             >
                 {children}
             </FlexGrid>
-            <Button
-                kind={KIND.minimal}
-                onClick={props.more}
-                $style={{ fontSize: "50px" }}
-            >
-                <FontAwesomeIcon
-                    icon={faChevronCircleDown}
-                />
-            </Button>
+            {props.arrowEnabled &&
+                <Button
+                    kind={KIND.minimal}
+                    onClick={props.more}
+                    $style={{ fontSize: "50px" }}
+                >
+                    <FontAwesomeIcon
+                        icon={faChevronCircleDown}
+                    />
+                </Button>
+            }
         </MaxCard>
     );
 };
 
 
 const UserDashboard = props => {
-    const userId = props.match.params.userId;
+    const [userId, setUserId] = useState(null);
     const [user, setUser] = useState(null);
     const [logs, setLogs] = useState(null);
     const allUsersPath = props.location.pathname.substr(
@@ -229,20 +253,40 @@ const UserDashboard = props => {
     const [logsDisplayed, setLogsDisplayed] = useState(4);
 
     useEffect(() => {
-        Promise.all([
-            OopCore.getUser(userId),
-            OopCore.getGlobalHistory({
-                filter: { userId: userId },
-                "page[size]": logsDisplayed
-            })
-        ])
-            .then(([
-                user,
-                logs,
-            ]) => {
-                setUser(user);
-                setLogs(logs.data);
-            });
+        if (props.user) {
+            Promise.all([
+                OopCore.getUser(props.user.id),
+                OopCore.getGlobalHistory({
+                    filter: { userId: props.user.id },
+                    "page[size]": logsDisplayed
+                })
+            ])
+                .then(([
+                    user,
+                    logs,
+                ]) => {
+                    setUser(user);
+                    setLogs(logs.data);
+                    setUserId(user.id);
+                });
+        } else {
+            Promise.all([
+                OopCore.getUser(props.match.params.userId),
+                OopCore.getGlobalHistory({
+                    filter: { userId: props.match.params.userId },
+                    "page[size]": logsDisplayed
+                })
+            ])
+                .then(([
+                    user,
+                    logs,
+                ]) => {
+                    setUser(user);
+                    setLogs(logs.data);
+                    setUserId(user.id);
+                });
+        }
+        
     }, [userId, logsDisplayed]);
 
     const moreLogs = () => {
@@ -271,15 +315,15 @@ const UserDashboard = props => {
 
     return (
         <Page
-            title="User Profile | Open Interop"
-            heading="User Profile"
-            backlink={allUsersPath}
+            title={props.user ? "Current User Profile | Open Interop" : "User Profile | Open Interop"}
+            heading={props.user ? "Current User Profile" : "User Profile"}
+            backlink={props.user ? null : allUsersPath}
             actions={
                 <>
                     <Button
                         $as={Link}
                         kind={KIND.minimal}
-                        to={`/users/${props.match.params.userId}/edit`}
+                        to={`/users/${userId}/edit`}
                         endEnhancer={() => <FontAwesomeIcon icon={faEdit} />}
                         aria-label="Edit this user"
                     >
@@ -288,12 +332,12 @@ const UserDashboard = props => {
                 </>
             }
         >
-            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5]} >
-                <Cell span={5}>
+            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[1]} >
+                <Cell span={1}>
                     <UserDetails user={user} />
                 </Cell>
-                <Cell span={[5]}>
-                    <UserAuditLogs logs={logs} userId={userId} more={moreLogs} less={lessLogs} />
+                <Cell span={1}>
+                    <UserAuditLogs logs={logs} userId={userId} more={moreLogs} arrowEnabled={logs ? logs.length == logsDisplayed : true} />
                 </Cell>
             </Grid>
         </Page>
