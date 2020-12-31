@@ -337,7 +337,7 @@ const UserDashboard = props => {
                     <UserDetails user={user} />
                 </Cell>
                 <Cell span={1}>
-                    <UserAuditLogs logs={logs} userId={userId} more={moreLogs} arrowEnabled={logs ? logs.length == logsDisplayed : true} />
+                    <UserAuditLogs logs={logs} userId={userId} more={moreLogs} arrowEnabled={logs ? logs.length === logsDisplayed : true} />
                 </Cell>
             </Grid>
         </Page>
