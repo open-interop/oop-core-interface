@@ -8,6 +8,7 @@ import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 import { Bar } from "react-chartjs-2";
 
 import OopCore from "../../OopCore";
+import { useWindowDimensions } from "../../Utilities";
 
 import chartStyles from "./../../styles/_chartColours.scss";
 import styles from "./../../styles/_variables.scss";
@@ -165,6 +166,10 @@ const FailedTransmissions = props => {
 const Messages = props => {
     const timelineRange = getDateRange(props.customStartDate, props.now);
 
+    const { height, width } = useWindowDimensions();
+
+    var showLegend = (width < 1100 && width > 900 || width > 1500);
+
     return (
         <MaxCard title={
             <CenteredTitle>
@@ -249,6 +254,9 @@ const Messages = props => {
                                 tooltips: {
                                     mode: "label",
                                 },
+                                legend: {
+                                    display: showLegend,
+                                }
                             }}
                         />
                     </div>
