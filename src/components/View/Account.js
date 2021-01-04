@@ -12,19 +12,15 @@ import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
 import { Timezones, TimeDiff } from "../../resources/Timezones";
 
+import { useStyletron } from "baseui";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+
 const Account = props => {
     const [account, setAccount] = useState({});
     const [updatedAccount, setUpdatedAccount] = useState({});
     const [accountErrors, setAccountErrors] = useState({});
     const blankAccount = props.match.params.accountId === "new";
-
-    const getAccount = () => {
-        return blankAccount
-            ? Promise.resolve({
-                  hostname: "",
-              })
-            : OopCore.getAccount(props.match.params.accountId);
-    };
 
     const refreshAccount = acc => {
         setAccount(acc);
@@ -43,28 +39,17 @@ const Account = props => {
     };
 
     const getData = () => {
-        return Promise.resolve(getAccount()
-        ).then(acc => {
-            return acc;
-        });
-    };
-
-    const deleteAccount = () => {
-        return OopCore.deleteAccount(updatedAccount.id)
-            .then(() => {
-                props.history.replace(`/accounts`);
-                SuccessToast("Deleted account", "Success");
-            })
-            .catch(error => {
-                console.error(error);
-                ErrorToast("Could not delete account", "Error");
-            });
+        return Promise.resolve(
+                    OopCore.getAccount()
+                ).then(acc => {
+                    return acc;
+                });
     };
 
     const saveAccount = () => {
         clearToast();
         setAccountErrors({});
-        return OopCore.updateAccount(props.match.params.accountId, updatedAccount)
+        return OopCore.updateAccount(updatedAccount)
             .then(response => {
                 SuccessToast("Updated account", "Success");
                 refreshAccount(response);
@@ -75,62 +60,61 @@ const Account = props => {
             });
     };
 
+
+    const StatusIndicator = props => {
+        const accActive = props;
+
+        const [css, theme] = useStyletron();
+
+        const active = css({
+            float: "right",
+            color: theme.colors.positive,
+            fontSize: "large",
+            ":after": { content: '" ACTIVE"' },
+        });
+
+        const inactive = css({
+            float: "right",
+            color: theme.colors.negative,
+            fontSize: "large",
+            ":after": { content: '" INACTIVE"' },
+        });
+
+        return (
+            <span className={accActive ? active : inactive}>
+                <FontAwesomeIcon
+                    className={accActive ? "blink" : ""}
+                    icon={faCircle}
+                />
+            </span>
+        );
+    };
+
     return (
         <Page
-            title={
-                blankAccount
-                    ? "New Account | Settings | Open Interop"
-                    : "Edit Account | Settings | Open Interop"
-            }
-            heading={blankAccount ? "Create Account" : "Edit Account"}
+            title={"Edit Account | Settings | Open Interop"}
+            heading={"Edit Account"}
             actions={
                 <>
-                    {blankAccount ? null : (
-                        <Button
-                            $as={Link}
-                            to={`${props.location.pathname}/audit-logs`}
-                            aria-label={"History"}
-                        >
-                            History
-                        </Button>
-                    )}
-                    {blankAccount ? null : (
-                        <ConfirmModal
-                            buttonText="Delete"
-                            title="Confirm Deletion"
-                            mainText={
-                                <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this account?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
-                                </>
-                            }
-                            primaryAction={deleteAccount}
-                            primaryActionText="Delete"
-                            secondaryActionText="Cancel"
-                        />
-                    )}
+                    <Button
+                        $as={Link}
+                        to={`${props.location.pathname}/audit-logs`}
+                        aria-label={"History"}
+                    >
+                        History
+                    </Button>
                     <Button
                         onClick={saveAccount}
                         disabled={identicalObject(
                             account,
                             updatedAccount,
                         )}
-                        aria-label={
-                            blankAccount
-                                ? "Create account"
-                                : "Update account"
-                        }
+                        aria-label={"Update account"}
                     >
-                        {blankAccount ? "Create" : "Save"}
+                        Save
                     </Button>
                 </>
             }
-            backlink={allAccountsPath}
         >
             <DataProvider
                 getData={() => {
@@ -138,21 +122,94 @@ const Account = props => {
                 }}
                 renderData={() => (
                     <>
+                        <StatusIndicator account={updatedAccount.active} />
+                        <FormControl
+                            label="Name"
+                            key={"form-control-group-name"}
+                            error={
+                                accountErrors.name ? `Name ${accountErrors.name}` : ""
+                            }
+                            caption="required"
+                        >
+                            <Input
+                                id={"input-name"}
+                                value={updatedAccount.name || ""}
+                                onChange={event =>
+                                    setValue("name", event.currentTarget.value)
+                                }
+                                error={accountErrors.name}
+                            />
+                        </FormControl>
                         <FormControl
                             label="Hostname"
                             key={"form-control-group-host-name"}
-                            error={
-                                accountErrors.hostname ? `Hostname ${accountErrors.hostname}` : ""
-                            }
                             caption="required"
                         >
                             <Input
                                 id={"input-hostname"}
                                 value={updatedAccount.hostname || ""}
+                                disabled={true}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Created at"
+                            key={"form-control-group-created-at"}
+                        >
+                            <Input
+                                id={"input-created-at"}
+                                value={updatedAccount.createdAt || ""}
+                                disabled={true}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Interface Path"
+                            key={"form-control-group-path"}
+                            caption="required"
+                            error={
+                                accountErrors.interfacePath ? `Interface Path ${accountErrors.interfacePath}` : ""
+                            }
+                        >
+                            <Input
+                                id={"input-path"}
+                                value={updatedAccount.interfacePath || ""}
                                 onChange={event =>
-                                    setValue("hostname", event.currentTarget.value)
+                                    setValue("interfacePath", event.currentTarget.value)
                                 }
-                                error={accountErrors.hostname}
+                                error={accountErrors.interfacePath}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Interface Port"
+                            key={"form-control-group-port"}
+                            caption="required"
+                            error={
+                                accountErrors.interfacePort ? `Interface Port ${accountErrors.interfacePort}` : ""
+                            }
+                        >
+                            <Input
+                                id={"input-port"}
+                                value={updatedAccount.interfacePort || ""}
+                                onChange={event =>
+                                    setValue("interfacePort", event.currentTarget.value)
+                                }
+                                error={accountErrors.interfacePort}
+                            />
+                        </FormControl>
+                        <FormControl
+                            label="Interface Scheme"
+                            key={"form-control-group-scheme"}
+                            caption="required"
+                            error={
+                                accountErrors.interfaceScheme ? `Interface Scheme ${accountErrors.interfaceScheme}` : ""
+                            }
+                        >
+                            <Input
+                                id={"input-path"}
+                                value={updatedAccount.interfaceScheme || ""}
+                                onChange={event =>
+                                    setValue("interfaceScheme", event.currentTarget.value)
+                                }
+                                error={accountErrors.interfaceScheme}
                             />
                         </FormControl>
                     </>

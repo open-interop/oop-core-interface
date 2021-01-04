@@ -24,7 +24,6 @@ const engine = new Styletron();
 const queryString = require("query-string");
 
 const Account = lazy(() => import('./components/View/Account'));
-const Accounts = lazy(() => import('./components/View/Accounts'));
 const AuditLog = lazy(() => import('./components/View/AuditLog'));
 const AuditLogs = lazy(() => import('./components/View/AuditLogs'));
 const BlacklistEntries = lazy(() => import('./components/View/BlacklistEntries'));
@@ -407,14 +406,7 @@ class App extends Component {
                                 }
                             />
                             <Route
-                                path="/accounts"
-                                exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Accounts, props)
-                                }
-                            />
-                            <Route
-                                path="/accounts/:accountId"
+                                path="/account"
                                 exact
                                 render={props =>
                                     this.getComponent(!hasUser, Account, props)

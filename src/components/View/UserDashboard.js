@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import moment from "moment";
+
 import { Button, KIND } from "baseui/button";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { Card } from "baseui/card";
@@ -29,25 +31,6 @@ const UserDetails = props => {
 
     if (!(user && user.id)) {
         return <Waiting title="Details" />;
-    }
-
-    const formatDate = d => {
-        const months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December'
-        ];
-        const parts = d.split("-");
-        return `${parts[2]} ${months[parseInt(parts[1])-1]} ${parts[0]}`
     }
 
     return (
@@ -91,7 +74,7 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Date of Birth">
-                                {user.dob ? formatDate(user.dob)
+                                {user.dob ? moment(user.dob).format("Do MMMM YYYY")
                                 : "Not available"}
                             </ListItemLabel>
                         </div>
@@ -110,7 +93,7 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Days since creation">
-                                {Math.floor((Date.now() - Date.parse(user.createdAt)) / (1000 * 60 * 60 * 24))}
+                                {moment().diff(moment(user.createdAt), 'days')}
                             </ListItemLabel>
                         </div>
                     </ListItem>

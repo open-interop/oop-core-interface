@@ -368,31 +368,13 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
     }
 
-    getAccounts(queryParameters) {
-        const parameters = this.getParameters(queryParameters);
-        let path = `/accounts`;
-        if (parameters) {
-            path += `?${parameters}`;
-        }
-
-        return this.makeRequest(path);
+    getAccount() {
+        return this.makeRequest(`/account`);
     }
 
-    getAccount(accountId) {
-        return this.makeRequest(`/accounts/${accountId}`);
-    }
-
-    createAccount(data) {
-        return this.makeRequest(`/accounts`, RequestType.POST, data);
-    }
-
-    deleteAccount(accountId) {
-        return this.makeRequest(`/accounts/${accountId}`, RequestType.DELETE);
-    }
-
-    updateAccount(accountId, data) {
+    updateAccount(data) {
         const payload = { account: data };
-        return this.makeRequest(`/accounts/${accountId}`, RequestType.PUT, payload);
+        return this.makeRequest(`/account`, RequestType.PUT, payload);
     }
 
     getDeviceGroups(queryParameters) {
