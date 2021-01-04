@@ -8,7 +8,7 @@ import { faListUl } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
-import { useQueryParam, StringParam, NumberParam } from "use-query-params";
+import { useQueryParam, StringParam, NumberParam, ObjectParam } from "use-query-params";
 import { arrayToObject } from "../../Utilities";
 
 const Messages = props => {
@@ -17,6 +17,7 @@ const Messages = props => {
     const [originId, setOriginId] = useQueryParam("originId", NumberParam);
     const [originType, setOriginType] = useQueryParam("originType", StringParam);
     const [ipAddress, setIpAddress] = useQueryParam("ipAddress", StringParam);
+    const [createdAt, setCreatedAt] = useQueryParam("createdAt", ObjectParam);
 
     const getData = (pagination) => {
         return Promise.all([
@@ -107,8 +108,8 @@ const Messages = props => {
                     {
                         id: "createdAt",
                         name: "Created at",
-                        type: "text",
-                        hasFilter: false,
+                        type: "datetime",
+                        hasFilter: true,
                     },
                     {
                         id: "action",
@@ -122,7 +123,7 @@ const Messages = props => {
                     }
                     return columnName;
                 }}
-                filters={{ uuid, originId, originType, ipAddress }}
+                filters={{ uuid, originId, originType, ipAddress, createdAt }}
                 updateFilters={(key, value) => {
                     switch (key) {
                         case "uuid":
@@ -133,6 +134,8 @@ const Messages = props => {
                             return setOriginType(value);
                         case "ipAddress":
                             return setIpAddress(value);
+                        case "createdAt":
+                            return setCreatedAt(value);
                         default:
                             return null;
                     }

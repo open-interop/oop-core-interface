@@ -123,10 +123,18 @@ class OopCore extends EventEmitter {
                 }
 
                 if (typeof value === "object" && value !== null) {
-                    // eslint-disable-next-line
-                    for (const [k, v] of Object.entries(value)) {
-                        const newBase = `${base}[${this.toSnakeCase(k)}]`;
-                        buildParam(newBase, v);
+                    if ('gt' in value && value['gt'] === true) {
+                        const newBase = `${base}[gt]`;
+                        buildParam(newBase, value['val']);
+                    } else if ('gt' in value && value['gt'] === false) {
+                        const newBase = `${base}[lt]`;
+                        buildParam(newBase, value['val']);
+                    } else {
+                        // eslint-disable-next-line
+                        for (const [k, v] of Object.entries(value)) {
+                            const newBase = `${base}[${this.toSnakeCase(k)}]`;
+                            buildParam(newBase, v);
+                        }
                     }
                 } else {
                     built[base] = value;
