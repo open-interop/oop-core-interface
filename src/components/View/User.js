@@ -56,7 +56,7 @@ const User = props => {
     const setDate = (d) => {
         if (d != null) {
             setDateOfBirth(d);
-            setValue('dob', d.toISOString().slice(0,10));
+            setValue('dateOfBirth', d.toISOString().slice(0,10));
         }
     };
 
@@ -172,8 +172,8 @@ const User = props => {
             <DataProvider
                 getData={() => {
                     return getUser().then(response => {
-                        if (response.dob) {
-                            setDateOfBirth(new Date(response.dob));
+                        if (response.dateOfBirth) {
+                            setDateOfBirth(new Date(response.dateOfBirth));
                         }
                         setUser(response);
                         setUpdatedUser(response);
@@ -315,8 +315,8 @@ const User = props => {
                             label="Date of Birth"
                             key={"form-control-group-dob"}
                             error={
-                                userErrors.dob
-                                    ? `Date of Birth ${userErrors.dob}`
+                                userErrors.dateOfBirth
+                                    ? `Date of Birth ${userErrors.dateOfBirth}`
                                     : ""
                             }
                         >

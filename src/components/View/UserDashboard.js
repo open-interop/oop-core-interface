@@ -74,7 +74,7 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Date of Birth">
-                                {user.dob ? moment(user.dob).format("Do MMMM YYYY")
+                                {user.dateOfBirth ? moment(user.dateOfBirth).format("Do MMMM YYYY")
                                 : "Not available"}
                             </ListItemLabel>
                         </div>
