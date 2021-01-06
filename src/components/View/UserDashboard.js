@@ -40,7 +40,7 @@ const UserDetails = props => {
                 flexGridColumnGap="scale200"
                 flexGridRowGap="scale200"
             >
-                <FlexGridItem {...{display: 'flex'}}>
+                <FlexGridItem>
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Full Name">
@@ -52,7 +52,7 @@ const UserDetails = props => {
                         </div>
                     </ListItem>
                 </FlexGridItem>
-                <FlexGridItem {...{display: 'flex'}}>
+                <FlexGridItem>
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Email Address">
@@ -61,7 +61,7 @@ const UserDetails = props => {
                         </div>
                     </ListItem>
                 </FlexGridItem>
-                <FlexGridItem {...{display: 'flex'}}>
+                <FlexGridItem>
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Timezone">
@@ -70,7 +70,7 @@ const UserDetails = props => {
                         </div>
                     </ListItem>
                 </FlexGridItem>
-                <FlexGridItem {...{display: 'flex'}}>
+                <FlexGridItem>
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Date of Birth">
@@ -80,7 +80,7 @@ const UserDetails = props => {
                         </div>
                     </ListItem>
                 </FlexGridItem>
-                <FlexGridItem {...{display: 'flex'}}>
+                <FlexGridItem>
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Job Title">
@@ -89,7 +89,7 @@ const UserDetails = props => {
                         </div>
                     </ListItem>
                 </FlexGridItem>
-                <FlexGridItem {...{display: 'flex'}}>
+                <FlexGridItem>
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Days since creation">

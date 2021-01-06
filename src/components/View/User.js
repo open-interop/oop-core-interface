@@ -177,7 +177,6 @@ const User = props => {
                         }
                         setUser(response);
                         setUpdatedUser(response);
-                        console.log(response);
                     });
                 }}
                 renderData={() => (
