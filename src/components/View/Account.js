@@ -204,7 +204,7 @@ const Account = props => {
                             }
                         >
                             <Input
-                                id={"input-path"}
+                                id={"input-scheme"}
                                 value={updatedAccount.interfaceScheme || ""}
                                 onChange={event =>
                                     setValue("interfaceScheme", event.currentTarget.value)
