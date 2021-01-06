@@ -241,6 +241,12 @@ const SideNavigation = props => {
                     onClick={toggleAccordion}
                     isActive={pathIncludes("/global-history")}
                 />
+                <NavigationItem
+                    path="/account"
+                    pathName="Account"
+                    onClick={toggleAccordion}
+                    isActive={pathIncludes("/account")}
+                />
             </NavigationGroup>
             <div className="filler" />
         </div>

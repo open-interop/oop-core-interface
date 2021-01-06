@@ -376,6 +376,15 @@ class OopCore extends EventEmitter {
         return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
     }
 
+    getAccount() {
+        return this.makeRequest(`/account`);
+    }
+
+    updateAccount(data) {
+        const payload = { account: data };
+        return this.makeRequest(`/account`, RequestType.PUT, payload);
+    }
+
     getDeviceGroups(queryParameters) {
         const parameters = this.getParameters(queryParameters);
         let path = `/device_groups`;

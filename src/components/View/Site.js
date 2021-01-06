@@ -10,7 +10,7 @@ import { ConfirmModal, DataProvider, Page } from "../Universal";
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
-import { Timezones } from "../../resources/Timezones";
+import { Timezones, TimeDiff } from "../../resources/Timezones";
 
 const Site = props => {
     const [site, setSite] = useState({});
@@ -21,7 +21,7 @@ const Site = props => {
     const timezones = Timezones.map(timezone => {
         return {
             id: timezone,
-            name: timezone,
+            name: timezone + " (UTC " + TimeDiff[timezone] + ")",
         };
     });
 

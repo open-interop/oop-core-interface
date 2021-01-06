@@ -23,6 +23,7 @@ import {
 const engine = new Styletron();
 const queryString = require("query-string");
 
+const Account = lazy(() => import('./components/View/Account'));
 const AuditLog = lazy(() => import('./components/View/AuditLog'));
 const AuditLogs = lazy(() => import('./components/View/AuditLogs'));
 const BlacklistEntries = lazy(() => import('./components/View/BlacklistEntries'));
@@ -41,7 +42,6 @@ const Login = lazy(() => import('./components/View/Login'));
 const Message = lazy(() => import('./components/View/Message'));
 const Messages = lazy(() => import('./components/View/Messages'));
 const PageNotFound = lazy(() => import('./components/View/PageNotFound'));
-const Profile = lazy(() => import('./components/View/Profile'));
 const ResetPassword = lazy(() => import('./components/View/ResetPassword'));
 const Schedule = lazy(() => import('./components/View/Schedule'));
 const ScheduleDashboard = lazy(() => import('./components/View/ScheduleDashboard'));
@@ -54,6 +54,7 @@ const Temprs = lazy(() => import('./components/View/Temprs'));
 const Transmission = lazy(() => import('./components/View/Transmission'));
 const Transmissions = lazy(() => import('./components/View/Transmissions'));
 const User = lazy(() => import('./components/View/User'));
+const UserDashboard = lazy(() => import('./components/View/UserDashboard'));
 const Users = lazy(() => import('./components/View/Users'));
 
 class App extends Component {
@@ -359,10 +360,23 @@ class App extends Component {
                                 }
                             />
                             <Route
-                                path="/users/:userId"
+                                path="/users/:userId/edit"
                                 exact
                                 render={props =>
                                     this.getComponent(!hasUser, User, props)
+                                }
+                            />
+                            <Route
+                                path="/users/:userId"
+                                exact
+                                render={props =>
+                                    this.getComponent(
+                                        !hasUser,
+                                        props.match.params.userId === "new"
+                                            ? User
+                                            : UserDashboard,
+                                        props,
+                                    )
                                 }
                             />
                             <Route
@@ -371,7 +385,7 @@ class App extends Component {
                                 render={props => {
                                     const user = this.state.user;
 
-                                    return this.getComponent(!hasUser, Profile, {
+                                    return this.getComponent(!hasUser, UserDashboard, {
                                         ...props,
                                         user,
                                     });
@@ -389,6 +403,13 @@ class App extends Component {
                                 exact
                                 render={props =>
                                     this.getComponent(!hasUser, Site, props)
+                                }
+                            />
+                            <Route
+                                path="/account"
+                                exact
+                                render={props =>
+                                    this.getComponent(!hasUser, Account, props)
                                 }
                             />
                             <Route
