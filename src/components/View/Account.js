@@ -2,15 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "baseui/button";
-import { Select } from "baseui/select";
 import { FormControl } from "baseui/form-control";
-import { Accordion, Panel } from "baseui/accordion";
 import { Input } from "baseui/input";
-import { ConfirmModal, DataProvider, Page } from "../Universal";
-import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
+import { DataProvider, Page } from "../Universal";
+import { clearToast, ErrorToast, SuccessToast } from "../Global";
 import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
-import { Timezones, TimeDiff } from "../../resources/Timezones";
 
 import { useStyletron } from "baseui";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,17 +17,11 @@ const Account = props => {
     const [account, setAccount] = useState({});
     const [updatedAccount, setUpdatedAccount] = useState({});
     const [accountErrors, setAccountErrors] = useState({});
-    const blankAccount = props.match.params.accountId === "new";
 
     const refreshAccount = acc => {
         setAccount(acc);
         setUpdatedAccount(acc);
     };
-
-    const allAccountsPath = props.location.pathname.substr(
-        0,
-        props.location.pathname.lastIndexOf("/"),
-    );
 
     const setValue = (key, value) => {
         const updatedData = { ...updatedAccount };

@@ -168,7 +168,7 @@ const Messages = props => {
 
     const { height, width } = useWindowDimensions();
 
-    var showLegend = (width < 1100 && width > 900 || width > 1500);
+    var showLegend = ((width < 1100 && width > 900) || (width > 1500)) && height > 800;
 
     return (
         <MaxCard title={

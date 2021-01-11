@@ -270,7 +270,7 @@ const UserDashboard = props => {
                 });
         }
         
-    }, [userId, logsDisplayed]);
+    }, [userId, logsDisplayed, props]);
 
     const moreLogs = () => {
         Promise.resolve(
@@ -284,6 +284,7 @@ const UserDashboard = props => {
         });
     }
 
+    // eslint-disable-next-line no-unused-vars
     const lessLogs = () => {
         Promise.resolve(
             OopCore.getGlobalHistory({
