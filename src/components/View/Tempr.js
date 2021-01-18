@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from "react";
 import { Link } from "react-router-dom";
 
-import { Button } from "baseui/button";
+import { Button, KIND } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
 
@@ -199,7 +199,7 @@ const Tempr = props => {
     async function getChildren(temprId) {
         var none = true;
         if (!blankTempr) {
-            const ts = await OopCore.getTemprs({temprId: temprId});
+            const ts = await OopCore.getTemprs({filter: {temprId: temprId}});
             if (ts) {
                 // eslint-disable-next-line no-unused-vars
                 for (const tempr of ts.data) {
@@ -410,6 +410,7 @@ const Tempr = props => {
                             $as={Link}
                             to={`${props.location.pathname}/audit-logs`}
                             aria-label={"History"}
+                            kind={(noParents && noChildren) ? KIND.primary : KIND.tertiary}
                         >
                             History
                         </Button>

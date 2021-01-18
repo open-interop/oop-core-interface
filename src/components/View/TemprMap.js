@@ -1,143 +1,295 @@
 import React, { useState } from "react";
-
 import { Redirect  } from 'react-router';
 
-import {
-    Page,
-    DataProvider,
-} from "../Universal";
+import ReactFlow, {
+    ReactFlowProvider,
+    removeElements,
+    isNode,
+    Controls,
+    MiniMap,
+    getBezierPath,
+    getMarkerEnd,
+} from "react-flow-renderer";
 
-import { Graphviz } from 'graphviz-react';
+import { TemprSidebar, TemprNode } from "../Global";
+import { DataProvider, Page, InPlaceGifSpinner } from "../Universal";
 
 import OopCore from "../../OopCore";
 
+import dagre from 'dagre';
+
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+const getLayoutedElements = (elements) => {
+  dagreGraph.setGraph({ rankdir: 'TB' });
+  elements.forEach((el) => {
+    if (isNode(el)) {
+      dagreGraph.setNode(el.id, { width: 250, height: 80 });
+    } else {
+      dagreGraph.setEdge(el.source, el.target);
+    }
+  });
+  dagre.layout(dagreGraph);
+  return elements.map((el) => {
+    if (isNode(el)) {
+      const nodeWithPosition = dagreGraph.node(el.id);
+      el.targetPosition = 'top';
+      el.sourcePosition = 'bottom';
+      // unfortunately we need this little hack to pass a slighltiy different position
+      // in order to notify react flow about the change
+      el.position = {
+        x: nodeWithPosition.x + Math.random() / 1000,
+        y: nodeWithPosition.y,
+      };
+    }
+    return el;
+  });
+};
+
+const ConnectionLine = ({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+    connectionLineType,
+    connectionLineStyle,
+}) => {
+    return (
+      <g>
+        <path
+          fill="none"
+          stroke="#222"
+          strokeWidth={1.5}
+          className="animated"
+          d={`M${sourceX},${sourceY} C ${sourceX} ${targetY} ${sourceX} ${targetY} ${targetX},${targetY}`}
+        />
+        <circle cx={targetX} cy={targetY} fill="#fff" r={3} stroke="#222" strokeWidth={1.5} />
+      </g>
+    );
+};
+
+const CustomEdge = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style = {},
+  data,
+  arrowHeadType,
+  markerEndId,
+}) => {
+  const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
+  const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
+  return (
+    <>
+      <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
+      <circle 
+        href={`#${id}`}
+        style={{ cursor: 'pointer' }}
+        onClick={() => data.onClick(id, data.els)} 
+        cx={(sourceX+targetX) / 2} 
+        cy={(sourceY+targetY) / 2} 
+        r="6"
+        fill="none"
+      />
+      <line
+          strokeWidth="1"
+          stroke="red"
+          style={{ cursor: 'pointer' }}
+          onClick={() => data.onClick(id, data.els)} 
+          x1={((sourceX+targetX) / 2) - 6}
+          x2={((sourceX+targetX) / 2) + 6}
+          y1={((sourceY+targetY) / 2) - 6}
+          y2={((sourceY+targetY) / 2) + 6}
+       />
+      <line
+          strokeWidth="1"
+          stroke="red"
+          style={{ cursor: 'pointer' }}
+          onClick={() => data.onClick(id, data.els)} 
+          x1={((sourceX+targetX) / 2) + 6}
+          x2={((sourceX+targetX) / 2) - 6}
+          y1={((sourceY+targetY) / 2) - 6}
+          y2={((sourceY+targetY) / 2) + 6}
+       />
+    </>
+  );
+}
 
 const TemprMap = props => {
     const [noMap, setNoMap] = useState(false);
 
-    const [nodes, setNodes] = useState({});
-    const [paths, setPaths] = useState([]);
     const [title, setTitle] = useState("");
+    const [loading, setLoading] = useState(false);
 
+    const temprOriginPath = "/temprs/" + props.match.params.temprId;
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const [elements, setElements] = useState([]);
+    const [unusedTemprs, setUnusedTemprs] = useState([]);
 
-    const temprOriginPath = '/temprs/' + props.match.params.temprId;
+    const nodeTypes = {
+      temprNode: TemprNode,
+    };
 
+    const edgeTypes = {
+      custom: CustomEdge,
+    };
 
-    async function getChildren(temprId) {
-        const ts = await OopCore.getTemprs({temprId: temprId});
-        var none = true;
-        if (ts) {
-            // eslint-disable-next-line no-unused-vars
-            for (const tempr of ts.data) {
-                if (tempr.temprId === temprId) {
-                    none = false;
-                    break;
-                }
+    async function onConnect(params) {
+        if (params.source !== params.target && 
+                params.targetHandle[0] === 'Y' && 
+                    params.sourceHandle.split("-")[0] === 'bottom') {
+            const newT = await OopCore.updateTempr(params.target, {temprId: params.source});
+            if (newT.temprId === parseInt(params.source)) {
+                refresh();
             }
         }
-        return none;
+    };
+    
+    const onElementsRemove = elementsToRemove => {
+        setElements(els => removeElements(elementsToRemove, els));
     };
 
-    async function getParents(temprId) {
-        const t = await OopCore.getTempr(temprId);
-        return (!t.temprId);
+    const onLoad = _reactFlowInstance => {
+        setReactFlowInstance(_reactFlowInstance);
     };
 
-    const formatNode = (temprObj) => {
-        return `${temprObj.id}[shape=plain, fontname=Helvetica,
-				label=<
-				<table border="${temprObj.id === props.match.params.temprId ? '2' : '1'}" color="${temprObj.id === props.match.params.temprId ? '#177692' : 'black'}" cellborder="0" cellspacing="0" cellpadding="2">
-			    	<tr>
-			     		<td align="left" colspan="8">
-			     			<font point-size="16" color="${temprObj.id === props.match.params.temprId ? '#177692' : 'black'}"><u>${temprObj.name}</u></font>
-		     			</td>
-		     			<td colspan="1" align="right">
-			     			<table cellborder="0" cellspacing="1" border="0" cellpadding="0">
-			     				<tr>
-			     					<td></td>
-			     					<td></td>
-			     				</tr>
-			     				<tr>
-			     					<td></td>
-			     					<td></td>
-			     					<td cellpadding="1" colspan="1" bgcolor="#177692" tooltip="Edit ${temprObj.name}" href="/temprs/${temprObj.id}">
-						     			<font point-size="12" color="white">&#9998;</font>
-					     			</td>
-			     					<td></td>
-			     				</tr>
-			     			</table>
-		     			</td>
-		     		</tr>
-		     		<tr><td colspan="12">&nbsp;</td></tr>
-			     	<tr>
-			     		<td colspan="6">
-			     			<table cellborder="0" color="black" cellspacing="2" border="0" cellpadding="5">
-			     				<tr>
-			     					<td align="text" colspan="2" bgcolor="${temprObj.queueRequest ? '#28364D' : '#D3D3D3'}"><font point-size="16" color="white">&#8659;</font></td>
-			     					<td align="text" colspan="2" bgcolor="${temprObj.queueResponse ? '#28364D' : '#D3D3D3'}"><font point-size="16" color="white">&#8657;</font></td>
-			     					<td colspan="1">&nbsp;</td>
-			     					<td colspan="1" border="1"><font point-size="10">${temprObj.endpointType}</font></td>
-			     				</tr>
-			     			</table>
-		     			</td>
-		     		</tr>
-			   	</table>
-			   	>]`;
+    const onDragOver = event => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+    };
+
+    async function onDrop(event) {
+        event.preventDefault();
+
+        const id = event.dataTransfer.getData("application/reactflow");
+        const position = reactFlowInstance.project({
+            x: event.clientX - 175,
+            y: event.clientY - 225,
+        });
+
+        setLoading(true);
+
+        const tempr = await OopCore.getTempr(id);
+
+        if (tempr.id) {
+            const newNode = formatNode(tempr, position);
+            var newElements = elements.concat(newNode);
+            const layoutedEls = getLayoutedElements(newElements);
+
+            setElements(layoutedEls);
+
+            var remainingTemprs = unusedTemprs.filter(t => t.id !== id);
+
+            setUnusedTemprs(remainingTemprs);
+        }
+
+        setLoading(false);
+    };
+
+    async function deletePath(edgeId, els) {
+        var target = parseInt(edgeId.split("-")[1]);
+
+        const newT = await OopCore.updateTempr(target, {temprId: null});
+        if (newT.temprId === null) {
+            refresh();
+        }
+    };
+
+    async function refresh() {
+        setLoading(true);
+        const response = await getData(props.match.params.temprId);
+        if (response) {
+            const layoutedEls = getLayoutedElements(response.nodes);
+            setElements(layoutedEls);
+            setUnusedTemprs(response.remainingTemprs);
+            setLoading(false);
+            return response;
+        } else {
+            setNoMap(true);
+            return false;
+        }
+    }
+
+    const formatNode = (temprObj, pos) => {
+        const primary = temprObj.id === parseInt(props.match.params.temprId);
+        const position = pos || { x: 200, y: 50 }
+        const border = primary ? '2px solid #177692' : '1px solid #777'
+        return (
+            {
+                id: `${temprObj.id}`,
+                type: 'temprNode',
+                data: { tempr: temprObj, primary: primary },
+                style: { border: border, borderRadius: '10px', padding: 10, backgroundColor: 'white' },
+                position: position,
+            }
+        );
+    };
+
+    const formatPath = (sourceId, targetId) => {
+      return (
+        {
+          id: `${sourceId}-${targetId}`,
+          source: `${sourceId}`,
+          target: `${targetId}`,
+          style: { stroke: '#777', strokeWidth: 1.5 },
+          type: 'custom',
+          data: { onClick: deletePath }
+        }
+      );
     };
 
     async function getData(temprId) {
-        var ps = await getParents(temprId);
-        var cs = await getChildren(temprId);
         var nodeData = [];
         var pathData = new Set();
-        if (ps && cs) {
-            return null;
-        } else {
-            var tempr = await OopCore.getTempr(temprId);
-            var children = await OopCore.getTemprs({temprId: temprId});
-            var childrenData = [];
-            for (var i = children.data.length - 1; i >= 0; i--) {
-                if (children.data[i].temprId === temprId) {
-                    childrenData.push(children.data[i]);
-                }
+        var tempr = await OopCore.getTempr(temprId);
+        var allTemprs = await OopCore.getTemprs({
+            filter: { deviceGroupId: tempr.deviceGroupId},
+        });
+        var children = await OopCore.getTemprs({
+            filter: { temprId: temprId},
+        });
+        var childrenData = children.data;
+        const titleNode = tempr.name;
+        while (tempr) {
+            if (!nodeData[tempr.id]) {
+                nodeData[tempr.id] = formatNode(tempr);
             }
-            const titleNode = tempr.name;
-            while (tempr) {
-                if (!nodeData[tempr.id]) {
-                    nodeData[tempr.id] = formatNode(tempr);
-                }
-                if (tempr.temprId) {
-                    pathData.add(`${tempr.temprId}->${tempr.id}`);
-                    if (nodeData[tempr.temprId]){
-                        tempr = null;
-                    } else {
-                        tempr = await OopCore.getTempr(tempr.temprId);
-                        childrenData.push(tempr);
-                    }
-                } else {
+            if (tempr.temprId) {
+                pathData.add(formatPath(tempr.temprId, tempr.id));
+                if (nodeData[tempr.temprId]){
                     tempr = null;
+                } else {
+                    tempr = await OopCore.getTempr(tempr.temprId);
+                    childrenData.push(tempr);
                 }
+            } else {
+                tempr = null;
             }
-            while (childrenData.length > 0) {
-                const c = childrenData.shift();
-                if (c.temprId) {
-                    if (!nodeData[c.id]) {
-                        nodeData[c.id] = formatNode(c);
-                    }
-                    pathData.add(`${c.temprId}->${c.id}`);
-                    var new_children = await OopCore.getTemprs({temprId: c.id});
-                    new_children = new_children.data;
-                    for (var q = new_children.length - 1; q >= 0; q--) {
-                        if (!nodes[new_children[q].id] && new_children[q].temprId === c.id) {
-                            childrenData.push(new_children[q]);
-                        }
-                    }
-                }
-            }
-            const pathArray = [...pathData];
-            let response = {nodes:nodeData,paths:pathArray,title:titleNode};
-            return (response);
         }
+        while (childrenData.length > 0) {
+            const c = childrenData.shift();
+            if (!nodeData[c.id]) {
+                nodeData[c.id] = formatNode(c);
+                pathData.add(formatPath(c.temprId, c.id));
+            }
+            var new_children = await OopCore.getTemprs({
+                filter: { temprId: c.id },
+            });
+            var filtered_children = new_children.data.filter(c => !nodeData[c.id]);
+            childrenData.push(...filtered_children);
+        }
+        const pathArray = [...pathData];
+        var filteredNodes = nodeData.filter(Boolean);
+        var remainingTemprs = allTemprs.data.filter(t => !nodeData[t.id]);
+        filteredNodes.push(...pathArray);
+        return {title: titleNode, nodes: filteredNodes, remainingTemprs: remainingTemprs};
     };
 
     return (
@@ -145,9 +297,10 @@ const TemprMap = props => {
             getData={() => {
                 return getData(props.match.params.temprId).then(response => {
                     if (response) {
-                        setNodes(response.nodes);
-                        setPaths(response.paths);
+                        const layoutedEls = getLayoutedElements(response.nodes);
+                        setElements(layoutedEls);
                         setTitle(response.title);
+                        setUnusedTemprs(response.remainingTemprs);
                         return response;
                     } else {
                         setNoMap(true);
@@ -155,31 +308,46 @@ const TemprMap = props => {
                     }
                 });
             }}
-            renderData={() => (!(noMap) ?
-                <Page
-                    title={"Tempr Map | Settings | Open Interop"}
-                    heading={"Tempr: " + title + "'s Map"}
-                    backlink={props.location.prevPath || temprOriginPath}
-                >
-                    <Graphviz
-                        dot={
-                            `digraph {
-                                ${Object.values(nodes).join('\n')}
-                                ${paths.join('\n')}
-                                splines=ortho
-                                nodesep=1
-                            }`
-                        }
-                        options={{
-                            fit:true,
-                            height:'auto',
-                            width:'auto',
-                            zoom:false,
-                        }}
-                    />
-                </Page>
-                : <Redirect to={`/temprs/${props.match.params.temprId}`} />
-            )}
+            renderData={() =>
+                !noMap ? (
+                    <Page
+                        title={"Tempr Map | Settings | Open Interop"}
+                        heading={"Tempr: " + title + "'s Map"}
+                        backlink={props.location.prevPath || temprOriginPath}
+                    >
+                        <div className="dndflow">
+                            <ReactFlowProvider>
+                                <div className="reactflow-wrapper">
+                                    {loading ? <InPlaceGifSpinner /> : (
+                                        <ReactFlow
+                                            elements={elements}
+                                            onConnect={onConnect}
+                                            onElementsRemove={onElementsRemove}
+                                            onLoad={onLoad}
+                                            onDrop={onDrop}
+                                            onDragOver={onDragOver}
+                                            nodeTypes={nodeTypes}       
+                                            edgeTypes={edgeTypes}
+                                            connectionLineComponent={ConnectionLine}
+                                        >
+                                            <Controls />
+                                            <MiniMap 
+                                                nodeStrokeColor={(n) => {
+                                                    if (n.data.primary) return '#177692';
+                                                    return 'black';
+                                                }}
+                                            />
+                                        </ReactFlow>
+                                    )}
+                                </div>
+                                <TemprSidebar temprs={unusedTemprs}/>
+                            </ReactFlowProvider>
+                        </div>
+                    </Page>
+                ) : (
+                    <Redirect to={`/temprs/${props.match.params.temprId}`} />
+                )
+            }
         />
     );
 };

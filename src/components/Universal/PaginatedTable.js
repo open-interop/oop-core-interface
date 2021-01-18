@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { useQueryParam, NumberParam, ObjectParam } from "use-query-params";
 import { Pagination, PaginationMobile, Table } from ".";
-import { Block } from 'baseui/block';
+import { useWindowDimensions } from "../../Utilities";
 
 const PaginatedTable = withRouter(props => {
     const [data, setData] = useState(null);
@@ -30,101 +30,110 @@ const PaginatedTable = withRouter(props => {
             });
     }, [page, pageSize, filters, getData]);
 
+    // eslint-disable-next-line no-unused-vars
+    const { height, width } = useWindowDimensions();
+
     return (
         <>
-            <Block display={['none', 'none', 'none', 'block']}>
-                <Table
-                    {...props}
-                    loading={loading}
-                    data={data && data.data}
-                    filters={filters}
-                    mobile={false}
-                    updateFilters={(colId, value) => {
-                        if (filters) {
-                            if (value === "") {
-                                delete filters[colId];
-                            } else {
-                                filters[colId] = value;
-                            }
-                            setFilters(filters);
-                        } else {
-                            setFilters({ [colId]: value });
-                        }
-                    }}
-                />
-                <Pagination
-                    updatePageSize={pageSize => {
-                        setPageSize(pageSize);
-                    }}
-                    currentPageSize={pageSize}
-                    updatePageNumber={pageNumber => setPage(pageNumber)}
-                    totalRecords={data ? data.totalRecords : "-"}
-                    numberOfPages={data ? data.numberOfPages : "-"}
-                    currentPage={page || 1}
-                />
-            </Block>
-            <Block display={['none', 'none', 'block', 'none']}>
-                <Table
-                    {...props}
-                    loading={loading}
-                    data={data && data.data}
-                    filters={filters}
-                    mobile={false}
-                    updateFilters={(colId, value) => {
-                        if (filters) {
-                            if (value === "") {
-                                delete filters[colId];
-                            } else {
-                                filters[colId] = value;
-                            }
-                            setFilters(filters);
-                        } else {
-                            setFilters({ [colId]: value });
-                        }
-                    }}
-                />
-                <PaginationMobile
-                    updatePageSize={pageSize => {
-                        setPageSize(pageSize);
-                    }}
-                    currentPageSize={pageSize}
-                    updatePageNumber={pageNumber => setPage(pageNumber)}
-                    totalRecords={data ? data.totalRecords : "-"}
-                    numberOfPages={data ? data.numberOfPages : "-"}
-                    currentPage={page || 1}
-                />
-            </Block>
-            <Block display={['block', 'block', 'none']}>
-                <Table
-                    {...props}
-                    loading={loading}
-                    data={data && data.data}
-                    filters={filters}
-                    mobile={true}
-                    updateFilters={(colId, value) => {
-                        if (filters) {
-                            if (value === "") {
-                                delete filters[colId];
-                            } else {
-                                filters[colId] = value;
-                            }
-                            setFilters(filters);
-                        } else {
-                            setFilters({ [colId]: value });
-                        }
-                    }}
-                />
-                <PaginationMobile
-                    updatePageSize={pageSize => {
-                        setPageSize(pageSize);
-                    }}
-                    currentPageSize={pageSize}
-                    updatePageNumber={pageNumber => setPage(pageNumber)}
-                    totalRecords={data ? data.totalRecords : "-"}
-                    numberOfPages={data ? data.numberOfPages : "-"}
-                    currentPage={page || 1}
-                />
-            </Block>
+            {
+                width >= 1100 ? (
+                    <>
+                        <Table
+                            {...props}
+                            loading={loading}
+                            data={data && data.data}
+                            filters={filters}
+                            mobile={false}
+                            updateFilters={(colId, value) => {
+                                if (filters) {
+                                    if (value === "") {
+                                        delete filters[colId];
+                                    } else {
+                                        filters[colId] = value;
+                                    }
+                                    setFilters(filters);
+                                } else {
+                                    setFilters({ [colId]: value });
+                                }
+                            }}
+                        />
+                        <Pagination
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={data ? data.totalRecords : "-"}
+                            numberOfPages={data ? data.numberOfPages : "-"}
+                            currentPage={page || 1}
+                        />
+                    </>
+                ) : width >= 650 ? (
+                    <>
+                        <Table
+                            {...props}
+                            loading={loading}
+                            data={data && data.data}
+                            filters={filters}
+                            mobile={false}
+                            updateFilters={(colId, value) => {
+                                if (filters) {
+                                    if (value === "") {
+                                        delete filters[colId];
+                                    } else {
+                                        filters[colId] = value;
+                                    }
+                                    setFilters(filters);
+                                } else {
+                                    setFilters({ [colId]: value });
+                                }
+                            }}
+                        />
+                        <PaginationMobile
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={data ? data.totalRecords : "-"}
+                            numberOfPages={data ? data.numberOfPages : "-"}
+                            currentPage={page || 1}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <Table
+                            {...props}
+                            loading={loading}
+                            data={data && data.data}
+                            filters={filters}
+                            mobile={true}
+                            updateFilters={(colId, value) => {
+                                if (filters) {
+                                    if (value === "") {
+                                        delete filters[colId];
+                                    } else {
+                                        filters[colId] = value;
+                                    }
+                                    setFilters(filters);
+                                } else {
+                                    setFilters({ [colId]: value });
+                                }
+                            }}
+                        />
+                        <PaginationMobile
+                            updatePageSize={pageSize => {
+                                setPageSize(pageSize);
+                            }}
+                            currentPageSize={pageSize}
+                            updatePageNumber={pageNumber => setPage(pageNumber)}
+                            totalRecords={data ? data.totalRecords : "-"}
+                            numberOfPages={data ? data.numberOfPages : "-"}
+                            currentPage={page || 1}
+                        />
+                    </>
+                )
+            }
         </>
     );
 });
