@@ -203,7 +203,7 @@ const Tempr = props => {
             if (ts) {
                 // eslint-disable-next-line no-unused-vars
                 for (const tempr of ts.data) {
-                    if (tempr.temprId === temprId) {
+                    if (tempr.temprId === parseInt(temprId)) {
                         none = false;
                         break;
                     }

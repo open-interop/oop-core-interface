@@ -15,6 +15,7 @@ import { TemprSidebar, TemprNode } from "../Global";
 import { DataProvider, Page, InPlaceGifSpinner } from "../Universal";
 
 import OopCore from "../../OopCore";
+import { useWindowDimensions } from "../../Utilities";
 
 import dagre from 'dagre';
 
@@ -133,6 +134,9 @@ const TemprMap = props => {
     const [elements, setElements] = useState([]);
     const [unusedTemprs, setUnusedTemprs] = useState([]);
 
+    const { height, width } = useWindowDimensions();
+    const noEdit = width < 1100 || height < 500;
+
     const nodeTypes = {
       temprNode: TemprNode,
     };
@@ -233,13 +237,14 @@ const TemprMap = props => {
     };
 
     const formatPath = (sourceId, targetId) => {
-      return (
+        const type = noEdit ? 'bezier' : 'custom';
+              return (
         {
           id: `${sourceId}-${targetId}`,
           source: `${sourceId}`,
           target: `${targetId}`,
           style: { stroke: '#777', strokeWidth: 1.5 },
-          type: 'custom',
+          type: type,
           data: { onClick: deletePath }
         }
       );
@@ -329,18 +334,21 @@ const TemprMap = props => {
                                             nodeTypes={nodeTypes}       
                                             edgeTypes={edgeTypes}
                                             connectionLineComponent={ConnectionLine}
-                                        >
+                                            nodesConnectable={!noEdit}
+                                        >   
                                             <Controls />
-                                            <MiniMap 
-                                                nodeStrokeColor={(n) => {
-                                                    if (n.data.primary) return '#177692';
-                                                    return 'black';
-                                                }}
-                                            />
+                                            {!noEdit &&
+                                                <MiniMap 
+                                                    nodeStrokeColor={(n) => {
+                                                        if (n.data.primary) return '#177692';
+                                                        return 'black';
+                                                    }}
+                                                />
+                                            }
                                         </ReactFlow>
                                     )}
                                 </div>
-                                <TemprSidebar temprs={unusedTemprs}/>
+                                {!noEdit && <TemprSidebar temprs={unusedTemprs}/>}
                             </ReactFlowProvider>
                         </div>
                     </Page>
