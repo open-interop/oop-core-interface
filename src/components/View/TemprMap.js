@@ -317,7 +317,7 @@ const TemprMap = props => {
                 !noMap ? (
                     <Page
                         title={"Tempr Map | Settings | Open Interop"}
-                        heading={"Tempr: " + title + "'s Map"}
+                        heading={"Tempr: " + title + "'s map"}
                         backlink={props.location.prevPath || temprOriginPath}
                     >
                         <div className="dndflow">

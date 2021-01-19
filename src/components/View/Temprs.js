@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEdit, faHistory, faProjectDiagram } from "@fortawesome/free-solid-svg-icons";
 import { useQueryParam, StringParam } from "use-query-params";
 
 import { PaginatedTable, Page } from "../Universal";
@@ -64,6 +64,16 @@ const Temprs = props => {
                     if (columnName === "action") {
                         return (
                             <>
+                                <Button
+                                    kind={KIND.tertiary}
+                                    $as={Link}
+                                    to={`${props.location.pathname}/${content}/map`}
+                                    aria-label="View tempr map"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faProjectDiagram}
+                                    />
+                                </Button>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
@@ -128,7 +138,7 @@ const Temprs = props => {
                         name: "",
                         type: "action",
                         hasFilter: false,
-                        width: "100px",
+                        width: "150px",
                     },
                 ]}
                 filters={{ id, name, deviceGroupId }}
