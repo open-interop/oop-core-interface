@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Redirect  } from 'react-router';
+import { Redirect } from "react-router";
 
 import ReactFlow, {
     ReactFlowProvider,
@@ -17,35 +17,35 @@ import { DataProvider, Page, InPlaceGifSpinner } from "../Universal";
 import OopCore from "../../OopCore";
 import { useWindowDimensions } from "../../Utilities";
 
-import dagre from 'dagre';
+import dagre from "dagre";
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const getLayoutedElements = (elements) => {
-  dagreGraph.setGraph({ rankdir: 'TB' });
-  elements.forEach((el) => {
-    if (isNode(el)) {
-      dagreGraph.setNode(el.id, { width: 250, height: 80 });
-    } else {
-      dagreGraph.setEdge(el.source, el.target);
-    }
-  });
-  dagre.layout(dagreGraph);
-  return elements.map((el) => {
-    if (isNode(el)) {
-      const nodeWithPosition = dagreGraph.node(el.id);
-      el.targetPosition = 'top';
-      el.sourcePosition = 'bottom';
-      // unfortunately we need this little hack to pass a slighltiy different position
-      // in order to notify react flow about the change
-      el.position = {
-        x: nodeWithPosition.x + Math.random() / 1000,
-        y: nodeWithPosition.y,
-      };
-    }
-    return el;
-  });
+const getLayoutedElements = elements => {
+    dagreGraph.setGraph({ rankdir: 'TB' });
+    elements.forEach((el) => {
+        if (isNode(el)) {
+            dagreGraph.setNode(el.id, { width: 250, height: 80 });
+        } else {
+            dagreGraph.setEdge(el.source, el.target);
+        }
+    });
+    dagre.layout(dagreGraph);
+    return elements.map((el) => {
+        if (isNode(el)) {
+            const nodeWithPosition = dagreGraph.node(el.id);
+            el.targetPosition = 'top';
+            el.sourcePosition = 'bottom';
+            // unfortunately we need this little hack to pass a slighltiy different position
+            // in order to notify react flow about the change
+            el.position = {
+                x: nodeWithPosition.x + Math.random() / 1000,
+                y: nodeWithPosition.y,
+            };
+        }
+        return el;
+    });
 };
 
 const ConnectionLine = ({
@@ -59,69 +59,75 @@ const ConnectionLine = ({
     connectionLineStyle,
 }) => {
     return (
-      <g>
-        <path
-          fill="none"
-          stroke="#222"
-          strokeWidth={1.5}
-          className="animated"
-          d={`M${sourceX},${sourceY} C ${sourceX} ${targetY} ${sourceX} ${targetY} ${targetX},${targetY}`}
-        />
-        <circle cx={targetX} cy={targetY} fill="#fff" r={3} stroke="#222" strokeWidth={1.5} />
-      </g>
+        <g>
+            <path
+                fill="none"
+                stroke="#222"
+                strokeWidth={1.5}
+                className="animated"
+                d={`M${sourceX},${sourceY} C ${sourceX} ${targetY} ${sourceX} ${targetY} ${targetX},${targetY}`}
+            />
+            <circle cx={targetX} cy={targetY} fill="#fff" r={3} stroke="#222" strokeWidth={1.5} />
+        </g>
     );
 };
 
 const CustomEdge = ({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  style = {},
-  data,
-  arrowHeadType,
-  markerEndId,
+    id,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+    style = {},
+    data,
+    arrowHeadType,
+    markerEndId,
 }) => {
-  const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
-  const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
-  return (
-    <>
-      <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
-      <circle 
-        href={`#${id}`}
-        style={{ cursor: 'pointer' }}
-        onClick={() => data.onClick(id, data.els)} 
-        cx={(sourceX+targetX) / 2} 
-        cy={(sourceY+targetY) / 2} 
-        r="6"
-        fill="none"
+    const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
+    const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
+    return (
+        <>
+            <path
+                id={id}
+                style={style}
+                className="react-flow__edge-path"
+                d={edgePath}
+                markerEnd={markerEnd}
+            />
+            <circle
+                href={`#${id}`}
+          style={{ cursor: 'pointer' }}
+          onClick={() => data.onClick(id, data.els)} 
+          cx={(sourceX+targetX) / 2} 
+          cy={(sourceY+targetY) / 2} 
+          r="6"
+                fill="none"
+            />
+            <line
+                strokeWidth="1"
+                stroke="red"
+                style={{ cursor: "pointer" }}
+                onClick={() => data.onClick(id, data.els)}
+                x1={(sourceX + targetX) / 2 - 6}
+                x2={(sourceX + targetX) / 2 + 6}
+                y1={(sourceY + targetY) / 2 - 6}
+                y2={(sourceY + targetY) / 2 + 6}
+            />
+            <line
+                strokeWidth="1"
+                stroke="red"
+                style={{ cursor: "pointer" }}
+                onClick={() => data.onClick(id, data.els)}
+                x1={(sourceX + targetX) / 2 + 6}
+                x2={(sourceX + targetX) / 2 - 6}
+                y1={(sourceY + targetY) / 2 - 6}
+                y2={(sourceY + targetY) / 2 + 6}
       />
-      <line
-          strokeWidth="1"
-          stroke="red"
-          style={{ cursor: 'pointer' }}
-          onClick={() => data.onClick(id, data.els)} 
-          x1={((sourceX+targetX) / 2) - 6}
-          x2={((sourceX+targetX) / 2) + 6}
-          y1={((sourceY+targetY) / 2) - 6}
-          y2={((sourceY+targetY) / 2) + 6}
-       />
-      <line
-          strokeWidth="1"
-          stroke="red"
-          style={{ cursor: 'pointer' }}
-          onClick={() => data.onClick(id, data.els)} 
-          x1={((sourceX+targetX) / 2) + 6}
-          x2={((sourceX+targetX) / 2) - 6}
-          y1={((sourceY+targetY) / 2) - 6}
-          y2={((sourceY+targetY) / 2) + 6}
-       />
-    </>
-  );
-}
+        </>
+    );
+};
 
 const TemprMap = props => {
     const [noMap, setNoMap] = useState(false);
@@ -138,24 +144,28 @@ const TemprMap = props => {
     const noEdit = width < 1100 || height < 500;
 
     const nodeTypes = {
-      temprNode: TemprNode,
+        temprNode: TemprNode,
     };
 
     const edgeTypes = {
-      custom: CustomEdge,
+        custom: CustomEdge,
     };
 
     async function onConnect(params) {
-        if (params.source !== params.target && 
-                params.targetHandle[0] === 'Y' && 
-                    params.sourceHandle.split("-")[0] === 'bottom') {
-            const newT = await OopCore.updateTempr(params.target, {temprId: params.source});
+        if (
+            params.source !== params.target &&
+            params.targetHandle[0] === "Y" &&
+            params.sourceHandle.split("-")[0] === "bottom"
+        ) {
+            const newT = await OopCore.updateTempr(params.target, {
+                temprId: params.source,
+            });
             if (newT.temprId === parseInt(params.source)) {
                 refresh();
             }
         }
-    };
-    
+    }
+
     const onElementsRemove = elementsToRemove => {
         setElements(els => removeElements(elementsToRemove, els));
     };
@@ -195,16 +205,16 @@ const TemprMap = props => {
         }
 
         setLoading(false);
-    };
+    }
 
     async function deletePath(edgeId, els) {
         var target = parseInt(edgeId.split("-")[1]);
 
-        const newT = await OopCore.updateTempr(target, {temprId: null});
+        const newT = await OopCore.updateTempr(target, { temprId: null });
         if (newT.temprId === null) {
             refresh();
         }
-    };
+    }
 
     async function refresh() {
         setLoading(true);
@@ -223,31 +233,33 @@ const TemprMap = props => {
 
     const formatNode = (temprObj, pos) => {
         const primary = temprObj.id === parseInt(props.match.params.temprId);
-        const position = pos || { x: 200, y: 50 }
-        const border = primary ? '2px solid #177692' : '1px solid #777'
-        return (
-            {
-                id: `${temprObj.id}`,
-                type: 'temprNode',
-                data: { tempr: temprObj, primary: primary },
-                style: { border: border, borderRadius: '10px', padding: 10, backgroundColor: 'white' },
-                position: position,
-            }
-        );
+        const position = pos || { x: 200, y: 50 };
+        const border = primary ? "2px solid #177692" : "1px solid #777";
+        return {
+            id: `${temprObj.id}`,
+            type: "temprNode",
+            data: { tempr: temprObj, primary: primary },
+            style: {
+                border: border,
+                borderRadius: "10px",
+                padding: 10,
+                backgroundColor: "white",
+            },
+            position: position,
+        };
     };
 
     const formatPath = (sourceId, targetId) => {
-        const type = noEdit ? 'bezier' : 'custom';
-              return (
-        {
-          id: `${sourceId}-${targetId}`,
-          source: `${sourceId}`,
-          target: `${targetId}`,
-          style: { stroke: '#777', strokeWidth: 1.5 },
-          type: type,
-          data: { onClick: deletePath }
-        }
-      );
+        const type = noEdit ? "bezier" : "custom";
+        return (
+            {
+                id: `${sourceId}-${targetId}`,
+            source: `${sourceId}`,
+                target: `${targetId}`,
+                style: { stroke: '#777', strokeWidth: 1.5 },
+                type: type,
+                data: { onClick: deletePath },
+            };
     };
 
     async function getData(temprId) {
@@ -255,10 +267,10 @@ const TemprMap = props => {
         var pathData = new Set();
         var tempr = await OopCore.getTempr(temprId);
         var allTemprs = await OopCore.getTemprs({
-            filter: { deviceGroupId: tempr.deviceGroupId},
+            filter: { deviceGroupId: tempr.deviceGroupId },
         });
         var children = await OopCore.getTemprs({
-            filter: { temprId: temprId},
+            filter: { temprId: temprId },
         });
         var childrenData = children.data;
         const titleNode = tempr.name;
@@ -268,7 +280,7 @@ const TemprMap = props => {
             }
             if (tempr.temprId) {
                 pathData.add(formatPath(tempr.temprId, tempr.id));
-                if (nodeData[tempr.temprId]){
+                if (nodeData[tempr.temprId]) {
                     tempr = null;
                 } else {
                     tempr = await OopCore.getTempr(tempr.temprId);
@@ -287,15 +299,21 @@ const TemprMap = props => {
             var new_children = await OopCore.getTemprs({
                 filter: { temprId: c.id },
             });
-            var filtered_children = new_children.data.filter(c => !nodeData[c.id]);
+            var filtered_children = new_children.data.filter(
+                c => !nodeData[c.id],
+            );
             childrenData.push(...filtered_children);
         }
         const pathArray = [...pathData];
         var filteredNodes = nodeData.filter(Boolean);
         var remainingTemprs = allTemprs.data.filter(t => !nodeData[t.id]);
         filteredNodes.push(...pathArray);
-        return {title: titleNode, nodes: filteredNodes, remainingTemprs: remainingTemprs};
-    };
+        return {
+            title: titleNode,
+            nodes: filteredNodes,
+            remainingTemprs: remainingTemprs,
+        };
+    }
 
     return (
         <DataProvider
@@ -323,7 +341,9 @@ const TemprMap = props => {
                         <div className="dndflow">
                             <ReactFlowProvider>
                                 <div className="reactflow-wrapper">
-                                    {loading ? <InPlaceGifSpinner /> : (
+                                    {loading ? (
+                                        <InPlaceGifSpinner />
+                                    ) : (
                                         <ReactFlow
                                             elements={elements}
                                             onConnect={onConnect}
@@ -331,24 +351,29 @@ const TemprMap = props => {
                                             onLoad={onLoad}
                                             onDrop={onDrop}
                                             onDragOver={onDragOver}
-                                            nodeTypes={nodeTypes}       
+                                            nodeTypes={nodeTypes}
                                             edgeTypes={edgeTypes}
-                                            connectionLineComponent={ConnectionLine}
+                                            connectionLineComponent={
+                                                ConnectionLine
+                                            }
                                             nodesConnectable={!noEdit}
-                                        >   
+                                        >
                                             <Controls />
-                                            {!noEdit &&
-                                                <MiniMap 
-                                                    nodeStrokeColor={(n) => {
-                                                        if (n.data.primary) return '#177692';
-                                                        return 'black';
+                                            {!noEdit && (
+                                                <MiniMap
+                                                    nodeStrokeColor={n => {
+                                                        if (n.data.primary)
+                                                            return "#177692";
+                                                        return "black";
                                                     }}
                                                 />
-                                            }
+                                            )}
                                         </ReactFlow>
                                     )}
                                 </div>
-                                {!noEdit && <TemprSidebar temprs={unusedTemprs}/>}
+                                {!noEdit && (
+                                    <TemprSidebar temprs={unusedTemprs} />
+                                )}
                             </ReactFlowProvider>
                         </div>
                     </Page>
