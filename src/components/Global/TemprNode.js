@@ -23,25 +23,32 @@ const TemprNode = memo(({ data }) => {
                     id={`Ytop-${data.tempr.id}`}
                   onConnect={(params) => console.log('handle onConnect', params)}
                 />
-          )
-            {
-                <div
-                    style={{
-                        fontSize: fs,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        flexDirection: "column",
-                        textAlign: "center",
-                    }}
-                >
-              <p style={{ margin: '0' }}><strong>{data.tempr.name} - </strong><a href={`/temprs/${data.tempr.id}`}>{data.tempr.id}</a></p>
-              <div style={{ fontSize: 'small', flexDirection: 'row', display: 'flex', justifyContent: 'space-between' }}>
-                  <p style={{ margin: '4px', fontSize: 'x-small', color: qReq }}><b>Queue Response</b></p>
-                  <p style={{ margin: '4px', fontSize: 'x-small', color: qRes }}><b>Queue Request</b></p>
-                  <p style={{ margin: '2px' }}>{`${data.tempr.endpointType}`}</p>
-                    </div>
+          )}
+            <div
+                style={{
+                    fontSize: fs,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "column",
+                    textAlign: "center",
+                }}
+            >
+          <p style={{ margin: '0' }}>
+            <strong>{data.tempr.name} - </strong>
+            <a href={`/temprs/${data.tempr.id}`} style={{
+              padding: '3px',
+              border: '1px solid #e6e8ec',
+              backgroundColor: '#fafafa',
+            }}>
+              {data.tempr.id}
+            </a>
+          </p>
+          <div style={{ fontSize: 'small', flexDirection: 'row', display: 'flex', justifyContent: 'space-between' }}>
+              <p style={{ margin: '4px', fontSize: 'x-small', color: qReq }}><b>Queue Response</b></p>
+              <p style={{ margin: '4px', fontSize: 'x-small', color: qRes }}><b>Queue Request</b></p>
+              <p style={{ margin: '2px' }}>{`${data.tempr.endpointType}`}</p>
                 </div>
-            }
+            </div>
 
             <Handle
                 type="source"

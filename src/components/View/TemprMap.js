@@ -9,6 +9,7 @@ import ReactFlow, {
     MiniMap,
     getBezierPath,
     getMarkerEnd,
+    useStoreState,
 } from "react-flow-renderer";
 
 import { TemprSidebar, TemprNode } from "../Global";
@@ -22,7 +23,7 @@ import dagre from "dagre";
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const getLayoutedElements = elements => {
+const getLayoutedElements = (elements, positions) => {
     dagreGraph.setGraph({ rankdir: 'TB' });
     elements.forEach((el) => {
         if (isNode(el)) {
@@ -34,18 +35,35 @@ const getLayoutedElements = elements => {
     dagre.layout(dagreGraph);
     return elements.map((el) => {
         if (isNode(el)) {
-            const nodeWithPosition = dagreGraph.node(el.id);
+            var newPosition = null;
+            if (positions) {
+                newPosition = getNewPos(el, positions);
+            }
             el.targetPosition = 'top';
             el.sourcePosition = 'bottom';
-            // unfortunately we need this little hack to pass a slighltiy different position
-            // in order to notify react flow about the change
-            el.position = {
-                x: nodeWithPosition.x + Math.random() / 1000,
-                y: nodeWithPosition.y,
-            };
+            if (newPosition) {
+                el.position = newPosition;
+            } else {
+                const nodeWithPosition = dagreGraph.node(el.id);
+                el.position = {
+                    x: nodeWithPosition.x + Math.random() / 1000,
+                    y: nodeWithPosition.y,
+                };
+            }
         }
         return el;
     });
+};
+
+const getNewPos = (element, positions) => {
+    const elId = element.id;
+    var newPos = null;
+    positions.forEach(p => {
+        if (p.id === elId) {
+            newPos = p.__rf.position;
+        };
+    });
+    return newPos;
 };
 
 const ConnectionLine = ({
@@ -139,6 +157,7 @@ const TemprMap = props => {
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const [elements, setElements] = useState([]);
     const [unusedTemprs, setUnusedTemprs] = useState([]);
+    var pos = [];
 
     const { height, width } = useWindowDimensions();
     const noEdit = width < 1100 || height < 500;
@@ -149,6 +168,16 @@ const TemprMap = props => {
 
     const edgeTypes = {
         custom: CustomEdge,
+    };
+
+    async function positionChange(p) {
+        pos = await p;
+    };
+
+    const NodeState = props => {
+        const nodes = useStoreState((store) => store.nodes);
+        props.onChange(nodes);
+        return null;
     };
 
     async function onConnect(params) {
@@ -195,11 +224,10 @@ const TemprMap = props => {
         if (tempr.id) {
             const newNode = formatNode(tempr, position);
             var newElements = elements.concat(newNode);
-            const layoutedEls = getLayoutedElements(newElements);
 
-            setElements(layoutedEls);
+            setElements(newElements);
 
-            var remainingTemprs = unusedTemprs.filter(t => t.id !== id);
+            var remainingTemprs = unusedTemprs.filter(t => t.id !== tempr.id);
 
             setUnusedTemprs(remainingTemprs);
         }
@@ -220,14 +248,14 @@ const TemprMap = props => {
         setLoading(true);
         const response = await getData(props.match.params.temprId);
         if (response) {
-            const layoutedEls = getLayoutedElements(response.nodes);
-            setElements(layoutedEls);
+            const layoutedEls = await getLayoutedElements(response.nodes, pos);
+            setElements(els => {
+                return layoutedEls;
+            });
             setUnusedTemprs(response.remainingTemprs);
             setLoading(false);
-            return response;
         } else {
             setNoMap(true);
-            return false;
         }
     }
 
@@ -235,18 +263,18 @@ const TemprMap = props => {
         const primary = temprObj.id === parseInt(props.match.params.temprId);
         const position = pos || { x: 200, y: 50 };
         const border = primary ? "2px solid #177692" : "1px solid #777";
-        return {
+        return ({
             id: `${temprObj.id}`,
             type: "temprNode",
             data: { tempr: temprObj, primary: primary },
             style: {
                 border: border,
-                borderRadius: "10px",
+                borderRadius: "2px",
                 padding: 10,
                 backgroundColor: "white",
             },
             position: position,
-        };
+        });
     };
 
     const formatPath = (sourceId, targetId) => {
@@ -254,12 +282,13 @@ const TemprMap = props => {
         return (
             {
                 id: `${sourceId}-${targetId}`,
-            source: `${sourceId}`,
+                source: `${sourceId}`,
                 target: `${targetId}`,
                 style: { stroke: '#777', strokeWidth: 1.5 },
                 type: type,
                 data: { onClick: deletePath },
-            };
+            }
+        );
     };
 
     async function getData(temprId) {
@@ -358,6 +387,7 @@ const TemprMap = props => {
                                             }
                                             nodesConnectable={!noEdit}
                                         >
+                                            <NodeState onChange={positionChange} />
                                             <Controls />
                                             {!noEdit && (
                                                 <MiniMap
