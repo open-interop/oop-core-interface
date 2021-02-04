@@ -49,12 +49,25 @@ const TemprNode = memo(({ data }) => {
               <p style={{ margin: '2px' }}>{`${data.tempr.endpointType}`}</p>
                 </div>
             </div>
-
             <Handle
                 type="source"
                 position="bottom"
-          style={{ background: 'green', width: '8px', height: '8px', bottom: '-5px' }}
+                style={{ background: 'green', width: '8px', height: '8px', bottom: '-5px' }}
                 id={`bottom-${data.tempr.id}`}
+            />
+            <Handle
+                type="source"
+                position="right"
+                style={{ background: 'green', width: '8px', height: '8px', top: '30px', right: '-5px' }}
+                id={`DT-${data.tempr.id}`}
+                onConnect={(params) => console.log('handle onConnect', params)}
+            />
+            <Handle
+                type="source"
+                position="left"
+                style={{ background: 'green', width: '8px', height: '8px', top: '30px', left: '-5px' }}
+                id={`ST-${data.tempr.id}`}
+                onConnect={(params) => console.log('handle onConnect', params)}
             />
         </>
     );
