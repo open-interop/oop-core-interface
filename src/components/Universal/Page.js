@@ -4,10 +4,11 @@ import { Link, Prompt } from "react-router-dom";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Heading, HeadingLevel } from "baseui/heading";
-import { Block } from 'baseui/block';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
+import { useWindowDimensions } from "../../Utilities";
 
 const Actions = props => {
     const [css] = useStyletron();
@@ -57,24 +58,29 @@ const Page = props => {
         padding: theme.sizing.scale800,
     });
 
+    // eslint-disable-next-line no-unused-vars
+    const { height, width } = useWindowDimensions();
+    const mobileView = width < 651;
+
     return (
         <div className={contentWrapper}>
             {props.alert && <Prompt message={props.alert} />}
             <HeadingLevel>
-                <Block display={['block', 'block', 'none']}>
-                    <Heading $style={{ display: "flex", fontSize: "8vmin", flexDirection: "row", alignItems: "center" }}>
-                        <BackLink backlink={props.backlink} />
-                        {props.heading}
-                        <Actions actions={props.actions} />
-                    </Heading>
-                </Block>
-                <Block display={['none', 'none', 'block']}>
-                    <Heading $style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                        <BackLink backlink={props.backlink} />
-                        {props.heading}
-                        <Actions actions={props.actions} />
-                    </Heading>
-                </Block>
+                {
+                    mobileView ? (
+                        <Heading $style={{ display: "flex", fontSize: "8vmin", flexDirection: "row", alignItems: "center" }}>
+                            <BackLink backlink={props.backlink} />
+                            {props.heading}
+                            <Actions actions={props.actions} />
+                        </Heading>
+                    ) : (
+                        <Heading $style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                            <BackLink backlink={props.backlink} />
+                            {props.heading}
+                            <Actions actions={props.actions} />
+                        </Heading>
+                    )
+                }
                 {props.children}
             </HeadingLevel>
         </div>

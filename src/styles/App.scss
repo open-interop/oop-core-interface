@@ -25,22 +25,19 @@ div[id="root"] {
     .content {
         background-color: $oop-grey;
         flex: 1;
-        margin-left: 9.5rem;
-        padding: 9em 2rem 2rem;
 
+        @media (min-width: 650px) {
+            margin-left: 9.5rem;
+            padding: 9em 2rem 2rem;
+        }
+
+        @media (max-width: 650px) {
+            padding: 24vh 0.5rem 0.5rem;
+        }
+        
         .content-wrapper {
             background-color: $color-white;
             padding: 1.5rem;
-        }
-    }
-    .content-mobile {
-        background-color: $oop-grey;
-        flex: 1;
-        padding: 26vh 0.5rem 0.5rem;
-
-        .content-wrapper {
-            background-color: $color-white;
-            padding: 1vmin;
         }
     }
 }
@@ -70,3 +67,4 @@ a {
 @import "layouts/table";
 @import "layouts/dashboard";
 @import "layouts/tempr";
+@import "layouts/tempr_map";
