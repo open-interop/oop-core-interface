@@ -2,6 +2,7 @@ export * from "./DatetimeFilter";
 export * from "./HttpTemprTemplate";
 export * from "./NavigationItem";
 export * from "./NavigationGroup";
+export * from "./OriginNode";
 export * from "./PairInput";
 export * from "./SiteSelector";
 export * from "./TableFilter";

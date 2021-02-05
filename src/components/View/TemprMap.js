@@ -12,7 +12,7 @@ import ReactFlow, {
     useStoreState,
 } from "react-flow-renderer";
 
-import { TemprSidebar, TemprNode } from "../Global";
+import { TemprSidebar, TemprNode, OriginNode } from "../Global";
 import { DataProvider, Page, InPlaceGifSpinner } from "../Universal";
 
 import OopCore from "../../OopCore";
@@ -164,6 +164,7 @@ const TemprMap = props => {
 
     const nodeTypes = {
         temprNode: TemprNode,
+        originNode: OriginNode,
     };
 
     const edgeTypes = {
@@ -244,6 +245,21 @@ const TemprMap = props => {
         }
     }
 
+    async function getLinks(temprId) {
+        var dts = await OopCore.getDeviceTemprs({
+            filter: { temprId: temprId },
+            "page[size]": -1,
+        });
+        var sts = await OopCore.getScheduleTemprs({
+            filter: { temprId: temprId },
+            "page[size]": -1,
+        });
+
+        var allLinks = dts.data.push(...sts.data);
+        console.log(allLinks);
+        return allLinks;
+    }
+
     async function refresh() {
         setLoading(true);
         const response = await getData(props.match.params.temprId);
@@ -277,7 +293,29 @@ const TemprMap = props => {
         });
     };
 
-    const formatPath = (sourceId, targetId) => {
+    const formatOriginNode = (originObj, pos, device) => {
+        const position = pos || { x: 200, y: 50 };
+        const style = device ? {
+            border: "1px solid #777",
+            borderRadius: "20px",
+            padding: 10,
+            backgroundColor: "white",
+        } : {
+            border: "1px solid #777",
+            borderRadius: "20px",
+            padding: 10,
+            backgroundColor: "white",
+        };
+        return ({
+            id: `${device ? 'D' : 'S'}${originObj.id}`,
+            type: "originNode",
+            data: originObj,
+            style: style,
+            position: position,
+        });
+    };
+
+    const formatPath = (sourceId, targetId, sourceHandle, targetHandle, dtId, stId) => {
         const type = noEdit ? "bezier" : "custom";
         return (
             {
@@ -286,7 +324,9 @@ const TemprMap = props => {
                 target: `${targetId}`,
                 style: { stroke: '#777', strokeWidth: 1.5 },
                 type: type,
-                data: { onClick: deletePath },
+                data: { onClick: deletePath, deviceTemprId: dtId, scheduleTemprId: stId },
+                sourceHandle: sourceHandle,
+                targetHandle: targetHandle,
             }
         );
     };
@@ -295,6 +335,7 @@ const TemprMap = props => {
         var nodeData = [];
         var pathData = new Set();
         var tempr = await OopCore.getTempr(temprId);
+        const originalTempr = tempr;
         var allTemprs = await OopCore.getTemprs({
             filter: { deviceGroupId: tempr.deviceGroupId },
         });
@@ -337,6 +378,21 @@ const TemprMap = props => {
         var filteredNodes = nodeData.filter(Boolean);
         var remainingTemprs = allTemprs.data.filter(t => !nodeData[t.id]);
         filteredNodes.push(...pathArray);
+        const devices = await OopCore.getDevices({
+            filter: { deviceGroupId: originalTempr.deviceGroupId },
+        });
+        const deviceNodes = devices.data.map(d => formatOriginNode(d, false, true));
+        const schedules = await OopCore.getSchedules();
+        const scheduleNodes = schedules.data.map(s => formatOriginNode(s, false, false));
+        const newPaths = await Promise.all(nodeData.filter(Boolean).map(t => {
+            const links = getLinks(t.id);
+
+        }));
+        console.log(newPaths);
+        const newP = formatPath(originalTempr.id, 'D22', `DT-${originalTempr.id}`, 'D-22');
+        filteredNodes.push(...deviceNodes);
+        filteredNodes.push(...scheduleNodes);
+        filteredNodes.push(newP);
         return {
             title: titleNode,
             nodes: filteredNodes,
