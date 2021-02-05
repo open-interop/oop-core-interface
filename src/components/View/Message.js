@@ -73,23 +73,22 @@ const Message = props => {
         var originTemprs;
         if (originType === "Device") {
             originTemprs = await OopCore.getDeviceTemprs({
-                "filter[device_id]": originId,
+                filter: { deviceId: originId },
+                "page[size]": -1,
             });
         } else {
             originTemprs = await OopCore.getScheduleTemprs({
-                "filter[schedule_id]": originId,
+                filter: { scheduleId: originId },
+                "page[size]": -1,
             });
         }
 
         var children = originTemprs.data;
+        var transmissionsFound = [];
         const transmissionObject = arrayToObject(
             transmissionArray.data,
             "temprId",
         );
-
-        if (children.length === 0) {
-            return null;
-        }
 
         async function getChildren(child, depth) {
             if (!child.name) {
@@ -97,11 +96,12 @@ const Message = props => {
                     var temprObject = await OopCore.getTempr(child.temprId);
                     child = temprObject;
                 } catch (err) {
-                    return null;
+                    return false;
                 }
             }
             var childrenOfChild = await OopCore.getTemprs({
-                "filter[tempr_id]": child.id,
+                filter: { temprId: child.id },
+                "page[size]": -1,
             });
             var allChildren = null;
 
@@ -128,6 +128,7 @@ const Message = props => {
                     transmissionId: transmissionObject[child.id].id,
                     messageId: props.match.params.messageId,
                 };
+                transmissionsFound.push(transmissionObject[child.id].id);
             } else {
                 node = {
                     id: child.id,
@@ -146,11 +147,48 @@ const Message = props => {
             return node;
         }
 
-        var temprHierarchy = await Promise.all(
-            children.map(child => getChildren(child, 1)),
-        );
+        if (children.length === 0) {
+            return await Promise.all(transmissionArray.data.map((node) => {
+                return getNode(node);
+            }));
+        } else {
+            var temprHierarchy = await Promise.all(
+                children.map(child => getChildren(child, 1)),
+            );
+            const extraTransmissions = await Promise.all(transmissionArray.data.map((node) => {
+                if (!transmissionsFound.includes(node.id)) {
+                    return getNode(node);
+                }
+            }));
+            temprHierarchy.push(...extraTransmissions);
+            var filtered = temprHierarchy.filter(Boolean);
+            return filtered;
+        }
 
-        return temprHierarchy;
+    }
+
+    async function getNode(node) {
+        var name = 'Unavailable';
+        try {
+            const tempr = await OopCore.getTempr(node.temprId);
+            if (tempr) {
+                name = tempr.name;
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        return {
+            id: node.id,
+            name: name,
+            depth: 1,
+            isExpanded: false,
+            transmissionMade: true,
+            messageUuid: node.transmissionUuid,
+            status: node.status,
+            transmittedAt: node.transmittedAt,
+            transmissionId: node.id,
+            messageId: node.messageId,
+        };
     }
 
     const TransmissionsDisplay = props => {
@@ -251,6 +289,26 @@ const Message = props => {
                                             <div className="card-label">
                                                 <ListItemLabel description="IP Address">
                                                     {message && message.ipAddress ? message.ipAddress :
+                                                        "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="State">
+                                                    {message && message.state ? message.state :
+                                                        "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Transmission Count">
+                                                    {message && message.transmissionCount ? message.transmissionCount :
                                                         "No data available"}
                                                 </ListItemLabel>
                                             </div>

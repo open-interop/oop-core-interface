@@ -20,7 +20,7 @@ const TransmissionTree = props => {
     const cleanData = props.initialData.map((node) => {
         if (!node) {
             emptyCounter++;
-            return {id: emptyCounter, deleted:true}
+            return {id: emptyCounter, deleted:true }
         } else {
             return node
         }
@@ -137,7 +137,7 @@ const TransmissionTree = props => {
                                 <div className="card-label">
                                     <ListItemLabel description="Status">
                                         {node.deleted ? "Origin/Tempr has been deleted"  
-                                            : "No Transmission made for this tempr / Tempr no longer associated"}
+                                            : "No Transmission made for this tempr"}
                                     </ListItemLabel>
                                 </div>
                             </ListItem>
