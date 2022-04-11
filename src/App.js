@@ -145,18 +145,9 @@ class App extends Component {
                 <Component {...props} />
             </div>
         ) : (
-            <>
-                <Block display={["none", "none", "block"]}>
-                    <div className="content">
-                        <Component {...props} />
-                    </div>
-                </Block>
-                <Block display={["block", "block", "none"]}>
-                    <div className="content-mobile">
-                        <Component {...props} />
-                    </div>
-                </Block>
-            </>
+            <div className="content">
+                <Component {...props} />
+            </div>
         );
     };
 
