@@ -40,6 +40,14 @@ div[id="root"] {
             .content-wrapper {
                 padding: 1vmin;
             }
+
+            .page-heading {
+                font-size: 8vmin;
+            }
+
+            .action-header {
+                flex-direction: column;
+            }
         }
     }
 }
