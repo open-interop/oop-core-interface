@@ -24,7 +24,7 @@ const Layers = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(pagination) => OopCore.getLayers(pagination)}
+                getData={pagination => OopCore.getLayers(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (
@@ -35,19 +35,20 @@ const Layers = memo(props => {
                                     to={`${props.location.pathname}/${content}`}
                                     aria-label="Edit Layer"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `${props.location.pathname}/${content}/audit-logs`, state: {from: `${props.location.pathname}`}}}
+                                    to={{
+                                        pathname: `${props.location.pathname}/${content}/audit-logs`,
+                                        state: {
+                                            from: `${props.location.pathname}`,
+                                        },
+                                    }}
                                     aria-label="View Layer history"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
                             </>
                         );
@@ -95,4 +96,3 @@ const Layers = memo(props => {
 });
 
 export default Layers;
-

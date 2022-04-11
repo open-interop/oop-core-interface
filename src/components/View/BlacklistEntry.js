@@ -74,7 +74,10 @@ const BlacklistEntry = props => {
                     ErrorToast("Failed to create blacklist entry", "Error");
                 });
         } else {
-            return OopCore.updateBlacklistEntry(props.match.params.blacklistEntryId, updatedBlacklistEntry)
+            return OopCore.updateBlacklistEntry(
+                props.match.params.blacklistEntryId,
+                updatedBlacklistEntry,
+            )
                 .then(response => {
                     refreshBlacklistEntry(response);
                     SuccessToast("Updated blacklist entry", "Success");
@@ -99,7 +102,6 @@ const BlacklistEntry = props => {
                 ipLiteral: null,
                 ipRange: ip,
             });
-
         } else {
             let ip = updatedBlacklistEntry.ipRange;
 
@@ -119,16 +121,15 @@ const BlacklistEntry = props => {
 
     const togglePathLiteralRegex = () => {
         if (pathLiteralFlag) {
-            let path = updatedBlacklistEntry.pathLiteral;
+            const path = updatedBlacklistEntry.pathLiteral;
 
             setUpdatedBlacklistEntry({
                 ...updatedBlacklistEntry,
                 pathLiteral: null,
                 pathRegex: path,
             });
-
         } else {
-            let path = updatedBlacklistEntry.pathRegex;
+            const path = updatedBlacklistEntry.pathRegex;
 
             setUpdatedBlacklistEntry({
                 ...updatedBlacklistEntry,
@@ -157,9 +158,7 @@ const BlacklistEntry = props => {
                     <Input
                         id={"input-ip"}
                         value={updatedBlacklistEntry[field] || ""}
-                        onChange={event =>
-                            setValue(field, event.currentTarget.value)
-                        }
+                        onChange={event => setValue(field, event.currentTarget.value)}
                         error={blacklistEntryErrors[field]}
                     />
                 </FormControl>
@@ -171,8 +170,8 @@ const BlacklistEntry = props => {
                         Label: {
                             style: ({ $theme }) => {
                                 return { fontSize: $theme.sizing.scale400 };
-                            }
-                        }
+                            },
+                        },
                     }}
                 >
                     Allow IP Range
@@ -198,9 +197,7 @@ const BlacklistEntry = props => {
                     <Input
                         id={"input-path"}
                         value={updatedBlacklistEntry[field] || ""}
-                        onChange={event =>
-                            setValue(field, event.currentTarget.value)
-                        }
+                        onChange={event => setValue(field, event.currentTarget.value)}
                         error={blacklistEntryErrors[field]}
                     />
                 </FormControl>
@@ -212,8 +209,8 @@ const BlacklistEntry = props => {
                         Label: {
                             style: ({ $theme }) => {
                                 return { fontSize: $theme.sizing.scale400 };
-                            }
-                        }
+                            },
+                        },
                     }}
                 >
                     Use Regex
@@ -224,9 +221,10 @@ const BlacklistEntry = props => {
 
     return (
         <Page
-            title={blankBlacklistEntry
-                ? "New Blacklist Entry | Settings | Open Interop"
-                : "Edit Blacklist Entry | Settings | Open Interop"
+            title={
+                blankBlacklistEntry
+                    ? "New Blacklist Entry | Settings | Open Interop"
+                    : "Edit Blacklist Entry | Settings | Open Interop"
             }
             heading={blankBlacklistEntry ? "Create Blacklist Entry" : "Edit Blacklist Entry"}
             backlink={allBlacklistEntriesPath}
@@ -247,13 +245,8 @@ const BlacklistEntry = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this Blacklist Entry?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this Blacklist Entry?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteBlacklistEntry}
@@ -263,14 +256,9 @@ const BlacklistEntry = props => {
                     )}
                     <Button
                         onClick={saveBlacklistEntry}
-                        disabled={identicalObject(
-                            blacklistEntry,
-                            updatedBlacklistEntry,
-                        )}
+                        disabled={identicalObject(blacklistEntry, updatedBlacklistEntry)}
                         aria-label={
-                            blankBlacklistEntry
-                                ? "Create blacklistEntry"
-                                : "Update blacklistEntry"
+                            blankBlacklistEntry ? "Create blacklistEntry" : "Update blacklistEntry"
                         }
                     >
                         {blankBlacklistEntry ? "Create" : "Save"}

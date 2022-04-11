@@ -60,8 +60,8 @@ const ForgotPassword = () => {
                             />
                         </FormControl>
                         <div className="forgot-password-text">
-                            Enter your email address and we'll send you a link
-                            to reset your password
+                            Enter your email address and we'll send you a link to reset your
+                            password
                         </div>
 
                         <Button
@@ -97,8 +97,7 @@ const ForgotPassword = () => {
                     <img src={logo} alt="logo" />
                     <LineWrapper title="Success!">
                         <div className="forgot-password-text">
-                            The email address you entered will receive a
-                            password reset link.
+                            The email address you entered will receive a password reset link.
                         </div>
 
                         <Button

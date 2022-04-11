@@ -6,31 +6,44 @@ import { StyledTitle } from "baseui/card";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 
-import { DataProvider, Page, DatetimeTooltip, MaxCard } from "../Universal";
+import {
+    DataProvider,
+    Page,
+    DatetimeTooltip,
+    MaxCard,
+    InPlaceGifSpinner,
+    Table,
+    ExpandModal,
+} from "../Universal";
 import OopCore from "../../OopCore";
 
-import { InPlaceGifSpinner, Table, ExpandModal } from "../Universal";
-
-const PageNotFound = lazy(() => import('../View/PageNotFound'));
+const PageNotFound = lazy(() => import("../View/PageNotFound"));
 
 const formatValue = (val, field) => {
-    if (typeof val != 'string') {
+    if (typeof val !== "string") {
         val = JSON.stringify(val);
     }
 
     if (val.length > 40) {
-        return <ExpandModal content={val} title={field}/> 
+        return <ExpandModal content={val} title={field} />;
     }
 
     return val;
-}
+};
 
 const CenteredTitle = props => {
     const [css, theme] = useStyletron();
 
-    return <StyledTitle className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
-        {props.children}
-    </StyledTitle>
+    return (
+        <StyledTitle
+            className={css({
+                textAlign: "center",
+                marginBottom: theme.sizing.scale500,
+            })}
+        >
+            {props.children}
+        </StyledTitle>
+    );
 };
 
 const itemProps = {
@@ -43,43 +56,47 @@ const AuditLog = props => {
     const [user, setUser] = useState({});
     const [notFound, setNotFound] = useState(null);
 
-    const previousPath = (props.location.state && props.location.state.from) ? props.location.state.from
-        : "/global-history";
-    
-    const getData = (pagination) => {
-        return OopCore.getAuditLog(
-            props.match.params.auditLogId
-        ).then(auditLog => {
-            setAuditLog(auditLog);
-            OopCore.getUser(
-                auditLog.userId
-            ).then(user => {
-                setUser(user);
-                return auditLog;
-            }).catch(e => {
-                setUser(null);
+    const previousPath =
+        props.location.state && props.location.state.from
+            ? props.location.state.from
+            : "/global-history";
+
+    const getData = pagination => {
+        return OopCore.getAuditLog(props.match.params.auditLogId)
+            .then(auditLog => {
+                setAuditLog(auditLog);
+                OopCore.getUser(auditLog.userId)
+                    .then(user => {
+                        setUser(user);
+                        return auditLog;
+                    })
+                    .catch(e => {
+                        setUser(null);
+                    });
+            })
+            .catch(e => {
+                setNotFound(true);
             });
-        }).catch(e => {
-            setNotFound(true);
-        });
     };
 
     const getBody = () => {
-        var updateBool = auditLog.action === 'update' ? true : false;
+        var updateBool = auditLog.action === "update";
         var changes = auditLog.auditedChanges;
 
-        const title = updateBool 
-                        ? <CenteredTitle>Update {auditLog.auditableType}</CenteredTitle>
-                        : <CenteredTitle>Create {auditLog.auditableType}</CenteredTitle>;
+        const title = updateBool ? (
+            <CenteredTitle>Update {auditLog.auditableType}</CenteredTitle>
+        ) : (
+            <CenteredTitle>Create {auditLog.auditableType}</CenteredTitle>
+        );
 
         const changesArray = [];
         // eslint-disable-next-line no-unused-vars
         for (const property in changes) {
             if (updateBool) {
                 changesArray.push({
-                    desc: property, 
+                    desc: property,
                     initial: formatValue(changes[property][0], property),
-                    current: formatValue(changes[property][1], property)
+                    current: formatValue(changes[property][1], property),
                 });
             } else {
                 changesArray.push({
@@ -90,13 +107,13 @@ const AuditLog = props => {
         }
 
         if (changesArray.length < 1) {
-            return <InPlaceGifSpinner />
+            return <InPlaceGifSpinner />;
         }
 
         return (
             <>
                 <FlexGrid
-                    flexGridColumnCount={[1,1,2]}
+                    flexGridColumnCount={[1, 1, 2]}
                     flexGridColumnGap="scale400"
                     flexGridRowGap="scale1000"
                     marginBottom="scale1000"
@@ -105,8 +122,7 @@ const AuditLog = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="Audit Log ID">
-                                    {auditLog.id ||
-                                        "No data available"}
+                                    {auditLog.id || "No data available"}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -115,8 +131,7 @@ const AuditLog = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="Version">
-                                    {auditLog.version ||
-                                        "No data available"}
+                                    {auditLog.version || "No data available"}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -125,8 +140,7 @@ const AuditLog = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="User ID">
-                                    {user.id ||
-                                        "No data available"}
+                                    {user.id || "No data available"}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -135,8 +149,7 @@ const AuditLog = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="User Email">
-                                    {user.email ||
-                                        "No data available"}
+                                    {user.email || "No data available"}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -145,8 +158,7 @@ const AuditLog = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="User Type">
-                                    {auditLog.userType ||
-                                        "No data available"}
+                                    {auditLog.userType || "No data available"}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -155,90 +167,72 @@ const AuditLog = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="Created At">
-                                    {auditLog.createdAt 
-                                        ? <DatetimeTooltip time={auditLog.createdAt}></DatetimeTooltip>
-                                        : "No data available"}
+                                    {auditLog.createdAt ? (
+                                        <DatetimeTooltip
+                                            time={auditLog.createdAt}
+                                        ></DatetimeTooltip>
+                                    ) : (
+                                        "No data available"
+                                    )}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
                     </FlexGridItem>
                 </FlexGrid>
                 <MaxCard title={title}>
-                    {updateBool 
-                        ? 
-                            <Table
-                                data={changesArray}
-                                mapFunction={(
-                                    columnName,
-                                    content,
-                                ) => {
-                                    return content;
-                                }}
-                                columns={[
-                                    {
-                                        id:
-                                            "desc",
-                                        name:
-                                            "Field",
-                                        width:
-                                            "200px",
-                                    },
-                                    {
-                                        id: "initial",
-                                        name: "Old Value",
-                                    },
-                                    {
-                                        id: "current",
-                                        name:
-                                            "New Value",
-                                    },
-                                ]}
-                            />
-                        :
-                            <Table
-                                data={changesArray}
-                                mapFunction={(
-                                    columnName,
-                                    content,
-                                ) => {
-                                    return content;
-                                }}
-                                columns={[
-                                    {
-                                        id:
-                                            "desc",
-                                        name:
-                                            "Field",
-                                        width:
-                                            "200px",
-                                    },
-                                    {
-                                        id: "current",
-                                        name:
-                                            "New Value",
-                                    },
-                                ]}
-                            />
-                    }
+                    {updateBool ? (
+                        <Table
+                            data={changesArray}
+                            mapFunction={(columnName, content) => {
+                                return content;
+                            }}
+                            columns={[
+                                {
+                                    id: "desc",
+                                    name: "Field",
+                                    width: "200px",
+                                },
+                                {
+                                    id: "initial",
+                                    name: "Old Value",
+                                },
+                                {
+                                    id: "current",
+                                    name: "New Value",
+                                },
+                            ]}
+                        />
+                    ) : (
+                        <Table
+                            data={changesArray}
+                            mapFunction={(columnName, content) => {
+                                return content;
+                            }}
+                            columns={[
+                                {
+                                    id: "desc",
+                                    name: "Field",
+                                    width: "200px",
+                                },
+                                {
+                                    id: "current",
+                                    name: "New Value",
+                                },
+                            ]}
+                        />
+                    )}
                 </MaxCard>
             </>
         );
     };
 
     if (notFound) {
-        return <PageNotFound item="Audit Log"/>
+        return <PageNotFound item="Audit Log" />;
     }
 
     return (
-        <Page
-            title="Audit Log | Open Interop"
-            heading="Audit Log"
-            backlink={previousPath}
-        >
-            <DataProvider
-                getData={getData}
-                renderData={getBody}
-            />
+        <Page title="Audit Log | Open Interop" heading="Audit Log" backlink={previousPath}>
+            <DataProvider getData={getData} renderData={getBody} />
         </Page>
     );
 };

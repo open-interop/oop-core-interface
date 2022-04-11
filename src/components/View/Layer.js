@@ -6,17 +6,13 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
-import {
-    ConfirmModal,
-    DataProvider,
-    Page,
-} from "../Universal";
+import { ConfirmModal, DataProvider, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 import TemprAssociator from "../Global/TemprAssociator";
 import AceEditor from "react-ace";
 
-import 'brace/ext/searchbox';
+import "brace/ext/searchbox";
 
 const Layer = props => {
     const [layer, setLayer] = useState({});
@@ -29,10 +25,10 @@ const Layer = props => {
     const getLayer = () => {
         return blankLayer
             ? Promise.resolve({
-                name: "",
-                reference: "",
-                script: "",
-            })
+                  name: "",
+                  reference: "",
+                  script: "",
+              })
             : OopCore.getLayer(props.match.params.layerId);
     };
 
@@ -51,10 +47,10 @@ const Layer = props => {
 
     const saveButtonDisabled = () => {
         return (
-            updatedLayer.name === layer.name &&
-            updatedLayer.reference === layer.reference &&
-            updatedLayer.script === layer.script) ||
-            !(updatedLayer.name && updatedLayer.reference && updatedLayer.script
+            (updatedLayer.name === layer.name &&
+                updatedLayer.reference === layer.reference &&
+                updatedLayer.script === layer.script) ||
+            !(updatedLayer.name && updatedLayer.reference && updatedLayer.script)
         );
     };
 
@@ -101,8 +97,9 @@ const Layer = props => {
         if (blankLayer) {
             return Promise.resolve([]);
         } else {
-            return OopCore.getTemprLayers({ layerId: props.match.params.layerId })
-                .then(res => res.data);
+            return OopCore.getTemprLayers({
+                layerId: props.match.params.layerId,
+            }).then(res => res.data);
         }
     };
 
@@ -113,11 +110,7 @@ const Layer = props => {
                     ? "New Layer | Settings | Open Interop"
                     : "Edit Layer | Settings | Open Interop"
             }
-            heading={
-                blankLayer
-                    ? "Create Layer"
-                    : "Edit Layer"
-            }
+            heading={blankLayer ? "Create Layer" : "Edit Layer"}
             backlink={props.location.prevPath || "/layers"}
             actions={
                 <>
@@ -136,13 +129,8 @@ const Layer = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this layer?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this layer?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteLayer}
@@ -150,10 +138,7 @@ const Layer = props => {
                             secondaryActionText="Cancel"
                         />
                     )}
-                    <Button
-                        onClick={saveLayer}
-                        disabled={saveButtonDisabled()}
-                    >
+                    <Button onClick={saveLayer} disabled={saveButtonDisabled()}>
                         {blankLayer ? "Create" : "Save"}
                     </Button>
                 </>
@@ -164,7 +149,7 @@ const Layer = props => {
                     return Promise.all([
                         getLayer().then(refreshLayer),
                         getRelations().then(setRelations),
-                    ])
+                    ]);
                 }}
                 renderKey={props.location.pathname}
                 renderData={() => (
@@ -172,18 +157,12 @@ const Layer = props => {
                         <FormControl
                             label="Name"
                             caption="required"
-                            error={
-                                layerErrors.name
-                                    ? `Name ${layerErrors.name}`
-                                    : ""
-                            }
+                            error={layerErrors.name ? `Name ${layerErrors.name}` : ""}
                         >
                             <Input
                                 id="input-name"
                                 value={updatedLayer.name}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("name", event.currentTarget.value)}
                                 error={layerErrors.name}
                             />
                         </FormControl>
@@ -191,12 +170,7 @@ const Layer = props => {
                             <Input
                                 id="input-reference"
                                 value={updatedLayer.reference}
-                                onChange={event =>
-                                    setValue(
-                                        "reference",
-                                        event.currentTarget.value,
-                                    )
-                                }
+                                onChange={event => setValue("reference", event.currentTarget.value)}
                                 error={layerErrors.reference}
                             />
                         </FormControl>
@@ -208,35 +182,31 @@ const Layer = props => {
                                 width="100%"
                                 showPrintMargin={false}
                                 onChange={value => {
-                                    setValue("script", value)
+                                    setValue("script", value);
                                 }}
                                 editorProps={{ $blockScrolling: true }}
                                 value={updatedLayer.script}
                             />
                         </FormControl>
-                        {blankLayer || <TemprAssociator
-                            subtitle="Select temprs to associate with this layer."
-                            selected={relations}
-                            onSelect={tempr => {
-                                return OopCore.createTemprLayer({
-                                    layerId: layer.id,
-                                    temprId: tempr.id,
-                                }).then(res => {
-                                    setRelations([...relations, res]);
-                                });
-                            }}
-                            onDeselect={(tempr, rel) => {
-                                return OopCore.deleteTemprLayer(rel.id, rel).then(
-                                    res => {
-                                        setRelations(
-                                            relations.filter(
-                                                v => v.id !== rel.id,
-                                            ),
-                                        );
-                                    },
-                                );
-                            }}
-                        />}
+                        {blankLayer || (
+                            <TemprAssociator
+                                subtitle="Select temprs to associate with this layer."
+                                selected={relations}
+                                onSelect={tempr => {
+                                    return OopCore.createTemprLayer({
+                                        layerId: layer.id,
+                                        temprId: tempr.id,
+                                    }).then(res => {
+                                        setRelations([...relations, res]);
+                                    });
+                                }}
+                                onDeselect={(tempr, rel) => {
+                                    return OopCore.deleteTemprLayer(rel.id, rel).then(res => {
+                                        setRelations(relations.filter(v => v.id !== rel.id));
+                                    });
+                                }}
+                            />
+                        )}
                     </>
                 )}
             />
@@ -245,4 +215,3 @@ const Layer = props => {
 };
 
 export default Layer;
-

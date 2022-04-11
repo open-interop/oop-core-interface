@@ -62,9 +62,7 @@ const DeviceGroup = props => {
             OopCore.createDeviceGroup(updatedDeviceGroup)
                 .then(response => {
                     SuccessToast("Created new device group", "Success");
-                    props.history.replace(
-                        `${allDeviceGroupsPath}/${response.id}`,
-                    );
+                    props.history.replace(`${allDeviceGroupsPath}/${response.id}`);
                     updateState(response);
                 })
                 .catch(error => {
@@ -91,11 +89,7 @@ const DeviceGroup = props => {
                     ? "New Device Group | Settings | Open Interop"
                     : "Edit Device Group | Settings | Open Interop"
             }
-            heading={
-                blankDeviceGroup
-                    ? "Create device group"
-                    : "Edit device group"
-            }
+            heading={blankDeviceGroup ? "Create device group" : "Edit device group"}
             backlink={allDeviceGroupsPath}
             actions={
                 <>
@@ -114,13 +108,8 @@ const DeviceGroup = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this device group?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this device group?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteDeviceGroup}
@@ -130,10 +119,7 @@ const DeviceGroup = props => {
                     )}
                     <Button
                         onClick={saveDeviceGroup}
-                        disabled={identicalObject(
-                            deviceGroup,
-                            updatedDeviceGroup,
-                        )}
+                        disabled={identicalObject(deviceGroup, updatedDeviceGroup)}
                     >
                         {blankDeviceGroup ? "Create" : "Save"}
                     </Button>
@@ -151,33 +137,21 @@ const DeviceGroup = props => {
                             label="Name"
                             key={`form-control-name`}
                             caption="required"
-                            error={
-                                deviceGroupErrors.name
-                                    ? `Name ${deviceGroupErrors.name}`
-                                    : ""
-                            }
+                            error={deviceGroupErrors.name ? `Name ${deviceGroupErrors.name}` : ""}
                         >
                             <Input
                                 id={`input-name`}
                                 value={updatedDeviceGroup.name || ""}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("name", event.currentTarget.value)}
                                 error={deviceGroupErrors.name}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Description"
-                            key={`form-control-description`}
-                        >
+                        <FormControl label="Description" key={`form-control-description`}>
                             <Input
                                 id={`input-description`}
                                 value={updatedDeviceGroup.description || ""}
                                 onChange={event =>
-                                    setValue(
-                                        "description",
-                                        event.currentTarget.value,
-                                    )
+                                    setValue("description", event.currentTarget.value)
                                 }
                             />
                         </FormControl>

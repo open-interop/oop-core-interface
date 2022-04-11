@@ -37,9 +37,7 @@ const Login = () => {
                             type="text"
                             autoComplete="email"
                             value={email}
-                            onChange={event =>
-                                setEmail(event.currentTarget.value)
-                            }
+                            onChange={event => setEmail(event.currentTarget.value)}
                             placeholder="E-mail address"
                         />
                     </FormControl>

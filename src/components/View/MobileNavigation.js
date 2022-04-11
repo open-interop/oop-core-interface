@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { NavigationGroup, NavigationItem } from "../Global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faCogs,
-    faNetworkWired,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faNetworkWired } from "@fortawesome/free-solid-svg-icons";
 
 const MobileNavigation = props => {
     const [settingsAccordionOpen, setSettingsAccordionOpen] = useState(false);

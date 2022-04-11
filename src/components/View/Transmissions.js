@@ -6,10 +6,7 @@ import { useQueryParam, StringParam, ObjectParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faCheck,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
@@ -22,14 +19,8 @@ const Transmissions = props => {
 
     const [id, setId] = useQueryParam("id", StringParam);
     const [deviceId, setDeviceId] = useQueryParam("deviceId", StringParam);
-    const [transmissionUuid, setTransmissionUuid] = useQueryParam(
-        "transmissionUuid",
-        StringParam,
-    );
-    const [messageUuid, setMessageUuid] = useQueryParam(
-        "messageUuid",
-        StringParam,
-    );
+    const [transmissionUuid, setTransmissionUuid] = useQueryParam("transmissionUuid", StringParam);
+    const [messageUuid, setMessageUuid] = useQueryParam("messageUuid", StringParam);
     const [status, setStatus] = useQueryParam("status", StringParam);
     const [success, setSuccess] = useQueryParam("success", StringParam);
     const [transmittedAt, setTransmittedAt] = useQueryParam("transmittedAt", ObjectParam);
@@ -40,12 +31,9 @@ const Transmissions = props => {
     );
 
     return (
-        <Page
-            heading="Transmissions"
-            backlink={deviceDashboardPath}
-        >
+        <Page heading="Transmissions" backlink={deviceDashboardPath}>
             <PaginatedTable
-                getData={(pagination) => {
+                getData={pagination => {
                     return OopCore.getTransmissions(pagination);
                 }}
                 mapFunction={(columnName, content) => {
@@ -71,18 +59,15 @@ const Transmissions = props => {
                     }
 
                     if (columnName === "deviceId") {
-                        return content ? content : "N/A"
+                        return content || "N/A";
                     }
 
-
                     if (columnName === "scheduleId") {
-                        return content ? content : "N/A"
+                        return content || "N/A";
                     }
 
                     if (columnName === "transmittedAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
                     }
                     return content;
                 }}

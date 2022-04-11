@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { Button, KIND } from "baseui/button";
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
-} from "baseui/modal";
+import { Modal, ModalHeader, ModalBody, ModalFooter, ModalButton } from "baseui/modal";
 
 const ConfirmModal = props => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -34,9 +28,7 @@ const ConfirmModal = props => {
                     </ModalButton>
                     <ModalButton
                         onClick={() =>
-                            props.secondaryAction
-                                ? props.secondaryAction()
-                                : setModalOpen(false)
+                            props.secondaryAction ? props.secondaryAction() : setModalOpen(false)
                         }
                     >
                         {props.secondaryActionText}

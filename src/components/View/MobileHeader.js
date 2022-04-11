@@ -19,7 +19,7 @@ const MobileHeader = props => {
                 <NavigationList $align={ALIGN.left}>
                     <NavigationItem>
                         <a href="/">
-                            <img src={logo} alt="logo"/>
+                            <img src={logo} alt="logo" />
                         </a>
                     </NavigationItem>
                     <NavigationItem>

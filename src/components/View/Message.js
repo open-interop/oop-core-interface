@@ -13,12 +13,7 @@ import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { Heading, HeadingLevel } from "baseui/heading";
 import { arrayToObject } from "../../Utilities";
 
-import {
-    DataProvider,
-    InPlaceGifSpinner,
-    Page,
-    TransmissionTree,
-} from "../Universal";
+import { DataProvider, InPlaceGifSpinner, Page, TransmissionTree } from "../Universal";
 
 import OopCore from "../../OopCore";
 
@@ -82,10 +77,7 @@ const Message = props => {
         }
 
         var children = originTemprs.data;
-        const transmissionObject = arrayToObject(
-            transmissionArray.data,
-            "temprId",
-        );
+        const transmissionObject = arrayToObject(transmissionArray.data, "temprId");
 
         if (children.length === 0) {
             return null;
@@ -107,9 +99,7 @@ const Message = props => {
 
             if (childrenOfChild.data.length > 0) {
                 allChildren = await Promise.all(
-                    childrenOfChild.data.map(newChild =>
-                        getChildren(newChild, depth + 1),
-                    ),
+                    childrenOfChild.data.map(newChild => getChildren(newChild, depth + 1)),
                 );
             }
 
@@ -146,9 +136,7 @@ const Message = props => {
             return node;
         }
 
-        var temprHierarchy = await Promise.all(
-            children.map(child => getChildren(child, 1)),
-        );
+        var temprHierarchy = await Promise.all(children.map(child => getChildren(child, 1)));
 
         return temprHierarchy;
     }
@@ -167,20 +155,11 @@ const Message = props => {
     };
 
     return (
-        <Page
-            title="Message | Open Interop"
-            heading="Message details"
-            backlink={allMessagesPath}
-        >
+        <Page title="Message | Open Interop" heading="Message details" backlink={allMessagesPath}>
             <DataProvider
                 getData={() => {
-                    return OopCore.getMessage(
-                        props.match.params.messageId,
-                    ).then(message => {
-                        OopCore.getTransmissionsByMessage(
-                            message.uuid,
-                            {},
-                        ).then(transmissions => {
+                    return OopCore.getMessage(props.match.params.messageId).then(message => {
+                        OopCore.getTransmissionsByMessage(message.uuid, {}).then(transmissions => {
                             getOriginChildren(
                                 message.originType,
                                 message.originId,
@@ -190,8 +169,7 @@ const Message = props => {
                                     setOriginName(originName);
                                     setOriginChildren(origins);
                                     const b =
-                                        Object.keys(message.body).length ===
-                                            0 &&
+                                        Object.keys(message.body).length === 0 &&
                                         message.body.constructor === Object
                                             ? null
                                             : message.body;
@@ -205,10 +183,10 @@ const Message = props => {
                 }}
                 renderData={() => (
                     <>
-                        {message && originChildren ?
+                        {message && originChildren ? (
                             <>
                                 <FlexGrid
-                                    flexGridColumnCount={[1,1,1,2]}
+                                    flexGridColumnCount={[1, 1, 1, 2]}
                                     flexGridRowGap="scale800"
                                     marginBottom="scale1000"
                                 >
@@ -216,21 +194,25 @@ const Message = props => {
                                         <ListItem>
                                             <div className="card-label">
                                                 <ListItemLabel description="UUID">
-                                                    {message && message.uuid ? message.uuid :
-                                                        "No data available"}
+                                                    {message && message.uuid
+                                                        ? message.uuid
+                                                        : "No data available"}
                                                 </ListItemLabel>
                                             </div>
                                         </ListItem>
                                     </FlexGridItem>
-                                    {(message && message.originType) && (
+                                    {message && message.originType && (
                                         <FlexGridItem {...itemProps}>
                                             <ListItem>
                                                 <div className="card-label">
                                                     <ListItemLabel
-                                                        description={message && message.originType ? message.originType : "Origin"}
+                                                        description={
+                                                            message && message.originType
+                                                                ? message.originType
+                                                                : "Origin"
+                                                        }
                                                     >
-                                                        {originName ||
-                                                            "No data available"}
+                                                        {originName || "No data available"}
                                                     </ListItemLabel>
                                                 </div>
                                             </ListItem>
@@ -240,8 +222,9 @@ const Message = props => {
                                         <ListItem>
                                             <div className="card-label">
                                                 <ListItemLabel description="Created At">
-                                                    {message && message.createdAt ? message.createdAt :
-                                                        "No data available"}
+                                                    {message && message.createdAt
+                                                        ? message.createdAt
+                                                        : "No data available"}
                                                 </ListItemLabel>
                                             </div>
                                         </ListItem>
@@ -250,8 +233,9 @@ const Message = props => {
                                         <ListItem>
                                             <div className="card-label">
                                                 <ListItemLabel description="IP Address">
-                                                    {message && message.ipAddress ? message.ipAddress :
-                                                        "No data available"}
+                                                    {message && message.ipAddress
+                                                        ? message.ipAddress
+                                                        : "No data available"}
                                                 </ListItemLabel>
                                             </div>
                                         </ListItem>
@@ -308,10 +292,10 @@ const Message = props => {
                                     </>
                                 )}
                                 <TransmissionsDisplay data={originChildren} />
-                            </> 
-                            :
+                            </>
+                        ) : (
                             <InPlaceGifSpinner />
-                        }
+                        )}
                     </>
                 )}
             />

@@ -7,7 +7,7 @@ import {
     faCircle,
     faCogs,
     faNetworkWired,
-    faInbox
+    faInbox,
 } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
 
@@ -43,18 +43,16 @@ const SideNavigation = props => {
     const toggleBothAccordions = () => {
         setDevicesAccordionOpen(false);
         setSettingsAccordionOpen(false);
-    }
+    };
 
     const getDeviceGroups = () => {
         if (props.site) {
-            return OopCore.getDevicesByGroup({ siteId: props.site.id }).then(
-                response => {
-                    const association = response.sites.find(
-                        association => association.id === props.site.id,
-                    );
-                    return association ? association.deviceGroups : [];
-                },
-            );
+            return OopCore.getDevicesByGroup({ siteId: props.site.id }).then(response => {
+                const association = response.sites.find(
+                    association => association.id === props.site.id,
+                );
+                return association ? association.deviceGroups : [];
+            });
         } else {
             return Promise.all([
                 OopCore.getDevices({ "page[size]": -1 }),
@@ -90,10 +88,7 @@ const SideNavigation = props => {
                         {props.site && props.site.fullName && (
                             <>
                                 <div className="site-name">
-                                    <FontAwesomeIcon
-                                        className="mr-1"
-                                        icon={faCircle}
-                                    />
+                                    <FontAwesomeIcon className="mr-1" icon={faCircle} />
                                     {props.site.fullName}
                                 </div>
                             </>
@@ -116,15 +111,11 @@ const SideNavigation = props => {
                                                 key={`device-${device.id}-navigation-item`}
                                                 path={`/devices/${device.id}`}
                                                 pathName={device.name}
-                                                isActive={pathIncludes(
-                                                    `/devices/${device.id}`,
-                                                )}
+                                                isActive={pathIncludes(`/devices/${device.id}`)}
                                             />
                                         ))
                                 ) : (
-                                    <NavigationItem disabled>
-                                        No devices
-                                    </NavigationItem>
+                                    <NavigationItem disabled>No devices</NavigationItem>
                                 )}
                             </React.Fragment>
                         ))}

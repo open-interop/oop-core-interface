@@ -6,13 +6,7 @@ import { PaginatedTable, Page } from "../Universal";
 import { ErrorToast } from "../Global";
 import OopCore from "../../OopCore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faChartPie,
-    faEdit,
-    faListUl,
-    faPlus,
-    faHistory,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChartPie, faEdit, faListUl, faPlus, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { arrayToObject } from "../../Utilities";
 
 const Devices = props => {
@@ -21,22 +15,15 @@ const Devices = props => {
     }, []);
     const [id, setId] = useQueryParam("id", StringParam);
     const [name, setName] = useQueryParam("name", StringParam);
-    const [deviceGroupId, setDeviceGroupId] = useQueryParam(
-        "deviceGroupId",
-        StringParam,
-    );
+    const [deviceGroupId, setDeviceGroupId] = useQueryParam("deviceGroupId", StringParam);
     const [siteId, setSiteId] = useQueryParam("siteId", StringParam);
 
     // site selected in header overrides table filter
-    if (
-        props.site &&
-        props.site.id &&
-        (!siteId || Number(siteId) !== props.site.id)
-    ) {
+    if (props.site && props.site.id && (!siteId || Number(siteId) !== props.site.id)) {
         setSiteId(String(props.site.id));
     }
 
-    const getData = (pagination) => {
+    const getData = pagination => {
         return Promise.all([
             OopCore.getDevices(pagination),
             OopCore.getDeviceGroups(),
@@ -49,9 +36,7 @@ const Devices = props => {
                 device.deviceGroupName = groupsObject[device.deviceGroupId]
                     ? groupsObject[device.deviceGroupId].name
                     : "";
-                device.siteName = sitesObject[device.siteId]
-                    ? sitesObject[device.siteId].name
-                    : "";
+                device.siteName = sitesObject[device.siteId] ? sitesObject[device.siteId].name : "";
             });
             return devices;
         });
@@ -63,9 +48,7 @@ const Devices = props => {
             actions={
                 <Button
                     $as={Link}
-                    to={`/devices/new${
-                        deviceGroupId ? "?deviceGroupId=" + deviceGroupId : ""
-                    }`}
+                    to={`/devices/new${deviceGroupId ? "?deviceGroupId=" + deviceGroupId : ""}`}
                     kind={KIND.minimal}
                     aria-label="Create new device"
                     endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
@@ -87,9 +70,7 @@ const Devices = props => {
                                     to={`/devices/${content}`}
                                     aria-label="View device dashboard"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faChartPie}
-                                    />
+                                    <FontAwesomeIcon icon={faChartPie} />
                                 </Button>
                                 <Button
                                     $as={Link}
@@ -100,19 +81,18 @@ const Devices = props => {
                                     }}
                                     aria-label="Edit device"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     $as={Link}
                                     kind={KIND.minimal}
-                                    to={{pathname: `/devices/${content}/audit-logs`, state: {from: `/devices`}}}
+                                    to={{
+                                        pathname: `/devices/${content}/audit-logs`,
+                                        state: { from: `/devices` },
+                                    }}
                                     aria-label="View device history"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
                                 <Button
                                     $as={Link}
@@ -120,9 +100,7 @@ const Devices = props => {
                                     to={`/messages?filter=originType-Device_originId-${content}`}
                                     aria-label="View device messages"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faListUl}
-                                    />
+                                    <FontAwesomeIcon icon={faListUl} />
                                 </Button>
                             </>
                         );

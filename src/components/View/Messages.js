@@ -12,14 +12,13 @@ import { useQueryParam, StringParam, NumberParam, ObjectParam } from "use-query-
 import { arrayToObject } from "../../Utilities";
 
 const Messages = props => {
-
     const [uuid, setUuid] = useQueryParam("uuid", StringParam);
     const [originId, setOriginId] = useQueryParam("originId", NumberParam);
     const [originType, setOriginType] = useQueryParam("originType", StringParam);
     const [ipAddress, setIpAddress] = useQueryParam("ipAddress", StringParam);
     const [createdAt, setCreatedAt] = useQueryParam("createdAt", ObjectParam);
 
-    const getData = (pagination) => {
+    const getData = pagination => {
         return Promise.all([
             OopCore.getMessages(pagination),
             OopCore.getDevices(),
@@ -27,45 +26,38 @@ const Messages = props => {
         ]).then(([messages, devices, schedules]) => {
             const devicesObject = arrayToObject(devices.data, "id");
             const schedulesObject = arrayToObject(schedules.data, "id");
-            const originDict = {"Device":devicesObject, "Schedule":schedulesObject}
+            const originDict = {
+                Device: devicesObject,
+                Schedule: schedulesObject,
+            };
 
             messages.data.forEach(message => {
-                message.origin = originDict[message.originType]
-                    && originDict[message.originType][message.originId]
-                    ? originDict[message.originType][message.originId].name
-                    : "No data available";
+                message.origin =
+                    originDict[message.originType] &&
+                    originDict[message.originType][message.originId]
+                        ? originDict[message.originType][message.originId].name
+                        : "No data available";
             });
             return messages;
         });
     };
 
     return (
-        <Page
-            title="Messages | Open Interop"
-            heading="Messages"
-        >
+        <Page title="Messages | Open Interop" heading="Messages">
             <PaginatedTable
                 getData={getData}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (
                             <>
-                                <Button
-                                    kind={KIND.tertiary}
-                                    $as={Link}
-                                    to={`/messages/${content}`}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faListUl}
-                                    />
+                                <Button kind={KIND.tertiary} $as={Link} to={`/messages/${content}`}>
+                                    <FontAwesomeIcon icon={faListUl} />
                                 </Button>
                             </>
                         );
-                    } 
+                    }
                     if (columnName === "createdAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
                     }
                     return content;
                 }}

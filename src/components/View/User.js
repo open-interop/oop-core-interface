@@ -6,7 +6,7 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Select } from "baseui/select";
 import { Textarea } from "baseui/textarea";
-import { Datepicker } from 'baseui/datepicker';
+import { Datepicker } from "baseui/datepicker";
 
 import { ConfirmModal, DataProvider, Page } from "../Universal";
 import { Timezones, TimeDiff } from "../../resources/Timezones";
@@ -53,10 +53,10 @@ const User = props => {
         setUpdatedUser(updatedData);
     };
 
-    const setDate = (d) => {
+    const setDate = d => {
         if (d != null) {
             setDateOfBirth(d);
-            setValue('dateOfBirth', d.toISOString().slice(0,10));
+            setValue("dateOfBirth", d.toISOString().slice(0, 10));
         }
     };
 
@@ -69,9 +69,7 @@ const User = props => {
     };
 
     const passwordTooShort = password => {
-        return (
-            password && password.length < 6 && "Minimum length is 6 characters"
-        );
+        return password && password.length < 6 && "Minimum length is 6 characters";
     };
 
     const deleteUser = () => {
@@ -115,20 +113,17 @@ const User = props => {
 
     return (
         <Page
-            title={blankUser
-                ? "New User | Settings | Open Interop"
-                : "Edit User | Settings | Open Interop"
+            title={
+                blankUser
+                    ? "New User | Settings | Open Interop"
+                    : "Edit User | Settings | Open Interop"
             }
             heading={blankUser ? "Create User" : "Edit User"}
             backlink={allUsersPath}
             actions={
                 <>
                     {blankUser ? null : (
-                        <Button
-                            $as={Link}
-                            to={`${allUsersPath}/audit-logs`}
-                            aria-label={"History"}
-                        >
+                        <Button $as={Link} to={`${allUsersPath}/audit-logs`} aria-label={"History"}>
                             History
                         </Button>
                     )}
@@ -138,13 +133,8 @@ const User = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this user?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this user?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteUser}
@@ -154,15 +144,8 @@ const User = props => {
                     )}
                     <Button
                         onClick={saveUser}
-                        disabled={identicalObject(
-                            user,
-                            updatedUser,
-                        )}
-                        aria-label={
-                            blankUser
-                                ? "Create user"
-                                : "Update user"
-                        }
+                        disabled={identicalObject(user, updatedUser)}
+                        aria-label={blankUser ? "Create user" : "Update user"}
                     >
                         {blankUser ? "Create" : "Save"}
                     </Button>
@@ -184,18 +167,12 @@ const User = props => {
                         <FormControl
                             label="Email"
                             key={"form-control-group-email"}
-                            error={
-                                userErrors.email
-                                    ? `Email ${userErrors.email}`
-                                    : ""
-                            }
+                            error={userErrors.email ? `Email ${userErrors.email}` : ""}
                         >
                             <Input
                                 id={"input-email"}
                                 value={updatedUser.email || ""}
-                                onChange={event =>
-                                    setValue("email", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("email", event.currentTarget.value)}
                                 error={userErrors.email}
                             />
                         </FormControl>
@@ -212,12 +189,7 @@ const User = props => {
                                 type="password"
                                 id={"input-new-password"}
                                 value={updatedUser.password || ""}
-                                onChange={event =>
-                                    setValue(
-                                        "password",
-                                        event.currentTarget.value,
-                                    )
-                                }
+                                onChange={event => setValue("password", event.currentTarget.value)}
                                 error={userErrors.password}
                             />
                         </FormControl>
@@ -227,9 +199,8 @@ const User = props => {
                             error={
                                 userErrors.passwordConfirmation
                                     ? `Password confirmation ${userErrors.passwordConfirmation}`
-                                    : passwordTooShort(
-                                          updatedUser.passwordConfirmation,
-                                      ) || passwordMismatch()
+                                    : passwordTooShort(updatedUser.passwordConfirmation) ||
+                                      passwordMismatch()
                             }
                         >
                             <Input
@@ -237,10 +208,7 @@ const User = props => {
                                 id={"input-confirm-password"}
                                 value={updatedUser.passwordConfirmation || ""}
                                 onChange={event =>
-                                    setValue(
-                                        "passwordConfirmation",
-                                        event.currentTarget.value,
-                                    )
+                                    setValue("passwordConfirmation", event.currentTarget.value)
                                 }
                                 error={userErrors.passwordConfirmation}
                             />
@@ -248,11 +216,7 @@ const User = props => {
                         <FormControl
                             label="Timezone"
                             key={`form-control-timezone`}
-                            error={
-                                userErrors.timeZone
-                                    ? `Time zone  ${userErrors.timeZone}`
-                                    : ""
-                            }
+                            error={userErrors.timeZone ? `Time zone  ${userErrors.timeZone}` : ""}
                         >
                             <Select
                                 id="select-id"
@@ -262,51 +226,34 @@ const User = props => {
                                 searchable={true}
                                 onChange={event => {
                                     event.value.length
-                                        ? setValue(
-                                              "timeZone",
-                                              event.value[0].id,
-                                          )
+                                        ? setValue("timeZone", event.value[0].id)
                                         : setValue("timeZone", null);
                                 }}
-                                value={timezones.filter(
-                                    item => item.id === updatedUser.timeZone,
-                                )}
+                                value={timezones.filter(item => item.id === updatedUser.timeZone)}
                                 error={userErrors.timeZone}
                             />
                         </FormControl>
                         <FormControl
                             label="First Name"
                             key={"form-control-group-first-name"}
-                            error={
-                                userErrors.firstName
-                                    ? `First Name ${userErrors.firstName}`
-                                    : ""
-                            }
+                            error={userErrors.firstName ? `First Name ${userErrors.firstName}` : ""}
                         >
                             <Input
                                 id={"input-first-name"}
                                 value={updatedUser.firstName || ""}
-                                onChange={event =>
-                                    setValue("firstName", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("firstName", event.currentTarget.value)}
                                 error={userErrors.firstName}
                             />
                         </FormControl>
                         <FormControl
                             label="Last Name"
                             key={"form-control-group-last-name"}
-                            error={
-                                userErrors.lastName
-                                    ? `Last Name ${userErrors.lastName}`
-                                    : ""
-                            }
+                            error={userErrors.lastName ? `Last Name ${userErrors.lastName}` : ""}
                         >
                             <Input
                                 id={"input-last-name"}
                                 value={updatedUser.lastName || ""}
-                                onChange={event =>
-                                    setValue("lastName", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("lastName", event.currentTarget.value)}
                                 error={userErrors.lastName}
                             />
                         </FormControl>
@@ -320,30 +267,24 @@ const User = props => {
                             }
                         >
                             <Datepicker
-                              aria-label="Select a date"
-                              value={dateOfBirth}
-                              onChange={({date}) => setDate(date)}
-                              formatString="yyyy-MM-dd"
-                              placeholder="YYYY-MM-DD"
-                              mask="9999-99-99"
-                              minDate={new Date("1900-01-01")}
+                                aria-label="Select a date"
+                                value={dateOfBirth}
+                                onChange={({ date }) => setDate(date)}
+                                formatString="yyyy-MM-dd"
+                                placeholder="YYYY-MM-DD"
+                                mask="9999-99-99"
+                                minDate={new Date("1900-01-01")}
                             />
                         </FormControl>
                         <FormControl
                             label="Job Title"
                             key={"form-control-group-job-title"}
-                            error={
-                                userErrors.jobTitle
-                                    ? `Job Title ${userErrors.jobTitle}`
-                                    : ""
-                            }
+                            error={userErrors.jobTitle ? `Job Title ${userErrors.jobTitle}` : ""}
                         >
                             <Input
                                 id={"input-job-title"}
                                 value={updatedUser.jobTitle || ""}
-                                onChange={event =>
-                                    setValue("jobTitle", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("jobTitle", event.currentTarget.value)}
                                 error={userErrors.jobTitle}
                             />
                         </FormControl>

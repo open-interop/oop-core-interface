@@ -39,7 +39,7 @@ const Table = memo(props => {
     var widthPixels = false;
 
     if (props.mobile) {
-        widthPixels = '930px';
+        widthPixels = "930px";
     }
 
     function TableRows() {
@@ -48,63 +48,47 @@ const Table = memo(props => {
         }
 
         if (data.length) {
-            return (
-                data.map((row, index) => {
-                    return (
-                        <StyledRow
-                            key={index}
-                            className={
-                                props.rowClassName
-                                    ? props.rowClassName(row)
-                                    : ""
-                            }
-                        >
-                            {props.columns.map(column => {
-                                return (
-                                    <StyledCell
-                                        $style={column.width ? { flex: `0 0 ${column.width}`, } : {}}
-                                        key={`table-cell-${index}-${column.id}`}
-                                        onClick={() => {
-                                            if (props.onRowClick) {
-                                                props.onRowClick(
-                                                    row,
-                                                    column.id,
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        {props.mapFunction(
-                                            column.id,
-                                            row[
-                                                props.columnContent
-                                                    ? props.columnContent(
-                                                          column.id,
-                                                      )
-                                                    : column.id
-                                            ],
-                                            row,
-                                        )}
-                                    </StyledCell>
-                                );
-                            })}
-                        </StyledRow>
-                    );
-                })
-            );
+            return data.map((row, index) => {
+                return (
+                    <StyledRow
+                        key={index}
+                        className={props.rowClassName ? props.rowClassName(row) : ""}
+                    >
+                        {props.columns.map(column => {
+                            return (
+                                <StyledCell
+                                    $style={column.width ? { flex: `0 0 ${column.width}` } : {}}
+                                    key={`table-cell-${index}-${column.id}`}
+                                    onClick={() => {
+                                        if (props.onRowClick) {
+                                            props.onRowClick(row, column.id);
+                                        }
+                                    }}
+                                >
+                                    {props.mapFunction(
+                                        column.id,
+                                        row[
+                                            props.columnContent
+                                                ? props.columnContent(column.id)
+                                                : column.id
+                                        ],
+                                        row,
+                                    )}
+                                </StyledCell>
+                            );
+                        })}
+                    </StyledRow>
+                );
+            });
         } else {
-            return (
-                <div className={noItems}>
-                    No items to show
-                </div>
-            );
+            return <div className={noItems}>No items to show</div>;
         }
     }
 
     function getFilterValue(filters, column) {
         if (filters) {
             return Object.keys(filters).find(
-                filterName =>
-                    filterName === column && filters[filterName] !== undefined,
+                filterName => filterName === column && filters[filterName] !== undefined,
             )
                 ? props.filters[column]
                 : "";
@@ -114,21 +98,18 @@ const Table = memo(props => {
     }
 
     return (
-        <StyledTable style={{maxHeight: props.maxHeight || 'auto'}}>
-            <StyledHead $width={widthPixels ? widthPixels : 'auto'}>
+        <StyledTable style={{ maxHeight: props.maxHeight || "auto" }}>
+            <StyledHead $width={widthPixels || "auto"}>
                 {props.columns.map(column => (
                     <StyledHeadCell
-                        $style={column.width ? { flex: `0 0 ${column.width}`, } : {}}
+                        $style={column.width ? { flex: `0 0 ${column.width}` } : {}}
                         key={`table-head-${column.id}`}
                     >
                         {column.name}
                         {column.hasFilter && (
                             <TableFilter
                                 contentType={column.type}
-                                filterValue={getFilterValue(
-                                    props.filters,
-                                    column.id,
-                                )}
+                                filterValue={getFilterValue(props.filters, column.id)}
                                 setFilterValue={newValue =>
                                     props.updateFilters(column.id, newValue)
                                 }
@@ -140,7 +121,7 @@ const Table = memo(props => {
                     </StyledHeadCell>
                 ))}
             </StyledHead>
-            <StyledBody className={css({ position: "relative" })} $width={widthPixels ? widthPixels : 'auto'}>
+            <StyledBody className={css({ position: "relative" })} $width={widthPixels || "auto"}>
                 {TableRows()}
                 {props.data && props.loading && (
                     <LoadingOverlay>

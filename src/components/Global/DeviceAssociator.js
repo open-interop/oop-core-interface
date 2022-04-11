@@ -4,17 +4,9 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faExternalLinkAlt,
-    faCheck,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExternalLinkAlt, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import {
-    AccordionWithCaption,
-    IconSpinner,
-    PaginatedTable,
-} from "../Universal";
+import { AccordionWithCaption, IconSpinner, PaginatedTable } from "../Universal";
 
 import OopCore from "../../OopCore";
 
@@ -37,15 +29,14 @@ const DeviceAssociator = memo(props => {
             <PaginatedTable
                 prefix="device-"
                 refresh={props.deviceGroupId}
-                getData={(pagination) => {
+                getData={pagination => {
                     return Promise.all([
                         OopCore.getSites({ "page[size]": -1 }),
                         OopCore.getDevices({
                             filter: { deviceGroupId: props.deviceGroupId },
                             pagination,
                         }),
-                    ])
-                    .then(([sites, devices]) => {
+                    ]).then(([sites, devices]) => {
                         const sitesById = {};
                         // eslint-disable-next-line no-unused-vars
                         for (const s of sites.data) {
@@ -59,9 +50,7 @@ const DeviceAssociator = memo(props => {
                         return devices;
                     });
                 }}
-                rowClassName={row =>
-                    `device-tempr${row.selected ? " selected" : ""}`
-                }
+                rowClassName={row => `device-tempr${row.selected ? " selected" : ""}`}
                 mapFunction={(columnName, content, row) => {
                     if (columnName === "action") {
                         return (
@@ -72,9 +61,7 @@ const DeviceAssociator = memo(props => {
                                     target="_blank"
                                     to={"/devices/" + content}
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faExternalLinkAlt}
-                                    />
+                                    <FontAwesomeIcon icon={faExternalLinkAlt} />
                                 </Button>
                             </>
                         );

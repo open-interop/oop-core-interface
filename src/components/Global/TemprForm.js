@@ -30,11 +30,7 @@ const TemprForm = memo(props => {
             <FormControl
                 label="Name"
                 key={"form-control-group-name"}
-                error={
-                    props.errors.name
-                        ? `Name ${props.errors.name}`
-                        : ""
-                }
+                error={props.errors.name ? `Name ${props.errors.name}` : ""}
                 caption="required"
             >
                 <Input
@@ -61,30 +57,17 @@ const TemprForm = memo(props => {
                     error={props.errors.deviceGroup}
                 />
             </FormControl>
-            <FormControl
-                label="Parent Tempr"
-                key={"form-control-group-parent"}
-            >
+            <FormControl label="Parent Tempr" key={"form-control-group-parent"}>
                 <TemprSelector
                     deviceGroup={deviceGroupId}
                     onChange={event => {
-                        setParentTemprId(
-                            event.value[0]
-                                ? event.value[0].id
-                                : null,
-                        );
+                        setParentTemprId(event.value[0] ? event.value[0].id : null);
                     }}
                     value={parentTemprId}
                 />
             </FormControl>
-            <FormControl
-                label="Description"
-                key="form-control-notes"
-            >
-                <Textarea
-                    value={description}
-                    onChange={setValue(setDescription)}
-                />
+            <FormControl label="Description" key="form-control-notes">
+                <Textarea value={description} onChange={setValue(setDescription)} />
             </FormControl>
             <FormControl
                 label="Endpoint type"
@@ -98,27 +81,23 @@ const TemprForm = memo(props => {
                     searchable={false}
                     clearable={false}
                     onChange={event => setEndpointType(event.option.id)}
-                    value={[endpointTypeOptions.find(
-                        item => item.id === endpointType
-                    ) || { id: "http" }]}
+                    value={[
+                        endpointTypeOptions.find(item => item.id === endpointType) || {
+                            id: "http",
+                        },
+                    ]}
                     error={props.error}
                     disabled
                 />
             </FormControl>
-            <FormControl
-                label="Queue Response"
-                key={`form-control-queue-response`}
-            >
+            <FormControl label="Queue Response" key={`form-control-queue-response`}>
                 <Checkbox
                     checked={queueResponse}
                     onChange={() => setQueueResponse(!queueResponse)}
                     checkmarkType={STYLE_TYPE.toggle_round}
                 />
             </FormControl>
-            <FormControl
-                label="Queue Request"
-                key={`form-control-queue-request`}
-            >
+            <FormControl label="Queue Request" key={`form-control-queue-request`}>
                 <Checkbox
                     checked={queueRequest}
                     onChange={() => setQueueRequest(!queueRequest)}

@@ -53,9 +53,7 @@ const SiteSelector = props => {
         return props.selectSite(null);
     };
 
-    const currentSiteName = props.selectedSite
-        ? props.selectedSite.fullName
-        : "All sites";
+    const currentSiteName = props.selectedSite ? props.selectedSite.fullName : "All sites";
 
     if (isEditing) {
         return (
@@ -76,23 +74,15 @@ const SiteSelector = props => {
                                         <Select
                                             options={parentSites}
                                             autoFocus={
-                                                !(
-                                                    props.selectedSite &&
-                                                    props.selectedSite.siteId
-                                                )
+                                                !(props.selectedSite && props.selectedSite.siteId)
                                             }
                                             startOpen={
-                                                !(
-                                                    props.selectedSite &&
-                                                    props.selectedSite.siteId
-                                                )
+                                                !(props.selectedSite && props.selectedSite.siteId)
                                             }
                                             labelKey="name"
                                             valueKey="id"
                                             filterOptions={options =>
-                                                options.filter(
-                                                    option => !option.siteId,
-                                                )
+                                                options.filter(option => !option.siteId)
                                             }
                                             onChange={event => {
                                                 event.value.length
@@ -100,16 +90,12 @@ const SiteSelector = props => {
                                                     : selectSite(null);
                                             }}
                                             onInputChange={event =>
-                                                setParentSearchValue(
-                                                    event.currentTarget.value,
-                                                )
+                                                setParentSearchValue(event.currentTarget.value)
                                             }
                                             value={selectedParentSites}
                                             placeholder="All sites"
                                             onOpen={() =>
-                                                setParentDropdownOpen(
-                                                    !parentDropdownOpen,
-                                                )
+                                                setParentDropdownOpen(!parentDropdownOpen)
                                             }
                                         />
                                     </div>
@@ -137,39 +123,29 @@ const SiteSelector = props => {
                                                     options={childSites}
                                                     autoFocus={
                                                         (props.selectedSite &&
-                                                            props.selectedSite
-                                                                .siteId) ||
+                                                            props.selectedSite.siteId) ||
                                                         childSites.length
                                                     }
                                                     startOpen={
                                                         (props.selectedSite &&
-                                                            props.selectedSite
-                                                                .siteId) ||
+                                                            props.selectedSite.siteId) ||
                                                         childSites.length
                                                     }
                                                     labelKey="name"
                                                     valueKey="id"
                                                     onChange={event => {
                                                         event.value.length
-                                                            ? selectSite(
-                                                                  event
-                                                                      .value[0],
-                                                              )
-                                                            : selectSite(
-                                                                  selectedParentSites[0],
-                                                              );
+                                                            ? selectSite(event.value[0])
+                                                            : selectSite(selectedParentSites[0]);
                                                     }}
                                                     onInputChange={event =>
                                                         setChildSearchValue(
-                                                            event.currentTarget
-                                                                .value,
+                                                            event.currentTarget.value,
                                                         )
                                                     }
                                                     value={selectedChildSites}
                                                     onOpen={() =>
-                                                        setChildDropdownOpen(
-                                                            !childDropdownOpen,
-                                                        )
+                                                        setChildDropdownOpen(!childDropdownOpen)
                                                     }
                                                     placeholder="Child sites"
                                                 />

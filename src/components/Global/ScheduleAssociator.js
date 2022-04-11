@@ -4,23 +4,15 @@ import { Link } from "react-router-dom";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faExternalLinkAlt,
-    faCheck,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExternalLinkAlt, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import {
-    AccordionWithCaption,
-    IconSpinner,
-    PaginatedTable,
-} from "../Universal";
+import { AccordionWithCaption, IconSpinner, PaginatedTable } from "../Universal";
 
 import OopCore from "../../OopCore";
 
-const getData = (pagination) => {
+const getData = pagination => {
     return OopCore.getSchedules({
-        //scheduleGroupId: updatedTempr.scheduleGroupId,
+        // scheduleGroupId: updatedTempr.scheduleGroupId,
         ...pagination,
     });
 };
@@ -44,9 +36,7 @@ const ScheduleAssociator = memo(props => {
             <PaginatedTable
                 prefix="schedule-"
                 getData={getData}
-                rowClassName={row =>
-                    `schedule-tempr${row.selected ? " selected" : ""}`
-                }
+                rowClassName={row => `schedule-tempr${row.selected ? " selected" : ""}`}
                 mapFunction={(columnName, content, row) => {
                     if (columnName === "action") {
                         return (
@@ -57,9 +47,7 @@ const ScheduleAssociator = memo(props => {
                                     target="_blank"
                                     to={"/schedules/" + content}
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faExternalLinkAlt}
-                                    />
+                                    <FontAwesomeIcon icon={faExternalLinkAlt} />
                                 </Button>
                             </>
                         );

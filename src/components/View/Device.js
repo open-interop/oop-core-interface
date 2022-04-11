@@ -8,17 +8,9 @@ import { Select } from "baseui/select";
 import { Checkbox, STYLE_TYPE } from "baseui/checkbox";
 
 import { clearToast, ErrorToast, PairInput, SuccessToast } from "../Global";
-import {
-    AccordionWithCaption,
-    ConfirmModal,
-    DataProvider,
-    Page,
-} from "../Universal";
+import { AccordionWithCaption, ConfirmModal, DataProvider, Page } from "../Universal";
 import OopCore from "../../OopCore";
-import {
-    identicalArray,
-    identicalObject,
-} from "../../Utilities";
+import { identicalArray, identicalObject } from "../../Utilities";
 
 import TemprAssociator from "../Global/TemprAssociator";
 
@@ -90,10 +82,7 @@ const Device = props => {
         setDevice(response);
         const copy = {};
         Object.keys(response).map(key => {
-            if (
-                key === "authenticationHeaders" ||
-                key === "authenticationQuery"
-            ) {
+            if (key === "authenticationHeaders" || key === "authenticationQuery") {
                 return (copy[key] = copyOfArray(response[key]));
             } else {
                 return (copy[key] = response[key]);
@@ -141,8 +130,7 @@ const Device = props => {
         return OopCore.getDeviceTemprs({
             filter: { deviceId: props.match.params.deviceId },
             "page[size]": -1,
-        })
-        .then(deviceTemprs => {
+        }).then(deviceTemprs => {
             setRelations(deviceTemprs.data);
         });
     };
@@ -159,19 +147,15 @@ const Device = props => {
             });
     };
 
-    const bothValuesEmpty = (pair) => {
+    const bothValuesEmpty = pair => {
         return (
-            (pair[0].length === 0 || !pair[0].trim()) &&
-            (pair[1].length === 0 || !pair[1].trim())
+            (pair[0].length === 0 || !pair[0].trim()) && (pair[1].length === 0 || !pair[1].trim())
         );
-    }
+    };
 
-    const oneValueEmpty = (pair) => {
-        return (
-            !(pair[0] === "" && pair[1] === "") && 
-            (pair[0] === "" || pair[1] === "")
-        );
-    }
+    const oneValueEmpty = pair => {
+        return !(pair[0] === "" && pair[1] === "") && (pair[0] === "" || pair[1] === "");
+    };
 
     const saveDevice = () => {
         clearToast();
@@ -180,12 +164,12 @@ const Device = props => {
         if (invalid) {
             setDeviceErrors(invalid);
             ErrorToast("Failed to update device - " + invalid, "Error");
-            return
+            return;
         }
-       
+
         const {
             authenticationHeaders: updatedHeaders,
-            authenticationQuery: updatedQuery, 
+            authenticationQuery: updatedQuery,
             // eslint-disable-next-line no-unused-vars
             ...updatedRest
         } = updatedDevice;
@@ -198,9 +182,7 @@ const Device = props => {
                 .then(response => {
                     SuccessToast("Created new device", "Success");
                     refreshDevice(response);
-                    props.history.replace(
-                        `${deviceDashboardPath}/${response.id}`,
-                    );
+                    props.history.replace(`${deviceDashboardPath}/${response.id}`);
                 })
                 .catch(error => {
                     setDeviceErrors(error);
@@ -226,33 +208,29 @@ const Device = props => {
             // eslint-disable-next-line no-unused-vars
             ...updatedRest
         } = updatedDevice;
-        
-        var validHeaders = false
+
+        var validHeaders = false;
         // eslint-disable-next-line no-unused-vars
         for (const header of updatedHeaders) {
             if (oneValueEmpty(header)) {
-                validHeaders = "Authentication Headers must have both a key and value"
+                validHeaders = "Authentication Headers must have both a key and value";
             }
-        };
-        
-        var validQuery = false
+        }
+
+        var validQuery = false;
         // eslint-disable-next-line no-unused-vars
         for (const query of updatedQuery) {
             if (oneValueEmpty(query)) {
-                validQuery = "Authentication Query must have both a key and value"
+                validQuery = "Authentication Query must have both a key and value";
             }
-        };
-        
-        return validHeaders || validQuery || false
-    }
+        }
+
+        return validHeaders || validQuery || false;
+    };
 
     return (
         <Page
-            title={
-                blankDevice
-                    ? "New Device | Open Interop"
-                    : "Edit Device | Open Interop"
-            }
+            title={blankDevice ? "New Device | Open Interop" : "Edit Device | Open Interop"}
             heading={blankDevice ? "Create Device" : "Edit Device"}
             backlink={props.location.prevPath || deviceDashboardPath}
             actions={
@@ -260,7 +238,12 @@ const Device = props => {
                     {blankDevice ? null : (
                         <Button
                             $as={Link}
-                            to={{pathname: `/devices/${props.match.params.deviceId}/audit-logs`, state: {from: `/devices/${props.match.params.deviceId}/edit`}}}
+                            to={{
+                                pathname: `/devices/${props.match.params.deviceId}/audit-logs`,
+                                state: {
+                                    from: `/devices/${props.match.params.deviceId}/edit`,
+                                },
+                            }}
                             aria-label={"History"}
                         >
                             History
@@ -272,13 +255,8 @@ const Device = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this device?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this device?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteDevice}
@@ -286,10 +264,7 @@ const Device = props => {
                             secondaryActionText="Cancel"
                         />
                     )}
-                    <Button
-                        onClick={saveDevice}
-                        disabled={saveButtonDisabled()}
-                    >
+                    <Button onClick={saveDevice} disabled={saveButtonDisabled()}>
                         {blankDevice ? "Create" : "Save"}
                     </Button>
                 </>
@@ -306,18 +281,12 @@ const Device = props => {
                             label="Name"
                             key={`form-control-name`}
                             caption="required"
-                            error={
-                                deviceErrors.name
-                                    ? `Name ${deviceErrors.name}`
-                                    : ""
-                            }
+                            error={deviceErrors.name ? `Name ${deviceErrors.name}` : ""}
                         >
                             <Input
                                 id={`input-name`}
                                 value={updatedDevice.name}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("name", event.currentTarget.value)}
                                 error={deviceErrors.name}
                             />
                         </FormControl>
@@ -325,11 +294,7 @@ const Device = props => {
                             label="Site"
                             key={`form-control-site`}
                             caption="required"
-                            error={
-                                deviceErrors.site
-                                    ? `Site ${deviceErrors.site}`
-                                    : ""
-                            }
+                            error={deviceErrors.site ? `Site ${deviceErrors.site}` : ""}
                         >
                             <Select
                                 required
@@ -343,9 +308,7 @@ const Device = props => {
                                         ? setValue("siteId", event.value[0].id)
                                         : setValue("siteId", null);
                                 }}
-                                value={sites.filter(
-                                    item => item.id === updatedDevice.siteId,
-                                )}
+                                value={sites.filter(item => item.id === updatedDevice.siteId)}
                                 error={deviceErrors.site}
                             />
                         </FormControl>
@@ -353,9 +316,7 @@ const Device = props => {
                             label="Group"
                             key={`form-control-group`}
                             error={
-                                deviceErrors.deviceGroup
-                                    ? `Group ${deviceErrors.deviceGroup}`
-                                    : ""
+                                deviceErrors.deviceGroup ? `Group ${deviceErrors.deviceGroup}` : ""
                             }
                             caption="required"
                         >
@@ -368,17 +329,13 @@ const Device = props => {
                                 searchable={false}
                                 onChange={event => {
                                     if (event.value.length) {
-                                        setValue(
-                                            "deviceGroupId",
-                                            event.value[0].id,
-                                        );
+                                        setValue("deviceGroupId", event.value[0].id);
                                     } else {
                                         setValue("deviceGroupId", null);
                                     }
                                 }}
                                 value={groups.filter(
-                                    item =>
-                                        item.id === updatedDevice.deviceGroupId,
+                                    item => item.id === updatedDevice.deviceGroupId,
                                 )}
                                 error={deviceErrors.deviceGroup}
                             />
@@ -386,9 +343,7 @@ const Device = props => {
                         <FormControl label="Active" key={`form-control-active`}>
                             <Checkbox
                                 checked={updatedDevice.active}
-                                onChange={() =>
-                                    setValue("active", !updatedDevice.active)
-                                }
+                                onChange={() => setValue("active", !updatedDevice.active)}
                                 checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
@@ -401,10 +356,7 @@ const Device = props => {
                                 checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Timezone"
-                            key={`form-control-timezone`}
-                        >
+                        <FormControl label="Timezone" key={`form-control-timezone`}>
                             <Select
                                 placeholder="Select Timezone..."
                                 options={timezones}
@@ -413,45 +365,24 @@ const Device = props => {
                                 searchable={true}
                                 onChange={event => {
                                     event.value.length
-                                        ? setValue(
-                                              "timeZone",
-                                              event.value[0].id,
-                                          )
+                                        ? setValue("timeZone", event.value[0].id)
                                         : setValue("timeZone", null);
                                 }}
-                                value={timezones.filter(
-                                    item => item.id === updatedDevice.timeZone,
-                                )}
+                                value={timezones.filter(item => item.id === updatedDevice.timeZone)}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Latitude"
-                            key={`form-control-latitude`}
-                        >
+                        <FormControl label="Latitude" key={`form-control-latitude`}>
                             <Input
                                 id={`input-latitude`}
                                 value={updatedDevice.latitude || ""}
-                                onChange={event =>
-                                    setValue(
-                                        "latitude",
-                                        event.currentTarget.value,
-                                    )
-                                }
+                                onChange={event => setValue("latitude", event.currentTarget.value)}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Longitude"
-                            key={`form-control-longitude`}
-                        >
+                        <FormControl label="Longitude" key={`form-control-longitude`}>
                             <Input
                                 id={`input-Longitude`}
                                 value={updatedDevice.longitude || ""}
-                                onChange={event =>
-                                    setValue(
-                                        "longitude",
-                                        event.currentTarget.value,
-                                    )
-                                }
+                                onChange={event => setValue("longitude", event.currentTarget.value)}
                             />
                         </FormControl>
                         <AccordionWithCaption
@@ -469,15 +400,11 @@ const Device = props => {
                                 >
                                     <Input
                                         id={`input-authentication-path`}
-                                        value={
-                                            updatedDevice.authenticationPath ||
-                                            ""
-                                        }
+                                        value={updatedDevice.authenticationPath || ""}
                                         onChange={event =>
                                             setValue(
                                                 "authenticationPath",
-                                                event.currentTarget.value ||
-                                                    null,
+                                                event.currentTarget.value || null,
                                             )
                                         }
                                         error={deviceErrors.base}
@@ -490,24 +417,15 @@ const Device = props => {
                                 >
                                     <PairInput
                                         data={
-                                            updatedDevice.authenticationHeaders
-                                                .length < 1
+                                            updatedDevice.authenticationHeaders.length < 1
                                                 ? [["", ""]]
                                                 : updatedDevice.authenticationHeaders
                                         }
                                         updateData={data => {
-                                            if (
-                                                identicalArray(data, [["", ""]])
-                                            ) {
-                                                setValue(
-                                                    "authenticationHeaders",
-                                                    [],
-                                                );
+                                            if (identicalArray(data, [["", ""]])) {
+                                                setValue("authenticationHeaders", []);
                                             } else {
-                                                setValue(
-                                                    "authenticationHeaders",
-                                                    data,
-                                                );
+                                                setValue("authenticationHeaders", data);
                                             }
                                         }}
                                         refreshKey={updatedDevice.updatedAt}
@@ -521,24 +439,15 @@ const Device = props => {
                                 >
                                     <PairInput
                                         data={
-                                            updatedDevice.authenticationQuery
-                                                .length < 1
+                                            updatedDevice.authenticationQuery.length < 1
                                                 ? [["", ""]]
                                                 : updatedDevice.authenticationQuery
                                         }
                                         updateData={data => {
-                                            if (
-                                                identicalArray(data, [["", ""]])
-                                            ) {
-                                                setValue(
-                                                    "authenticationQuery",
-                                                    [],
-                                                );
+                                            if (identicalArray(data, [["", ""]])) {
+                                                setValue("authenticationQuery", []);
                                             } else {
-                                                setValue(
-                                                    "authenticationQuery",
-                                                    data,
-                                                );
+                                                setValue("authenticationQuery", data);
                                             }
                                         }}
                                         refreshKey={updatedDevice.updatedAt}
@@ -548,10 +457,12 @@ const Device = props => {
                             </div>
                         </AccordionWithCaption>
                         {!blankDevice && (
-                            <TemprAssociator 
+                            <TemprAssociator
                                 subtitle="Select temprs to associate with this device."
                                 selected={relations}
-                                filter={{ deviceGroupId: updatedDevice.deviceGroupId }}
+                                filter={{
+                                    deviceGroupId: updatedDevice.deviceGroupId,
+                                }}
                                 onSelect={tempr => {
                                     return OopCore.createDeviceTempr({
                                         deviceId: updatedDevice.id,
@@ -565,13 +476,10 @@ const Device = props => {
                                         });
                                 }}
                                 onDeselect={(tempr, rel) => {
-                                    return OopCore.deleteDeviceTempr(
-                                        rel.id,
-                                        {
-                                            deviceId: updatedDevice.id,
-                                            temprId: tempr.id,
-                                        }
-                                    )
+                                    return OopCore.deleteDeviceTempr(rel.id, {
+                                        deviceId: updatedDevice.id,
+                                        temprId: tempr.id,
+                                    })
                                         .then(() => {
                                             setRelations(relations.filter(v => v.id !== rel.id));
                                         })

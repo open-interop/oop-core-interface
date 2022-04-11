@@ -1,19 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faExternalLinkAlt,
-    faCheck,
-    faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExternalLinkAlt, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import { Button, KIND } from "baseui/button";
 
-import {
-    AccordionWithCaption,
-    PaginatedTable,
-    IconSpinner,
-} from "../Universal";
+import { AccordionWithCaption, PaginatedTable, IconSpinner } from "../Universal";
 
 import OopCore from "../../OopCore";
 
@@ -36,14 +28,15 @@ const TemprAssociator = props => {
             error={props.error}
         >
             <PaginatedTable
-                getData={async (pagination) => {
-                    const temprs = await OopCore.getTemprs({ ...pagination, ...(props.temprsFilter || {}) });
+                getData={async pagination => {
+                    const temprs = await OopCore.getTemprs({
+                        ...pagination,
+                        ...(props.temprsFilter || {}),
+                    });
 
                     return temprs;
                 }}
-                rowClassName={row =>
-                    `device-tempr${row.selected ? " selected" : ""}`
-                }
+                rowClassName={row => `device-tempr${row.selected ? " selected" : ""}`}
                 mapFunction={(columnName, content, row) => {
                     if (columnName === "action") {
                         return (
@@ -54,9 +47,7 @@ const TemprAssociator = props => {
                                     target="_blank"
                                     to={"/temprs/" + content}
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faExternalLinkAlt}
-                                    />
+                                    <FontAwesomeIcon icon={faExternalLinkAlt} />
                                 </Button>
                             </>
                         );
@@ -117,16 +108,16 @@ const TemprAssociator = props => {
                 }}
                 updateFilters={(key, value) => {
                     switch (key) {
-                    case "id":
+                        case "id":
                             return setTemprFilterId(value);
-                    case "name":
+                        case "name":
                             return setTemprFilterName(value);
-                    case "selected":
+                        case "selected":
                             if (value === null) {
                                 return setTemprFilterSelected("");
                             }
                             return setTemprFilterSelected(value);
-                    default:
+                        default:
                             return null;
                     }
                 }}
@@ -136,10 +127,7 @@ const TemprAssociator = props => {
                     if (column !== "action" && !loading) {
                         setLoading(tempr.id);
                         if (selected[tempr.id]) {
-                            await props.onDeselect(
-                                tempr,
-                                selected[tempr.id],
-                            );
+                            await props.onDeselect(tempr, selected[tempr.id]);
                         } else {
                             await props.onSelect(tempr);
                         }

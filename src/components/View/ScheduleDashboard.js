@@ -5,11 +5,7 @@ import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faCircle,
-    faEdit,
-    faHistory,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Chart, Pie } from "react-chartjs-2";
@@ -46,10 +42,7 @@ const StatusIndicator = props => {
 
     return (
         <span className={schedule.active ? active : inactive}>
-            <FontAwesomeIcon
-                className={schedule.active ? "blink" : ""}
-                icon={faCircle}
-            />
+            <FontAwesomeIcon className={schedule.active ? "blink" : ""} icon={faCircle} />
         </span>
     );
 };
@@ -71,9 +64,7 @@ const ScheduleDetails = props => {
         >
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Name">
-                        {schedule.name}
-                    </ListItemLabel>
+                    <ListItemLabel description="Name">{schedule.name}</ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
@@ -86,12 +77,8 @@ const ScheduleDetails = props => {
             <ListItem>
                 <div className="card-label">
                     <ListItemLabel description="Schedule Temprs">
-                        {
-                            schedule.scheduleTemprs
-                                ? schedule.scheduleTemprs
-                                : "No"
-                        }{" "}
-                        schedule temprs associated
+                        {schedule.scheduleTemprs ? schedule.scheduleTemprs : "No"} schedule temprs
+                        associated
                     </ListItemLabel>
                 </div>
             </ListItem>
@@ -107,11 +94,7 @@ const ScheduleMessages = props => {
     }
 
     if (!(schedule.messages && schedule.messages.length)) {
-        return (
-            <MaxCard title="Latest Messages">
-                No messages available
-            </MaxCard>
-        );
+        return <MaxCard title="Latest Messages">No messages available</MaxCard>;
     }
     return (
         <MaxCard
@@ -131,23 +114,16 @@ const ScheduleMessages = props => {
         >
             <Table
                 data={schedule.messages}
-                mapFunction={(
-                    columnName,
-                    content,
-                ) => {
+                mapFunction={(columnName, content) => {
                     if (columnName === "transmittedAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
                     }
                     return content;
                 }}
                 columns={[
                     {
-                        id:
-                            "uuid",
-                        name:
-                            "Message UUID",
+                        id: "uuid",
+                        name: "Message UUID",
                     },
                     {
                         id: "transmissionCount",
@@ -155,8 +131,7 @@ const ScheduleMessages = props => {
                     },
                     {
                         id: "createdAt",
-                        name:
-                            "Created at",
+                        name: "Created at",
                     },
                 ]}
             />
@@ -175,42 +150,33 @@ const ScheduleTimer = props => {
         <MaxCard title="Schedule Timer">
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Minute">
-                        {schedule.minute}
-                    </ListItemLabel>
+                    <ListItemLabel description="Minute">{schedule.minute}</ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Hour">
-                        {schedule.hour}
-                    </ListItemLabel>
+                    <ListItemLabel description="Hour">{schedule.hour}</ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Day Of Week">
-                        {schedule.dayOfWeek}
-                    </ListItemLabel>
+                    <ListItemLabel description="Day Of Week">{schedule.dayOfWeek}</ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Day of Month">
-                        {schedule.dayOfMonth}
-                    </ListItemLabel>
+                    <ListItemLabel description="Day of Month">{schedule.dayOfMonth}</ListItemLabel>
                 </div>
-            </ListItem><ListItem>
+            </ListItem>
+            <ListItem>
                 <div className="card-label">
                     <ListItemLabel description="Month of Year">
                         {schedule.monthOfYear}
                     </ListItemLabel>
                 </div>
-            </ListItem>         
+            </ListItem>
         </MaxCard>
     );
-
-
 };
 
 const ScheduleTransmissionStatus = props => {
@@ -221,11 +187,7 @@ const ScheduleTransmissionStatus = props => {
     }
 
     if (!(schedule.transmissions && schedule.transmissions.length)) {
-        return (
-            <MaxCard title="Transmission Status">
-                No transmission status available
-            </MaxCard>
-        );
+        return <MaxCard title="Transmission Status">No transmission status available</MaxCard>;
     }
 
     const generateCustomLabels = chart => {
@@ -237,30 +199,17 @@ const ScheduleTransmissionStatus = props => {
                 var ds = data.datasets[0];
                 var arc = meta.data[i];
                 var custom = (arc && arc.custom) || {};
-                var getValueAtIndexOrDefault =
-                    Chart.helpers.getValueAtIndexOrDefault;
+                var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
                 var arcOpts = chart.options.elements.arc;
                 var fill = custom.backgroundColor
                     ? custom.backgroundColor
-                    : getValueAtIndexOrDefault(
-                          ds.backgroundColor,
-                          i,
-                          arcOpts.backgroundColor,
-                      );
+                    : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
                 var stroke = custom.borderColor
                     ? custom.borderColor
-                    : getValueAtIndexOrDefault(
-                          ds.borderColor,
-                          i,
-                          arcOpts.borderColor,
-                      );
+                    : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
                 var bw = custom.borderWidth
                     ? custom.borderWidth
-                    : getValueAtIndexOrDefault(
-                          ds.borderWidth,
-                          i,
-                          arcOpts.borderWidth,
-                      );
+                    : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
                 return {
                     text: ds.data[i] + " " + label.toLowerCase(),
                     fillStyle: fill,
@@ -279,19 +228,11 @@ const ScheduleTransmissionStatus = props => {
             <div className="flex-row center">
                 <Pie
                     data={{
-                        labels: schedule.stats.map(
-                            stat => stat.label,
-                        ),
+                        labels: schedule.stats.map(stat => stat.label),
                         datasets: [
                             {
-                                data: schedule.stats.map(
-                                    stat =>
-                                        stat.value,
-                                ),
-                                backgroundColor: schedule.stats.map(
-                                    stat =>
-                                        stat.backgroundColor,
-                                ),
+                                data: schedule.stats.map(stat => stat.value),
+                                backgroundColor: schedule.stats.map(stat => stat.backgroundColor),
                             },
                         ],
                     }}
@@ -339,40 +280,32 @@ const ScheduleDashboard = props => {
                     originId: scheduleId,
                 },
                 "page[size]": 5,
-            })
-        ])
-            .then(([
-                schedule,
-                transmissions,
-                scheduleTemprs,
-                scheduleStats,
-                messages,
-            ]) => {
-                schedule.transmissions = transmissions.data;
-                schedule.scheduleTemprs = scheduleTemprs.data.length;
-                schedule.messages = messages.data;
+            }),
+        ]).then(([schedule, transmissions, scheduleTemprs, scheduleStats, messages]) => {
+            schedule.transmissions = transmissions.data;
+            schedule.scheduleTemprs = scheduleTemprs.data.length;
+            schedule.messages = messages.data;
 
+            const successfulTransmissions = {
+                label: "Successful",
+                value: scheduleStats.transmissions.successful || 0,
+                backgroundColor: styles.green,
+            };
+            const failedTransmissions = {
+                label: "Failed",
+                value: scheduleStats.transmissions.failed || 0,
+                backgroundColor: styles.red,
+            };
+            const skippedTransmissions = {
+                label: "Skipped",
+                value: scheduleStats.transmissions.skipped || 0,
+                backgroundColor: styles.orange,
+            };
 
-                const successfulTransmissions = {
-                    label: "Successful",
-                    value: scheduleStats.transmissions.successful || 0,
-                    backgroundColor: styles.green,
-                };
-                const failedTransmissions = {
-                    label: "Failed",
-                    value: scheduleStats.transmissions.failed || 0,
-                    backgroundColor: styles.red,
-                };
-                const skippedTransmissions = {
-                    label: "Skipped",
-                    value: scheduleStats.transmissions.skipped || 0,
-                    backgroundColor: styles.orange,
-                };
+            schedule.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
 
-                schedule.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
-
-                setSchedule(schedule);
-            });
+            setSchedule(schedule);
+        });
     }, [scheduleId]);
 
     return (
@@ -394,7 +327,12 @@ const ScheduleDashboard = props => {
                     <Button
                         $as={Link}
                         kind={KIND.minimal}
-                        to={{pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`, state: {from: `/schedules/${props.match.params.scheduleId}`}}}
+                        to={{
+                            pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`,
+                            state: {
+                                from: `/schedules/${props.match.params.scheduleId}`,
+                            },
+                        }}
                         endEnhancer={() => <FontAwesomeIcon icon={faHistory} />}
                         aria-label="History for this schedule"
                     >
@@ -403,14 +341,14 @@ const ScheduleDashboard = props => {
                 </>
             }
         >
-            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,12]} >
+            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5, 5, 12]}>
                 <Cell span={5}>
                     <ScheduleDetails schedule={schedule} />
                 </Cell>
-                <Cell span={[5,5,7]}>
+                <Cell span={[5, 5, 7]}>
                     <ScheduleTransmissionStatus schedule={schedule} />
                 </Cell>
-                <Cell span={[5,5,7]}>
+                <Cell span={[5, 5, 7]}>
                     <ScheduleMessages schedule={schedule} />
                 </Cell>
                 <Cell span={5}>

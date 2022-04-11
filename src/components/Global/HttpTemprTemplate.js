@@ -62,11 +62,18 @@ const HttpTemprTemplate = memo(props => {
                             searchable={false}
                             clearable={false}
                             onChange={event => {
-                                setValue("protocol", { language, "script": event.option.id});
+                                setValue("protocol", {
+                                    language,
+                                    script: event.option.id,
+                                });
                             }}
-                            value={[protocolOptions.find(
-                                item => item.id === (props.template.protocol && props.template.protocol.script),
-                            ) || "http"]}
+                            value={[
+                                protocolOptions.find(
+                                    item =>
+                                        item.id ===
+                                        (props.template.protocol && props.template.protocol.script),
+                                ) || "http",
+                            ]}
                             error={props.error}
                         />
                     );
@@ -87,11 +94,19 @@ const HttpTemprTemplate = memo(props => {
                             searchable={false}
                             clearable={false}
                             onChange={event => {
-                                setValue("requestMethod", { language, "script": event.option.id});
+                                setValue("requestMethod", {
+                                    language,
+                                    script: event.option.id,
+                                });
                             }}
-                            value={[requestMethodOptions.find(
-                                item => item.id === (props.template.requestMethod && props.template.requestMethod.script),
-                            ) || "GET"]}
+                            value={[
+                                requestMethodOptions.find(
+                                    item =>
+                                        item.id ===
+                                        (props.template.requestMethod &&
+                                            props.template.requestMethod.script),
+                                ) || "GET",
+                            ]}
                             error={props.error}
                         />
                     );
@@ -103,7 +118,7 @@ const HttpTemprTemplate = memo(props => {
                 label={"Headers"}
                 value={props.template.headers}
                 onChange={val => setValue("headers", val)}
-                languages={[ "json", "js" ]}
+                languages={["json", "js"]}
                 json={({ language, script }) => {
                     let headers;
 
@@ -117,7 +132,10 @@ const HttpTemprTemplate = memo(props => {
                         <PairInput
                             data={headers}
                             updateData={data => {
-                                setValue("headers", { language, "script": JSON.stringify(data) });
+                                setValue("headers", {
+                                    language,
+                                    script: JSON.stringify(data),
+                                });
                             }}
                         />
                     );

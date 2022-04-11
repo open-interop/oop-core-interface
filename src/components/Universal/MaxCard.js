@@ -12,19 +12,25 @@ const MaxCard = props => {
                 width: "100%",
                 height: "100%",
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
             })}
             overrides={{
-                Contents: { style: { flex: "1", display: "flex", flexDirection: "column" } },
+                Contents: {
+                    style: {
+                        flex: "1",
+                        display: "flex",
+                        flexDirection: "column",
+                    },
+                },
                 Body: {
                     style: {
                         flex: "1",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "stretch",
-                        flexDirection: "column"
-                    }
-                }
+                        flexDirection: "column",
+                    },
+                },
             }}
             title={props.title}
         >

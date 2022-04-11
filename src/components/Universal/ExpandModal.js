@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import { Button, KIND } from "baseui/button";
 
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
-} from "baseui/modal";
+import { Modal, ModalHeader, ModalBody, ModalFooter, ModalButton } from "baseui/modal";
 
 import AceEditor from "react-ace";
 
@@ -18,8 +12,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 
 import { InPlaceGifSpinner } from "../Universal";
 
-
-const getBody = (val) => {
+const getBody = val => {
     return (
         <AceEditor
             placeholder=""
@@ -30,16 +23,12 @@ const getBody = (val) => {
             readOnly={true}
             highlightActiveLine={true}
             maxLines={25}
-            minLines={Math.max(val.split(
-                    /\r\n|\r|\n/,
-                ).length + 2,
-                8,
-            )}
+            minLines={Math.max(val.split(/\r\n|\r|\n/).length + 2, 8)}
             value={val}
             style={{ width: "100%" }}
         />
     );
-}
+};
 
 const ExpandModal = props => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -50,31 +39,24 @@ const ExpandModal = props => {
             <Button kind={KIND.tertiary} onClick={() => setModalOpen(true)}>
                 View Value
             </Button>
-            <Modal 
-                onClose={() => setModalOpen(false)} 
-                isOpen={modalOpen} 
+            <Modal
+                onClose={() => setModalOpen(false)}
+                isOpen={modalOpen}
                 overrides={{
-                  Dialog: {
-                    style: {
-                      width: '60%',
-                      height: '80%',
-                      display: 'flex',
-                      flexDirection: 'column',
+                    Dialog: {
+                        style: {
+                            width: "60%",
+                            height: "80%",
+                            display: "flex",
+                            flexDirection: "column",
+                        },
                     },
-                  },
                 }}
             >
                 <ModalHeader>{props.title}</ModalHeader>
-                <ModalBody>
-                    {body || 
-                        <InPlaceGifSpinner />}
-                </ModalBody>
+                <ModalBody>{body || <InPlaceGifSpinner />}</ModalBody>
                 <ModalFooter>
-                    <ModalButton
-                        onClick={() => setModalOpen(false)}
-                    >
-                        Close
-                    </ModalButton>
+                    <ModalButton onClick={() => setModalOpen(false)}>Close</ModalButton>
                 </ModalFooter>
             </Modal>
         </>

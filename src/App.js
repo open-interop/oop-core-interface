@@ -6,13 +6,7 @@ import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
 import oopTheme from "./theme";
 
-import {
-    BrowserRouter,
-    Route,
-    Redirect,
-    withRouter,
-    Switch,
-} from "react-router-dom";
+import { BrowserRouter, Route, Redirect, withRouter, Switch } from "react-router-dom";
 
 import { createBrowserHistory } from "history";
 
@@ -20,12 +14,7 @@ import { GifSpinner } from "./components/Universal";
 import OopCore from "./OopCore";
 import "./styles/App.scss";
 import { QueryParamProvider } from "use-query-params";
-import {
-    MobileNavigation,
-    MobileHeader,
-    SideNavigation,
-    Header,
-} from "./components/View";
+import { MobileNavigation, MobileHeader, SideNavigation, Header } from "./components/View";
 
 const engine = new Styletron();
 const queryString = require("query-string");
@@ -33,9 +22,7 @@ const queryString = require("query-string");
 const Account = lazy(() => import("./components/View/Account"));
 const AuditLog = lazy(() => import("./components/View/AuditLog"));
 const AuditLogs = lazy(() => import("./components/View/AuditLogs"));
-const BlacklistEntries = lazy(() =>
-    import("./components/View/BlacklistEntries"),
-);
+const BlacklistEntries = lazy(() => import("./components/View/BlacklistEntries"));
 const BlacklistEntry = lazy(() => import("./components/View/BlacklistEntry"));
 const Dashboard = lazy(() => import("./components/View/Dashboard"));
 const Device = lazy(() => import("./components/View/Device"));
@@ -53,9 +40,7 @@ const Messages = lazy(() => import("./components/View/Messages"));
 const PageNotFound = lazy(() => import("./components/View/PageNotFound"));
 const ResetPassword = lazy(() => import("./components/View/ResetPassword"));
 const Schedule = lazy(() => import("./components/View/Schedule"));
-const ScheduleDashboard = lazy(() =>
-    import("./components/View/ScheduleDashboard"),
-);
+const ScheduleDashboard = lazy(() => import("./components/View/ScheduleDashboard"));
 const Schedules = lazy(() => import("./components/View/Schedules"));
 const Site = lazy(() => import("./components/View/Site"));
 const Sites = lazy(() => import("./components/View/Sites"));
@@ -199,31 +184,17 @@ class App extends Component {
                             <Route
                                 path="/login"
                                 exact
-                                render={props =>
-                                    this.getComponent(hasUser, Login, props)
-                                }
+                                render={props => this.getComponent(hasUser, Login, props)}
                             />
                             <Route
                                 path="/forgot-password"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        hasUser,
-                                        ForgotPassword,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(hasUser, ForgotPassword, props)}
                             />
                             <Route
                                 path="/reset-password"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        hasUser,
-                                        ResetPassword,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(hasUser, ResetPassword, props)}
                             />
                             <Route
                                 path="/"
@@ -265,78 +236,42 @@ class App extends Component {
                             <Route
                                 path="/devices/:deviceId/edit"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Device, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Device, props)}
                             />
                             <Route
                                 path="/transmissions"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        Transmissions,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, Transmissions, props)}
                             />
                             <Route
                                 path="/transmissions/:transmissionId"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        Transmission,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, Transmission, props)}
                             />
                             <Route
                                 path="/device-groups"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        DeviceGroups,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, DeviceGroups, props)}
                             />
                             <Route
                                 path="/device-groups/:deviceGroupId"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        DeviceGroup,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, DeviceGroup, props)}
                             />
                             <Route
                                 path="/temprs"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Temprs, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Temprs, props)}
                             />
                             <Route
                                 path="/temprs/:temprId/map"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, TemprMap, props)
-                                }
+                                render={props => this.getComponent(!hasUser, TemprMap, props)}
                             />
                             <Route
                                 path="/schedules"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        Schedules,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, Schedules, props)}
                             />
                             <Route
                                 path="/schedules/:scheduleId"
@@ -354,66 +289,44 @@ class App extends Component {
                             <Route
                                 path="/schedules/:scheduleId/edit"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Schedule, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Schedule, props)}
                             />
                             <Route
                                 path="/layers"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Layers, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Layers, props)}
                             />
                             <Route
                                 path="/layers/:layerId"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Layer, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Layer, props)}
                             />
                             <Route
                                 path="/blacklist-entries"
                                 exact
                                 render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        BlacklistEntries,
-                                        props,
-                                    )
+                                    this.getComponent(!hasUser, BlacklistEntries, props)
                                 }
                             />
                             <Route
                                 path="/blacklist-entries/:blacklistEntryId"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        BlacklistEntry,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, BlacklistEntry, props)}
                             />
                             <Route
                                 path="/temprs/:temprId"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Tempr, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Tempr, props)}
                             />
                             <Route
                                 path="/users"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Users, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Users, props)}
                             />
                             <Route
                                 path="/users/:userId/edit"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, User, props)
-                                }
+                                render={props => this.getComponent(!hasUser, User, props)}
                             />
                             <Route
                                 path="/users/:userId"
@@ -421,9 +334,7 @@ class App extends Component {
                                 render={props =>
                                     this.getComponent(
                                         !hasUser,
-                                        props.match.params.userId === "new"
-                                            ? User
-                                            : UserDashboard,
+                                        props.match.params.userId === "new" ? User : UserDashboard,
                                         props,
                                     )
                                 }
@@ -434,88 +345,54 @@ class App extends Component {
                                 render={props => {
                                     const user = this.state.user;
 
-                                    return this.getComponent(
-                                        !hasUser,
-                                        UserDashboard,
-                                        {
-                                            ...props,
-                                            user,
-                                        },
-                                    );
+                                    return this.getComponent(!hasUser, UserDashboard, {
+                                        ...props,
+                                        user,
+                                    });
                                 }}
                             />
                             <Route
                                 path="/sites"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Sites, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Sites, props)}
                             />
                             <Route
                                 path="/sites/:siteId"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Site, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Site, props)}
                             />
                             <Route
                                 path="/account"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Account, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Account, props)}
                             />
                             <Route
                                 path="/messages"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Messages, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Messages, props)}
                             />
                             <Route
                                 path="/messages/:messageId"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, Message, props)
-                                }
+                                render={props => this.getComponent(!hasUser, Message, props)}
                             />
                             <Route
                                 path="/global-history"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        GlobalHistory,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, GlobalHistory, props)}
                             />
                             <Route
                                 path="/:componentType/:componentId/audit-logs"
                                 exact
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        AuditLogs,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, AuditLogs, props)}
                             />
                             <Route
                                 path="/audit-logs/:auditLogId"
                                 exact
-                                render={props =>
-                                    this.getComponent(!hasUser, AuditLog, props)
-                                }
+                                render={props => this.getComponent(!hasUser, AuditLog, props)}
                             />
                             <Route
-                                render={props =>
-                                    this.getComponent(
-                                        !hasUser,
-                                        PageNotFound,
-                                        props,
-                                    )
-                                }
+                                render={props => this.getComponent(!hasUser, PageNotFound, props)}
                             />
                         </Switch>
                     </Suspense>
@@ -528,11 +405,7 @@ class App extends Component {
         return (
             <StyletronProvider value={engine}>
                 <BaseProvider theme={oopTheme}>
-                    {this.state.isLoading ? (
-                        <GifSpinner />
-                    ) : (
-                        this.renderRoutes()
-                    )}
+                    {this.state.isLoading ? <GifSpinner /> : this.renderRoutes()}
                 </BaseProvider>
             </StyletronProvider>
         );

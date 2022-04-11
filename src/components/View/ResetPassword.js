@@ -42,9 +42,7 @@ const ResetPassword = props => {
                         type="password"
                         autoComplete="new-password"
                         value={password}
-                        onChange={event =>
-                            setPassword(event.currentTarget.value)
-                        }
+                        onChange={event => setPassword(event.currentTarget.value)}
                         placeholder="New Password"
                     />
                 </FormControl>

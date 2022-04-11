@@ -18,11 +18,7 @@ const Modal = props => {
 
     return (
         <>
-            <Button
-                aria-label="Open modal"
-                onClick={() => setIsOpen(true)}
-                kind={props.buttonKind}
-            >
+            <Button aria-label="Open modal" onClick={() => setIsOpen(true)} kind={props.buttonKind}>
                 {props.buttonText}
             </Button>
 

@@ -27,7 +27,7 @@ const Schedules = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(pagination) => OopCore.getSchedules(pagination)}
+                getData={pagination => OopCore.getSchedules(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (
@@ -38,9 +38,7 @@ const Schedules = memo(props => {
                                     to={`/schedules/${content}`}
                                     aria-label="View schedule dashboard"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faChartPie}
-                                    />
+                                    <FontAwesomeIcon icon={faChartPie} />
                                 </Button>
                                 <Button
                                     $as={Link}
@@ -51,22 +49,18 @@ const Schedules = memo(props => {
                                     }}
                                     aria-label="Edit schedule"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     $as={Link}
                                     kind={KIND.minimal}
                                     to={{
                                         pathname: `/schedules/${content}/audit-logs`,
-                                        state: {from: `/schedules`},
+                                        state: { from: `/schedules` },
                                     }}
                                     aria-label="View schedule history"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
                                 <Button
                                     $as={Link}
@@ -74,9 +68,7 @@ const Schedules = memo(props => {
                                     to={`/messages?filter=originType-Schedule_originId-${content}`}
                                     aria-label="View schedule messages"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faListUl}
-                                    />
+                                    <FontAwesomeIcon icon={faListUl} />
                                 </Button>
                             </>
                         );

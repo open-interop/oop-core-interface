@@ -63,16 +63,13 @@ const getDateRange = (startDate, endDate) => {
 };
 
 const getDaysAgo = (now, lastMessagesRange, series) => {
-    let dayDifference = 0
+    let dayDifference = 0;
 
     for (let i = lastMessagesRange.length - 1; i > 0; i--) {
         if (series.messages[lastMessagesRange[i].date]) {
             break;
         } else {
-            dayDifference = moment(now).diff(
-                moment(lastMessagesRange[i - 1].date),
-                "days",
-            );
+            dayDifference = moment(now).diff(moment(lastMessagesRange[i - 1].date), "days");
         }
     }
 
@@ -86,9 +83,16 @@ const getDaysAgo = (now, lastMessagesRange, series) => {
 const CenteredTitle = props => {
     const [css, theme] = useStyletron();
 
-    return <div className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
-        {props.children}
-    </div>
+    return (
+        <div
+            className={css({
+                textAlign: "center",
+                marginBottom: theme.sizing.scale500,
+            })}
+        >
+            {props.children}
+        </div>
+    );
 };
 
 const FailedTransmissions = props => {
@@ -125,11 +129,7 @@ const FailedTransmissions = props => {
     };
 
     return (
-        <MaxCard title={
-            <CenteredTitle>
-                Failed Transmissions
-            </CenteredTitle>
-        } >
+        <MaxCard title={<CenteredTitle>Failed Transmissions</CenteredTitle>}>
             <div>
                 <DataProvider
                     loadingFallback={<InPlaceGifSpinner />}
@@ -138,21 +138,19 @@ const FailedTransmissions = props => {
                     renderData={() => {
                         return (
                             <Grid gridColumns={12}>
-                                <Cell span={[12, 6, 6]} >
+                                <Cell span={[12, 6, 6]}>
                                     <DataCircle
-                                        value={
-                                            failedTransmissions.thirtyDays
-                                        }
+                                        value={failedTransmissions.thirtyDays}
                                         color={styles.lightBlue}
                                         subtitle="in the last 30 days"
                                     />
                                 </Cell>
-                                <Cell span={[12, 6, 6]} >
-                                <DataCircle
-                                    value={failedTransmissions.oneDay}
-                                    color={styles.orange}
-                                    subtitle="in the last 24 hours"
-                                />
+                                <Cell span={[12, 6, 6]}>
+                                    <DataCircle
+                                        value={failedTransmissions.oneDay}
+                                        color={styles.orange}
+                                        subtitle="in the last 24 hours"
+                                    />
                                 </Cell>
                             </Grid>
                         );
@@ -168,20 +166,22 @@ const Messages = props => {
 
     const { height, width } = useWindowDimensions();
 
-    var showLegend = ((width < 1100 && width > 900) || (width > 1500)) && height > 800;
+    var showLegend = ((width < 1100 && width > 900) || width > 1500) && height > 800;
 
     return (
-        <MaxCard title={
-            <CenteredTitle>
-                Messages
-            </CenteredTitle>
-        } >
-            {props.messageTimeline === null ?
-                <InPlaceGifSpinner /> :
+        <MaxCard title={<CenteredTitle>Messages</CenteredTitle>}>
+            {props.messageTimeline === null ? (
+                <InPlaceGifSpinner />
+            ) : (
                 <>
                     <div className="center">
                         {!props.messageTimeline.length && (
-                            <div style={{textAlign: 'center', position: 'relative'}}>
+                            <div
+                                style={{
+                                    textAlign: "center",
+                                    position: "relative",
+                                }}
+                            >
                                 No message data available
                             </div>
                         )}
@@ -220,24 +220,16 @@ const Messages = props => {
                         <Bar
                             data={{
                                 labels: timelineRange.map(date => date.label),
-                                datasets: props.messageTimeline.map(
-                                    (series, index) => {
-                                        return {
-                                            label: series.originName,
-                                            data: timelineRange.map(
-                                                date =>
-                                                    series.messages[
-                                                        date.date
-                                                    ] || 0,
-                                            ),
-                                            backgroundColor:
-                                                availableColours[
-                                                    index %
-                                                        availableColours.length
-                                                ],
-                                        };
-                                    },
-                                ),
+                                datasets: props.messageTimeline.map((series, index) => {
+                                    return {
+                                        label: series.originName,
+                                        data: timelineRange.map(
+                                            date => series.messages[date.date] || 0,
+                                        ),
+                                        backgroundColor:
+                                            availableColours[index % availableColours.length],
+                                    };
+                                }),
                             }}
                             options={{
                                 scales: {
@@ -245,9 +237,9 @@ const Messages = props => {
                                         {
                                             stacked: true,
                                             ticks: {
-                                                beginAtZero: true
-                                            }
-                                        }
+                                                beginAtZero: true,
+                                            },
+                                        },
                                     ],
                                     xAxes: [{ stacked: true }],
                                 },
@@ -256,12 +248,12 @@ const Messages = props => {
                                 },
                                 legend: {
                                     display: showLegend,
-                                }
+                                },
                             }}
                         />
                     </div>
                 </>
-            }
+            )}
         </MaxCard>
     );
 };
@@ -278,65 +270,50 @@ const DaysSinceLastMessage = props => {
     });
 
     return (
-        <MaxCard
-            title={
-                <CenteredTitle>
-                    Days since last message
-                </CenteredTitle>
-            }
-        >
+        <MaxCard title={<CenteredTitle>Days since last message</CenteredTitle>}>
             <div className={center}>
-            {messagesByLastDay === null
-                ? <InPlaceGifSpinner />
-                : <>
-                    {!messagesByLastDay.length && (
-                        <div className="chart-overlay">
-                            No message data available
-                        </div>
-                    )}
-                    <Bar
-                        data={{
-                            labels: messagesByLastDay.map(
-                                origin => origin.originName,
-                            ),
-                            datasets: [
-                                {
-                                    data: messagesByLastDay.map(
-                                        origin => origin.daysAgo,
-                                    ),
-                                    backgroundColor: messagesByLastDay.map(
-                                        (currentValue, index) =>
-                                            availableColours[
-                                                index %
-                                                    availableColours.length
-                                            ],
-                                    ),
-                                },
-                            ],
-                        }}
-                        options={{
-                            scales: {
-                                yAxes: [
+                {messagesByLastDay === null ? (
+                    <InPlaceGifSpinner />
+                ) : (
+                    <>
+                        {!messagesByLastDay.length && (
+                            <div className="chart-overlay">No message data available</div>
+                        )}
+                        <Bar
+                            data={{
+                                labels: messagesByLastDay.map(origin => origin.originName),
+                                datasets: [
                                     {
-                                        ticks: {
-                                            beginAtZero: true,
-                                            stepSize: 1,
-                                            callback: value =>
-                                                value < 7 ? value : "7+",
-                                        },
+                                        data: messagesByLastDay.map(origin => origin.daysAgo),
+                                        backgroundColor: messagesByLastDay.map(
+                                            (currentValue, index) =>
+                                                availableColours[index % availableColours.length],
+                                        ),
                                     },
                                 ],
-                            },
-                            legend: {
-                                display: false,
-                            },
-                            tooltips: {
-                                enabled: false,
-                            },
-                        }}
-                    />
-                </>
-            }
+                            }}
+                            options={{
+                                scales: {
+                                    yAxes: [
+                                        {
+                                            ticks: {
+                                                beginAtZero: true,
+                                                stepSize: 1,
+                                                callback: value => (value < 7 ? value : "7+"),
+                                            },
+                                        },
+                                    ],
+                                },
+                                legend: {
+                                    display: false,
+                                },
+                                tooltips: {
+                                    enabled: false,
+                                },
+                            }}
+                        />
+                    </>
+                )}
             </div>
         </MaxCard>
     );
@@ -353,26 +330,24 @@ const Stats = props => {
             return;
         }
 
-        Promise.all([
-            OopCore.getDeviceGroups(),
-            OopCore.getTemprs(),
-        ]).then(([deviceGroupsResponse, temprsResponse]) => {
-            setGeneralStats({
-                deviceGroups: deviceGroupsResponse.totalRecords,
-                devices: devices.length,
-                temprs: temprsResponse.totalRecords,
-                schedules: schedules.length
-            });
-        });
+        Promise.all([OopCore.getDeviceGroups(), OopCore.getTemprs()]).then(
+            ([deviceGroupsResponse, temprsResponse]) => {
+                setGeneralStats({
+                    deviceGroups: deviceGroupsResponse.totalRecords,
+                    devices: devices.length,
+                    temprs: temprsResponse.totalRecords,
+                    schedules: schedules.length,
+                });
+            },
+        );
     }, [devices, schedules]);
 
     return (
-        <MaxCard title={
-            <CenteredTitle>Stats</CenteredTitle>
-        } >
+        <MaxCard title={<CenteredTitle>Stats</CenteredTitle>}>
             <div>
-                {generalStats === null ?
-                    <InPlaceGifSpinner /> :
+                {generalStats === null ? (
+                    <InPlaceGifSpinner />
+                ) : (
                     <Grid gridColumns={12}>
                         <Cell span={[12, 6, 6, 3]}>
                             <DataCircle
@@ -403,7 +378,7 @@ const Stats = props => {
                             />
                         </Cell>
                     </Grid>
-                }
+                )}
             </div>
         </MaxCard>
     );
@@ -437,36 +412,35 @@ const Dashboard = props => {
 
     const lastMessagesRange = getDateRange(eightDaysAgo, now);
 
-    const messagesByLastDay = messageTimeline ?
-        messageTimeline
-            .map(series => getDaysAgo(now, lastMessagesRange, series)) :
-            null;
+    const messagesByLastDay = messageTimeline
+        ? messageTimeline.map(series => getDaysAgo(now, lastMessagesRange, series))
+        : null;
 
     const getAllOrigins = () => {
         return Promise.all([
-            OopCore.getDevices({"page[size]": -1}),
-            OopCore.getSchedules({"page[size]": -1,}),
+            OopCore.getDevices({ "page[size]": -1 }),
+            OopCore.getSchedules({ "page[size]": -1 }),
         ]).then(([devices, schedules]) => {
-                setSchedules(schedules.data);
-                setDevices(devices.data);
-                var scheduleOrigins = schedules.data.map((s) => {
-                    var oData = {};
-                    oData.id = s.id;
-                    oData.name = s.name;
-                    oData.siteId = null;
-                    oData.type = "Schedule";
-                    return oData;
-                });
-                var deviceOrigins = devices.data.map((d) => {
-                    var oData = {};
-                    oData.id = d.id;
-                    oData.name = d.name;
-                    oData.siteId = d.siteId;
-                    oData.type = "Device";
-                    return oData;
-                });
-                setOrigins(scheduleOrigins.concat(deviceOrigins));
+            setSchedules(schedules.data);
+            setDevices(devices.data);
+            var scheduleOrigins = schedules.data.map(s => {
+                var oData = {};
+                oData.id = s.id;
+                oData.name = s.name;
+                oData.siteId = null;
+                oData.type = "Schedule";
+                return oData;
             });
+            var deviceOrigins = devices.data.map(d => {
+                var oData = {};
+                oData.id = d.id;
+                oData.name = d.name;
+                oData.siteId = d.siteId;
+                oData.type = "Device";
+                return oData;
+            });
+            setOrigins(scheduleOrigins.concat(deviceOrigins));
+        });
     };
 
     const getMessagesByDate = origin => {
@@ -478,20 +452,18 @@ const Dashboard = props => {
             },
         }).then(response => {
             response.originId = origin.id;
-            response.originName = origin.name + ' (' + origin.type[0] + ')' ;
+            response.originName = origin.name + " (" + origin.type[0] + ")";
             return response;
         });
     };
 
     const getMessageTimeline = (site, origins) => {
         setMessageTimeline(null);
-        const originsForSite = site
-            ? origins.filter(origin => origin.siteId === site.id)
-            : origins;
+        const originsForSite = site ? origins.filter(origin => origin.siteId === site.id) : origins;
 
-        return Promise.all(
-            originsForSite.map(origin => getMessagesByDate(origin)),
-        ).then(timeline => setMessageTimeline(timeline));
+        return Promise.all(originsForSite.map(origin => getMessagesByDate(origin))).then(timeline =>
+            setMessageTimeline(timeline),
+        );
     };
 
     useEffect(() => {
@@ -508,11 +480,7 @@ const Dashboard = props => {
     }, [origins, props.site]);
 
     return (
-        <Grid
-            behavior={BEHAVIOR.fluid}
-            gridGaps={[32]}
-            gridColumns={[6,6,12]}
-        >
+        <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[6, 6, 12]}>
             <Cell span={6}>
                 <Messages
                     dateFrom={dateFrom}
@@ -523,15 +491,13 @@ const Dashboard = props => {
                 />
             </Cell>
             <Cell span={6}>
-                <DaysSinceLastMessage
-                    messagesByLastDay={messagesByLastDay}
-                />
+                <DaysSinceLastMessage messagesByLastDay={messagesByLastDay} />
             </Cell>
             <Cell span={6}>
                 <FailedTransmissions now={now} />
             </Cell>
             <Cell span={6}>
-                <Stats devices={devices} schedules={schedules}/>
+                <Stats devices={devices} schedules={schedules} />
             </Cell>
         </Grid>
     );

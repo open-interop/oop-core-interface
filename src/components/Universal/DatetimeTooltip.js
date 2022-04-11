@@ -9,12 +9,13 @@ import moment from "moment";
 const DatetimeTooltip = props => {
     const formatISODate = date => {
         const d = new Date();
-        const dtf = Intl.DateTimeFormat(undefined, {timeZoneName: 'short'});
-        const timezone = " " + dtf.formatToParts(d).find((part) => part.type === 'timeZoneName').value;
+        const dtf = Intl.DateTimeFormat(undefined, { timeZoneName: "short" });
+        const timezone =
+            " " + dtf.formatToParts(d).find(part => part.type === "timeZoneName").value;
 
         if (date) {
-            const date_obj = parseISO(date);
-            return moment(date_obj).format('YYYY-MM-DD HH:mm:ss') + timezone;
+            const dateObj = parseISO(date);
+            return moment(dateObj).format("YYYY-MM-DD HH:mm:ss") + timezone;
         } else {
             return null;
         }
@@ -23,56 +24,33 @@ const DatetimeTooltip = props => {
     return (
         <StatefulTooltip
             accessibilityType={"tooltip"}
-            content={
-                props.time || ""
-            }
+            content={props.time || ""}
             showArrow={true}
             placement="right"
             overrides={{
                 Body: {
                     style: ({ $theme }) => ({
-                        backgroundColor:
-                            $theme.colors.black,
-                        borderTopLeftRadius:
-                            $theme.borders
-                                .radius200,
-                        borderTopRightRadius:
-                            $theme.borders
-                                .radius200,
-                        borderBottomRightRadius:
-                            $theme.borders
-                                .radius200,
-                        borderBottomLeftRadius:
-                            $theme.borders
-                                .radius200,
+                        backgroundColor: $theme.colors.black,
+                        borderTopLeftRadius: $theme.borders.radius200,
+                        borderTopRightRadius: $theme.borders.radius200,
+                        borderBottomRightRadius: $theme.borders.radius200,
+                        borderBottomLeftRadius: $theme.borders.radius200,
                     }),
                 },
                 Inner: {
                     style: ({ $theme }) => ({
-                        backgroundColor:
-                            $theme.colors.black,
-                        borderTopLeftRadius:
-                            $theme.borders
-                                .radius200,
-                        borderTopRightRadius:
-                            $theme.borders
-                                .radius200,
-                        borderBottomRightRadius:
-                            $theme.borders
-                                .radius200,
-                        borderBottomLeftRadius:
-                            $theme.borders
-                                .radius200,
-                        color:
-                            $theme.colors.white,
+                        backgroundColor: $theme.colors.black,
+                        borderTopLeftRadius: $theme.borders.radius200,
+                        borderTopRightRadius: $theme.borders.radius200,
+                        borderBottomRightRadius: $theme.borders.radius200,
+                        borderBottomLeftRadius: $theme.borders.radius200,
+                        color: $theme.colors.white,
                         fontSize: "14px",
                     }),
                 },
             }}
         >
-            {formatISODate(
-                props.time,
-            ) || "No data available"}
+            {formatISODate(props.time) || "No data available"}
         </StatefulTooltip>
     );
 };

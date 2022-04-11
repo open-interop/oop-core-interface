@@ -30,11 +30,9 @@ const Account = props => {
     };
 
     const getData = () => {
-        return Promise.resolve(
-                    OopCore.getAccount()
-                ).then(acc => {
-                    return acc;
-                });
+        return Promise.resolve(OopCore.getAccount()).then(acc => {
+            return acc;
+        });
     };
 
     const saveAccount = () => {
@@ -50,7 +48,6 @@ const Account = props => {
                 ErrorToast("Failed to update account", "Error");
             });
     };
-
 
     const StatusIndicator = props => {
         const accActive = props;
@@ -73,10 +70,7 @@ const Account = props => {
 
         return (
             <span className={accActive ? active : inactive}>
-                <FontAwesomeIcon
-                    className={accActive ? "blink" : ""}
-                    icon={faCircle}
-                />
+                <FontAwesomeIcon className={accActive ? "blink" : ""} icon={faCircle} />
             </span>
         );
     };
@@ -96,10 +90,7 @@ const Account = props => {
                     </Button>
                     <Button
                         onClick={saveAccount}
-                        disabled={identicalObject(
-                            account,
-                            updatedAccount,
-                        )}
+                        disabled={identicalObject(account, updatedAccount)}
                         aria-label={"Update account"}
                     >
                         Save
@@ -117,17 +108,13 @@ const Account = props => {
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
-                            error={
-                                accountErrors.name ? `Name ${accountErrors.name}` : ""
-                            }
+                            error={accountErrors.name ? `Name ${accountErrors.name}` : ""}
                             caption="required"
                         >
                             <Input
                                 id={"input-name"}
                                 value={updatedAccount.name || ""}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("name", event.currentTarget.value)}
                                 error={accountErrors.name}
                             />
                         </FormControl>
@@ -142,10 +129,7 @@ const Account = props => {
                                 disabled={true}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Created at"
-                            key={"form-control-group-created-at"}
-                        >
+                        <FormControl label="Created at" key={"form-control-group-created-at"}>
                             <Input
                                 id={"input-created-at"}
                                 value={updatedAccount.createdAt || ""}
@@ -157,7 +141,9 @@ const Account = props => {
                             key={"form-control-group-path"}
                             caption="required"
                             error={
-                                accountErrors.interfacePath ? `Interface Path ${accountErrors.interfacePath}` : ""
+                                accountErrors.interfacePath
+                                    ? `Interface Path ${accountErrors.interfacePath}`
+                                    : ""
                             }
                         >
                             <Input
@@ -174,7 +160,9 @@ const Account = props => {
                             key={"form-control-group-port"}
                             caption="required"
                             error={
-                                accountErrors.interfacePort ? `Interface Port ${accountErrors.interfacePort}` : ""
+                                accountErrors.interfacePort
+                                    ? `Interface Port ${accountErrors.interfacePort}`
+                                    : ""
                             }
                         >
                             <Input
@@ -191,7 +179,9 @@ const Account = props => {
                             key={"form-control-group-scheme"}
                             caption="required"
                             error={
-                                accountErrors.interfaceScheme ? `Interface Scheme ${accountErrors.interfaceScheme}` : ""
+                                accountErrors.interfaceScheme
+                                    ? `Interface Scheme ${accountErrors.interfaceScheme}`
+                                    : ""
                             }
                         >
                             <Input
