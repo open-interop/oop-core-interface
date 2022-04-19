@@ -32,15 +32,22 @@ div[id="root"] {
             background-color: $color-white;
             padding: 1.5rem;
         }
-    }
-    .content-mobile {
-        background-color: $oop-grey;
-        flex: 1;
-        padding: 26vh 0.5rem 0.5rem;
 
-        .content-wrapper {
-            background-color: $color-white;
-            padding: 1vmin;
+        @media screen and (max-width: 650px) {
+            padding: 26vh 0.5rem 0.5rem;
+            margin-left: unset;
+
+            .content-wrapper {
+                padding: 1vmin;
+            }
+
+            .page-heading {
+                font-size: 8vmin;
+            }
+
+            .action-header {
+                flex-direction: column;
+            }
         }
     }
 }
