@@ -2,7 +2,11 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.0
+
 jobs:
   build:
     docker:
@@ -14,24 +18,209 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
+      - image: rabbitmq:3.8.3
+        name: rabbit
+
+      - image: "openinterop/oop-core:dev"
+        name: oop-core
+        entrypoint:
+          - \"\"bin/rails db:create\"\"
+          - \"\"bin/rails db:migrate\"\"
+          - \"\"bin/rails server -b 0.0.0.0\"\"
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_CORE_SCHEME: http://
+          - OOP_CORE_PORT: 9001
+          - OOP_CORE_PATH: /
+          - PORT: 9001
+          - OOP_CORE_INTERFACE_SCHEME: http://
+          - OOP_CORE_INTERFACE_PORT: 80
+          - OOP_CORE_INTERFACE_PATH: /
+          - OOP_CORE_FROM_ADDRESS: oop@bluefrontier.co.uk
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
+          - DATABASE_HOST: database
+          - POSTGRES_USER: postgres
+          - POSTGRES_PASSWORD: password
+          - POSTGRES_DB: oop_core_development
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+          - DATABASE_URL: postgres://postgres:password@database/oop_core_development
+
+      #- image: "openinterop/oop-core:dev"
+        #name: oop-core-transmissions
+        #command: bin/rails runner TransmissionQueue.retrieve_transmissions
+        #environment:
+          #- NODE_ENV: production
+          #- RAILS_ENV: production
+          #- OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          #- RABBITMQ_URL: amqp://guest:guest@rabbit
+          #- OOP_ERROR_EXCHANGE_NAME: oop.errors
+          #- OOP_JSON_ERROR_Q: oop.errors.json
+          #- OOP_EXCHANGE_NAME: oop
+          #- OOP_QUEUE_PREFETCH_LIMIT: 5
+          #- OOP_CORE_SCHEME: http://
+          #- OOP_CORE_PORT: 9001
+          #- OOP_CORE_PATH: /
+          #- PORT: 9001
+          #- OOP_CORE_INTERFACE_SCHEME: http://
+          #- OOP_CORE_INTERFACE_PORT: 80
+          #- OOP_CORE_INTERFACE_PATH: /
+          #- OOP_CORE_FROM_ADDRESS: oop@bluefrontier.co.uk
+          #- OOP_CORE_API_URL: http://localhost:9001/services/v1
+          #- DATABASE_HOST: database
+          #- POSTGRES_USER: postgres
+          #- POSTGRES_PASSWORD: password
+          #- POSTGRES_DB: oop_core_development
+          #- SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+          #- DATABASE_URL: postgres://postgres:password@database/oop_core_development
+
+      - image: "openinterop/oop-gateway:latest"
+        name: oop-gateway
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_GATEWAY_OUTPUT_Q: oop.noauth.raw_messages
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
+          - OOP_LISTEN_PORT: 3000
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+
+      - image: "openinterop/oop-tempr:latest"
+        name: oop-tempr
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_TEMPR_INPUT_Q: oop.hasauth.messages
+          - OOP_TEMPR_OUTPUT_Q: oop.hasauth.temprs
+          - OOP_CORE_TOKEN: foobar
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+
+      - image: "openinterop/oop-renderer:latest"
+        name: oop-renderer
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_RENDERER_INPUT_Q: oop.hasauth.temprs
+          - OOP_ENDPOINTS_EXCHANGE_NAME: oop.endpoints
+          - OOP_CORE_RESPONSE_Q: oop.core.transmissions
+          - OOP_ENDPOINT_Q: oop.endpoints
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+
+      - image: "openinterop/oop-endpoints-http:latest"
+        name: oop-endpoints-http
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_ENDPOINTS_HTTP_OUTPUT_Q: oop.hasauth.relay
+          - OOP_REQUEST_TIMEOUT: 1000
+          - OOP_ENDPOINTS_HTTP_MAX_RETRIES: 3
+          - OOP_CORE_RESPONSE_Q: oop.core.transmissions
+          - OOP_ENDPOINTS_EXCHANGE_NAME: oop.endpoints
+          - OOP_ENDPOINT_Q: oop.endpoints
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+
+      - image: "openinterop/oop-relay:latest"
+        name: oop-relay
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_RELAY_INPUT_Q: oop.hasauth.relay
+          - OOP_RECURSIVE_TEMPR_Q: oop.hasauth.temprs
+          - OOP_CORE_RESPONSE_Q: oop.core.transmissions
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+
+      - image: "openinterop/oop-authenticator:dev"
+        name: oop-authenticator
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - OOP_AMQP_ADDRESS: amqp://guest:guest@rabbit
+          - RABBITMQ_URL: amqp://guest:guest@rabbit
+          - OOP_ERROR_EXCHANGE_NAME: oop.errors
+          - OOP_JSON_ERROR_Q: oop.errors.json
+          - OOP_EXCHANGE_NAME: oop
+          - OOP_QUEUE_PREFETCH_LIMIT: 5
+          - OOP_AUTHENTICATOR_INPUT_Q: oop.noauth.raw_messages
+          - OOP_AUTHENTICATOR_OUTPUT_Q: oop.hasauth.messages
+          - OOP_CORE_API_URL: http://oop-core:9001/services/v1
+          - OOP_CORE_TOKEN: foobar
+          - OOP_CORE_DEVICE_UPDATE_EXCHANGE: oop.core.devices
+          - SECRET_KEY_BASE: RCvxQdmiR2YVu3qmgtt3oLNNKf7aFNFavuW7UjJc8HaKVQtA6Xo4HWHt399DkvF8
+
+      - image: "openinterop/oop-core-interface:dev"
+        name: oop-core-interface
+        environment:
+          PORT: 3001
+          PROXY: http://oop-core:9001
+
+      - image: postgres
+        name: database
+        environment:
+          - NODE_ENV: production
+          - RAILS_ENV: production
+          - DATABASE_HOST: database
+          - POSTGRES_USER: postgres
+          - POSTGRES_PASSWORD: password
+          - POSTGRES_DB: oop_core_development
+
     working_directory: ~/repo
 
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      - run: curl http://oop-core:9001/services/v1
 
-      - run: yarn install
+      - run: docker ps -a
+
+      - run: bash core_setup.sh
+
+      - ruby/install:
+          version: '2.7'
+      - run: gem install bundler
+      - run: rvm rvmrc warning ignore allGemfiles
+
+      - restore_cache:
+          key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
+
+      - run: bundle install
 
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      # run tests!
-      - run: yarn run test-lint
+            - ~/.bundle
+          key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
