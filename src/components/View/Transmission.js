@@ -253,7 +253,7 @@ const Transmission = props => {
                                     </div>
                                 </ListItem>
                             </FlexGridItem>
-                            {(transmission.customFieldA || transmission.customFieldB) &&
+                            {(transmission?.customFieldA || transmission?.customFieldB) &&
                                 <>
                                     <FlexGridItem {...itemProps}>
                                         <ListItem>

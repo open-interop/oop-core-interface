@@ -256,7 +256,7 @@ const Message = props => {
                                             </div>
                                         </ListItem>
                                     </FlexGridItem>
-                                    {(message.customFieldA || message.customFieldB) &&
+                                    {(message?.customFieldA || message?.customFieldB) &&
                                         <>
                                             <FlexGridItem {...itemProps}>
                                                 <ListItem>
