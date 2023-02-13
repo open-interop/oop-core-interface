@@ -258,7 +258,7 @@ const Transmission = props => {
                                     <ListItem>
                                         <div className="card-label">
                                             <ListItemLabel description="Field A">
-                                                {transmission.customFieldB}
+                                                {transmission.customFieldA}
                                             </ListItemLabel>
                                         </div>
                                     </ListItem>

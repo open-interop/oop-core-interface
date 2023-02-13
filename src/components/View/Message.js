@@ -261,7 +261,7 @@ const Message = props => {
                                             <ListItem>
                                                 <div className="card-label">
                                                     <ListItemLabel description="Field A">
-                                                        {message.customFieldB}
+                                                        {message.customFieldA}
                                                     </ListItemLabel>
                                                 </div>
                                             </ListItem>
