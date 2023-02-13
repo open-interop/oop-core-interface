@@ -143,6 +143,18 @@ const Transmissions = props => {
                         hasFilter: true,
                     },
                     {
+                        id: "customFieldA",
+                        name: "Field A",
+                        type: "text",
+                        hasFilter: true,
+                    },
+                    {
+                        id: "customFieldB",
+                        name: "Field B",
+                        type: "text",
+                        hasFilter: true,
+                    },
+                    {
                         id: "action",
                         name: "",
                         type: "action",

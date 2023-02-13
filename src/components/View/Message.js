@@ -256,6 +256,30 @@ const Message = props => {
                                             </div>
                                         </ListItem>
                                     </FlexGridItem>
+                                    {message.customFieldA &&
+                                        <FlexGridItem {...itemProps}>
+                                            <ListItem>
+                                                <div className="card-label">
+                                                    <ListItemLabel description="Field A">
+                                                        {message.customFieldB}
+                                                    </ListItemLabel>
+                                                </div>
+                                            </ListItem>
+                                        </FlexGridItem>
+                                    }
+                                    {(message.customFieldA || message.customFieldB) &&
+                                        <FlexGridItem {...itemProps}>
+                                            {message.customFieldB &&
+                                                <ListItem>
+                                                    <div className="card-label">
+                                                        <ListItemLabel description="Field B">
+                                                            {message.customFieldB}
+                                                        </ListItemLabel>
+                                                    </div>
+                                                </ListItem>
+                                            }
+                                        </FlexGridItem>
+                                    }
                                 </FlexGrid>
                                 <FlexGrid
                                     flexGridColumnCount={3}

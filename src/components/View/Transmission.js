@@ -253,6 +253,30 @@ const Transmission = props => {
                                     </div>
                                 </ListItem>
                             </FlexGridItem>
+                            {transmission.customFieldA &&
+                                <FlexGridItem {...itemProps}>
+                                    <ListItem>
+                                        <div className="card-label">
+                                            <ListItemLabel description="Field A">
+                                                {transmission.customFieldB}
+                                            </ListItemLabel>
+                                        </div>
+                                    </ListItem>
+                                </FlexGridItem>
+                            }
+                            {(transmission.customFieldA || transmission.customFieldB) &&
+                                <FlexGridItem {...itemProps}>
+                                    {transmission.customFieldB &&
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Field B">
+                                                    {transmission.customFieldB}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    }
+                                </FlexGridItem>
+                            }
                             {requestBody && (
                                 <FlexGridItem {...itemProps}>
                                     <Button
