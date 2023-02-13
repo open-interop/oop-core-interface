@@ -253,29 +253,27 @@ const Transmission = props => {
                                     </div>
                                 </ListItem>
                             </FlexGridItem>
-                            {transmission.customFieldA &&
-                                <FlexGridItem {...itemProps}>
-                                    <ListItem>
-                                        <div className="card-label">
-                                            <ListItemLabel description="Field A">
-                                                {transmission.customFieldA}
-                                            </ListItemLabel>
-                                        </div>
-                                    </ListItem>
-                                </FlexGridItem>
-                            }
                             {(transmission.customFieldA || transmission.customFieldB) &&
-                                <FlexGridItem {...itemProps}>
-                                    {transmission.customFieldB &&
+                                <>
+                                    <FlexGridItem {...itemProps}>
                                         <ListItem>
                                             <div className="card-label">
-                                                <ListItemLabel description="Field B">
-                                                    {transmission.customFieldB}
+                                                <ListItemLabel description="Field A">
+                                                    {transmission.customFieldA ?? "No data available"}
                                                 </ListItemLabel>
                                             </div>
                                         </ListItem>
-                                    }
-                                </FlexGridItem>
+                                    </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Field B">
+                                                    {transmission.customFieldB ?? "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                </>
                             }
                             {requestBody && (
                                 <FlexGridItem {...itemProps}>
