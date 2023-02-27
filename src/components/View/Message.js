@@ -187,7 +187,6 @@ const Message = props => {
                     return OopCore.getMessage(
                         props.match.params.messageId,
                     ).then(message => {
-                        console.log(message)
                         OopCore.getTransmissionsByMessage(
                             message.uuid,
                             {},
