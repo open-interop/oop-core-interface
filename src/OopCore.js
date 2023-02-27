@@ -742,6 +742,10 @@ class OopCore extends EventEmitter {
     getAuditLog(auditLogId) {
         return this.makeRequest(uri`/audit_logs/${auditLogId}`);
     }
+
+    retryMessage(messageId) {
+        return this.makeRequest(uri`/messages/${messageId}/retry`, "POST");
+    }
 }
 
 export default new OopCore();

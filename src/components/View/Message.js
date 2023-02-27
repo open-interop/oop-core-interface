@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AceEditor from "react-ace";
 
 import "brace/ext/searchbox";
@@ -23,12 +23,16 @@ import {
 import OopCore from "../../OopCore";
 
 const Message = props => {
+    const history = useHistory();
+
     const [message, setMessage] = useState();
     const [originChildren, setOriginChildren] = useState();
     const [showBody, setShowBody] = React.useState();
 
     const [body, setBody] = useState("");
     const [originName, setOriginName] = useState("");
+
+    const [retrying, setRetrying] = useState(null);
 
     const allMessagesPath = props.location.pathname.substr(
         0,
@@ -166,6 +170,12 @@ const Message = props => {
         );
     };
 
+    async function retryMessage() {
+        setRetrying(true);
+        await OopCore.retryMessage(message.id);
+        setRetrying(false);
+    }
+
     return (
         <Page
             title="Message | Open Interop"
@@ -177,6 +187,7 @@ const Message = props => {
                     return OopCore.getMessage(
                         props.match.params.messageId,
                     ).then(message => {
+                        console.log(message)
                         OopCore.getTransmissionsByMessage(
                             message.uuid,
                             {},
@@ -284,7 +295,7 @@ const Message = props => {
                                     flexGridRowGap="scale800"
                                     marginBottom="scale800"
                                 >
-                                    {body && (
+                                    {body ? (
                                         <FlexGridItem {...wideItemProps}>
                                             <Button
                                                 kind={KIND.secondary}
@@ -293,6 +304,17 @@ const Message = props => {
                                                 {showBody
                                                     ? "Hide Message Body"
                                                     : "View Message Body"}
+                                            </Button>
+                                        </FlexGridItem>
+                                    ) : !message?.retriedAt && (
+                                        <FlexGridItem {...itemProps}>
+                                            <Button
+                                                kind={KIND.secondary}
+                                                onClick={retryMessage}
+                                                isLoading={retrying}
+                                                disabled={retrying !== null}
+                                            >
+                                                {retrying === null ? "Retry" : "Retried"}
                                             </Button>
                                         </FlexGridItem>
                                     )}
@@ -307,6 +329,20 @@ const Message = props => {
                                         </Button>
                                     </FlexGridItem>
                                 </FlexGrid>
+                                {body && !message?.retriedAt &&
+                                    <FlexGrid>
+                                        <FlexGridItem {...itemProps}>
+                                            <Button
+                                                kind={KIND.secondary}
+                                                onClick={retryMessage}
+                                                isLoading={retrying}
+                                                disabled={retrying !== null}
+                                            >
+                                                {retrying === null ? "Retry" : "Retried"}
+                                            </Button>
+                                        </FlexGridItem>
+                                    </FlexGrid>
+                                }
                                 {showBody && (
                                     <>
                                         <h2>Message Body</h2>

@@ -28,7 +28,7 @@ const PaginatedTable = withRouter(props => {
                 setData(d);
                 setLoading(false);
             });
-    }, [page, pageSize, filters, getData]);
+    }, [page, pageSize, filters]);
 
     return (
         <>

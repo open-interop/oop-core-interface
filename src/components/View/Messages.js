@@ -1,7 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 
 import { Button, KIND } from "baseui/button";
+import { Checkbox } from "baseui/checkbox";
+import { useStyletron } from "baseui";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
@@ -12,12 +14,67 @@ import { useQueryParam, StringParam, NumberParam, ObjectParam } from "use-query-
 import { arrayToObject } from "../../Utilities";
 
 const Messages = props => {
+    const history = useHistory();
 
     const [uuid, setUuid] = useQueryParam("uuid", StringParam);
     const [originId, setOriginId] = useQueryParam("originId", NumberParam);
     const [originType, setOriginType] = useQueryParam("originType", StringParam);
     const [ipAddress, setIpAddress] = useQueryParam("ipAddress", StringParam);
     const [createdAt, setCreatedAt] = useQueryParam("createdAt", ObjectParam);
+
+    const [checkedMessages, setCheckedMessages] = useState([]);
+    const [allChecked, setAllChecked] = useState(false);
+    const [retryingMessages, setRetryingMessages] = useState(false);
+
+    const ItemsSelectedRow = props => {
+        const [css, theme] = useStyletron();
+    
+        return <div className={css({ display: "flex", marginBottom: theme.sizing.scale500, justifyContent: "space-between", alignItems: "center" })} >
+            {checkedMessages.length} items selected
+            <Button
+                kind={KIND.secondary}
+                disabled={!checkedMessages.length}
+                onClick={onPressConfirm}
+                isLoading={retryingMessages}
+            >
+                Retry
+            </Button>
+        </div>
+    };    
+
+    const onCheckRow = (id) => {
+        const newCheckedMessages = [...checkedMessages];
+        const index = checkedMessages.indexOf(id)
+        if(index !== -1){
+            newCheckedMessages.splice(index, 1);
+            setAllChecked(false)
+        } else {
+            newCheckedMessages.push(id)
+        }
+        setCheckedMessages(newCheckedMessages)
+    }
+
+    const onSelectAll = (data) => {
+        const newCheckedMessages = [];
+        if(allChecked){
+            setCheckedMessages([])
+        } else {
+            for (const item of data){
+                newCheckedMessages.push(item.id)
+            }
+            setCheckedMessages(newCheckedMessages);
+        }
+        setAllChecked(!allChecked)
+    }
+
+    const onPressConfirm = async () => {
+        setRetryingMessages(true);
+        for(const messageId of checkedMessages){
+            await OopCore.retryMessage(messageId);
+        }
+        history.go(0)
+        setRetryingMessages(false);
+    }
 
     const getData = (pagination) => {
         return Promise.all([
@@ -44,6 +101,7 @@ const Messages = props => {
             title="Messages | Open Interop"
             heading="Messages"
         >
+            <ItemsSelectedRow />
             <PaginatedTable
                 getData={getData}
                 mapFunction={(columnName, content) => {
@@ -67,9 +125,28 @@ const Messages = props => {
                             <DatetimeTooltip time={content}></DatetimeTooltip>
                         );
                     }
+                    if (columnName === "id") {
+                        return (
+                            <Checkbox
+                                onChange={() => onCheckRow(content)}
+                                checked={checkedMessages.indexOf(content) !== -1}
+                            />
+                        );
+                    }
                     return content;
                 }}
                 columns={[
+                    {
+                        id: "id",
+                        name: "",
+                        width: "50px",
+                        mapFunction: (data) => {
+                            return  <Checkbox
+                                onChange={() => onSelectAll(data)}
+                                checked={allChecked}
+                            />
+                        }
+                    },
                     {
                         id: "uuid",
                         name: "UUID",
