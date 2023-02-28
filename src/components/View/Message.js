@@ -170,6 +170,19 @@ const Message = props => {
         );
     };
 
+    const RetryButton = props => {
+        return(
+            <Button
+                kind={KIND.secondary}
+                onClick={retryMessage}
+                isLoading={retrying}
+                disabled={retrying !== null}
+            >
+                {retrying === null ? "Retry" : "Retried"}
+            </Button>
+)
+    }
+
     async function retryMessage() {
         setRetrying(true);
         await OopCore.retryMessage(message.id);
@@ -307,14 +320,7 @@ const Message = props => {
                                         </FlexGridItem>
                                     ) : !message?.retriedAt && (
                                         <FlexGridItem {...itemProps}>
-                                            <Button
-                                                kind={KIND.secondary}
-                                                onClick={retryMessage}
-                                                isLoading={retrying}
-                                                disabled={retrying !== null}
-                                            >
-                                                {retrying === null ? "Retry" : "Retried"}
-                                            </Button>
+                                            <RetryButton />
                                         </FlexGridItem>
                                     )}
                                     <FlexGridItem display="none"></FlexGridItem>
@@ -330,16 +336,7 @@ const Message = props => {
                                 </FlexGrid>
                                 {body && !message?.retriedAt &&
                                     <FlexGrid>
-                                        <FlexGridItem {...itemProps}>
-                                            <Button
-                                                kind={KIND.secondary}
-                                                onClick={retryMessage}
-                                                isLoading={retrying}
-                                                disabled={retrying !== null}
-                                            >
-                                                {retrying === null ? "Retry" : "Retried"}
-                                            </Button>
-                                        </FlexGridItem>
+                                        <RetryButton />
                                     </FlexGrid>
                                 }
                                 {showBody && (

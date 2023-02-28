@@ -28,6 +28,8 @@ const Transmission = props => {
 
     const [showResponse, setShowResponse] = React.useState(false);
 
+    const [retrying, setRetrying] = useState(null);
+
     const allTransmissionsPath = (props.location.state && props.location.state.from) ? props.location.state.from
     : props.location.pathname.substr(
         0,
@@ -59,6 +61,25 @@ const Transmission = props => {
         );
     } catch (e) {
         responseBody = transmission.responseBody;
+    }
+
+    const RetryButton = props => {
+        return (
+            <Button
+                kind={KIND.secondary}
+                onClick={retryMessage}
+                isLoading={retrying}
+                disabled={retrying !== null}
+            >
+                {retrying === null ? "Retry" : "Retried"}
+            </Button>
+        )       
+    }
+
+    async function retryMessage() {
+        setRetrying(true);
+        await OopCore.retryTransmission(transmission.id);
+        setRetrying(false);
     }
 
     return (
@@ -302,6 +323,11 @@ const Transmission = props => {
                                     </Button>
                                 </FlexGridItem>
                             )}
+                            {!transmission?.retriedAt &&
+                                <FlexGridItem {...itemProps}>
+                                    <RetryButton />
+                                </FlexGridItem>
+                            }
                         </FlexGrid>
                         <FlexGrid flexGridRowGap="scale1000">
                             <FlexGridItem>

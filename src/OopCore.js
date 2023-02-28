@@ -746,6 +746,10 @@ class OopCore extends EventEmitter {
     retryMessage(messageId) {
         return this.makeRequest(uri`/messages/${messageId}/retry`, "POST");
     }
+
+    retryTransmission(transmissionId) {
+        return this.makeRequest(uri`/transmissions/${transmissionId}/retry`, "POST");
+    }
 }
 
 export default new OopCore();
