@@ -14,6 +14,17 @@ const PaginatedTable = withRouter(props => {
     const [filters, setFilters] = useQueryParam(`${props.prefix || ""}filter`, ObjectParam);
     var getData = props.getData;
 
+    function formatFilters(filters = {}){
+        const formattedFilters = {...filters}
+        Object.entries(formattedFilters).map(([key, value]) => {
+            if(props.columns.find(c => c.id === key).type === "datetime" && value){
+                const splitString = value.split("#");
+                formattedFilters[key] = {gt: splitString[0] === "gt", val: splitString[1].replaceAll("/", "-")}
+            }
+        })
+        return formattedFilters;
+    }
+
     useEffect(() => {
         setLoading(true);
         const args = {
@@ -21,7 +32,7 @@ const PaginatedTable = withRouter(props => {
                 number: page,
                 size: pageSize,
             },
-            filter: { ...(filters || {}) },
+            filter: formatFilters(filters),
         };
         getData(args)
             .then(d => {
@@ -40,6 +51,7 @@ const PaginatedTable = withRouter(props => {
                     filters={filters}
                     mobile={false}
                     updateFilters={(colId, value) => {
+                        console.log(colId, typeof(value))
                         if (filters) {
                             if (value === "") {
                                 delete filters[colId];
@@ -71,6 +83,7 @@ const PaginatedTable = withRouter(props => {
                     filters={filters}
                     mobile={false}
                     updateFilters={(colId, value) => {
+                        console.log(colId, value)
                         if (filters) {
                             if (value === "") {
                                 delete filters[colId];
@@ -102,6 +115,7 @@ const PaginatedTable = withRouter(props => {
                     filters={filters}
                     mobile={true}
                     updateFilters={(colId, value) => {
+                        console.log(colId, value)
                         if (filters) {
                             if (value === "") {
                                 delete filters[colId];

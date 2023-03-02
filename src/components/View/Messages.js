@@ -6,21 +6,15 @@ import { Checkbox } from "baseui/checkbox";
 import { useStyletron } from "baseui";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faListUl } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faListUl, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
-import { useQueryParam, StringParam, NumberParam, ObjectParam } from "use-query-params";
+import { useQueryParam, StringParam, NumberParam, ObjectParam, BooleanParam } from "use-query-params";
 import { arrayToObject } from "../../Utilities";
 
 const Messages = props => {
     const history = useHistory();
-
-    const [uuid, setUuid] = useQueryParam("uuid", StringParam);
-    const [originId, setOriginId] = useQueryParam("originId", NumberParam);
-    const [originType, setOriginType] = useQueryParam("originType", StringParam);
-    const [ipAddress, setIpAddress] = useQueryParam("ipAddress", StringParam);
-    const [createdAt, setCreatedAt] = useQueryParam("createdAt", ObjectParam);
 
     const [checkedMessages, setCheckedMessages] = useState([]);
     const [allChecked, setAllChecked] = useState(false);
@@ -120,17 +114,19 @@ const Messages = props => {
                             </>
                         );
                     } 
-                    if (columnName === "createdAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
-                    }
                     if (columnName === "id") {
                         return (
                             <Checkbox
                                 onChange={() => onCheckRow(content)}
                                 checked={checkedMessages.indexOf(content) !== -1}
                             />
+                        );
+                    }
+                    if (columnName === "retried") {
+                        return content ? (
+                            <FontAwesomeIcon icon={faCheck} />
+                        ) : (
+                            <FontAwesomeIcon icon={faTimes} />
                         );
                     }
                     return content;
@@ -189,6 +185,19 @@ const Messages = props => {
                         hasFilter: true,
                     },
                     {
+                        id: "retried",
+                        name: "Retried",
+                        type: "bool",
+                        hasFilter: true,
+                        trueText: "Retried",
+                        falseText: "Not retried"
+                    },
+                    {
+                        id: "retriedAt",
+                        name: "Retried at",
+                        type: "datetime",
+                    },
+                    {
                         id: "customFieldA",
                         name: "Field A",
                         type: "text",
@@ -211,23 +220,6 @@ const Messages = props => {
                         return "id";
                     }
                     return columnName;
-                }}
-                filters={{ uuid, originId, originType, ipAddress, createdAt }}
-                updateFilters={(key, value) => {
-                    switch (key) {
-                        case "uuid":
-                            return setUuid(value);
-                        case "originId":
-                            return setOriginId(value);
-                        case "originType":
-                            return setOriginType(value);
-                        case "ipAddress":
-                            return setIpAddress(value);
-                        case "createdAt":
-                            return setCreatedAt(value);
-                        default:
-                            return null;
-                    }
                 }}
             />
         </Page>

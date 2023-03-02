@@ -136,8 +136,8 @@ const Table = memo(props => {
                                 setFilterValue={newValue =>
                                     props.updateFilters(column.id, newValue)
                                 }
-                                trueText={props.trueText}
-                                falseText={props.falseText}
+                                trueText={column.trueText || props.trueText}
+                                falseText={column.falseText || props.falseText}
                                 zIndex={1}
                             />
                         )}

@@ -4,21 +4,23 @@ import { Datepicker } from 'baseui/datepicker';
 import {TimePicker} from 'baseui/timepicker';
 
 const DatetimeFilter = props => {
-    const [greaterThan, setGreaterThan] = useState(props.value['gt'] || true);
-    const [dateSelected, setDateSelected] = useState(props.value['val'] ? props.value['val'].split(" ")[0] : null);
-    const [timeSelected, setTimeSelected] = useState(props.value['val'] ? props.value['val'].split(" ")[1] : null);
+    const splitValue = props.value?.split("#");
+
+    const [greaterThan, setGreaterThan] = useState(splitValue[0] === "lt" ? false : true);
+    const [dateSelected, setDateSelected] = useState(splitValue?.length > 0 && splitValue[1] ? splitValue[1].split(" ")[0] : null);
+    const [timeSelected, setTimeSelected] = useState(splitValue?.length > 0 && splitValue[1] ? splitValue[1].split(" ")[1] : null);
     const [datePick, setDatePick] = useState(null);
     const [timePick, setTimePick] = useState(null);
 
     function toggleGreaterThan() {
-        props.setValue({'gt': !greaterThan, 'val': `${dateSelected} ${timeSelected}`});
+        props.setValue(`${!greaterThan ? "gt" : "lt"}#${dateSelected} ${timeSelected}`);
         setGreaterThan(!greaterThan);
     }
 
     function setDate(d) {
         if (d !== null) {
-            setDateSelected(d.toISOString().slice(0,10));
-            props.setValue({'gt': greaterThan, 'val': `${d.toISOString().slice(0,10)} ${timeSelected}`});
+            setDateSelected(d.toISOString().slice(0,10).replaceAll("-", "/"));
+            props.setValue(`${greaterThan ? "gt" : "lt"}#${d.toISOString().slice(0,10).replaceAll("-", "/")} ${timeSelected}`);
             setDatePick(d);
         }
     }
@@ -26,7 +28,7 @@ const DatetimeFilter = props => {
     function setTime(t) {
         if (t !== null) {
             setTimeSelected(t.toISOString().slice(11,19));
-            props.setValue({'gt': greaterThan, 'val': `${dateSelected} ${t.toISOString().slice(11,19)}`});
+            props.setValue(`${greaterThan ? "gt" : "lt"}#${dateSelected} ${t.toISOString().slice(11,19)}`);
             setTimePick(t);
         }
     }

@@ -37,6 +37,7 @@ const Transmissions = props => {
     const [status, setStatus] = useQueryParam("status", StringParam);
     const [success, setSuccess] = useQueryParam("success", StringParam);
     const [transmittedAt, setTransmittedAt] = useQueryParam("transmittedAt", ObjectParam);
+    const [retried, setRetried] = useQueryParam("retried", StringParam);
 
     const [checkedTransmissions, setCheckedTransmissions] = useState([]);
     const [allChecked, setAllChecked] = useState(false);
@@ -154,6 +155,13 @@ const Transmissions = props => {
                         />
                     );
                     }
+                    if (columnName === "retried") {
+                        return content ? (
+                            <FontAwesomeIcon icon={faCheck} />
+                        ) : (
+                            <FontAwesomeIcon icon={faTimes} />
+                        );
+                    }
 
                     return content;
                 }}
@@ -219,6 +227,19 @@ const Transmissions = props => {
                         hasFilter: true,
                     },
                     {
+                        id: "retried",
+                        name: "Retried",
+                        type: "bool",
+                        hasFilter: true,
+                        trueText: "Retried",
+                        falseText: "Not retried"
+                    },
+                    {
+                        id: "retriedAt",
+                        name: "Retried at",
+                        type: "datetime",
+                    },
+                    {
                         id: "customFieldA",
                         name: "Field A",
                         type: "text",
@@ -246,6 +267,7 @@ const Transmissions = props => {
                     status,
                     success,
                     transmittedAt,
+                    retried
                 }}
                 updateFilters={(key, value) => {
                     switch (key) {
@@ -263,6 +285,8 @@ const Transmissions = props => {
                             return setSuccess(value);
                         case "transmittedAt":
                             return setTransmittedAt(value);
+                        case "retried":
+                            return setRetried(value);
                         default:
                             return null;
                     }

@@ -339,7 +339,6 @@ class OopCore extends EventEmitter {
         if (parameters) {
             path += `?${parameters}`;
         }
-
         return this.makeRequest(path);
     }
 
@@ -534,6 +533,8 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
 
         let path = "/dashboards/messages";
+
+        
         if (parameters) {
             path += `?${parameters}`;
         }
