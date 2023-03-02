@@ -51,7 +51,6 @@ const PaginatedTable = withRouter(props => {
                     filters={filters}
                     mobile={false}
                     updateFilters={(colId, value) => {
-                        console.log(colId, typeof(value))
                         if (filters) {
                             if (value === "") {
                                 delete filters[colId];
@@ -83,7 +82,6 @@ const PaginatedTable = withRouter(props => {
                     filters={filters}
                     mobile={false}
                     updateFilters={(colId, value) => {
-                        console.log(colId, value)
                         if (filters) {
                             if (value === "") {
                                 delete filters[colId];
@@ -115,7 +113,6 @@ const PaginatedTable = withRouter(props => {
                     filters={filters}
                     mobile={true}
                     updateFilters={(colId, value) => {
-                        console.log(colId, value)
                         if (filters) {
                             if (value === "") {
                                 delete filters[colId];
