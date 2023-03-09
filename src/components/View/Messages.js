@@ -8,9 +8,8 @@ import { useStyletron } from "baseui";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faListUl, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
+import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
-import { useQueryParam, StringParam, NumberParam, ObjectParam, BooleanParam } from "use-query-params";
 import { arrayToObject } from "../../Utilities";
 
 const Messages = props => {
@@ -173,8 +172,8 @@ const Messages = props => {
                         type: "text",
                     },
                     {
-                        id: "ipAddress",
-                        name: "IP Address",
+                        id: "state",
+                        name: "State",
                         type: "text",
                         hasFilter: true,
                     },
