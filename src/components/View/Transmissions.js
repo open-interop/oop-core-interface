@@ -235,11 +235,6 @@ const Transmissions = props => {
                         falseText: "Not retried"
                     },
                     {
-                        id: "retriedAt",
-                        name: "Retried at",
-                        type: "datetime",
-                    },
-                    {
                         id: "customFieldA",
                         name: "Field A",
                         type: "text",
