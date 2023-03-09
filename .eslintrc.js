@@ -15,8 +15,7 @@ module.exports = {
     },
     plugins: ["prettier", "jest"],
     rules: {
-        indent: [1, 4],
-        curly: ["error", "all"],
+        "curly": ["error", "all"],
         "comma-dangle": ["error", "always-multiline"],
         "prettier/prettier": "error",
         "linebreak-style": ["error", "unix"]

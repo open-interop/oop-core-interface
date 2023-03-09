@@ -13,7 +13,7 @@ export function compareByValue(a, b) {
         return false;
     }
 
-    const compareSet = key => compareByValue(a[key], b[key])
+    const compareSet = key => compareByValue(a[key], b[key]);
     if (a instanceof Array) {
         if (a.length !== b.length) {
             return false;
@@ -33,7 +33,7 @@ export function compareByValue(a, b) {
     }
 
     return false;
-};
+}
 
 export function identicalObject(oldObject, updatedObject) {
     if (oldObject === updatedObject) {
@@ -48,9 +48,7 @@ export function identicalObject(oldObject, updatedObject) {
         return false;
     }
 
-    return Object.keys(oldObject).every(
-        key => oldObject[key] === updatedObject[key],
-    );
+    return Object.keys(oldObject).every(key => oldObject[key] === updatedObject[key]);
 }
 
 export function identicalArray(oldArray, updatedArray) {
@@ -86,24 +84,24 @@ export function arrayToObject(array, keyField) {
 }
 
 function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height
-  };
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+        width,
+        height,
+    };
 }
 
 export function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
+    useEffect(() => {
+        function handleResize() {
+            setWindowDimensions(getWindowDimensions());
+        }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
-  return windowDimensions;
+    return windowDimensions;
 }

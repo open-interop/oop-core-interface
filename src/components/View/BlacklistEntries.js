@@ -15,19 +15,19 @@ const BlacklistEntries = memo(props => {
             title="Blacklist Entries | Settings | Open Interop"
             heading="Blacklist Entries"
             actions={
-                    <Button
-                        $as={Link}
-                        to={"/blacklist-entries/new"}
-                        kind={KIND.minimal}
-                        aria-label="Create new Blacklist Entry"
-                        endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
-                    >
-                        New
-                    </Button>
+                <Button
+                    $as={Link}
+                    to={"/blacklist-entries/new"}
+                    kind={KIND.minimal}
+                    aria-label="Create new Blacklist Entry"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
+                    New
+                </Button>
             }
         >
             <PaginatedTable
-                getData={(pagination) => OopCore.getBlacklistEntries(pagination)}
+                getData={pagination => OopCore.getBlacklistEntries(pagination)}
                 mapFunction={(columnName, content, row) => {
                     if (columnName === "action") {
                         return (
@@ -38,19 +38,18 @@ const BlacklistEntries = memo(props => {
                                     to={`/blacklist-entries/${content}`}
                                     aria-label="Edit Blacklist Entry"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/blacklist-entries/${content}/audit-logs`, state: { from: `/blacklist-entries` }}}
+                                    to={{
+                                        pathname: `/blacklist-entries/${content}/audit-logs`,
+                                        state: { from: `/blacklist-entries` },
+                                    }}
                                     aria-label="View Blacklist Entry's History"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
                             </>
                         );
@@ -71,15 +70,17 @@ const BlacklistEntries = memo(props => {
                             parts.push(`Path matches ${pathRegex}`);
                         }
                         if (headers) {
-                            parts.push(`Headers contain ${Object.entries(headers).map(([k, v]) => `${k}: ${v}`)}`);
+                            parts.push(
+                                `Headers contain ${Object.entries(headers).map(
+                                    ([k, v]) => `${k}: ${v}`,
+                                )}`,
+                            );
                         }
 
                         return parts.join(" and ");
                     } else if (columnName === "createdAt" || columnName === "updatedAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
-                    }else {
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
+                    } else {
                         return content;
                     }
                 }}
@@ -108,4 +109,3 @@ const BlacklistEntries = memo(props => {
 });
 
 export default BlacklistEntries;
-

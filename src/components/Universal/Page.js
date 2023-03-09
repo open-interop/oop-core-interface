@@ -16,10 +16,12 @@ const Actions = props => {
     }
 
     return (
-        <span className={`${css({
-            display: "inline-flex",
-            marginLeft: "auto",
-        })} action-header`}>
+        <span
+            className={`${css({
+                display: "inline-flex",
+                marginLeft: "auto",
+            })} action-header`}
+        >
             {props.actions}
         </span>
     );

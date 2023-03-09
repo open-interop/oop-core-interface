@@ -38,11 +38,7 @@ const DataProvider = props => {
             );
         }
     } else {
-        return props.loadingFallback !== undefined ? (
-            props.loadingFallback
-        ) : (
-            <GifSpinner />
-        );
+        return props.loadingFallback !== undefined ? props.loadingFallback : <GifSpinner />;
     }
 };
 

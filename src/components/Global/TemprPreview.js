@@ -1,15 +1,13 @@
 import React, { memo } from "react";
 import AceEditor from "react-ace";
 
-import 'brace/ext/searchbox';
+import "brace/ext/searchbox";
 
 import { FormControl } from "baseui/form-control";
 
 const TemprPreview = memo(props => {
     return (
-        <FormControl
-            label="Example Message"
-        >
+        <FormControl label="Example Message">
             <AceEditor
                 mode="json"
                 theme="kuroir"
@@ -27,4 +25,4 @@ const TemprPreview = memo(props => {
     );
 });
 
-export { TemprPreview }
+export { TemprPreview };

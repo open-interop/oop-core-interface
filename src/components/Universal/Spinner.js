@@ -20,7 +20,11 @@ const InPlaceGifSpinner = () => {
 
     return (
         <div className={css({ margin: "0 auto" })}>
-            <img alt="loading-spinner" src={spinnerGif} className={css({ display: "block", margin: "0 auto" })} />
+            <img
+                alt="loading-spinner"
+                src={spinnerGif}
+                className={css({ display: "block", margin: "0 auto" })}
+            />
         </div>
     );
 };

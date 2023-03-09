@@ -3,11 +3,7 @@ import { NavigationItem } from ".";
 
 const useOutsideClick = (ref, exception, callback) => {
     const handleClick = e => {
-        if (
-            ref.current &&
-            ref.current !== e.target &&
-            !exception.current.contains(e.target)
-        ) {
+        if (ref.current && ref.current !== e.target && !exception.current.contains(e.target)) {
             callback();
         }
     };
@@ -42,10 +38,7 @@ const NavigationGroup = props => {
                 icon={props.icon}
             />
 
-            <div
-                ref={navRef}
-                className={`nested-navigation${props.isOpen ? " open" : ""}`}
-            >
+            <div ref={navRef} className={`nested-navigation${props.isOpen ? " open" : ""}`}>
                 {props.children}
             </div>
         </>

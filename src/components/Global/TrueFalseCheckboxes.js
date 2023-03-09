@@ -27,9 +27,9 @@ const TrueFalseCheckboxes = props => {
         setCheckboxes(updatedCheckboxes);
 
         if (!updatedCheckboxes[0] && !updatedCheckboxes[1]) {
-            updatedCheckboxes[
+            updatedCheckboxes[Math.abs(checkboxNumber - 1)] = !updatedCheckboxes[
                 Math.abs(checkboxNumber - 1)
-            ] = !updatedCheckboxes[Math.abs(checkboxNumber - 1)];
+            ];
         }
 
         if (updatedCheckboxes[0] && !updatedCheckboxes[1]) {
@@ -43,16 +43,10 @@ const TrueFalseCheckboxes = props => {
 
     return (
         <>
-            <Checkbox
-                checked={checkboxes[0]}
-                onChange={() => toggleCheckbox(0)}
-            >
+            <Checkbox checked={checkboxes[0]} onChange={() => toggleCheckbox(0)}>
                 {props.trueText || "true"}
             </Checkbox>
-            <Checkbox
-                checked={checkboxes[1]}
-                onChange={() => toggleCheckbox(1)}
-            >
+            <Checkbox checked={checkboxes[1]} onChange={() => toggleCheckbox(1)}>
                 {props.falseText || "false"}
             </Checkbox>
         </>

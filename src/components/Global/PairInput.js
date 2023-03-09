@@ -8,11 +8,19 @@ import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 const InputRow = props => {
     const [css, theme] = useStyletron();
 
-    const { pair: [key, value] } = props;
+    const {
+        pair: [key, value],
+    } = props;
 
     return (
-        <div className={css({ display: "flex", flexDirection: "row", marginBottom: theme.sizing.scale550 })} >
-            <div className={css({ display: "flex", flexGrow: 1 })} >
+        <div
+            className={css({
+                display: "flex",
+                flexDirection: "row",
+                marginBottom: theme.sizing.scale550,
+            })}
+        >
+            <div className={css({ display: "flex", flexGrow: 1 })}>
                 <div className={css({ flexGrow: 1 })}>
                     <Input
                         error={props.error || (!key && value)}
@@ -21,7 +29,12 @@ const InputRow = props => {
                         onChange={props.onChangeKey}
                     />
                 </div>
-                <div className={css({ flexGrow: 1,  marginLeft: theme.sizing.scale550 })}>
+                <div
+                    className={css({
+                        flexGrow: 1,
+                        marginLeft: theme.sizing.scale550,
+                    })}
+                >
                     <Input
                         error={props.error || (key && !value)}
                         placeholder="Value"
@@ -56,9 +69,9 @@ const PairInput = memo(props => {
         dataArray = [["", ""]];
     }
 
-    const update = (data) => {
+    const update = data => {
         if (dataIsArray) {
-            const filtered = data.filter(item => (item[0] != null) && (item[1] != null));
+            const filtered = data.filter(item => item[0] != null && item[1] != null);
 
             if (filtered.length) {
                 props.updateData(filtered);
@@ -91,10 +104,7 @@ const PairInput = memo(props => {
 
     const addRow = () => {
         const updatedArray = [...dataArray];
-        if (
-            updatedArray[updatedArray.length - 1][0] ||
-            updatedArray[updatedArray.length - 1][1]
-        ) {
+        if (updatedArray[updatedArray.length - 1][0] || updatedArray[updatedArray.length - 1][1]) {
             updatedArray.push(["", ""]);
             update(updatedArray);
         }
@@ -106,29 +116,23 @@ const PairInput = memo(props => {
             updatedArray[index][position] = event.currentTarget.value;
 
             update(updatedArray);
-        }
+        };
     };
 
     return (
         <>
-            {
-                dataArray.map((row, index) => 
-                    <InputRow
-                        key={index}
-                        index={index}
-                        pair={row}
-                        onChangeKey={setData(index, 0)}
-                        onChangeValue={setData(index, 1)}
-                        onRemove={() => removeRow(index)}
-                        error={props.error}
-                    />
-                )
-            }
-            <Button
-                kind={KIND.tertiary}
-                onClick={addRow}
-                aria-label="add-input-row"
-            >
+            {dataArray.map((row, index) => (
+                <InputRow
+                    key={index}
+                    index={index}
+                    pair={row}
+                    onChangeKey={setData(index, 0)}
+                    onChangeValue={setData(index, 1)}
+                    onRemove={() => removeRow(index)}
+                    error={props.error}
+                />
+            ))}
+            <Button kind={KIND.tertiary} onClick={addRow} aria-label="add-input-row">
                 <FontAwesomeIcon icon={faPlus} />
             </Button>
         </>

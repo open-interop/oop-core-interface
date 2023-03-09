@@ -6,16 +6,13 @@ const NavigationItem = props => {
     if (props.button) {
         return (
             <Button
-                className={`navigation-item${
-                    props.isActive ? " active" : ""
-                } ${props.className || ""}`}
+                className={`navigation-item${props.isActive ? " active" : ""} ${props.className ||
+                    ""}`}
                 onClick={props.onClick}
                 ref={props.refName}
                 size={SIZE.compact}
             >
-                {props.icon && (
-                    <div className="size-xxl navigation-icon">{props.icon}</div>
-                )}
+                {props.icon && <div className="size-xxl navigation-icon">{props.icon}</div>}
                 <span>{props.pathName}</span>
             </Button>
         );
@@ -26,29 +23,23 @@ const NavigationItem = props => {
                 size={SIZE.compact}
                 disabled
             >
-                {props.icon && (
-                    <div className="size-xxl navigation-icon">{props.icon}</div>
-                )}
+                {props.icon && <div className="size-xxl navigation-icon">{props.icon}</div>}
                 <span>{props.children}</span>
             </Button>
         );
-    }else {
+    } else {
         return (
             <>
                 <Button
                     $as={Link}
                     onClick={props.onClick}
                     to={props.path}
-                    className={`navigation-item${
-                        props.isActive ? " active" : ""
-                    } ${props.className}`}
+                    className={`navigation-item${props.isActive ? " active" : ""} ${
+                        props.className
+                    }`}
                     size={SIZE.compact}
                 >
-                    {props.icon && (
-                        <div className="size-xxl navigation-icon">
-                            {props.icon}
-                        </div>
-                    )}
+                    {props.icon && <div className="size-xxl navigation-icon">{props.icon}</div>}
                     <div>
                         {props.symbolLeft}
                         {props.symbolLeft ? " " : ""}

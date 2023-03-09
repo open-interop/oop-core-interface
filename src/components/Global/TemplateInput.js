@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AceEditor from "react-ace";
 
-import 'brace/ext/searchbox';
+import "brace/ext/searchbox";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpandArrowsAlt, faCompressArrowsAlt } from "@fortawesome/free-solid-svg-icons";
@@ -35,19 +35,11 @@ const TemplateInput = props => {
 
     const getControlElement = () => {
         if (language === "text" && props.text) {
-            return (
-                <Cell span={10}>
-                    {props.text({ language, script })}
-                </Cell>
-            );
+            return <Cell span={10}>{props.text({ language, script })}</Cell>;
         }
 
         if (language === "json" && props.json) {
-            return (
-                <Cell span={10}>
-                    {props.json({ language, script })}
-                </Cell>
-            );
+            return <Cell span={10}>{props.json({ language, script })}</Cell>;
         }
 
         if (language === "text") {
@@ -57,7 +49,10 @@ const TemplateInput = props => {
                         id={`input-${props.label}`}
                         value={script}
                         onChange={event =>
-                            props.onChange({ language, script: event.currentTarget.value })
+                            props.onChange({
+                                language,
+                                script: event.currentTarget.value,
+                            })
                         }
                         error={props.error}
                     />
@@ -67,14 +62,17 @@ const TemplateInput = props => {
 
         return (
             <Cell span={fullScreen ? 12 : 10}>
-                <div style={{display: "flex", flexDirection: "row"}}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
                     <AceEditor
                         id="input-host"
                         mode={editorTypeMap[language]}
                         theme="kuroir"
                         showPrintMargin={false}
                         onChange={value => {
-                            props.onChange({ language: language, script: value });
+                            props.onChange({
+                                language: language,
+                                script: value,
+                            });
                         }}
                         style={{ flex: 1 }}
                         editorProps={{ $blockScrolling: true }}
@@ -87,7 +85,9 @@ const TemplateInput = props => {
                         size={SIZE.large}
                         onClick={() => setFullScreen(!fullScreen)}
                     >
-                        <FontAwesomeIcon icon={fullScreen ? faCompressArrowsAlt : faExpandArrowsAlt} />
+                        <FontAwesomeIcon
+                            icon={fullScreen ? faCompressArrowsAlt : faExpandArrowsAlt}
+                        />
                     </Button>
                 </div>
             </Cell>
@@ -95,37 +95,37 @@ const TemplateInput = props => {
     };
 
     return (
-        <FormControl
-            label={props.label}
-            caption={props.caption}
-        >
+        <FormControl label={props.label} caption={props.caption}>
             <Grid behavior={BEHAVIOR.fluid}>
-            {getControlElement()}
-            {!fullScreen &&
-                <Cell span={2}>
-                    <Select
-                        required={true}
-                        clearable={false}
-                        options={languages.filter(l => allowedLanguages.includes(l.value))}
-                        valueKey="value"
-                        labelKey="label"
-                        value={[{ value: language }]}
-                        onChange={selected => {
-                            props.onChange({ language: selected.option.value, script: script });
-                        }}
-                        overrides={{
-                            DropdownContainer: {
-                              style: () => {
-                                return {
-                                  width: "auto !important",
-                                };
-                              }
-                            }
-                        }}
-                    />
-                </Cell>
-            }
-        </Grid>
+                {getControlElement()}
+                {!fullScreen && (
+                    <Cell span={2}>
+                        <Select
+                            required={true}
+                            clearable={false}
+                            options={languages.filter(l => allowedLanguages.includes(l.value))}
+                            valueKey="value"
+                            labelKey="label"
+                            value={[{ value: language }]}
+                            onChange={selected => {
+                                props.onChange({
+                                    language: selected.option.value,
+                                    script: script,
+                                });
+                            }}
+                            overrides={{
+                                DropdownContainer: {
+                                    style: () => {
+                                        return {
+                                            width: "auto !important",
+                                        };
+                                    },
+                                },
+                            }}
+                        />
+                    </Cell>
+                )}
+            </Grid>
         </FormControl>
     );
 };

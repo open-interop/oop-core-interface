@@ -15,19 +15,19 @@ const Users = memo(props => {
             title="Users | Settings | Open Interop"
             heading="Users"
             actions={
-                    <Button
-                        $as={Link}
-                        to={`/users/new`}
-                        kind={KIND.minimal}
-                        aria-label="Create new user"
-                        endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
-                    >
-                        New
-                    </Button>
+                <Button
+                    $as={Link}
+                    to={`/users/new`}
+                    kind={KIND.minimal}
+                    aria-label="Create new user"
+                    endEnhancer={() => <FontAwesomeIcon icon={faPlus} />}
+                >
+                    New
+                </Button>
             }
         >
             <PaginatedTable
-                getData={(pagination) => OopCore.getUsers(pagination)}
+                getData={pagination => OopCore.getUsers(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (
@@ -38,9 +38,7 @@ const Users = memo(props => {
                                     to={`/users/${content}`}
                                     aria-label="User dashboard"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faUserCircle}
-                                    />
+                                    <FontAwesomeIcon icon={faUserCircle} />
                                 </Button>
                                 <Button
                                     kind={KIND.tertiary}
@@ -48,27 +46,24 @@ const Users = memo(props => {
                                     to={`/users/${content}/edit`}
                                     aria-label="Edit user"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/users/${content}/audit-logs`, state: {from: `/users`}}}
+                                    to={{
+                                        pathname: `/users/${content}/audit-logs`,
+                                        state: { from: `/users` },
+                                    }}
                                     aria-label="View user history"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
                             </>
                         );
                     }
                     if (columnName === "createdAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
                     }
                     return content;
                 }}

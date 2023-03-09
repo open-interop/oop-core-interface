@@ -6,7 +6,6 @@ import "brace/ext/searchbox";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-monokai";
 
-
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
@@ -28,11 +27,10 @@ const Transmission = props => {
 
     const [showResponse, setShowResponse] = React.useState(false);
 
-    const allTransmissionsPath = (props.location.state && props.location.state.from) ? props.location.state.from
-    : props.location.pathname.substr(
-        0,
-        props.location.pathname.lastIndexOf("/"),
-    );
+    const allTransmissionsPath =
+        props.location.state && props.location.state.from
+            ? props.location.state.from
+            : props.location.pathname.substr(0, props.location.pathname.lastIndexOf("/"));
 
     const itemProps = {
         height: "scale1000",
@@ -41,22 +39,14 @@ const Transmission = props => {
 
     let requestBody;
     try {
-        requestBody = JSON.stringify(
-            JSON.parse(transmission.requestBody),
-            null,
-            "    "
-        );
+        requestBody = JSON.stringify(JSON.parse(transmission.requestBody), null, "    ");
     } catch (e) {
         requestBody = transmission.requestBody;
     }
 
     let responseBody;
     try {
-        responseBody = JSON.stringify(
-            JSON.parse(transmission.responseBody),
-            null,
-            "    "
-        );
+        responseBody = JSON.stringify(JSON.parse(transmission.responseBody), null, "    ");
     } catch (e) {
         responseBody = transmission.responseBody;
     }
@@ -69,75 +59,71 @@ const Transmission = props => {
         >
             <DataProvider
                 getData={() => {
-                    return OopCore.getTransmission(
-                        props.match.params.transmissionId,
-                    ).then(transmission => {
-                        transmission.deviceId 
-                            ? OopCore.getDevice(transmission.deviceId)
-                                .catch(error => {
-                                    !transmission.errors
-                                        ? setTransmission(transmission)
-                                        : setTransmission(null);
-                                })
-                                .then(device => {
-                                    OopCore.getTempr(transmission.temprId)
-                                        .catch(error => {
-                                            !transmission.errors
-                                                ? setTransmission(transmission)
-                                                : setTransmission(null);
-                                        })
-                                        .then(tempr => {
-                                            setTransmission(transmission);
-                                            setDevice(device);
-                                            setSchedule(null);
-                                            setTempr(tempr);
-                                            return transmission;
-                                        })
-                                        .catch(error => {
-                                            !tempr.status
-                                                ? setTempr(tempr)
-                                                : setTempr(null);
-                                            !device.status
-                                                ? setDevice(device)
-                                                : setDevice(null);
-                                            !transmission.errors
-                                                ? setTransmission(transmission)
-                                                : setTransmission(null);
-                                        });
-                                })
-                            : OopCore.getSchedule(transmission.scheduleId)
-                                .catch(error => {
-                                    !transmission.errors
-                                        ? setTransmission(transmission)
-                                        : setTransmission(null);
-                                })
-                                .then(schedule => {
-                                    OopCore.getTempr(transmission.temprId)
-                                        .catch(error => {
-                                            !transmission.errors
-                                                ? setTransmission(transmission)
-                                                : setTransmission(null);
-                                        })
-                                        .then(tempr => {
-                                            setTransmission(transmission);
-                                            setDevice(null);
-                                            setSchedule(schedule)
-                                            setTempr(tempr);
-                                            return transmission;
-                                        })
-                                        .catch(error => {
-                                            !tempr.status
-                                                ? setTempr(tempr)
-                                                : setTempr(null);
-                                            !schedule.status
-                                                ? setSchedule(schedule)
-                                                : setSchedule(null);
-                                            !transmission.errors
-                                                ? setTransmission(transmission)
-                                                : setTransmission(null);
-                                        });
-                                });
-                    });
+                    return OopCore.getTransmission(props.match.params.transmissionId).then(
+                        transmission => {
+                            transmission.deviceId
+                                ? OopCore.getDevice(transmission.deviceId)
+                                      .catch(() => {
+                                          !transmission.errors
+                                              ? setTransmission(transmission)
+                                              : setTransmission(null);
+                                      })
+                                      .then(device => {
+                                          OopCore.getTempr(transmission.temprId)
+                                              .catch(() => {
+                                                  !transmission.errors
+                                                      ? setTransmission(transmission)
+                                                      : setTransmission(null);
+                                              })
+                                              .then(tempr => {
+                                                  setTransmission(transmission);
+                                                  setDevice(device);
+                                                  setSchedule(null);
+                                                  setTempr(tempr);
+                                                  return transmission;
+                                              })
+                                              .catch(() => {
+                                                  !tempr.status ? setTempr(tempr) : setTempr(null);
+                                                  !device.status
+                                                      ? setDevice(device)
+                                                      : setDevice(null);
+                                                  !transmission.errors
+                                                      ? setTransmission(transmission)
+                                                      : setTransmission(null);
+                                              });
+                                      })
+                                : OopCore.getSchedule(transmission.scheduleId)
+                                      .catch(() => {
+                                          !transmission.errors
+                                              ? setTransmission(transmission)
+                                              : setTransmission(null);
+                                      })
+                                      .then(schedule => {
+                                          OopCore.getTempr(transmission.temprId)
+                                              .catch(() => {
+                                                  !transmission.errors
+                                                      ? setTransmission(transmission)
+                                                      : setTransmission(null);
+                                              })
+                                              .then(() => {
+                                                  setTransmission(transmission);
+                                                  setDevice(null);
+                                                  setSchedule(schedule);
+                                                  setTempr(tempr);
+                                                  return transmission;
+                                              })
+                                              .catch(() => {
+                                                  !tempr.status ? setTempr(tempr) : setTempr(null);
+                                                  !schedule.status
+                                                      ? setSchedule(schedule)
+                                                      : setSchedule(null);
+                                                  !transmission.errors
+                                                      ? setTransmission(transmission)
+                                                      : setTransmission(null);
+                                              });
+                                      });
+                        },
+                    );
                 }}
                 renderData={() => (
                     <>
@@ -150,8 +136,7 @@ const Transmission = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="Transmission UUID">
-                                            {transmission.transmissionUuid ||
-                                                "No data available"}
+                                            {transmission.transmissionUuid || "No data available"}
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
@@ -160,8 +145,7 @@ const Transmission = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="Message UUID">
-                                            {transmission.messageUuid ||
-                                                "No data available"}
+                                            {transmission.messageUuid || "No data available"}
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
@@ -169,10 +153,18 @@ const Transmission = props => {
                             <FlexGridItem {...itemProps}>
                                 <ListItem>
                                     <div className="card-label">
-                                        <ListItemLabel description={device ? "Device ID" 
-                                                : (schedule ? "Schedule ID" : "Origin ID")}>
-                                            {transmission.deviceId ? transmission.deviceId :
-                                                (transmission.scheduleId || "No data available")}
+                                        <ListItemLabel
+                                            description={
+                                                device
+                                                    ? "Device ID"
+                                                    : schedule
+                                                    ? "Schedule ID"
+                                                    : "Origin ID"
+                                            }
+                                        >
+                                            {transmission.deviceId
+                                                ? transmission.deviceId
+                                                : transmission.scheduleId || "No data available"}
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
@@ -181,8 +173,7 @@ const Transmission = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="Tempr ID">
-                                            {transmission.temprId ||
-                                                "No data available"}
+                                            {transmission.temprId || "No data available"}
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
@@ -190,24 +181,25 @@ const Transmission = props => {
                             <FlexGridItem {...itemProps}>
                                 <ListItem>
                                     <div className="card-label">
-                                        <ListItemLabel description={device ? "Device Name" 
-                                                : (schedule ? "Schedule Name" : "Origin Name")}>
+                                        <ListItemLabel
+                                            description={
+                                                device
+                                                    ? "Device Name"
+                                                    : schedule
+                                                    ? "Schedule Name"
+                                                    : "Origin Name"
+                                            }
+                                        >
                                             {device ? (
-                                                <a
-                                                    href={`/devices/${transmission.deviceId}`}
-                                                >
+                                                <a href={`/devices/${transmission.deviceId}`}>
                                                     {device.name}
                                                 </a>
+                                            ) : schedule ? (
+                                                <a href={`/schedules/${transmission.scheduleId}`}>
+                                                    {schedule.name}
+                                                </a>
                                             ) : (
-                                                    schedule ? (
-                                                        <a
-                                                            href={`/schedules/${transmission.scheduleId}`}
-                                                        >
-                                                            {schedule.name}
-                                                        </a>
-                                                    ) : (
-                                                        "No data available"
-                                                    )
+                                                "No data available"
                                             )}
                                         </ListItemLabel>
                                     </div>
@@ -218,9 +210,7 @@ const Transmission = props => {
                                     <div className="card-label">
                                         <ListItemLabel description="Tempr Name">
                                             {tempr ? (
-                                                <a
-                                                    href={`/temprs/${transmission.temprId}`}
-                                                >
+                                                <a href={`/temprs/${transmission.temprId}`}>
                                                     {tempr.name}
                                                 </a>
                                             ) : (
@@ -234,9 +224,7 @@ const Transmission = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="Status">
-                                            {transmission.success
-                                                ? "Successful"
-                                                : "Failed"}
+                                            {transmission.success ? "Successful" : "Failed"}
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
@@ -247,8 +235,7 @@ const Transmission = props => {
                                         <ListItemLabel description="Transmitted at">
                                             <DatetimeTooltip
                                                 time={transmission.transmittedAt}
-                                            >
-                                            </DatetimeTooltip>
+                                            ></DatetimeTooltip>
                                         </ListItemLabel>
                                     </div>
                                 </ListItem>
@@ -281,9 +268,7 @@ const Transmission = props => {
                                         kind={KIND.secondary}
                                         onClick={() => setShowRequest(!showRequest)}
                                     >
-                                        {showRequest
-                                            ? "Hide request body"
-                                            : "View request body"}
+                                        {showRequest ? "Hide request body" : "View request body"}
                                     </Button>
                                 </FlexGridItem>
                             )}
@@ -292,13 +277,9 @@ const Transmission = props => {
                                 <FlexGridItem {...itemProps}>
                                     <Button
                                         kind={KIND.secondary}
-                                        onClick={() =>
-                                            setShowResponse(!showResponse)
-                                        }
+                                        onClick={() => setShowResponse(!showResponse)}
                                     >
-                                        {showResponse
-                                            ? "Hide response body"
-                                            : "View response body"}
+                                        {showResponse ? "Hide response body" : "View response body"}
                                     </Button>
                                 </FlexGridItem>
                             )}
@@ -307,7 +288,7 @@ const Transmission = props => {
                             <FlexGridItem>
                                 {showRequest && (
                                     <>
-                                    <h2>Request Body</h2>
+                                        <h2>Request Body</h2>
                                         <AceEditor
                                             placeholder=""
                                             mode="json"
@@ -318,9 +299,7 @@ const Transmission = props => {
                                             highlightActiveLine={true}
                                             maxLines={25}
                                             minLines={Math.max(
-                                                requestBody.split(
-                                                    /\r\n|\r|\n/,
-                                                ).length + 2,
+                                                requestBody.split(/\r\n|\r|\n/).length + 2,
                                                 8,
                                             )}
                                             value={requestBody}
@@ -343,9 +322,7 @@ const Transmission = props => {
                                             highlightActiveLine={true}
                                             maxLines={25}
                                             minLines={Math.max(
-                                                responseBody.split(
-                                                    /\r\n|\r|\n/,
-                                                ).length + 2,
+                                                responseBody.split(/\r\n|\r|\n/).length + 2,
                                                 8,
                                             )}
                                             value={responseBody}

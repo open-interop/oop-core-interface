@@ -8,11 +8,7 @@ import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { Card } from "baseui/card";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faEdit,
-    faChevronCircleDown,
-    faListUl
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faChevronCircleDown, faListUl } from "@fortawesome/free-solid-svg-icons";
 import { Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import OopCore from "../../OopCore";
@@ -36,7 +32,7 @@ const UserDetails = props => {
     return (
         <MaxCard title="Details">
             <FlexGrid
-                flexGridColumnCount={[1,1,2,3]}
+                flexGridColumnCount={[1, 1, 2, 3]}
                 flexGridColumnGap="scale200"
                 flexGridRowGap="scale200"
             >
@@ -46,8 +42,7 @@ const UserDetails = props => {
                             <ListItemLabel description="Full Name">
                                 {user.firstName && user.lastName
                                     ? user.firstName + " " + user.lastName
-                                    : "Not available"
-                                }
+                                    : "Not available"}
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -55,9 +50,7 @@ const UserDetails = props => {
                 <FlexGridItem>
                     <ListItem>
                         <div className="card-label">
-                            <ListItemLabel description="Email Address">
-                                {user.email} 
-                            </ListItemLabel>
+                            <ListItemLabel description="Email Address">{user.email}</ListItemLabel>
                         </div>
                     </ListItem>
                 </FlexGridItem>
@@ -65,7 +58,7 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Timezone">
-                                {user.timeZone || "Not available"} 
+                                {user.timeZone || "Not available"}
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -74,8 +67,9 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Date of Birth">
-                                {user.dateOfBirth ? moment(user.dateOfBirth).format("Do MMMM YYYY")
-                                : "Not available"}
+                                {user.dateOfBirth
+                                    ? moment(user.dateOfBirth).format("Do MMMM YYYY")
+                                    : "Not available"}
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -84,7 +78,7 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Job Title">
-                                {user.jobTitle || "Not available"} 
+                                {user.jobTitle || "Not available"}
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -93,7 +87,7 @@ const UserDetails = props => {
                     <ListItem>
                         <div className="card-label">
                             <ListItemLabel description="Days since creation">
-                                {moment().diff(moment(user.createdAt), 'days')}
+                                {moment().diff(moment(user.createdAt), "days")}
                             </ListItemLabel>
                         </div>
                     </ListItem>
@@ -111,11 +105,7 @@ const UserAuditLogs = props => {
     }
 
     if (!(logs && logs.length)) {
-        return (
-            <MaxCard title="Recent Audit History">
-                No audit logs available
-            </MaxCard>
-        );
+        return <MaxCard title="Recent Audit History">No audit logs available</MaxCard>;
     }
 
     const itemProps = {
@@ -124,14 +114,19 @@ const UserAuditLogs = props => {
 
     const children = props.logs.map((item, index) => (
         <FlexGridItem {...itemProps} key={item.id}>
-            <Card title={`${item.action.charAt(0).toUpperCase() + item.action.slice(1)} ${item.auditableType}`} $style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column"
-            }}>
+            <Card
+                title={`${item.action.charAt(0).toUpperCase() + item.action.slice(1)} ${
+                    item.auditableType
+                }`}
+                $style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+            >
                 <FlexGrid
-                    flexGridColumnCount={[1,2,2]}
+                    flexGridColumnCount={[1, 2, 2]}
                     flexGridColumnGap="scale200"
                     flexGridRowGap="scale200"
                 >
@@ -139,8 +134,7 @@ const UserAuditLogs = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="Audit Log ID">
-                                    {item.id ||
-                                        "No data available"}
+                                    {item.id || "No data available"}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -149,8 +143,11 @@ const UserAuditLogs = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description="Timestamp">
-                                    {item.createdAt ? <DatetimeTooltip time={item.createdAt} /> :
-                                        "No data available"}
+                                    {item.createdAt ? (
+                                        <DatetimeTooltip time={item.createdAt} />
+                                    ) : (
+                                        "No data available"
+                                    )}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -159,8 +156,7 @@ const UserAuditLogs = props => {
                         <ListItem>
                             <div className="card-label">
                                 <ListItemLabel description={`${item.auditableType} ID`}>
-                                    {item.auditableId ||
-                                        "No data available"}
+                                    {item.auditableId || "No data available"}
                                 </ListItemLabel>
                             </div>
                         </ListItem>
@@ -171,7 +167,12 @@ const UserAuditLogs = props => {
                                 <Button
                                     $as={Link}
                                     kind={KIND.secondary}
-                                    to={{pathname: `/audit-logs/${item.id}`, state: {from: `/users/${props.userId}`}}}
+                                    to={{
+                                        pathname: `/audit-logs/${item.id}`,
+                                        state: {
+                                            from: `/users/${props.userId}`,
+                                        },
+                                    }}
                                     endEnhancer={() => <FontAwesomeIcon icon={faListUl} />}
                                 >
                                     More Details
@@ -200,30 +201,23 @@ const UserAuditLogs = props => {
                     </Button>
                 </>
             }
-        >   
+        >
             <FlexGrid
-                flexGridColumnCount={[1,1,1,2]}
+                flexGridColumnCount={[1, 1, 1, 2]}
                 flexGridColumnGap="scale800"
                 flexGridRowGap="scale800"
                 marginBottom="scale400"
             >
                 {children}
             </FlexGrid>
-            {props.arrowEnabled &&
-                <Button
-                    kind={KIND.minimal}
-                    onClick={props.more}
-                    $style={{ fontSize: "50px" }}
-                >
-                    <FontAwesomeIcon
-                        icon={faChevronCircleDown}
-                    />
+            {props.arrowEnabled && (
+                <Button kind={KIND.minimal} onClick={props.more} $style={{ fontSize: "50px" }}>
+                    <FontAwesomeIcon icon={faChevronCircleDown} />
                 </Button>
-            }
+            )}
         </MaxCard>
     );
 };
-
 
 const UserDashboard = props => {
     const [userId, setUserId] = useState(null);
@@ -241,65 +235,58 @@ const UserDashboard = props => {
                 OopCore.getUser(props.user.id),
                 OopCore.getGlobalHistory({
                     filter: { userId: props.user.id },
-                    "page[size]": logsDisplayed
-                })
-            ])
-                .then(([
-                    user,
-                    logs,
-                ]) => {
-                    setUser(user);
-                    setLogs(logs.data);
-                    setUserId(user.id);
-                });
+                    "page[size]": logsDisplayed,
+                }),
+            ]).then(([user, logs]) => {
+                setUser(user);
+                setLogs(logs.data);
+                setUserId(user.id);
+            });
         } else {
             Promise.all([
                 OopCore.getUser(props.match.params.userId),
                 OopCore.getGlobalHistory({
                     filter: { userId: props.match.params.userId },
-                    "page[size]": logsDisplayed
-                })
-            ])
-                .then(([
-                    user,
-                    logs,
-                ]) => {
-                    setUser(user);
-                    setLogs(logs.data);
-                    setUserId(user.id);
-                });
+                    "page[size]": logsDisplayed,
+                }),
+            ]).then(([user, logs]) => {
+                setUser(user);
+                setLogs(logs.data);
+                setUserId(user.id);
+            });
         }
-        
     }, [userId, logsDisplayed, props]);
 
     const moreLogs = () => {
         Promise.resolve(
             OopCore.getGlobalHistory({
                 filter: { userId: userId },
-                "page[size]": logsDisplayed + 4
-            })
+                "page[size]": logsDisplayed + 4,
+            }),
         ).then(logs => {
             setLogs(logs.data);
             setLogsDisplayed(logsDisplayed + 4);
         });
-    }
+    };
 
     // eslint-disable-next-line no-unused-vars
     const lessLogs = () => {
         Promise.resolve(
             OopCore.getGlobalHistory({
                 filter: { userId: userId },
-                "page[size]": logsDisplayed - 4
-            })
+                "page[size]": logsDisplayed - 4,
+            }),
         ).then(logs => {
             setLogs(logs.data);
             setLogsDisplayed(logsDisplayed - 4);
         });
-    }
+    };
 
     return (
         <Page
-            title={props.user ? "Current User Profile | Open Interop" : "User Profile | Open Interop"}
+            title={
+                props.user ? "Current User Profile | Open Interop" : "User Profile | Open Interop"
+            }
             heading={props.user ? "Current User Profile" : "User Profile"}
             backlink={props.user ? null : allUsersPath}
             actions={
@@ -316,12 +303,17 @@ const UserDashboard = props => {
                 </>
             }
         >
-            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[1]} >
+            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[1]}>
                 <Cell span={1}>
                     <UserDetails user={user} />
                 </Cell>
                 <Cell span={1}>
-                    <UserAuditLogs logs={logs} userId={userId} more={moreLogs} arrowEnabled={logs ? logs.length === logsDisplayed : true} />
+                    <UserAuditLogs
+                        logs={logs}
+                        userId={userId}
+                        more={moreLogs}
+                        arrowEnabled={logs ? logs.length === logsDisplayed : true}
+                    />
                 </Cell>
             </Grid>
         </Page>

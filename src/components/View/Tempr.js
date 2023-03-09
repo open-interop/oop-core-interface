@@ -5,12 +5,7 @@ import { Button } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
 
-import {
-    AccordionWithCaption,
-    ConfirmModal,
-    Page,
-    InPlaceGifSpinner,
-} from "../Universal";
+import { AccordionWithCaption, ConfirmModal, Page, InPlaceGifSpinner } from "../Universal";
 
 import {
     clearToast,
@@ -34,10 +29,9 @@ import "brace/mode/javascript";
 import "brace/mode/handlebars";
 import "brace/theme/kuroir";
 
-
 const getTempr = (temprId, deviceGroupId) => {
     if (temprId === "new") {
-        return  Promise.resolve({
+        return Promise.resolve({
             name: "",
             temprId: null,
             description: "",
@@ -70,91 +64,80 @@ const getData = (temprId, deviceGroupId, getParents, getChildren) => {
     ]);
 };
 
-const DeviceTemprAssociator = memo(({
-    temprId,
-    deviceGroupId,
-    deviceTemprs,
-    setDeviceTemprs,
-    temprErrors,
-    setTemprErrors
-}) => {
-    const setError = error => {
-        const newErrors = {
-            ...temprErrors,
-            deviceTemprs: error.errors,
+const DeviceTemprAssociator = memo(
+    ({ temprId, deviceGroupId, deviceTemprs, setDeviceTemprs, temprErrors, setTemprErrors }) => {
+        const setError = error => {
+            const newErrors = {
+                ...temprErrors,
+                deviceTemprs: error.errors,
+            };
+            setTemprErrors(newErrors);
         };
-        setTemprErrors(newErrors);
-    };
 
-    return (
-        <DeviceAssociator
-            deviceGroupId={deviceGroupId}
-            selected={deviceTemprs}
-            onSelect={device => {
-                return OopCore.createDeviceTempr({
-                    deviceId: device.id,
-                    temprId: temprId
-                })
-                    .then(res => {
-                        setDeviceTemprs([...deviceTemprs, res]);
+        return (
+            <DeviceAssociator
+                deviceGroupId={deviceGroupId}
+                selected={deviceTemprs}
+                onSelect={device => {
+                    return OopCore.createDeviceTempr({
+                        deviceId: device.id,
+                        temprId: temprId,
                     })
-                    .catch(setError);
-            }}
-            onDeselect={(device, dt) => {
-                return OopCore.deleteDeviceTempr(dt.id, {
-                    deviceId: device.id,
-                    temprId: temprId
-                })
-                    .then(() => {
-                        setDeviceTemprs(
-                            deviceTemprs.filter(v => v.id !== dt.id)
-                        );
+                        .then(res => {
+                            setDeviceTemprs([...deviceTemprs, res]);
+                        })
+                        .catch(setError);
+                }}
+                onDeselect={(device, dt) => {
+                    return OopCore.deleteDeviceTempr(dt.id, {
+                        deviceId: device.id,
+                        temprId: temprId,
                     })
-                    .catch(setError);
-            }}
-            error={temprErrors.deviceTemprs}
-        />
-    );
-});
+                        .then(() => {
+                            setDeviceTemprs(deviceTemprs.filter(v => v.id !== dt.id));
+                        })
+                        .catch(setError);
+                }}
+                error={temprErrors.deviceTemprs}
+            />
+        );
+    },
+);
 
-const ScheduleTemprAssociator = memo(({
-    temprId,
-    scheduleTemprs,
-    setScheduleTemprs,
-    temprErrors,
-    setTemprErrors
-}) => {
-    return (
-        <ScheduleAssociator
-            selected={scheduleTemprs}
-            onSelect={schedule => {
-                return OopCore.createScheduleTempr({
-                    scheduleId: schedule.id,
-                    temprId
-                })
-                    .then(res => {
-                        setScheduleTemprs([...scheduleTemprs, res]);
+const ScheduleTemprAssociator = memo(
+    ({ temprId, scheduleTemprs, setScheduleTemprs, temprErrors, setTemprErrors }) => {
+        return (
+            <ScheduleAssociator
+                selected={scheduleTemprs}
+                onSelect={schedule => {
+                    return OopCore.createScheduleTempr({
+                        scheduleId: schedule.id,
+                        temprId,
                     })
-                    .catch(error => {
-                        temprErrors.scheduleTemprs = error.errors;
-                    });
-            }}
-            onDeselect={(schedule, st) => {
-                return OopCore.deleteScheduleTempr(st.id, {
-                    scheduleId: schedule.id,
-                    temprId
-                })
-                    .then(() => {
-                        setScheduleTemprs(scheduleTemprs.filter(v => v.id !== st.id));
+                        .then(res => {
+                            setScheduleTemprs([...scheduleTemprs, res]);
+                        })
+                        .catch(error => {
+                            temprErrors.scheduleTemprs = error.errors;
+                        });
+                }}
+                onDeselect={(schedule, st) => {
+                    return OopCore.deleteScheduleTempr(st.id, {
+                        scheduleId: schedule.id,
+                        temprId,
                     })
-                    .catch(error => {
-                        temprErrors.scheduleTemprs = error.errors;
-                    });
-            }}
-            error={temprErrors.scheduleTemprs}
-        />
-    );
-});
+                        .then(() => {
+                            setScheduleTemprs(scheduleTemprs.filter(v => v.id !== st.id));
+                        })
+                        .catch(error => {
+                            temprErrors.scheduleTemprs = error.errors;
+                        });
+                }}
+                error={temprErrors.scheduleTemprs}
+            />
+        );
+    },
+);
 
 const Tempr = props => {
     const temprId = props.match.params.temprId;
@@ -169,7 +152,9 @@ const Tempr = props => {
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [deviceGroupId, setDeviceGroupId] = useState(Number(props.match.params.deviceGroupId) || null);
+    const [deviceGroupId, setDeviceGroupId] = useState(
+        Number(props.match.params.deviceGroupId) || null,
+    );
     const [parentTemprId, setParentTemprId] = useState(null);
     const [endpointType, setEndpointType] = useState("http");
     const [queueResponse, setQueueResponse] = useState(false);
@@ -186,20 +171,22 @@ const Tempr = props => {
     const [deleting, setDeleting] = useState(false);
     const [creating, setCreating] = useState(false);
 
-
     useEffect(
-        () => { getData(temprId, props.match.params.deviceGroupId, getParents, getChildren).then(setData); },
+        () => {
+            getData(temprId, props.match.params.deviceGroupId, getParents, getChildren).then(
+                setData,
+            );
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [temprId, props.match.params.deviceGroupId]
-    ); 
+        [temprId, props.match.params.deviceGroupId],
+    );
 
     const blankTempr = temprId === "new";
-
 
     async function getChildren(temprId) {
         var none = true;
         if (!blankTempr) {
-            const ts = await OopCore.getTemprs({temprId: temprId});
+            const ts = await OopCore.getTemprs({ temprId: temprId });
             if (ts) {
                 // eslint-disable-next-line no-unused-vars
                 for (const tempr of ts.data) {
@@ -211,12 +198,12 @@ const Tempr = props => {
             }
         }
         setNoChildren(none);
-    };
+    }
 
     async function getParents(temprId) {
         const t = blankTempr ? false : await OopCore.getTempr(temprId);
         setNoParents(!t.temprId);
-    };
+    }
 
     const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
         setOriginalTempr({
@@ -284,7 +271,6 @@ const Tempr = props => {
                 ErrorToast("Could not delete tempr", "Error");
             });
     };
-
 
     const saveTempr = () => {
         clearToast();
@@ -429,14 +415,8 @@ const Tempr = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this tempr?
-                                    </div>
-                                    <div>
-                                        This action can't be
-                                        undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this tempr?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteTempr}
@@ -446,23 +426,22 @@ const Tempr = props => {
                     )}
                     <Button
                         onClick={saveTempr}
-                        aria-label={
-                            blankTempr
-                                ? "Create tempr"
-                                : "Update tempr"
-                        }
+                        aria-label={blankTempr ? "Create tempr" : "Update tempr"}
                     >
                         {blankTempr ? "Create" : "Save"}
                     </Button>
                 </>
             }
             alert={
-                (!compareByValue(originalTempr, temprToObject()) && !deleting && !creating) &&
+                !compareByValue(originalTempr, temprToObject()) &&
+                !deleting &&
+                !creating &&
                 "There are unsaved changes, are you sure you want to leave?"
             }
         >
-            {loading ?
-                <InPlaceGifSpinner /> :
+            {loading ? (
+                <InPlaceGifSpinner />
+            ) : (
                 <>
                     <div>
                         <TemprForm
@@ -478,14 +457,8 @@ const Tempr = props => {
                             errors={temprErrors}
                         />
                         {getTemprTemplateAndPreview()}
-                        <FormControl
-                            label="Notes"
-                            key={`form-control-notes`}
-                        >
-                            <Textarea
-                                value={notes}
-                                onChange={setValue(setNotes)}
-                            />
+                        <FormControl label="Notes" key={`form-control-notes`}>
+                            <Textarea value={notes} onChange={setValue(setNotes)} />
                         </FormControl>
                         {blankTempr ? null : (
                             <>
@@ -509,16 +482,14 @@ const Tempr = props => {
                         )}
                         <Button
                             onClick={saveTempr}
-                            aria-label={
-                                blankTempr ? "Create tempr" : "Update tempr"
-                            }
+                            aria-label={blankTempr ? "Create tempr" : "Update tempr"}
                         >
                             {blankTempr ? "Create" : "Save"}
                         </Button>
                         {props.error && <div>{props.error}</div>}
                     </div>
                 </>
-            }
+            )}
         </Page>
     );
 };

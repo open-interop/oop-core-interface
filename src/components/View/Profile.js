@@ -30,25 +30,11 @@ const Profile = props => {
             <FormControl label="Email" key={"form-control-group-email"}>
                 <Input id={"input-email"} value={props.user.email} disabled />
             </FormControl>
-            <FormControl
-                label="Created At"
-                key={"form-control-group-created-at"}
-            >
-                <Input
-                    id={"input-created-at"}
-                    value={props.user.createdAt}
-                    disabled
-                />
+            <FormControl label="Created At" key={"form-control-group-created-at"}>
+                <Input id={"input-created-at"} value={props.user.createdAt} disabled />
             </FormControl>
-            <FormControl
-                label="Updated At"
-                key={"form-control-group-updated-at"}
-            >
-                <Input
-                    id={"input-updated-at"}
-                    value={props.user.updatedAt}
-                    disabled
-                />
+            <FormControl label="Updated At" key={"form-control-group-updated-at"}>
+                <Input id={"input-updated-at"} value={props.user.updatedAt} disabled />
             </FormControl>
         </Page>
     );

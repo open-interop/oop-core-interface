@@ -11,15 +11,14 @@ import { Page, PaginatedTable, DatetimeTooltip } from "../Universal";
 import { useQueryParam, StringParam, NumberParam } from "use-query-params";
 import OopCore from "../../OopCore";
 
-const PageNotFound = lazy(() => import('../View/PageNotFound'));
+const PageNotFound = lazy(() => import("../View/PageNotFound"));
 
 function typeHeading(string) {
-    const capitalized = (string.charAt(0).toUpperCase() + string.slice(1)).replace('-', ' ');
-    if (capitalized[capitalized.length - 1] === 's') {
-        if (capitalized.slice(capitalized.length - 3) === 'ies') {
-            return capitalized.slice(0, -3) + 'y';
-        }
-        else {
+    const capitalized = (string.charAt(0).toUpperCase() + string.slice(1)).replace("-", " ");
+    if (capitalized[capitalized.length - 1] === "s") {
+        if (capitalized.slice(capitalized.length - 3) === "ies") {
+            return capitalized.slice(0, -3) + "y";
+        } else {
             return capitalized.slice(0, -1);
         }
     } else {
@@ -37,25 +36,29 @@ const AuditLogs = props => {
     const [userId, setUserId] = useQueryParam("userId", NumberParam);
     const [notFound, setNotFound] = useState(null);
 
-    const previousPath = (props.location.state && props.location.state.from) ? props.location.state.from
-        : props.location.pathname.replace('/audit-logs','');
+    const previousPath =
+        props.location.state && props.location.state.from
+            ? props.location.state.from
+            : props.location.pathname.replace("/audit-logs", "");
 
     const componentHeading = typeHeading(props.match.params.componentType);
 
-    const getData = (pagination) => {
+    const getData = pagination => {
         return OopCore.getAuditLogs(
             formatType(props.match.params.componentType),
             props.match.params.componentId,
-            pagination
-        ).then(history => {
-            return history;
-        }).catch(e => {
-            setNotFound(true);
-        });
+            pagination,
+        )
+            .then(history => {
+                return history;
+            })
+            .catch(e => {
+                setNotFound(true);
+            });
     };
 
     if (notFound) {
-        return <PageNotFound item="Audit Logs"/>
+        return <PageNotFound item="Audit Logs" />;
     }
 
     return (
@@ -72,19 +75,18 @@ const AuditLogs = props => {
                             <Button
                                 kind={KIND.tertiary}
                                 $as={Link}
-                                to={{pathname: `/audit-logs/${content}`, state: { from: props.location.pathname }}}
+                                to={{
+                                    pathname: `/audit-logs/${content}`,
+                                    state: { from: props.location.pathname },
+                                }}
                                 aria-label={`View Audit Log - ${content}`}
                             >
-                                <FontAwesomeIcon
-                                    icon={faListUl}
-                                />
+                                <FontAwesomeIcon icon={faListUl} />
                             </Button>
                         );
-                    } 
+                    }
                     if (columnName === "createdAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
                     }
                     return content;
                 }}

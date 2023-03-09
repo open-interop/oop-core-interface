@@ -63,15 +63,11 @@ const Site = props => {
     };
 
     const getData = () => {
-        return Promise.all([getSite(), OopCore.getSites()]).then(
-            ([site, sites]) => {
-                const filtered = sites.data.filter(
-                    existingSite => existingSite.id !== site.id,
-                );
-                setSites(filtered);
-                return site;
-            },
-        );
+        return Promise.all([getSite(), OopCore.getSites()]).then(([site, sites]) => {
+            const filtered = sites.data.filter(existingSite => existingSite.id !== site.id);
+            setSites(filtered);
+            return site;
+        });
     };
 
     const deleteSite = () => {
@@ -138,13 +134,8 @@ const Site = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this site?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this site?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteSite}
@@ -154,15 +145,8 @@ const Site = props => {
                     )}
                     <Button
                         onClick={saveSite}
-                        disabled={identicalObject(
-                            site,
-                            updatedSite,
-                        )}
-                        aria-label={
-                            blankSite
-                                ? "Create site"
-                                : "Update site"
-                        }
+                        disabled={identicalObject(site, updatedSite)}
+                        aria-label={blankSite ? "Create site" : "Update site"}
                     >
                         {blankSite ? "Create" : "Save"}
                     </Button>
@@ -179,39 +163,26 @@ const Site = props => {
                         <FormControl
                             label="Name"
                             key={"form-control-group-name"}
-                            error={
-                                siteErrors.name ? `Name ${siteErrors.name}` : ""
-                            }
+                            error={siteErrors.name ? `Name ${siteErrors.name}` : ""}
                             caption="required"
                         >
                             <Input
                                 id={"input-name"}
                                 value={updatedSite.name || ""}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("name", event.currentTarget.value)}
                                 error={siteErrors.name}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Description"
-                            key={"form-control-group-description"}
-                        >
+                        <FormControl label="Description" key={"form-control-group-description"}>
                             <Input
                                 id={"input-description"}
                                 value={updatedSite.description || ""}
                                 onChange={event =>
-                                    setValue(
-                                        "description",
-                                        event.currentTarget.value,
-                                    )
+                                    setValue("description", event.currentTarget.value)
                                 }
                             />
                         </FormControl>
-                        <FormControl
-                            label="Timezone"
-                            key={"form-control-group-time-zone"}
-                        >
+                        <FormControl label="Timezone" key={"form-control-group-time-zone"}>
                             <Select
                                 options={timezones}
                                 labelKey="name"
@@ -219,21 +190,13 @@ const Site = props => {
                                 searchable={false}
                                 onChange={event => {
                                     event.value.length
-                                        ? setValue(
-                                              "timeZone",
-                                              event.value[0].id,
-                                          )
+                                        ? setValue("timeZone", event.value[0].id)
                                         : setValue("timeZone", null);
                                 }}
-                                value={timezones.filter(
-                                    item => item.id === updatedSite.timeZone,
-                                )}
+                                value={timezones.filter(item => item.id === updatedSite.timeZone)}
                             />
                         </FormControl>
-                        <FormControl
-                            label="Parent site"
-                            key={"form-control-group-site-id"}
-                        >
+                        <FormControl label="Parent site" key={"form-control-group-site-id"}>
                             <Select
                                 options={sites}
                                 labelKey="name"
@@ -243,103 +206,65 @@ const Site = props => {
                                         ? setValue("siteId", event.value[0].id)
                                         : setValue("siteId", null);
                                 }}
-                                value={sites.filter(
-                                    item => item.id === updatedSite.siteId,
-                                )}
+                                value={sites.filter(item => item.id === updatedSite.siteId)}
                             />
                         </FormControl>
 
                         <Accordion>
                             <Panel title="Location">
                                 <div className="content-wrapper">
-                                    <FormControl
-                                        label="Address"
-                                        key={"form-control-group-address"}
-                                    >
+                                    <FormControl label="Address" key={"form-control-group-address"}>
                                         <Input
                                             id={"input-address"}
                                             value={updatedSite.address || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "address",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("address", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
 
-                                    <FormControl
-                                        label="Zip code"
-                                        key={"form-control-zip-code"}
-                                    >
+                                    <FormControl label="Zip code" key={"form-control-zip-code"}>
                                         <Input
                                             id={"input-zip-code"}
                                             value={updatedSite.zipCode || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "zipCode",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("zipCode", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
-                                    <FormControl
-                                        label="City"
-                                        key={"form-control-group-city"}
-                                    >
+                                    <FormControl label="City" key={"form-control-group-city"}>
                                         <Input
                                             id={"input-city"}
                                             value={updatedSite.city || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "city",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("city", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
-                                    <FormControl
-                                        label="Region"
-                                        key={"form-control-group-region"}
-                                    >
+                                    <FormControl label="Region" key={"form-control-group-region"}>
                                         <Input
                                             id={"input-region"}
                                             value={updatedSite.region || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "region",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("region", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
-                                    <FormControl
-                                        label="State"
-                                        key={"form-control-group-state"}
-                                    >
+                                    <FormControl label="State" key={"form-control-group-state"}>
                                         <Input
                                             id={"input-state"}
                                             value={updatedSite.state || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "state",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("state", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
-                                    <FormControl
-                                        label="Country"
-                                        key={"form-control-group-country"}
-                                    >
+                                    <FormControl label="Country" key={"form-control-group-country"}>
                                         <Input
                                             id={"input-country"}
                                             value={updatedSite.country || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "country",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("country", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
@@ -351,10 +276,7 @@ const Site = props => {
                                             id={"input-latitude"}
                                             value={updatedSite.latitude || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "latitude",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("latitude", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
@@ -366,10 +288,7 @@ const Site = props => {
                                             id={"input-longitude"}
                                             value={updatedSite.longitude || ""}
                                             onChange={event =>
-                                                setValue(
-                                                    "longitude",
-                                                    event.currentTarget.value,
-                                                )
+                                                setValue("longitude", event.currentTarget.value)
                                             }
                                         />
                                     </FormControl>
@@ -382,9 +301,7 @@ const Site = props => {
                         >
                             <PairInput
                                 data={updatedSite.externalUuids}
-                                updateData={data =>
-                                    setValue("externalUuids", data)
-                                }
+                                updateData={data => setValue("externalUuids", data)}
                             />
                         </FormControl>
                     </>

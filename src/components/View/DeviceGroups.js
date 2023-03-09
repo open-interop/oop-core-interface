@@ -24,7 +24,7 @@ const DeviceGroups = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(pagination) => {
+                getData={pagination => {
                     return OopCore.getDeviceGroups(pagination);
                 }}
                 mapFunction={(columnName, content) => {
@@ -37,19 +37,18 @@ const DeviceGroups = memo(props => {
                                     to={`/device-groups/${content}`}
                                     aria-label="Edit device group"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/device-groups/${content}/audit-logs`, state: { from: `/device-groups` }}}
+                                    to={{
+                                        pathname: `/device-groups/${content}/audit-logs`,
+                                        state: { from: `/device-groups` },
+                                    }}
                                     aria-label="View device group history"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
 
                                 <Button

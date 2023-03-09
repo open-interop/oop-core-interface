@@ -25,9 +25,7 @@ const Header = props => {
                     {!props.history.location.pathname.includes("/sites") &&
                         !props.history.location.pathname.includes("/temprs") &&
                         !props.history.location.pathname.includes("/users") &&
-                        !props.history.location.pathname.includes(
-                            "/device-groups",
-                        ) && (
+                        !props.history.location.pathname.includes("/device-groups") && (
                             <SiteSelector
                                 selectedSite={props.site}
                                 selectSite={props.selectSite}
@@ -50,9 +48,7 @@ const Header = props => {
                                 OopCore.logout();
                             }}
                             aria-label="Log out"
-                            endEnhancer={() => (
-                                <FontAwesomeIcon icon={faSignOutAlt} />
-                            )}
+                            endEnhancer={() => <FontAwesomeIcon icon={faSignOutAlt} />}
                         >
                             Log out
                         </Button>

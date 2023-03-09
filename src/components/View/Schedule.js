@@ -7,11 +7,7 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 
 import { clearToast, ErrorToast, SuccessToast } from "../Global";
-import {
-    ConfirmModal,
-    DataProvider,
-    Page,
-} from "../Universal";
+import { ConfirmModal, DataProvider, Page } from "../Universal";
 import OopCore from "../../OopCore";
 import { identicalObject } from "../../Utilities";
 
@@ -32,15 +28,15 @@ const Schedule = props => {
     const getSchedule = () => {
         return blankSchedule
             ? Promise.resolve({
-                name: "",
-                monthOfYear: "*",
-                dayOfMonth: "*",
-                dayOfWeek: "*",
-                hour: "*",
-                minute: "*",
-                active: false,
-                relations: [],
-            })
+                  name: "",
+                  monthOfYear: "*",
+                  dayOfMonth: "*",
+                  dayOfWeek: "*",
+                  hour: "*",
+                  minute: "*",
+                  active: false,
+                  relations: [],
+              })
             : OopCore.getSchedule(props.match.params.scheduleId);
     };
 
@@ -48,9 +44,9 @@ const Schedule = props => {
         return blankSchedule
             ? Promise.resolve([])
             : OopCore.getScheduleTemprs({
-                filter: { scheduleId: props.match.params.scheduleId },
-                "page[size]": -1,
-            }).then(res => res.data);
+                  filter: { scheduleId: props.match.params.scheduleId },
+                  "page[size]": -1,
+              }).then(res => res.data);
     };
 
     const refreshSchedule = response => {
@@ -111,23 +107,20 @@ const Schedule = props => {
 
     return (
         <Page
-            title={
-                blankSchedule
-                    ? "New Schedule | Open Interop"
-                    : "Edit Schedule | Open Interop"
-            }
-            heading={
-                blankSchedule
-                    ? "Create Schedule"
-                    : "Edit Schedule"
-            }
+            title={blankSchedule ? "New Schedule | Open Interop" : "Edit Schedule | Open Interop"}
+            heading={blankSchedule ? "Create Schedule" : "Edit Schedule"}
             backlink={props.location.prevPath || "/schedules"}
             actions={
                 <>
                     {blankSchedule ? null : (
                         <Button
                             $as={Link}
-                            to={{pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`, state: {from: `/schedules/${props.match.params.scheduleId}/edit`}}}
+                            to={{
+                                pathname: `/schedules/${props.match.params.scheduleId}/audit-logs`,
+                                state: {
+                                    from: `/schedules/${props.match.params.scheduleId}/edit`,
+                                },
+                            }}
                             aria-label={"History"}
                         >
                             History
@@ -139,13 +132,8 @@ const Schedule = props => {
                             title="Confirm Deletion"
                             mainText={
                                 <>
-                                    <div>
-                                        Are you sure you want to
-                                        delete this schedule?
-                                    </div>
-                                    <div>
-                                        This action can't be undone.
-                                    </div>
+                                    <div>Are you sure you want to delete this schedule?</div>
+                                    <div>This action can't be undone.</div>
                                 </>
                             }
                             primaryAction={deleteSchedule}
@@ -153,10 +141,7 @@ const Schedule = props => {
                             secondaryActionText="Cancel"
                         />
                     )}
-                    <Button
-                        onClick={saveSchedule}
-                        disabled={saveButtonDisabled()}
-                    >
+                    <Button onClick={saveSchedule} disabled={saveButtonDisabled()}>
                         {blankSchedule ? "Create" : "Save"}
                     </Button>
                 </>
@@ -175,18 +160,12 @@ const Schedule = props => {
                         <FormControl
                             label="Name"
                             caption="required"
-                            error={
-                                scheduleErrors.name
-                                    ? `Name ${scheduleErrors.name}`
-                                    : ""
-                            }
+                            error={scheduleErrors.name ? `Name ${scheduleErrors.name}` : ""}
                         >
                             <Input
                                 id="input-name"
                                 value={updatedSchedule.name}
-                                onChange={event =>
-                                    setValue("name", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("name", event.currentTarget.value)}
                                 error={scheduleErrors.name}
                             />
                         </FormControl>
@@ -194,9 +173,7 @@ const Schedule = props => {
                             <Checkbox
                                 id="input-active"
                                 checked={updatedSchedule.active}
-                                onChange={() =>
-                                    setValue("active", !updatedSchedule.active)
-                                }
+                                onChange={() => setValue("active", !updatedSchedule.active)}
                                 checkmarkType={STYLE_TYPE.toggle_round}
                             />
                         </FormControl>
@@ -213,10 +190,7 @@ const Schedule = props => {
                                 id="input-moy"
                                 value={updatedSchedule.monthOfYear}
                                 onChange={event =>
-                                    setValue(
-                                        "monthOfYear",
-                                        event.currentTarget.value,
-                                    )
+                                    setValue("monthOfYear", event.currentTarget.value)
                                 }
                                 error={scheduleErrors.monthOfYear}
                             />
@@ -234,10 +208,7 @@ const Schedule = props => {
                                 id="input-dom"
                                 value={updatedSchedule.dayOfMonth}
                                 onChange={event =>
-                                    setValue(
-                                        "dayOfMonth",
-                                        event.currentTarget.value,
-                                    )
+                                    setValue("dayOfMonth", event.currentTarget.value)
                                 }
                                 error={scheduleErrors.dayOfMonth}
                             />
@@ -254,30 +225,19 @@ const Schedule = props => {
                             <Input
                                 id="input-dow"
                                 value={updatedSchedule.dayOfWeek}
-                                onChange={event =>
-                                    setValue(
-                                        "dayOfWeek",
-                                        event.currentTarget.value,
-                                    )
-                                }
+                                onChange={event => setValue("dayOfWeek", event.currentTarget.value)}
                                 error={scheduleErrors.dayOfWeek}
                             />
                         </FormControl>
                         <FormControl
                             label="Hour"
                             caption="required"
-                            error={
-                                scheduleErrors.hour
-                                    ? `Day of Week ${scheduleErrors.hour}`
-                                    : ""
-                            }
+                            error={scheduleErrors.hour ? `Day of Week ${scheduleErrors.hour}` : ""}
                         >
                             <Input
                                 id="input-hour"
                                 value={updatedSchedule.hour}
-                                onChange={event =>
-                                    setValue("hour", event.currentTarget.value)
-                                }
+                                onChange={event => setValue("hour", event.currentTarget.value)}
                                 error={scheduleErrors.hour}
                             />
                         </FormControl>
@@ -285,47 +245,35 @@ const Schedule = props => {
                             label="Minute"
                             caption="required"
                             error={
-                                scheduleErrors.minute
-                                    ? `Day of Week ${scheduleErrors.minute}`
-                                    : ""
+                                scheduleErrors.minute ? `Day of Week ${scheduleErrors.minute}` : ""
                             }
                         >
                             <Input
                                 id="input-minute"
                                 value={updatedSchedule.minute}
-                                onChange={event =>
-                                    setValue(
-                                        "minute",
-                                        event.currentTarget.value,
-                                    )
-                                }
+                                onChange={event => setValue("minute", event.currentTarget.value)}
                                 error={scheduleErrors.minute}
                             />
                         </FormControl>
-                        {blankSchedule ||
-                        <TemprAssociator
-                            subtitle="Select temprs to associate with this schedule."
-                            selected={relations}
-                            onSelect={tempr => {
-                                return OopCore.createScheduleTempr({
-                                    scheduleId: schedule.id,
-                                    temprId: tempr.id,
-                                }).then(res => {
-                                    setRelations([...relations, res]);
-                                });
-                            }}
-                            onDeselect={(tempr, rel) => {
-                                return OopCore.deleteScheduleTempr(rel.id, rel).then(
-                                    res => {
-                                        setRelations(
-                                            relations.filter(
-                                                v => v.id !== rel.id,
-                                            ),
-                                        );
-                                    },
-                                );
-                            }}
-                        />}
+                        {blankSchedule || (
+                            <TemprAssociator
+                                subtitle="Select temprs to associate with this schedule."
+                                selected={relations}
+                                onSelect={tempr => {
+                                    return OopCore.createScheduleTempr({
+                                        scheduleId: schedule.id,
+                                        temprId: tempr.id,
+                                    }).then(res => {
+                                        setRelations([...relations, res]);
+                                    });
+                                }}
+                                onDeselect={(tempr, rel) => {
+                                    return OopCore.deleteScheduleTempr(rel.id, rel).then(res => {
+                                        setRelations(relations.filter(v => v.id !== rel.id));
+                                    });
+                                }}
+                            />
+                        )}
                     </>
                 )}
             />

@@ -11,31 +11,22 @@ import { PaginatedTable, Page } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Temprs = props => {
-
     const [id, setId] = useQueryParam("id", StringParam);
     const [name, setName] = useQueryParam("name", StringParam);
-    const [deviceGroupId, setDeviceGroupId] = useQueryParam(
-        "deviceGroupId",
-        StringParam,
-    );
+    const [deviceGroupId, setDeviceGroupId] = useQueryParam("deviceGroupId", StringParam);
 
-    const getData = (pagination) => {
-        return Promise.all([
-            OopCore.getTemprs(pagination),
-            OopCore.getDeviceGroups(),
-        ]).then(([temprs, groups]) => {
-            temprs.data = temprs.data.map(tempr => ({
-                ...tempr,
-                group: groups.data.some(
-                    group => group.id === tempr.deviceGroupId,
-                )
-                    ? groups.data.find(
-                          group => group.id === tempr.deviceGroupId,
-                      ).name
-                    : "No group name provided",
-            }));
-            return temprs;
-        });
+    const getData = pagination => {
+        return Promise.all([OopCore.getTemprs(pagination), OopCore.getDeviceGroups()]).then(
+            ([temprs, groups]) => {
+                temprs.data = temprs.data.map(tempr => ({
+                    ...tempr,
+                    group: groups.data.some(group => group.id === tempr.deviceGroupId)
+                        ? groups.data.find(group => group.id === tempr.deviceGroupId).name
+                        : "No group name provided",
+                }));
+                return temprs;
+            },
+        );
     };
 
     return (
@@ -55,7 +46,7 @@ const Temprs = props => {
             }
         >
             <PaginatedTable
-                getData={(pagination) => {
+                getData={pagination => {
                     return getData(pagination).then(response => {
                         return response;
                     });
@@ -70,19 +61,20 @@ const Temprs = props => {
                                     to={`${props.location.pathname}/${content}`}
                                     aria-label="Edit tempr"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `${props.location.pathname}/${content}/audit-logs`, state: {from: `${props.location.pathname}`}}}
+                                    to={{
+                                        pathname: `${props.location.pathname}/${content}/audit-logs`,
+                                        state: {
+                                            from: `${props.location.pathname}`,
+                                        },
+                                    }}
                                     aria-label="View tempr history"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
                             </>
                         );

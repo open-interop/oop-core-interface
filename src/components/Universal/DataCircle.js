@@ -15,7 +15,7 @@ const Circle = styled("div", props => ({
         content: '""',
         display: "block",
         paddingBottom: "100%",
-    }
+    },
 }));
 
 const DataCircle = ({ color, value, subtitle }) => {
@@ -33,7 +33,7 @@ const DataCircle = ({ color, value, subtitle }) => {
                 alignItems: "center",
             })}
         >
-            <Circle color={color} fontSize={fontSize} >
+            <Circle color={color} fontSize={fontSize}>
                 {string}
             </Circle>
             <div className="data-subtitle">{subtitle}</div>

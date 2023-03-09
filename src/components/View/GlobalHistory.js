@@ -24,11 +24,9 @@ const GlobalHistory = props => {
     const [action, setAction] = useQueryParam("action", StringParam);
 
     return (
-        <Page
-            heading={"Global History"}
-        >
+        <Page heading={"Global History"}>
             <PaginatedTable
-                getData={(pagination) => {
+                getData={pagination => {
                     return OopCore.getGlobalHistory(pagination);
                 }}
                 mapFunction={(columnName, content) => {
@@ -50,9 +48,7 @@ const GlobalHistory = props => {
                     }
 
                     if (columnName === "createdAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
                     }
                     return content;
                 }}

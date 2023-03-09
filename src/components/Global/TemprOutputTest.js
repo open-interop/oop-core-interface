@@ -42,19 +42,13 @@ const TemprOutputTest = memo(props => {
                         <Tab title="Console output">
                             <JSONPretty
                                 className="tempr-preview-content "
-                                data={
-                                    rendered.console ||
-                                    "No data to show"
-                                }
+                                data={rendered.console || "No data to show"}
                             />
                         </Tab>
                         <Tab title="Error output">
                             <JSONPretty
                                 className="tempr-preview-content "
-                                data={
-                                    rendered.error ||
-                                    "No data to show"
-                                }
+                                data={rendered.error || "No data to show"}
                             />
                         </Tab>
                     </Tabs>
@@ -81,10 +75,7 @@ const TemprOutputTest = memo(props => {
             .catch(error => {
                 setPreviewLoading(false);
                 console.error(error);
-                ErrorToast(
-                    "Could not preview example transmission with current mapping",
-                    "Error",
-                );
+                ErrorToast("Could not preview example transmission with current mapping", "Error");
             });
     };
 
@@ -95,19 +86,15 @@ const TemprOutputTest = memo(props => {
                     kind={KIND.secondary}
                     onClick={calculateOutput}
                     isLoading={previewLoading}
-                    style={{margin: "20px"}}
+                    style={{ margin: "20px" }}
                 >
                     Calculate output
                 </Button>
-                {
-                    props.showOpenButton &&
-                    <Button
-                        kind={KIND.secondary}
-                        onClick={props.openEditor}
-                    >
+                {props.showOpenButton && (
+                    <Button kind={KIND.secondary} onClick={props.openEditor}>
                         Open Large Editor
                     </Button>
-                }
+                )}
             </div>
             {PreviewTemprBox()}
         </>

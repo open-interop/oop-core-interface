@@ -27,10 +27,10 @@ $header-font-family: $body-font-family;
 */
 
 const primitives = {
-    primaryFontFamily: "system-ui, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    primaryFontFamily: 'system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
 
-    primary: '#177692',
-    primaryA: '#303030',
+    primary: "#177692",
+    primaryA: "#303030",
 
     negative: "#c32b08",
     positive: "#187b50",
@@ -41,7 +41,7 @@ const primitives = {
 const overrides = {
     grid: { margins: 0 },
     heading: {
-        fontFamily: "system-ui, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+        fontFamily: 'system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif',
     },
     breakpoints: {
         small: 380,

@@ -5,11 +5,7 @@ import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faCircle,
-    faEdit,
-    faHistory,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faEdit, faHistory } from "@fortawesome/free-solid-svg-icons";
 import { Table, Page, MaxCard, InPlaceGifSpinner, DatetimeTooltip } from "../Universal";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { Map, TileLayer, Marker } from "react-leaflet";
@@ -47,10 +43,7 @@ const StatusIndicator = props => {
 
     return (
         <span className={device.active ? active : inactive}>
-            <FontAwesomeIcon
-                className={device.active ? "blink" : ""}
-                icon={faCircle}
-            />
+            <FontAwesomeIcon className={device.active ? "blink" : ""} icon={faCircle} />
         </span>
     );
 };
@@ -72,38 +65,25 @@ const DeviceDetails = props => {
         >
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Name">
-                        {device.name}
-                    </ListItemLabel>
+                    <ListItemLabel description="Name">{device.name}</ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
                 <div className="card-label">
                     <ListItemLabel description="Site">
-                        {
-                            device.site
-                                ? device.site.fullName
-                                : ""
-                        }
+                        {device.site ? device.site.fullName : ""}
                     </ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
                 <div className="card-label">
-                    <ListItemLabel description="Group">
-                        {device.group.name}
-                    </ListItemLabel>
+                    <ListItemLabel description="Group">{device.group.name}</ListItemLabel>
                 </div>
             </ListItem>
             <ListItem>
                 <div className="card-label">
                     <ListItemLabel description="Device Temprs">
-                        {
-                            device.deviceTemprs
-                                ? device.deviceTemprs
-                                : "No"
-                        }{" "}
-                        device temprs associated
+                        {device.deviceTemprs ? device.deviceTemprs : "No"} device temprs associated
                     </ListItemLabel>
                 </div>
             </ListItem>
@@ -122,10 +102,7 @@ const DeviceLocation = props => {
         <MaxCard title="Location">
             {device.longitude && device.latitude ? (
                 <Map
-                    center={[
-                        device.latitude,
-                        device.longitude,
-                    ]}
+                    center={[device.latitude, device.longitude]}
                     zoom={10}
                     className="map-component"
                 >
@@ -133,17 +110,10 @@ const DeviceLocation = props => {
                         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker
-                        position={[
-                            device.latitude,
-                            device.longitude,
-                        ]}
-                    ></Marker>
+                    <Marker position={[device.latitude, device.longitude]}></Marker>
                 </Map>
             ) : (
-                <div className="map-component-placeholder">
-                    No location data
-                </div>
+                <div className="map-component-placeholder">No location data</div>
             )}
         </MaxCard>
     );
@@ -157,11 +127,7 @@ const DeviceTransmissions = props => {
     }
 
     if (!(device.messages && device.messages.length)) {
-        return (
-            <MaxCard title="Latest Messages">
-                No messages available
-            </MaxCard>
-        );
+        return <MaxCard title="Latest Messages">No messages available</MaxCard>;
     }
 
     return (
@@ -182,23 +148,16 @@ const DeviceTransmissions = props => {
         >
             <Table
                 data={device.messages}
-                mapFunction={(
-                    columnName,
-                    content,
-                ) => {
+                mapFunction={(columnName, content) => {
                     if (columnName === "transmittedAt") {
-                        return (
-                            <DatetimeTooltip time={content}></DatetimeTooltip>
-                        );
+                        return <DatetimeTooltip time={content}></DatetimeTooltip>;
                     }
                     return content;
                 }}
                 columns={[
                     {
-                        id:
-                            "uuid",
-                        name:
-                            "Message UUID",
+                        id: "uuid",
+                        name: "Message UUID",
                     },
                     {
                         id: "transmissionCount",
@@ -206,11 +165,10 @@ const DeviceTransmissions = props => {
                     },
                     {
                         id: "createdAt",
-                        name:
-                            "Created at",
+                        name: "Created at",
                     },
                 ]}
-                maxHeight={'600px'}
+                maxHeight={"600px"}
             />
         </MaxCard>
     );
@@ -224,11 +182,7 @@ const DeviceTransmissionStatus = props => {
     }
 
     if (!(device.transmissions && device.transmissions.length)) {
-        return (
-            <MaxCard title="Transmission Status">
-                No transmission status available
-            </MaxCard>
-        );
+        return <MaxCard title="Transmission Status">No transmission status available</MaxCard>;
     }
 
     const generateCustomLabels = chart => {
@@ -240,30 +194,17 @@ const DeviceTransmissionStatus = props => {
                 var ds = data.datasets[0];
                 var arc = meta.data[i];
                 var custom = (arc && arc.custom) || {};
-                var getValueAtIndexOrDefault =
-                    Chart.helpers.getValueAtIndexOrDefault;
+                var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
                 var arcOpts = chart.options.elements.arc;
                 var fill = custom.backgroundColor
                     ? custom.backgroundColor
-                    : getValueAtIndexOrDefault(
-                          ds.backgroundColor,
-                          i,
-                          arcOpts.backgroundColor,
-                      );
+                    : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
                 var stroke = custom.borderColor
                     ? custom.borderColor
-                    : getValueAtIndexOrDefault(
-                          ds.borderColor,
-                          i,
-                          arcOpts.borderColor,
-                      );
+                    : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
                 var bw = custom.borderWidth
                     ? custom.borderWidth
-                    : getValueAtIndexOrDefault(
-                          ds.borderWidth,
-                          i,
-                          arcOpts.borderWidth,
-                      );
+                    : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
                 return {
                     text: ds.data[i] + " " + label.toLowerCase(),
                     fillStyle: fill,
@@ -282,19 +223,11 @@ const DeviceTransmissionStatus = props => {
             <div className="flex-row center">
                 <Pie
                     data={{
-                        labels: device.stats.map(
-                            stat => stat.label,
-                        ),
+                        labels: device.stats.map(stat => stat.label),
                         datasets: [
                             {
-                                data: device.stats.map(
-                                    stat =>
-                                        stat.value,
-                                ),
-                                backgroundColor: device.stats.map(
-                                    stat =>
-                                        stat.backgroundColor,
-                                ),
+                                data: device.stats.map(stat => stat.value),
+                                backgroundColor: device.stats.map(stat => stat.backgroundColor),
                             },
                         ],
                     }}
@@ -342,48 +275,39 @@ const DeviceDashboard = props => {
                     originId: deviceId,
                 },
                 "page[size]": 15,
-            })
-        ])
-            .then(([
-                device,
-                transmissions,
-                deviceTemprs,
-                deviceStats,
-                messages,
-            ]) => {
-                device.transmissions = transmissions.data;
-                device.deviceTemprs = deviceTemprs.data.length;
-                device.messages = messages.data;
+            }),
+        ]).then(([device, transmissions, deviceTemprs, deviceStats, messages]) => {
+            device.transmissions = transmissions.data;
+            device.deviceTemprs = deviceTemprs.data.length;
+            device.messages = messages.data;
 
-                const successfulTransmissions = {
-                    label: "Successful",
-                    value: deviceStats.transmissions.successful || 0,
-                    backgroundColor: styles.green,
-                };
-                const failedTransmissions = {
-                    label: "Failed",
-                    value: deviceStats.transmissions.failed || 0,
-                    backgroundColor: styles.red,
-                };
-                const skippedTransmissions = {
-                    label: "Skipped",
-                    value: deviceStats.transmissions.skipped || 0,
-                    backgroundColor: styles.orange,
-                };
+            const successfulTransmissions = {
+                label: "Successful",
+                value: deviceStats.transmissions.successful || 0,
+                backgroundColor: styles.green,
+            };
+            const failedTransmissions = {
+                label: "Failed",
+                value: deviceStats.transmissions.failed || 0,
+                backgroundColor: styles.red,
+            };
+            const skippedTransmissions = {
+                label: "Skipped",
+                value: deviceStats.transmissions.skipped || 0,
+                backgroundColor: styles.orange,
+            };
 
+            device.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
 
-                device.stats = [successfulTransmissions, failedTransmissions, skippedTransmissions];
+            setDevice(device);
 
-                setDevice(device);
-
-                Promise.all([
-                    OopCore.getSite(device.siteId),
-                    OopCore.getDeviceGroup(device.deviceGroupId),
-                ])
-                    .then(([site, group]) => {
-                        setDevice({ ...device, site, group });
-                    });
+            Promise.all([
+                OopCore.getSite(device.siteId),
+                OopCore.getDeviceGroup(device.deviceGroupId),
+            ]).then(([site, group]) => {
+                setDevice({ ...device, site, group });
             });
+        });
     }, [deviceId]);
 
     return (
@@ -405,7 +329,12 @@ const DeviceDashboard = props => {
                     <Button
                         $as={Link}
                         kind={KIND.minimal}
-                        to={{pathname: `/devices/${props.match.params.deviceId}/audit-logs`, state: {from: `/devices/${props.match.params.deviceId}`}}}
+                        to={{
+                            pathname: `/devices/${props.match.params.deviceId}/audit-logs`,
+                            state: {
+                                from: `/devices/${props.match.params.deviceId}`,
+                            },
+                        }}
                         endEnhancer={() => <FontAwesomeIcon icon={faHistory} />}
                         aria-label="History for this device"
                     >
@@ -414,14 +343,14 @@ const DeviceDashboard = props => {
                 </>
             }
         >
-            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5,5,12]} >
+            <Grid behavior={BEHAVIOR.fluid} gridGaps={[32]} gridColumns={[5, 5, 12]}>
                 <Cell span={5}>
                     <DeviceDetails device={device} />
                 </Cell>
-                <Cell span={[5,5,7]}>
+                <Cell span={[5, 5, 7]}>
                     <DeviceLocation device={device} />
                 </Cell>
-                <Cell span={[5,5,7]}>
+                <Cell span={[5, 5, 7]}>
                     <DeviceTransmissions device={device} />
                 </Cell>
                 <Cell span={5}>

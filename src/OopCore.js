@@ -123,12 +123,12 @@ class OopCore extends EventEmitter {
                 }
 
                 if (typeof value === "object" && value !== null) {
-                    if ('gt' in value && value['gt'] === true) {
+                    if ("gt" in value && value["gt"] === true) {
                         const newBase = `${base}[gt]`;
-                        buildParam(newBase, value['val']);
-                    } else if ('gt' in value && value['gt'] === false) {
+                        buildParam(newBase, value["val"]);
+                    } else if ("gt" in value && value["gt"] === false) {
                         const newBase = `${base}[lt]`;
-                        buildParam(newBase, value['val']);
+                        buildParam(newBase, value["val"]);
                     } else {
                         // eslint-disable-next-line
                         for (const [k, v] of Object.entries(value)) {
@@ -147,12 +147,7 @@ class OopCore extends EventEmitter {
         return queryString.stringify(built);
     }
 
-    makeRequest(
-        endpoint,
-        requestType = RequestType.GET,
-        data = false,
-        requireToken = true,
-    ) {
+    makeRequest(endpoint, requestType = RequestType.GET, data = false, requireToken = true) {
         const token = this.token;
         if (!token && requireToken) {
             return Promise.reject(new Error("No token set."));
@@ -163,10 +158,7 @@ class OopCore extends EventEmitter {
             method: requestType,
         };
 
-        if (
-            requestType === RequestType.POST ||
-            requestType === RequestType.PUT
-        ) {
+        if (requestType === RequestType.POST || requestType === RequestType.PUT) {
             options.headers["Content-Type"] = "application/json";
             options.body = JSON.stringify(this.camelToSnake(data));
         }
@@ -201,16 +193,13 @@ class OopCore extends EventEmitter {
     }
 
     login(email, password) {
-        return this.makeRequest(
-            "/auth/login",
-            RequestType.POST,
-            { email, password },
-            false,
-        ).then(response => {
-            this.token = response.token;
-            this.saveCookie("token", response.token);
-            return this.getLoggedInUser();
-        });
+        return this.makeRequest("/auth/login", RequestType.POST, { email, password }, false).then(
+            response => {
+                this.token = response.token;
+                this.saveCookie("token", response.token);
+                return this.getLoggedInUser();
+            },
+        );
     }
 
     requestPasswordReset(user) {
@@ -290,11 +279,7 @@ class OopCore extends EventEmitter {
 
     updateDevice(data) {
         const payload = { device: data };
-        return this.makeRequest(
-            `/devices/${data.id}`,
-            RequestType.PUT,
-            payload,
-        );
+        return this.makeRequest(`/devices/${data.id}`, RequestType.PUT, payload);
     }
 
     createDevice(device) {
@@ -309,11 +294,7 @@ class OopCore extends EventEmitter {
 
     updateDeviceGroup(deviceGroup) {
         const payload = { device_group: deviceGroup };
-        return this.makeRequest(
-            `/device_groups/${deviceGroup.id}`,
-            RequestType.PUT,
-            payload,
-        );
+        return this.makeRequest(`/device_groups/${deviceGroup.id}`, RequestType.PUT, payload);
     }
 
     createDeviceGroup(deviceGroup) {
@@ -322,10 +303,7 @@ class OopCore extends EventEmitter {
     }
 
     deleteDeviceGroup(deviceGroupId) {
-        return this.makeRequest(
-            `/device_groups/${deviceGroupId}`,
-            RequestType.DELETE,
-        );
+        return this.makeRequest(`/device_groups/${deviceGroupId}`, RequestType.DELETE);
     }
 
     getDeviceGroup(deviceGroupId) {
@@ -344,9 +322,7 @@ class OopCore extends EventEmitter {
     }
 
     getTransmission(transmissionId) {
-        return this.makeRequest(
-            `/transmissions/${transmissionId}`,
-        );
+        return this.makeRequest(`/transmissions/${transmissionId}`);
     }
 
     getSites(queryParameters) {
@@ -436,9 +412,7 @@ class OopCore extends EventEmitter {
     }
 
     createDeviceTempr(queryParameters) {
-        const parameters = queryString.stringify(
-            this.camelToSnake(queryParameters),
-        );
+        const parameters = queryString.stringify(this.camelToSnake(queryParameters));
         let path = `/device_temprs`;
         if (parameters) {
             path += `?${parameters}`;
@@ -448,9 +422,7 @@ class OopCore extends EventEmitter {
     }
 
     deleteDeviceTempr(deviceTemprId, queryParameters) {
-        const parameters = queryString.stringify(
-            this.camelToSnake(queryParameters),
-        );
+        const parameters = queryString.stringify(this.camelToSnake(queryParameters));
         let path = `/device_temprs/${deviceTemprId}`;
         if (parameters) {
             path += `?${parameters}`;
@@ -492,31 +464,13 @@ class OopCore extends EventEmitter {
     }
 
     getDevicesByGroup(queryParameters) {
-        const parameters = queryString.stringify(
-            this.camelToSnake(queryParameters),
-        );
+        const parameters = queryString.stringify(this.camelToSnake(queryParameters));
         let path = `/sites/sidebar`;
         if (parameters) {
             path += `?${parameters}`;
         }
 
         return this.makeRequest(path);
-    }
-
-    mapStatsParams(key) {
-        switch (key) {
-            case "gteq":
-            case "gt":
-                return `filter[transmitted_at[${key}]]`;
-            case "siteId":
-            case "deviceId":
-                return `filter[${key}]`;
-            case "field":
-            case "direction":
-                return `filter[sort][${key}]`;
-            default:
-                return key;
-        }
     }
 
     getTransmissionStats(queryParameters) {
@@ -561,18 +515,11 @@ class OopCore extends EventEmitter {
     }
 
     updateSchedule(schedule) {
-        return this.makeRequest(
-            uri`/schedules/${schedule.id}`,
-            RequestType.PUT,
-            { schedule },
-        );
+        return this.makeRequest(uri`/schedules/${schedule.id}`, RequestType.PUT, { schedule });
     }
 
     deleteSchedule(scheduleId) {
-        return this.makeRequest(
-            uri`/schedules/${scheduleId}`,
-            RequestType.DELETE,
-        );
+        return this.makeRequest(uri`/schedules/${scheduleId}`, RequestType.DELETE);
     }
 
     getScheduleTemprs(params) {
@@ -619,18 +566,11 @@ class OopCore extends EventEmitter {
     }
 
     updateBlacklistEntry(id, blacklistEntry) {
-        return this.makeRequest(
-            uri`/blacklist_entries/${id}`,
-            RequestType.PUT,
-            { blacklistEntry },
-        );
+        return this.makeRequest(uri`/blacklist_entries/${id}`, RequestType.PUT, { blacklistEntry });
     }
 
     deleteBlacklistEntry(id) {
-        return this.makeRequest(
-            uri`/blacklist_entries/${id}`,
-            RequestType.DELETE,
-        );
+        return this.makeRequest(uri`/blacklist_entries/${id}`, RequestType.DELETE);
     }
 
     getLayers(queryParameters) {
@@ -653,18 +593,13 @@ class OopCore extends EventEmitter {
     }
 
     updateLayer(layer) {
-        return this.makeRequest(
-            uri`/layers/${layer.id}`,
-            RequestType.PUT,
-            { layer },
-        );
+        return this.makeRequest(uri`/layers/${layer.id}`, RequestType.PUT, {
+            layer,
+        });
     }
 
     deleteLayer(layerId) {
-        return this.makeRequest(
-            uri`/layers/${layerId}`,
-            RequestType.DELETE,
-        );
+        return this.makeRequest(uri`/layers/${layerId}`, RequestType.DELETE);
     }
 
     getTemprLayers(params) {
@@ -730,13 +665,13 @@ class OopCore extends EventEmitter {
 
     getAuditLogs(compType, compId, queryParameters) {
         const parameters = this.getParameters(queryParameters);
-        let path = `/${compType}/${compId}/audit_logs`
+        let path = `/${compType}/${compId}/audit_logs`;
 
         if (parameters) {
             path += `?${parameters}`;
         }
 
-        return this.makeRequest(path)
+        return this.makeRequest(path);
     }
 
     getAuditLog(auditLogId) {

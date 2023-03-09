@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { useQueryParam, NumberParam, ObjectParam } from "use-query-params";
 import { Pagination, PaginationMobile, Table } from ".";
-import { Block } from 'baseui/block';
+import { Block } from "baseui/block";
 
 const PaginatedTable = withRouter(props => {
     const [data, setData] = useState(null);
@@ -23,16 +23,15 @@ const PaginatedTable = withRouter(props => {
             },
             filter: { ...(filters || {}) },
         };
-        getData(args)
-            .then(d => {
-                setData(d);
-                setLoading(false);
-            });
+        getData(args).then(d => {
+            setData(d);
+            setLoading(false);
+        });
     }, [page, pageSize, filters, getData]);
 
     return (
         <>
-            <Block display={['none', 'none', 'none', 'block']}>
+            <Block display={["none", "none", "none", "block"]}>
                 <Table
                     {...props}
                     loading={loading}
@@ -63,7 +62,7 @@ const PaginatedTable = withRouter(props => {
                     currentPage={page || 1}
                 />
             </Block>
-            <Block display={['none', 'none', 'block', 'none']}>
+            <Block display={["none", "none", "block", "none"]}>
                 <Table
                     {...props}
                     loading={loading}
@@ -94,7 +93,7 @@ const PaginatedTable = withRouter(props => {
                     currentPage={page || 1}
                 />
             </Block>
-            <Block display={['block', 'block', 'none']}>
+            <Block display={["block", "block", "none"]}>
                 <Table
                     {...props}
                     loading={loading}

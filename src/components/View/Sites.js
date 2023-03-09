@@ -27,28 +27,23 @@ const Sites = memo(props => {
             }
         >
             <PaginatedTable
-                getData={(pagination) => OopCore.getSites(pagination)}
+                getData={pagination => OopCore.getSites(pagination)}
                 mapFunction={(columnName, content) => {
                     if (columnName === "action") {
                         return (
                             <>
-                                <Button
-                                    kind={KIND.tertiary}
-                                    $as={Link}
-                                    to={`/sites/${content}`}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faEdit}
-                                    />
+                                <Button kind={KIND.tertiary} $as={Link} to={`/sites/${content}`}>
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </Button>
                                 <Button
                                     kind={KIND.tertiary}
                                     $as={Link}
-                                    to={{pathname: `/sites/${content}/audit-logs`, state: { from: `/sites` }}}
+                                    to={{
+                                        pathname: `/sites/${content}/audit-logs`,
+                                        state: { from: `/sites` },
+                                    }}
                                 >
-                                    <FontAwesomeIcon
-                                        icon={faHistory}
-                                    />
+                                    <FontAwesomeIcon icon={faHistory} />
                                 </Button>
                             </>
                         );
