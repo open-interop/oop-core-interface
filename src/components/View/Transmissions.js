@@ -156,11 +156,7 @@ const Transmissions = props => {
                     );
                     }
                     if (columnName === "retried") {
-                        return content ? (
-                            <FontAwesomeIcon icon={faCheck} />
-                        ) : (
-                            <FontAwesomeIcon icon={faTimes} />
-                        );
+                        return content && <FontAwesomeIcon icon={faCheck} />;
                     }
 
                     return content;
