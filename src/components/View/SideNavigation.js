@@ -10,6 +10,7 @@ import {
     faInbox
 } from "@fortawesome/free-solid-svg-icons";
 import OopCore from "../../OopCore";
+import packageJson from "../../../package.json"
 
 const SideNavigation = props => {
     const [deviceGroups, setDeviceGroups] = useState([]);
@@ -249,6 +250,7 @@ const SideNavigation = props => {
                 />
             </NavigationGroup>
             <div className="filler" />
+            <div className="version">Version {packageJson.version}</div>
         </div>
     );
 };

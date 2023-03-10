@@ -279,6 +279,26 @@ const Message = props => {
                                             </div>
                                         </ListItem>
                                     </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="State">
+                                                    {message && message.state ? message.state :
+                                                        "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Retried At">
+                                                    {message && message.retriedAt ? message.retriedAt :
+                                                        "Not retried"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
                                     {(message?.customFieldA || message?.customFieldB) &&
                                         <>
                                             <FlexGridItem {...itemProps}>

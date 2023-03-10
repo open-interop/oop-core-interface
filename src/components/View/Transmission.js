@@ -296,6 +296,18 @@ const Transmission = props => {
                                     </FlexGridItem>
                                 </>
                             }
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Retried At">
+                                            {transmission && transmission.retriedAt ? transmission.retriedAt :
+                                                "Not retried"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                            </FlexGridItem>
                             {requestBody && (
                                 <FlexGridItem {...itemProps}>
                                     <Button
