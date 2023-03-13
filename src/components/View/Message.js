@@ -11,7 +11,7 @@ import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { Heading, HeadingLevel } from "baseui/heading";
-import { arrayToObject } from "../../Utilities";
+import { arrayToObjectArray } from "../../Utilities";
 
 import {
     DataProvider,
@@ -86,10 +86,9 @@ const Message = props => {
         }
 
         var children = originTemprs.data;
-        const transmissionObject = arrayToObject(
+        const transmissionObject = arrayToObjectArray(
             transmissionArray.data,
             "temprId",
-            true
         );
 
         if (children.length === 0) {
