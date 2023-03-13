@@ -89,6 +89,7 @@ const Message = props => {
         const transmissionObject = arrayToObject(
             transmissionArray.data,
             "temprId",
+            true
         );
 
         if (children.length === 0) {
@@ -117,30 +118,42 @@ const Message = props => {
                 );
             }
 
-            var node;
+            var node = [];
+
+            const nodeObj = {
+                id: 1,
+                temprId: child.id,
+                name: child.name,
+                depth: depth,
+                isExpanded: false,
+                transmissionMade: true,
+                messageId: props.match.params.messageId,
+            }
 
             if (transmissionObject[child.id]) {
-                node = {
-                    id: child.id,
-                    name: child.name,
-                    depth: depth,
-                    isExpanded: false,
-                    transmissionMade: true,
-                    messageUuid: transmissionObject[child.id].transmissionUuid,
-                    status: transmissionObject[child.id].status,
-                    transmittedAt: transmissionObject[child.id].transmittedAt,
-                    transmissionId: transmissionObject[child.id].id,
-                    messageId: props.match.params.messageId,
-                };
+                if(Array.isArray(transmissionObject[child.id])){
+                    for(const transmission of transmissionObject[child.id]){
+                        console.log(transmission)
+                        node.push({
+                            ...nodeObj,
+                            id: transmission.id,
+                            messageUuid: transmission.transmissionUuid,
+                            status: transmission.status,
+                            transmittedAt: transmission.transmittedAt,
+                            transmissionId: transmission.id,
+                        })
+                    }
+                } else {
+                    node.push({
+                        ...nodeObj,
+                        messageUuid: transmissionObject[child.id].transmissionUuid,
+                        status: transmissionObject[child.id].status,
+                        transmittedAt: transmissionObject[child.id].transmittedAt,
+                        transmissionId: transmissionObject[child.id].id,
+                    })
+                }
             } else {
-                node = {
-                    id: child.id,
-                    name: child.name,
-                    depth: depth,
-                    isExpanded: false,
-                    transmissionMade: false,
-                    messageId: props.match.params.messageId,
-                };
+                node.push(nodeObj)
             }
 
             if (allChildren) {
@@ -150,9 +163,13 @@ const Message = props => {
             return node;
         }
 
-        var temprHierarchy = await Promise.all(
-            children.map(child => getChildren(child, 1)),
-        );
+
+        var temprHierarchy = [];
+
+        for(const child of children){
+            const childArray = await getChildren(child, 1);
+            temprHierarchy.push(...childArray)
+        }
 
         return temprHierarchy;
     }

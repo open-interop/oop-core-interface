@@ -78,9 +78,13 @@ export function identicalArray(oldArray, updatedArray) {
     return !foundDifferentValue;
 }
 
-export function arrayToObject(array, keyField) {
+export function arrayToObject(array, keyField, arrayDuplicates) {
     return array.reduce((obj, item) => {
-        obj[item[keyField]] = item;
+        if(arrayDuplicates && item[keyField] in obj){
+            obj[item[keyField]] = [obj[item[keyField]], item]
+        } else {
+            obj[item[keyField]] = item;
+        }
         return obj;
     }, {});
 }
