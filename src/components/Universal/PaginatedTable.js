@@ -14,6 +14,17 @@ const PaginatedTable = withRouter(props => {
     const [filters, setFilters] = useQueryParam(`${props.prefix || ""}filter`, ObjectParam);
     var getData = props.getData;
 
+    function formatFilters(filters = {}){
+        const formattedFilters = {...filters}
+        Object.entries(formattedFilters).map(([key, value]) => {
+            if(props.columns.find(c => c.id === key).type === "datetime" && value){
+                const splitString = value.split("#");
+                formattedFilters[key] = {gt: splitString[0] === "gt", val: splitString[1].replaceAll("/", "-")}
+            }
+        })
+        return formattedFilters;
+    }
+
     useEffect(() => {
         setLoading(true);
         const args = {
@@ -21,14 +32,14 @@ const PaginatedTable = withRouter(props => {
                 number: page,
                 size: pageSize,
             },
-            filter: { ...(filters || {}) },
+            filter: formatFilters(filters),
         };
         getData(args)
             .then(d => {
                 setData(d);
                 setLoading(false);
             });
-    }, [page, pageSize, filters, getData]);
+    }, [page, pageSize, filters]);
 
     return (
         <>

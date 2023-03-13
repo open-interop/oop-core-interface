@@ -121,7 +121,11 @@ const Table = memo(props => {
                         $style={column.width ? { flex: `0 0 ${column.width}`, } : {}}
                         key={`table-head-${column.id}`}
                     >
-                        {column.name}
+                        {column.mapFunction ?
+                            column.mapFunction(data)
+                        :
+                            column.name
+                        }
                         {column.hasFilter && (
                             <TableFilter
                                 contentType={column.type}
@@ -132,8 +136,8 @@ const Table = memo(props => {
                                 setFilterValue={newValue =>
                                     props.updateFilters(column.id, newValue)
                                 }
-                                trueText={props.trueText}
-                                falseText={props.falseText}
+                                trueText={column.trueText || props.trueText}
+                                falseText={column.falseText || props.falseText}
                                 zIndex={1}
                             />
                         )}

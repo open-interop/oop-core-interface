@@ -339,7 +339,6 @@ class OopCore extends EventEmitter {
         if (parameters) {
             path += `?${parameters}`;
         }
-
         return this.makeRequest(path);
     }
 
@@ -534,6 +533,8 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
 
         let path = "/dashboards/messages";
+
+        
         if (parameters) {
             path += `?${parameters}`;
         }
@@ -741,6 +742,14 @@ class OopCore extends EventEmitter {
 
     getAuditLog(auditLogId) {
         return this.makeRequest(uri`/audit_logs/${auditLogId}`);
+    }
+
+    retryMessage(messageId) {
+        return this.makeRequest(uri`/messages/${messageId}/retry`, "POST");
+    }
+
+    retryTransmission(transmissionId) {
+        return this.makeRequest(uri`/transmissions/${transmissionId}/retry`, "POST");
     }
 }
 

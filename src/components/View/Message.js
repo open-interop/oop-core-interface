@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AceEditor from "react-ace";
 
 import "brace/ext/searchbox";
@@ -11,7 +11,7 @@ import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import { Heading, HeadingLevel } from "baseui/heading";
-import { arrayToObject } from "../../Utilities";
+import { arrayToObjectArray } from "../../Utilities";
 
 import {
     DataProvider,
@@ -23,12 +23,16 @@ import {
 import OopCore from "../../OopCore";
 
 const Message = props => {
+    const history = useHistory();
+
     const [message, setMessage] = useState();
     const [originChildren, setOriginChildren] = useState();
     const [showBody, setShowBody] = React.useState();
 
     const [body, setBody] = useState("");
     const [originName, setOriginName] = useState("");
+
+    const [retrying, setRetrying] = useState(null);
 
     const allMessagesPath = props.location.pathname.substr(
         0,
@@ -82,7 +86,7 @@ const Message = props => {
         }
 
         var children = originTemprs.data;
-        const transmissionObject = arrayToObject(
+        const transmissionObject = arrayToObjectArray(
             transmissionArray.data,
             "temprId",
         );
@@ -113,30 +117,42 @@ const Message = props => {
                 );
             }
 
-            var node;
+            var node = [];
+
+            const nodeObj = {
+                id: 1,
+                temprId: child.id,
+                name: child.name,
+                depth: depth,
+                isExpanded: false,
+                transmissionMade: true,
+                messageId: props.match.params.messageId,
+            }
 
             if (transmissionObject[child.id]) {
-                node = {
-                    id: child.id,
-                    name: child.name,
-                    depth: depth,
-                    isExpanded: false,
-                    transmissionMade: true,
-                    messageUuid: transmissionObject[child.id].transmissionUuid,
-                    status: transmissionObject[child.id].status,
-                    transmittedAt: transmissionObject[child.id].transmittedAt,
-                    transmissionId: transmissionObject[child.id].id,
-                    messageId: props.match.params.messageId,
-                };
+                if(Array.isArray(transmissionObject[child.id])){
+                    for(const transmission of transmissionObject[child.id]){
+                        console.log(transmission)
+                        node.push({
+                            ...nodeObj,
+                            id: transmission.id,
+                            messageUuid: transmission.transmissionUuid,
+                            status: transmission.status,
+                            transmittedAt: transmission.transmittedAt,
+                            transmissionId: transmission.id,
+                        })
+                    }
+                } else {
+                    node.push({
+                        ...nodeObj,
+                        messageUuid: transmissionObject[child.id].transmissionUuid,
+                        status: transmissionObject[child.id].status,
+                        transmittedAt: transmissionObject[child.id].transmittedAt,
+                        transmissionId: transmissionObject[child.id].id,
+                    })
+                }
             } else {
-                node = {
-                    id: child.id,
-                    name: child.name,
-                    depth: depth,
-                    isExpanded: false,
-                    transmissionMade: false,
-                    messageId: props.match.params.messageId,
-                };
+                node.push(nodeObj)
             }
 
             if (allChildren) {
@@ -146,9 +162,13 @@ const Message = props => {
             return node;
         }
 
-        var temprHierarchy = await Promise.all(
-            children.map(child => getChildren(child, 1)),
-        );
+
+        var temprHierarchy = [];
+
+        for(const child of children){
+            const childArray = await getChildren(child, 1);
+            temprHierarchy.push(...childArray)
+        }
 
         return temprHierarchy;
     }
@@ -165,6 +185,25 @@ const Message = props => {
             </div>
         );
     };
+
+    const RetryButton = props => {
+        return(
+            <Button
+                kind={KIND.secondary}
+                onClick={retryMessage}
+                isLoading={retrying}
+                disabled={retrying !== null}
+            >
+                {retrying === null ? "Retry" : "Retried"}
+            </Button>
+)
+    }
+
+    async function retryMessage() {
+        setRetrying(true);
+        await OopCore.retryMessage(message.id);
+        setRetrying(false);
+    }
 
     return (
         <Page
@@ -256,6 +295,26 @@ const Message = props => {
                                             </div>
                                         </ListItem>
                                     </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="State">
+                                                    {message && message.state ? message.state :
+                                                        "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Retried At">
+                                                    {message && message.retriedAt ? message.retriedAt :
+                                                        "Not retried"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
                                     {(message?.customFieldA || message?.customFieldB) &&
                                         <>
                                             <FlexGridItem {...itemProps}>
@@ -284,7 +343,7 @@ const Message = props => {
                                     flexGridRowGap="scale800"
                                     marginBottom="scale800"
                                 >
-                                    {body && (
+                                    {body ? (
                                         <FlexGridItem {...wideItemProps}>
                                             <Button
                                                 kind={KIND.secondary}
@@ -294,6 +353,10 @@ const Message = props => {
                                                     ? "Hide Message Body"
                                                     : "View Message Body"}
                                             </Button>
+                                        </FlexGridItem>
+                                    ) : !message?.retriedAt && (
+                                        <FlexGridItem {...itemProps}>
+                                            <RetryButton />
                                         </FlexGridItem>
                                     )}
                                     <FlexGridItem display="none"></FlexGridItem>
@@ -307,6 +370,11 @@ const Message = props => {
                                         </Button>
                                     </FlexGridItem>
                                 </FlexGrid>
+                                {body && !message?.retriedAt &&
+                                    <FlexGrid>
+                                        <RetryButton />
+                                    </FlexGrid>
+                                }
                                 {showBody && (
                                     <>
                                         <h2>Message Body</h2>

@@ -85,6 +85,17 @@ export function arrayToObject(array, keyField) {
     }, {});
 }
 
+export function arrayToObjectArray(array, keyField) {
+    return array.reduce((obj, item) => {
+        if(item[keyField] in obj){
+            obj[item[keyField]].push(item)
+        } else {
+            obj[item[keyField]] = [item];
+        }
+        return obj;
+    }, {});
+}
+
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
   return {
