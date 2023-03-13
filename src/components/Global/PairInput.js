@@ -67,7 +67,7 @@ const PairInput = memo(props => {
             }
         } else {
             const resultObject = {};
-
+            // eslint-disable-next-line no-unused-vars
             for (const [key, val] of data) {
                 resultObject[key] = val;
             }

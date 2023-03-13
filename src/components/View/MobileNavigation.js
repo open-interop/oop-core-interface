@@ -1,32 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button, KIND } from "baseui/button";
 import { useHistory } from "react-router-dom";
-import {
-    HeaderNavigation,
-    ALIGN,
-    StyledNavigationList as NavigationList,
-} from "baseui/header-navigation";
 import { NavigationGroup, NavigationItem } from "../Global";
-import { StyledLink } from "baseui/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faChartPie,
-    faCircle,
     faCogs,
     faNetworkWired,
-    faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
 const MobileNavigation = props => {
     const [settingsAccordionOpen, setSettingsAccordionOpen] = useState(false);
 
     const history = useHistory();
-
-
-    const pathIncludes = path => {
-        return props.history.location.pathname.includes(path);
-    };
 
     return (
         <div className="mobile-nav">

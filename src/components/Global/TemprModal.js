@@ -1,14 +1,10 @@
-import React, { useState, useEffect, memo } from "react";
+import React from "react";
 
 import { Heading, HeadingLevel } from "baseui/heading";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
 import {
     Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalButton,
     SIZE,
     ROLE
 } from "baseui/modal";

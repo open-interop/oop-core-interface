@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
-import { useQueryParam, StringParam } from "use-query-params";
+import { Link, useHistory } from "react-router-dom";
+import { useQueryParam, StringParam, ObjectParam } from "use-query-params";
 
 import { Button, KIND } from "baseui/button";
+import { Checkbox } from "baseui/checkbox";
+import { useStyletron } from "baseui";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,7 +13,7 @@ import {
     faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { DataProvider, PaginatedTable, Page, DatetimeTooltip } from "../Universal";
+import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmissions = props => {
@@ -20,7 +22,8 @@ const Transmissions = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [device, setDevice] = useState({});
+    const history = useHistory();
+
     const [id, setId] = useQueryParam("id", StringParam);
     const [deviceId, setDeviceId] = useQueryParam("deviceId", StringParam);
     const [transmissionUuid, setTransmissionUuid] = useQueryParam(
@@ -33,26 +36,76 @@ const Transmissions = props => {
     );
     const [status, setStatus] = useQueryParam("status", StringParam);
     const [success, setSuccess] = useQueryParam("success", StringParam);
+    const [transmittedAt, setTransmittedAt] = useQueryParam("transmittedAt", ObjectParam);
+    const [retried, setRetried] = useQueryParam("retried", StringParam);
 
-    const getData = () => {
-        return OopCore.getDevice(props.match.params.deviceId).then(setDevice);
-    };
+    const [checkedTransmissions, setCheckedTransmissions] = useState([]);
+    const [allChecked, setAllChecked] = useState(false);
+    const [retryingTransmissions, setRetryingTransmissions] = useState(false);
 
     const deviceDashboardPath = props.location.pathname.substr(
         0,
         props.location.pathname.lastIndexOf("/"),
     );
 
+    const ItemsSelectedRow = props => {
+        const [css, theme] = useStyletron();
+    
+        return <div className={css({ display: "flex", marginBottom: theme.sizing.scale500, justifyContent: "space-between", alignItems: "center" })} >
+            {checkedTransmissions.length} items selected
+            <Button
+                kind={KIND.secondary}
+                disabled={!checkedTransmissions.length}
+                onClick={onPressConfirm}
+                isLoading={retryingTransmissions}
+            >
+                Retry
+            </Button>
+        </div>
+    }; 
+
+    const onCheckRow = (id) => {
+        const newCheckedTransmissions = [...checkedTransmissions];
+        const index = checkedTransmissions.indexOf(id)
+        if(index !== -1){
+            newCheckedTransmissions.splice(index, 1);
+            setAllChecked(false)
+        } else {
+            newCheckedTransmissions.push(id)
+        }
+        setCheckedTransmissions(newCheckedTransmissions)
+    }
+
+    const onSelectAll = (data) => {
+        console.log("hey")
+        const newCheckedTransmissions = [];
+        if(allChecked){
+            setCheckedTransmissions([])
+        } else {
+            console.log(data)
+            for (const item of data){
+                newCheckedTransmissions.push(item.id)
+            }
+            setCheckedTransmissions(newCheckedTransmissions);
+        }
+        setAllChecked(!allChecked)
+    }
+
+    const onPressConfirm = async () => {
+        setRetryingTransmissions(true);
+        for(const transmissionId of checkedTransmissions){
+            await OopCore.retryTransmission(transmissionId);
+        }
+        history.go(0)
+        setRetryingTransmissions(false);
+    }
+
     return (
         <Page
-            heading={
-                `Transmissions ${
-                    device.name
-                        ? "- " + device.name
-                        : ""}`
-            }
+            heading="Transmissions"
             backlink={deviceDashboardPath}
         >
+            <ItemsSelectedRow />
             <PaginatedTable
                 getData={(pagination) => {
                     return OopCore.getTransmissions(pagination);
@@ -93,6 +146,19 @@ const Transmissions = props => {
                             <DatetimeTooltip time={content}></DatetimeTooltip>
                         );
                     }
+
+                    if (columnName === "id") {
+                        return (
+                            <Checkbox
+                            onChange={() => onCheckRow(content)}
+                            checked={checkedTransmissions.indexOf(content) !== -1}
+                        />
+                    );
+                    }
+                    if (columnName === "retried") {
+                        return content && <FontAwesomeIcon icon={faCheck} />;
+                    }
+
                     return content;
                 }}
                 columnContent={columnName => {
@@ -104,9 +170,14 @@ const Transmissions = props => {
                 columns={[
                     {
                         id: "id",
-                        name: "ID",
-                        type: "text",
-                        hasFilter: true,
+                        name: "",
+                        width: "50px",
+                        mapFunction: (data) => {
+                            return  <Checkbox
+                            onChange={() => onSelectAll(data)}
+                            checked={allChecked}
+                        />
+                        }
                     },
                     {
                         id: "deviceId",
@@ -148,8 +219,28 @@ const Transmissions = props => {
                     {
                         id: "transmittedAt",
                         name: "Transmitted at",
+                        type: "datetime",
+                        hasFilter: true,
+                    },
+                    {
+                        id: "retried",
+                        name: "Retried",
+                        type: "bool",
+                        hasFilter: true,
+                        trueText: "Retried",
+                        falseText: "Not retried"
+                    },
+                    {
+                        id: "customFieldA",
+                        name: "Field A",
                         type: "text",
-                        hasFilter: false,
+                        hasFilter: true,
+                    },
+                    {
+                        id: "customFieldB",
+                        name: "Field B",
+                        type: "text",
+                        hasFilter: true,
                     },
                     {
                         id: "action",
@@ -166,6 +257,8 @@ const Transmissions = props => {
                     transmissionUuid,
                     status,
                     success,
+                    transmittedAt,
+                    retried
                 }}
                 updateFilters={(key, value) => {
                     switch (key) {
@@ -181,6 +274,10 @@ const Transmissions = props => {
                             return setStatus(value);
                         case "success":
                             return setSuccess(value);
+                        case "transmittedAt":
+                            return setTransmittedAt(value);
+                        case "retried":
+                            return setRetried(value);
                         default:
                             return null;
                     }
@@ -190,4 +287,4 @@ const Transmissions = props => {
     );
 };
 
-export { Transmissions };
+export default Transmissions;

@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 export function compareByValue(a, b) {
     if (a === b) {
         return true;
@@ -81,4 +83,38 @@ export function arrayToObject(array, keyField) {
         obj[item[keyField]] = item;
         return obj;
     }, {});
+}
+
+export function arrayToObjectArray(array, keyField) {
+    return array.reduce((obj, item) => {
+        if(item[keyField] in obj){
+            obj[item[keyField]].push(item)
+        } else {
+            obj[item[keyField]] = [item];
+        }
+        return obj;
+    }, {});
+}
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
+export function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
 }

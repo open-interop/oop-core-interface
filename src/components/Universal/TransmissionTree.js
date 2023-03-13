@@ -4,18 +4,16 @@ import {
     TreeView,
     TreeLabel,
     toggleIsExpanded,
-    TreeLabelInteractable,
 } from "baseui/tree-view";
 
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
-import { Card, StyledBody } from "baseui/card";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
-import { MaxCard } from "../Universal";
+import { DatetimeTooltip, MaxCard } from "../Universal";
 
 const TransmissionTree = props => {
     var emptyCounter = 0;
@@ -80,7 +78,10 @@ const TransmissionTree = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="Transmitted At">
-                                            {node.transmittedAt ||
+                                            {node.transmittedAt ?
+                                                <DatetimeTooltip
+                                                    time={node.transmittedAt}
+                                                /> :
                                                 "No data available"}
                                         </ListItemLabel>
                                     </div>

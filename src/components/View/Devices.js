@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQueryParam, NumberParam, StringParam } from "use-query-params";
+import { useQueryParam, StringParam } from "use-query-params";
 import { Button, KIND } from "baseui/button";
 import { PaginatedTable, Page } from "../Universal";
 import { ErrorToast } from "../Global";
@@ -19,7 +19,6 @@ const Devices = props => {
     useEffect(() => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [devices, setDevices] = useState([]);
     const [id, setId] = useQueryParam("id", StringParam);
     const [name, setName] = useQueryParam("name", StringParam);
     const [deviceGroupId, setDeviceGroupId] = useQueryParam(
@@ -54,7 +53,6 @@ const Devices = props => {
                     ? sitesObject[device.siteId].name
                     : "";
             });
-            setDevices(devices);
             return devices;
         });
     };
@@ -206,4 +204,4 @@ const Devices = props => {
     );
 };
 
-export { Devices };
+export default Devices;

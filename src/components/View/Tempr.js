@@ -183,9 +183,13 @@ const Tempr = props => {
     const [groups, setGroups] = useState([]);
     const [deviceTemprs, setDeviceTemprs] = useState([]);
     const [scheduleTemprs, setScheduleTemprs] = useState([]);
+    const [deleting, setDeleting] = useState(false);
+    const [creating, setCreating] = useState(false);
+
 
     useEffect(
         () => { getData(temprId, props.match.params.deviceGroupId, getParents, getChildren).then(setData); },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [temprId, props.match.params.deviceGroupId]
     ); 
 
@@ -197,8 +201,9 @@ const Tempr = props => {
         if (!blankTempr) {
             const ts = await OopCore.getTemprs({temprId: temprId});
             if (ts) {
+                // eslint-disable-next-line no-unused-vars
                 for (const tempr of ts.data) {
-                    if (tempr.temprId == temprId) {
+                    if (tempr.temprId === temprId) {
                         none = false;
                         break;
                     }
@@ -218,7 +223,7 @@ const Tempr = props => {
             name: tempr.name,
             description: tempr.description,
             deviceGroupId: tempr.deviceGroupId,
-            temprId: parentTemprId,
+            temprId: tempr.temprId,
             endpointType: tempr.endpointType,
             queueResponse: tempr.queueResponse,
             queueRequest: tempr.queueRequest,
@@ -268,6 +273,7 @@ const Tempr = props => {
     );
 
     const deleteTempr = () => {
+        setDeleting(true);
         return OopCore.deleteTempr(temprId)
             .then(() => {
                 props.history.replace(`/temprs`);
@@ -287,11 +293,25 @@ const Tempr = props => {
         const tempr = temprToObject();
 
         if (blankTempr) {
+            setCreating(true);
             return OopCore.createTempr(tempr)
                 .then(response => {
                     SuccessToast("Created new tempr", "Success");
                     setTemprFromObject(response);
                     props.history.replace(`/temprs/${response.id}`);
+                    setOriginalTempr({
+                        name: response.name,
+                        description: response.description,
+                        deviceGroupId: response.deviceGroupId,
+                        temprId: response.temprId,
+                        endpointType: response.endpointType,
+                        queueResponse: response.queueResponse,
+                        queueRequest: response.queueRequest,
+                        notes: response.notes,
+                        template: response.template,
+                        exampleTransmission: response.exampleTransmission,
+                    });
+                    setCreating(false);
                 })
                 .catch(error => {
                     setTemprErrors(error);
@@ -302,6 +322,18 @@ const Tempr = props => {
                 .then(response => {
                     setTemprFromObject(response);
                     SuccessToast("Updated tempr", "Success");
+                    setOriginalTempr({
+                        name: response.name,
+                        description: response.description,
+                        deviceGroupId: response.deviceGroupId,
+                        temprId: response.temprId,
+                        endpointType: response.endpointType,
+                        queueResponse: response.queueResponse,
+                        queueRequest: response.queueRequest,
+                        notes: response.notes,
+                        template: response.template,
+                        exampleTransmission: response.exampleTransmission,
+                    });
                 })
                 .catch(error => {
                     setTemprErrors(error);
@@ -425,15 +457,13 @@ const Tempr = props => {
                 </>
             }
             alert={
-                !compareByValue(originalTempr, temprToObject()) &&
+                (!compareByValue(originalTempr, temprToObject()) && !deleting && !creating) &&
                 "There are unsaved changes, are you sure you want to leave?"
             }
         >
             {loading ?
                 <InPlaceGifSpinner /> :
                 <>
-                    {
-                    }
                     <div>
                         <TemprForm
                             name={[name, setName]}
@@ -493,4 +523,4 @@ const Tempr = props => {
     );
 };
 
-export { Tempr };
+export default Tempr;

@@ -22,7 +22,7 @@ import {
 
 import TemprAssociator from "../Global/TemprAssociator";
 
-import { Timezones } from "../../resources/Timezones";
+import { Timezones, TimeDiff } from "../../resources/Timezones";
 
 const Device = props => {
     const [device, setDevice] = useState(null);
@@ -33,7 +33,7 @@ const Device = props => {
     const timezones = Timezones.map(timezone => {
         return {
             id: timezone,
-            name: timezone,
+            name: timezone + " (UTC " + TimeDiff[timezone] + ")",
         };
     });
     const blankDevice = props.match.params.deviceId === "new";
@@ -168,8 +168,8 @@ const Device = props => {
 
     const oneValueEmpty = (pair) => {
         return (
-            !(pair[0] == "" && pair[1] == "") && 
-            (pair[0] == "" || pair[1] == "")
+            !(pair[0] === "" && pair[1] === "") && 
+            (pair[0] === "" || pair[1] === "")
         );
     }
 
@@ -182,9 +182,11 @@ const Device = props => {
             ErrorToast("Failed to update device - " + invalid, "Error");
             return
         }
+       
         const {
             authenticationHeaders: updatedHeaders,
-            authenticationQuery: updatedQuery,
+            authenticationQuery: updatedQuery, 
+            // eslint-disable-next-line no-unused-vars
             ...updatedRest
         } = updatedDevice;
 
@@ -221,22 +223,25 @@ const Device = props => {
         const {
             authenticationHeaders: updatedHeaders,
             authenticationQuery: updatedQuery,
+            // eslint-disable-next-line no-unused-vars
             ...updatedRest
         } = updatedDevice;
         
         var validHeaders = false
-        updatedHeaders.map((header) => {
+        // eslint-disable-next-line no-unused-vars
+        for (const header of updatedHeaders) {
             if (oneValueEmpty(header)) {
                 validHeaders = "Authentication Headers must have both a key and value"
             }
-        });
+        };
         
         var validQuery = false
-        updatedQuery.map((query) => {
+        // eslint-disable-next-line no-unused-vars
+        for (const query of updatedQuery) {
             if (oneValueEmpty(query)) {
-                validQuery = "Authentication Queries must have both a key and value"
+                validQuery = "Authentication Query must have both a key and value"
             }
-        });
+        };
         
         return validHeaders || validQuery || false
     }
@@ -583,4 +588,4 @@ const Device = props => {
     );
 };
 
-export { Device };
+export default Device;

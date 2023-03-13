@@ -18,6 +18,13 @@ div[id="root"] {
             color: $color-white;
         }
 
+        .version {
+            background-color: $oop-teal;
+            padding: 1rem;
+            display: block;
+            text-align: center;
+        }
+
         .navigation-item {
             background-color: $oop-teal;
             padding: 1rem;

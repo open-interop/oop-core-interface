@@ -93,4 +93,4 @@ const Sites = memo(props => {
     );
 });
 
-export { Sites };
+export default Sites;

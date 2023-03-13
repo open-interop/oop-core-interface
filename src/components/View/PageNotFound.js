@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
-import { Error, MaxCard } from "../Universal";
+import { MaxCard } from "../Universal";
 
-import { useStyletron } from "baseui";
 import { StyledTitle } from "baseui/card";
 
 const PageNotFound = props => {
@@ -10,8 +9,6 @@ const PageNotFound = props => {
         document.title = props.item ? props.item + " Not Found | Open Interop" : "Page Not Found | Open Interop";
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(false);
     
     return (
         <MaxCard title={
@@ -28,4 +25,4 @@ const PageNotFound = props => {
     );
 };
 
-export { PageNotFound };
+export default PageNotFound;

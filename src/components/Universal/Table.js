@@ -10,7 +10,7 @@ import {
     StyledHeadCell,
 } from "baseui/table";
 
-import { useStyletron, withStyle } from "baseui";
+import { useStyletron } from "baseui";
 import { TableFilter } from "../Global";
 
 import { GifSpinner } from ".";
@@ -114,14 +114,18 @@ const Table = memo(props => {
     }
 
     return (
-        <StyledTable>
+        <StyledTable style={{maxHeight: props.maxHeight || 'auto'}}>
             <StyledHead $width={widthPixels ? widthPixels : 'auto'}>
                 {props.columns.map(column => (
                     <StyledHeadCell
                         $style={column.width ? { flex: `0 0 ${column.width}`, } : {}}
                         key={`table-head-${column.id}`}
                     >
-                        {column.name}
+                        {column.mapFunction ?
+                            column.mapFunction(data)
+                        :
+                            column.name
+                        }
                         {column.hasFilter && (
                             <TableFilter
                                 contentType={column.type}
@@ -132,8 +136,8 @@ const Table = memo(props => {
                                 setFilterValue={newValue =>
                                     props.updateFilters(column.id, newValue)
                                 }
-                                trueText={props.trueText}
-                                falseText={props.falseText}
+                                trueText={column.trueText || props.trueText}
+                                falseText={column.falseText || props.falseText}
                                 zIndex={1}
                             />
                         )}

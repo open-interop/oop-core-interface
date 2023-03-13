@@ -111,7 +111,7 @@ class OopCore extends EventEmitter {
         const items = Object.entries(params || {});
 
         const built = {};
-
+        // eslint-disable-next-line
         for (const [key, val] of items) {
             if (!key || val === undefined) {
                 continue;
@@ -123,9 +123,18 @@ class OopCore extends EventEmitter {
                 }
 
                 if (typeof value === "object" && value !== null) {
-                    for (const [k, v] of Object.entries(value)) {
-                        const newBase = `${base}[${this.toSnakeCase(k)}]`;
-                        buildParam(newBase, v);
+                    if ('gt' in value && value['gt'] === true) {
+                        const newBase = `${base}[gt]`;
+                        buildParam(newBase, value['val']);
+                    } else if ('gt' in value && value['gt'] === false) {
+                        const newBase = `${base}[lt]`;
+                        buildParam(newBase, value['val']);
+                    } else {
+                        // eslint-disable-next-line
+                        for (const [k, v] of Object.entries(value)) {
+                            const newBase = `${base}[${this.toSnakeCase(k)}]`;
+                            buildParam(newBase, v);
+                        }
                     }
                 } else {
                     built[base] = value;
@@ -330,7 +339,6 @@ class OopCore extends EventEmitter {
         if (parameters) {
             path += `?${parameters}`;
         }
-
         return this.makeRequest(path);
     }
 
@@ -365,6 +373,15 @@ class OopCore extends EventEmitter {
     updateSite(siteId, data) {
         const payload = { site: data };
         return this.makeRequest(`/sites/${siteId}`, RequestType.PUT, payload);
+    }
+
+    getAccount() {
+        return this.makeRequest(`/account`);
+    }
+
+    updateAccount(data) {
+        const payload = { account: data };
+        return this.makeRequest(`/account`, RequestType.PUT, payload);
     }
 
     getDeviceGroups(queryParameters) {
@@ -516,6 +533,8 @@ class OopCore extends EventEmitter {
         const parameters = this.getParameters(queryParameters);
 
         let path = "/dashboards/messages";
+
+        
         if (parameters) {
             path += `?${parameters}`;
         }
@@ -723,6 +742,14 @@ class OopCore extends EventEmitter {
 
     getAuditLog(auditLogId) {
         return this.makeRequest(uri`/audit_logs/${auditLogId}`);
+    }
+
+    retryMessage(messageId) {
+        return this.makeRequest(uri`/messages/${messageId}/retry`, "POST");
+    }
+
+    retryTransmission(transmissionId) {
+        return this.makeRequest(uri`/transmissions/${transmissionId}/retry`, "POST");
     }
 }
 

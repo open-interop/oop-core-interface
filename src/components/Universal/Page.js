@@ -4,7 +4,6 @@ import { Link, Prompt } from "react-router-dom";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Heading, HeadingLevel } from "baseui/heading";
-import { Block } from 'baseui/block';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -17,10 +16,10 @@ const Actions = props => {
     }
 
     return (
-        <span className={css({
+        <span className={`${css({
             display: "inline-flex",
             marginLeft: "auto",
-        })}>
+        })} action-header`}>
             {props.actions}
         </span>
     );
@@ -61,20 +60,11 @@ const Page = props => {
         <div className={contentWrapper}>
             {props.alert && <Prompt message={props.alert} />}
             <HeadingLevel>
-                <Block display={['block', 'block', 'none']}>
-                    <Heading $style={{ display: "flex", fontSize: "8vmin", flexDirection: "row", alignItems: "center" }}>
-                        <BackLink backlink={props.backlink} />
-                        {props.heading}
-                        <Actions actions={props.actions} />
-                    </Heading>
-                </Block>
-                <Block display={['none', 'none', 'block']}>
-                    <Heading $style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                        <BackLink backlink={props.backlink} />
-                        {props.heading}
-                        <Actions actions={props.actions} />
-                    </Heading>
-                </Block>
+                <Heading $style={{ display: "flex", flexDirection: "row", alignItems: "center" }} className="page-heading">
+                    <BackLink backlink={props.backlink} />
+                    {props.heading}
+                    <Actions actions={props.actions} />
+                </Heading>
                 {props.children}
             </HeadingLevel>
         </div>

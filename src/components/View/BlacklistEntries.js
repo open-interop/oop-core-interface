@@ -75,7 +75,7 @@ const BlacklistEntries = memo(props => {
                         }
 
                         return parts.join(" and ");
-                    } else if (columnName == "createdAt" || columnName === "updatedAt") {
+                    } else if (columnName === "createdAt" || columnName === "updatedAt") {
                         return (
                             <DatetimeTooltip time={content}></DatetimeTooltip>
                         );
@@ -107,5 +107,5 @@ const BlacklistEntries = memo(props => {
     );
 });
 
-export { BlacklistEntries };
+export default BlacklistEntries;
 

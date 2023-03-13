@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { Link } from "react-router-dom";
 import { useQueryParam, StringParam, NumberParam } from "use-query-params";
@@ -8,7 +8,7 @@ import { Button, KIND } from "baseui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListUl } from "@fortawesome/free-solid-svg-icons";
 
-import { DataProvider, PaginatedTable, Page, DatetimeTooltip } from "../Universal";
+import { PaginatedTable, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const GlobalHistory = props => {
@@ -147,4 +147,4 @@ const GlobalHistory = props => {
     );
 };
 
-export { GlobalHistory };
+export default GlobalHistory;

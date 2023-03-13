@@ -9,12 +9,9 @@ import "ace-builds/src-noconflict/theme-monokai";
 
 import { KIND, Button } from "baseui/button";
 import { ListItem, ListItemLabel } from "baseui/list";
-import { Card, StyledBody } from "baseui/card";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 
-import JSONPretty from "react-json-pretty";
-
-import { DataProvider, Modal, Page, DatetimeTooltip } from "../Universal";
+import { DataProvider, Page, DatetimeTooltip } from "../Universal";
 import OopCore from "../../OopCore";
 
 const Transmission = props => {
@@ -30,6 +27,8 @@ const Transmission = props => {
     const [showRequest, setShowRequest] = React.useState(false);
 
     const [showResponse, setShowResponse] = React.useState(false);
+
+    const [retrying, setRetrying] = useState(null);
 
     const allTransmissionsPath = (props.location.state && props.location.state.from) ? props.location.state.from
     : props.location.pathname.substr(
@@ -62,6 +61,25 @@ const Transmission = props => {
         );
     } catch (e) {
         responseBody = transmission.responseBody;
+    }
+
+    const RetryButton = props => {
+        return (
+            <Button
+                kind={KIND.secondary}
+                onClick={retryMessage}
+                isLoading={retrying}
+                disabled={retrying !== null}
+            >
+                {retrying === null ? "Retry" : "Retried"}
+            </Button>
+        )       
+    }
+
+    async function retryMessage() {
+        setRetrying(true);
+        await OopCore.retryTransmission(transmission.id);
+        setRetrying(false);
     }
 
     return (
@@ -256,6 +274,40 @@ const Transmission = props => {
                                     </div>
                                 </ListItem>
                             </FlexGridItem>
+                            {(transmission?.customFieldA || transmission?.customFieldB) &&
+                                <>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Field A">
+                                                    {transmission.customFieldA ?? "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                    <FlexGridItem {...itemProps}>
+                                        <ListItem>
+                                            <div className="card-label">
+                                                <ListItemLabel description="Field B">
+                                                    {transmission.customFieldB ?? "No data available"}
+                                                </ListItemLabel>
+                                            </div>
+                                        </ListItem>
+                                    </FlexGridItem>
+                                </>
+                            }
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
+                                        <ListItemLabel description="Retried At">
+                                            {transmission && transmission.retriedAt ? transmission.retriedAt :
+                                                "Not retried"}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                            </FlexGridItem>
                             {requestBody && (
                                 <FlexGridItem {...itemProps}>
                                     <Button
@@ -283,6 +335,11 @@ const Transmission = props => {
                                     </Button>
                                 </FlexGridItem>
                             )}
+                            {!transmission?.retriedAt &&
+                                <FlexGridItem {...itemProps}>
+                                    <RetryButton />
+                                </FlexGridItem>
+                            }
                         </FlexGrid>
                         <FlexGrid flexGridRowGap="scale1000">
                             <FlexGridItem>
@@ -343,4 +400,4 @@ const Transmission = props => {
     );
 };
 
-export { Transmission };
+export default Transmission;

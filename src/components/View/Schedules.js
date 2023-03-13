@@ -147,4 +147,4 @@ const Schedules = memo(props => {
     );
 });
 
-export { Schedules };
+export default Schedules;

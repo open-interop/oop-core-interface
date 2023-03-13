@@ -88,4 +88,4 @@ const ResetPassword = props => {
     );
 };
 
-export { ResetPassword };
+export default ResetPassword;

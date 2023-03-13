@@ -22,7 +22,7 @@ const DeviceAssociator = memo(props => {
     const [deviceTemprLoading, setDeviceTemprLoading] = useState(false);
 
     const selected = {};
-
+    // eslint-disable-next-line no-unused-vars
     for (const deviceTempr of props.selected) {
         selected[deviceTempr.deviceId] = deviceTempr;
     }
@@ -47,10 +47,11 @@ const DeviceAssociator = memo(props => {
                     ])
                     .then(([sites, devices]) => {
                         const sitesById = {};
+                        // eslint-disable-next-line no-unused-vars
                         for (const s of sites.data) {
                             sitesById[s.id] = s;
                         }
-
+                        // eslint-disable-next-line no-unused-vars
                         for (const d of devices.data) {
                             d.siteName = sitesById[d.siteId].name;
                         }

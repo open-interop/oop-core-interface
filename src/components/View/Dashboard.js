@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 import { useStyletron } from "baseui";
-import { StyledTitle } from "baseui/card";
 import { Select } from "baseui/select";
 import { Grid, Cell, BEHAVIOR } from "baseui/layout-grid";
 
 import { Bar } from "react-chartjs-2";
 
 import OopCore from "../../OopCore";
+import { useWindowDimensions } from "../../Utilities";
 
 import chartStyles from "./../../styles/_chartColours.scss";
 import styles from "./../../styles/_variables.scss";
@@ -86,9 +86,9 @@ const getDaysAgo = (now, lastMessagesRange, series) => {
 const CenteredTitle = props => {
     const [css, theme] = useStyletron();
 
-    return <StyledTitle className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
+    return <div className={css({ textAlign: "center", marginBottom: theme.sizing.scale500 })} >
         {props.children}
-    </StyledTitle>
+    </div>
 };
 
 const FailedTransmissions = props => {
@@ -165,6 +165,10 @@ const FailedTransmissions = props => {
 
 const Messages = props => {
     const timelineRange = getDateRange(props.customStartDate, props.now);
+
+    const { height, width } = useWindowDimensions();
+
+    var showLegend = ((width < 1100 && width > 900) || (width > 1500)) && height > 800;
 
     return (
         <MaxCard title={
@@ -250,6 +254,9 @@ const Messages = props => {
                                 tooltips: {
                                     mode: "label",
                                 },
+                                legend: {
+                                    display: showLegend,
+                                }
                             }}
                         />
                     </div>
@@ -357,7 +364,7 @@ const Stats = props => {
                 schedules: schedules.length
             });
         });
-    }, [devices]);
+    }, [devices, schedules]);
 
     return (
         <MaxCard title={
@@ -497,6 +504,7 @@ const Dashboard = props => {
         }
 
         getMessageTimeline(props.site, origins);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [origins, props.site]);
 
     return (
@@ -529,4 +537,4 @@ const Dashboard = props => {
     );
 };
 
-export { Dashboard };
+export default Dashboard;
