@@ -15,7 +15,7 @@
     "chart.js": "^2.9.3",
     "graphviz-react": "1.1.1",
     "leaflet": "^1.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "prop-types": "^15.7.2",
     "query-string": "^6.8.3",
     "react": "^16.11.0",
