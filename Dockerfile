@@ -1,7 +1,7 @@
 # build environment
-FROM node:13.12.0-alpine as build
+FROM node:16-alpine as build
 
-RUN apk add --no-cache python make g++
+RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
