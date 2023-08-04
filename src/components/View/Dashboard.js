@@ -474,6 +474,7 @@ const Dashboard = props => {
             group: "created_at",
             filter: {
                 originId: origin.id,
+                originType: origin.type,
                 createdAt: { gteq: formatDateTime(oneYearAgo) },
             },
         }).then(response => {
