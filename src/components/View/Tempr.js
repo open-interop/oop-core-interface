@@ -45,6 +45,7 @@ const getTempr = (temprId, deviceGroupId) => {
             endpointType: "http",
             queueResponse: false,
             queueRequest: false,
+            saveConsole: false,
             notes: "",
             template: {},
         });
@@ -174,6 +175,7 @@ const Tempr = props => {
     const [endpointType, setEndpointType] = useState("http");
     const [queueResponse, setQueueResponse] = useState(false);
     const [queueRequest, setQueueRequest] = useState(false);
+    const [saveConsole, setSaveConsole] = useState(false);
     const [notes, setNotes] = useState("");
     const [template, setTemplate] = useState({});
     const [exampleTransmission, setExampleTransmission] = useState("");
@@ -227,6 +229,7 @@ const Tempr = props => {
             endpointType: tempr.endpointType,
             queueResponse: tempr.queueResponse,
             queueRequest: tempr.queueRequest,
+            saveConsole: tempr.saveConsole,
             notes: tempr.notes,
             template: tempr.template,
             exampleTransmission: tempr.exampleTransmission,
@@ -247,6 +250,7 @@ const Tempr = props => {
         setEndpointType(tempr.endpointType);
         setQueueResponse(tempr.queueResponse);
         setQueueRequest(tempr.queueRequest);
+        setSaveConsole(tempr.saveConsole);
         setNotes(tempr.notes);
         setTemplate(tempr.template);
         setExampleTransmission(tempr.exampleTransmission);
@@ -261,6 +265,7 @@ const Tempr = props => {
             endpointType,
             queueResponse,
             queueRequest,
+            saveConsole,
             notes,
             template,
             exampleTransmission,
@@ -307,6 +312,7 @@ const Tempr = props => {
                         endpointType: response.endpointType,
                         queueResponse: response.queueResponse,
                         queueRequest: response.queueRequest,
+                        saveConsole: response.saveConsole,
                         notes: response.notes,
                         template: response.template,
                         exampleTransmission: response.exampleTransmission,
@@ -330,6 +336,7 @@ const Tempr = props => {
                         endpointType: response.endpointType,
                         queueResponse: response.queueResponse,
                         queueRequest: response.queueRequest,
+                        saveConsole: response.saveConsole,
                         notes: response.notes,
                         template: response.template,
                         exampleTransmission: response.exampleTransmission,
@@ -473,6 +480,7 @@ const Tempr = props => {
                             endpointType={[endpointType, setEndpointType]}
                             queueResponse={[queueResponse, setQueueResponse]}
                             queueRequest={[queueRequest, setQueueRequest]}
+                            saveConsole={[saveConsole, setSaveConsole]}
                             groups={groups}
                             temprId={temprId}
                             errors={temprErrors}

@@ -28,6 +28,8 @@ const Transmission = props => {
 
     const [showResponse, setShowResponse] = React.useState(false);
 
+    const [showConsole, setShowConsole] = React.useState(false);
+
     const [retrying, setRetrying] = useState(null);
 
     const allTransmissionsPath = (props.location.state && props.location.state.from) ? props.location.state.from
@@ -43,25 +45,31 @@ const Transmission = props => {
 
     let requestBody;
     try {
-        requestBody = JSON.stringify(
-            JSON.parse(transmission.requestBody),
-            null,
-            "    "
-        );
+        if(transmission.requestBody) {
+            requestBody = JSON.stringify(
+                JSON.parse(transmission.requestBody),
+                null,
+                "    "
+            );
+        }
     } catch (e) {
         requestBody = transmission.requestBody;
     }
 
     let responseBody;
     try {
-        responseBody = JSON.stringify(
-            JSON.parse(transmission.responseBody),
-            null,
-            "    "
-        );
+        if(transmission.responseBody) {
+            responseBody = JSON.stringify(
+                JSON.parse(transmission.responseBody),
+                null,
+                "    "
+            );
+        }
     } catch (e) {
         responseBody = transmission.responseBody;
     }
+
+    let consoleOutput = transmission.consoleOutput;
 
     const RetryButton = props => {
         return (
@@ -73,7 +81,7 @@ const Transmission = props => {
             >
                 {retrying === null ? "Retry" : "Retried"}
             </Button>
-        )       
+        )
     }
 
     async function retryMessage() {
@@ -265,6 +273,15 @@ const Transmission = props => {
                             <FlexGridItem {...itemProps}>
                                 <ListItem>
                                     <div className="card-label">
+                                        <ListItemLabel description="State">
+                                            {OopCore.capitalise(transmission.state)}
+                                        </ListItemLabel>
+                                    </div>
+                                </ListItem>
+                            </FlexGridItem>
+                            <FlexGridItem {...itemProps}>
+                                <ListItem>
+                                    <div className="card-label">
                                         <ListItemLabel description="Transmitted at">
                                             <DatetimeTooltip
                                                 time={transmission.transmittedAt}
@@ -335,7 +352,22 @@ const Transmission = props => {
                                     </Button>
                                 </FlexGridItem>
                             )}
-                            {!transmission?.retriedAt &&
+
+                            {consoleOutput && (
+                                <FlexGridItem {...itemProps}>
+                                    <Button
+                                        kind={KIND.secondary}
+                                        onClick={() =>
+                                            setShowConsole(!showConsole)
+                                        }
+                                    >
+                                        {showConsole
+                                            ? "Hide console output"
+                                            : "View console output"}
+                                    </Button>
+                                </FlexGridItem>
+                            )}
+                            {!transmission?.retriedAt && transmission.requestBody &&
                                 <FlexGridItem {...itemProps}>
                                     <RetryButton />
                                 </FlexGridItem>
@@ -387,6 +419,32 @@ const Transmission = props => {
                                                 8,
                                             )}
                                             value={responseBody}
+                                            style={{ width: "100%" }}
+                                        />
+                                    </>
+                                )}
+                            </FlexGridItem>
+
+                            <FlexGridItem>
+                                {showConsole && (
+                                    <>
+                                        <h2>Console Output</h2>
+                                        <AceEditor
+                                            placeholder=""
+                                            mode="text"
+                                            theme="monokai"
+                                            name="responseAce"
+                                            fontSize={14}
+                                            readOnly={true}
+                                            highlightActiveLine={true}
+                                            maxLines={25}
+                                            minLines={Math.max(
+                                                consoleOutput.split(
+                                                    /\r\n|\r|\n/,
+                                                ).length + 2,
+                                                8,
+                                            )}
+                                            value={consoleOutput}
                                             style={{ width: "100%" }}
                                         />
                                     </>
