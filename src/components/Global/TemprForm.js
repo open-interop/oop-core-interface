@@ -8,7 +8,7 @@ import { Textarea } from "baseui/textarea";
 
 import { TemprSelector } from "../Global";
 
-const endpointTypeOptions = [{ id: "http" }, { id: "ftp" }];
+const endpointTypeOptions = [{ id: "http" }, { id: "tempr" }];
 
 const TemprForm = memo(props => {
     const [name, setName] = props.name;
@@ -18,6 +18,7 @@ const TemprForm = memo(props => {
     const [endpointType, setEndpointType] = props.endpointType;
     const [queueResponse, setQueueResponse] = props.queueResponse;
     const [queueRequest, setQueueRequest] = props.queueRequest;
+    const [saveConsole, setSaveConsole] = props.saveConsole;
 
     const setValue = setter => {
         return event => {
@@ -122,6 +123,16 @@ const TemprForm = memo(props => {
                 <Checkbox
                     checked={queueRequest}
                     onChange={() => setQueueRequest(!queueRequest)}
+                    checkmarkType={STYLE_TYPE.toggle_round}
+                />
+            </FormControl>
+            <FormControl
+                label="Save Console Output"
+                key={`form-control-save-console`}
+            >
+                <Checkbox
+                    checked={saveConsole}
+                    onChange={() => setSaveConsole(!saveConsole)}
                     checkmarkType={STYLE_TYPE.toggle_round}
                 />
             </FormControl>

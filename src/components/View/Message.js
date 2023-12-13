@@ -299,7 +299,7 @@ const Message = props => {
                                         <ListItem>
                                             <div className="card-label">
                                                 <ListItemLabel description="State">
-                                                    {message && message.state ? message.state :
+                                                    {message && message.state ? OopCore.capitalise(message.state) :
                                                         "No data available"}
                                                 </ListItemLabel>
                                             </div>
@@ -315,7 +315,7 @@ const Message = props => {
                                             </div>
                                         </ListItem>
                                     </FlexGridItem>
-                                    {(message?.customFieldA || message?.customFieldB) &&
+                                    {(message?.customFieldA) &&
                                         <>
                                             <FlexGridItem {...itemProps}>
                                                 <ListItem>
@@ -326,6 +326,10 @@ const Message = props => {
                                                     </div>
                                                 </ListItem>
                                             </FlexGridItem>
+                                        </>
+                                    }
+                                    {(message?.customFieldB) &&
+                                        <>
                                             <FlexGridItem {...itemProps}>
                                                 <ListItem>
                                                     <div className="card-label">
