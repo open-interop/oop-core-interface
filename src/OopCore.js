@@ -55,6 +55,10 @@ class OopCore extends EventEmitter {
             });
     }
 
+    capitalise(string) {
+        return string[0].toUpperCase() + string.slice(1);
+    }
+
     isObject(o) {
         return o === Object(o) && !Array.isArray(o) && typeof o !== "function";
     }
