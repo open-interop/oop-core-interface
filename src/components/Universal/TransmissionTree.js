@@ -48,7 +48,7 @@ const TransmissionTree = props => {
                                 <ListItem>
                                     <div className="card-label">
                                         <ListItemLabel description="UUID">
-                                            {node.messageUuid ||
+                                            {node.transmissionUuid ||
                                                 "No data available"}
                                         </ListItemLabel>
                                     </div>
@@ -96,7 +96,7 @@ const TransmissionTree = props => {
                                     {"View Transmission Details"}
                                 </Button>
                             </FlexGridItem>
-                            {node.children && (
+                            {node.children && node.children.length && (
                                 <FlexGridItem>
                                     <Button
                                         kind={KIND.minimal}

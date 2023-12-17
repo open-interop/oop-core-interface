@@ -77,12 +77,10 @@ const Transmissions = props => {
     }
 
     const onSelectAll = (data) => {
-        console.log("hey")
         const newCheckedTransmissions = [];
         if(allChecked){
             setCheckedTransmissions([])
         } else {
-            console.log(data)
             for (const item of data){
                 newCheckedTransmissions.push(item.id)
             }
