@@ -60,7 +60,6 @@ const Schedules = lazy(() => import("./components/View/Schedules"));
 const Site = lazy(() => import("./components/View/Site"));
 const Sites = lazy(() => import("./components/View/Sites"));
 const Tempr = lazy(() => import("./components/View/Tempr"));
-const TemprMap = lazy(() => import("./components/View/TemprMap"));
 const Temprs = lazy(() => import("./components/View/Temprs"));
 const Transmission = lazy(() => import("./components/View/Transmission"));
 const Transmissions = lazy(() => import("./components/View/Transmissions"));
@@ -309,13 +308,6 @@ class App extends Component {
                                 exact
                                 render={props =>
                                     this.getComponent(!hasUser, Temprs, props)
-                                }
-                            />
-                            <Route
-                                path="/temprs/:temprId/map"
-                                exact
-                                render={props =>
-                                    this.getComponent(!hasUser, TemprMap, props)
                                 }
                             />
                             <Route

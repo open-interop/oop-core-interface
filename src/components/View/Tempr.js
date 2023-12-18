@@ -25,6 +25,7 @@ import {
 
 import DeviceAssociator from "../Global/DeviceAssociator";
 import ScheduleAssociator from "../Global/ScheduleAssociator";
+import LayerAssociator from "../Global/LayerAssociator";
 
 import { compareByValue } from "../../Utilities";
 
@@ -63,6 +64,10 @@ const getData = (temprId, deviceGroupId, getParents, getChildren) => {
             "page[size]": -1,
         }),
         OopCore.getScheduleTemprs({
+            filter: { temprId: temprId },
+            "page[size]": -1,
+        }),
+        OopCore.getTemprLayers({
             filter: { temprId: temprId },
             "page[size]": -1,
         }),
@@ -157,6 +162,45 @@ const ScheduleTemprAssociator = memo(({
     );
 });
 
+const LayerTemprAssociator = memo(({
+    temprId,
+    layerTemprs,
+    setLayerTemprs,
+    temprErrors,
+    setTemprErrors
+}) => {
+    return (
+        <LayerAssociator
+            selected={layerTemprs}
+            onSelect={layer => {
+                return OopCore.createTemprLayer({
+                    layerId: layer.id,
+                    temprId
+                })
+                    .then(res => {
+                        setLayerTemprs([...layerTemprs, res]);
+                    })
+                    .catch(error => {
+                        temprErrors.layerTemprs = error.errors;
+                    });
+            }}
+            onDeselect={(layer, st) => {
+                return OopCore.deleteTemprLayer(st.id, {
+                    layerId: layer.id,
+                    temprId
+                })
+                    .then(() => {
+                        setLayerTemprs(layerTemprs.filter(v => v.id !== st.id));
+                    })
+                    .catch(error => {
+                        temprErrors.layerTemprs = error.errors;
+                    });
+            }}
+            error={temprErrors.layerTemprs}
+        />
+    );
+});
+
 const Tempr = props => {
     const temprId = props.match.params.temprId;
 
@@ -185,6 +229,7 @@ const Tempr = props => {
     const [groups, setGroups] = useState([]);
     const [deviceTemprs, setDeviceTemprs] = useState([]);
     const [scheduleTemprs, setScheduleTemprs] = useState([]);
+    const [layerTemprs, setLayerTemprs] = useState([]);
     const [deleting, setDeleting] = useState(false);
     const [creating, setCreating] = useState(false);
 
@@ -220,7 +265,7 @@ const Tempr = props => {
         setNoParents(!t.temprId);
     };
 
-    const setData = ([tempr, groups, deviceTemprs, scheduleTemprs]) => {
+    const setData = ([tempr, groups, deviceTemprs, scheduleTemprs, layerTemprs]) => {
         setOriginalTempr({
             name: tempr.name,
             description: tempr.description,
@@ -239,6 +284,7 @@ const Tempr = props => {
         setGroups(groups.data);
         setDeviceTemprs(deviceTemprs.data);
         setScheduleTemprs(scheduleTemprs.data);
+        setLayerTemprs(layerTemprs.data);
         setLoading(false);
     };
 
@@ -421,15 +467,6 @@ const Tempr = props => {
                             History
                         </Button>
                     )}
-                    {blankTempr || (noParents && noChildren) ? null : (
-                        <Button
-                            $as={Link}
-                            to={`${props.location.pathname}/map`}
-                            aria-label={"Tempr Map"}
-                        >
-                            View Map
-                        </Button>
-                    )}
                     {blankTempr ? null : (
                         <ConfirmModal
                             buttonText="Delete"
@@ -497,6 +534,14 @@ const Tempr = props => {
                         </FormControl>
                         {blankTempr ? null : (
                             <>
+                                <LayerTemprAssociator
+                                    temprId={temprId}
+                                    layerTemprs={layerTemprs}
+                                    setLayerTemprs={setLayerTemprs}
+                                    temprErrors={temprErrors}
+                                    setTemprErrors={setTemprErrors}
+                                    deviceGroupId={deviceGroupId}
+                                />
                                 <DeviceTemprAssociator
                                     temprId={temprId}
                                     deviceTemprs={deviceTemprs}

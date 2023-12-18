@@ -101,7 +101,7 @@ const Layer = props => {
         if (blankLayer) {
             return Promise.resolve([]);
         } else {
-            return OopCore.getTemprLayers({ layerId: props.match.params.layerId })
+            return OopCore.getTemprLayers({ filter: { layerId: props.match.params.layerId } })
                 .then(res => res.data);
         }
     };
@@ -214,7 +214,8 @@ const Layer = props => {
                                 value={updatedLayer.script}
                             />
                         </FormControl>
-                        {blankLayer || <TemprAssociator
+                        {blankLayer ||
+                        <TemprAssociator
                             subtitle="Select temprs to associate with this layer."
                             selected={relations}
                             onSelect={tempr => {
