@@ -104,17 +104,19 @@ const Message = props => {
                     return null;
                 }
             }
+
             var childrenOfChild = await OopCore.getTemprs({
                 "filter[tempr_id]": child.id,
             });
-            var allChildren = null;
+
+            var allChildren = [];
 
             if (childrenOfChild.data.length > 0) {
-                allChildren = await Promise.all(
-                    childrenOfChild.data.map(newChild =>
-                        getChildren(newChild, depth + 1),
-                    ),
-                );
+                for (const newChild of childrenOfChild.data) {
+                  let childNode = await getChildren(newChild, depth + 1);
+
+                  allChildren.push(...childNode)
+                }
             }
 
             var node = [];
@@ -125,27 +127,31 @@ const Message = props => {
                 name: child.name,
                 depth: depth,
                 isExpanded: false,
-                transmissionMade: true,
                 messageId: props.match.params.messageId,
+            }
+
+            if (allChildren) {
+                nodeObj.children = allChildren;
             }
 
             if (transmissionObject[child.id]) {
                 if(Array.isArray(transmissionObject[child.id])){
                     for(const transmission of transmissionObject[child.id]){
-                        console.log(transmission)
                         node.push({
                             ...nodeObj,
                             id: transmission.id,
-                            messageUuid: transmission.transmissionUuid,
+                            transmissionUuid: transmission.transmissionUuid,
                             status: transmission.status,
                             transmittedAt: transmission.transmittedAt,
                             transmissionId: transmission.id,
+                            transmissionMade: true
                         })
                     }
                 } else {
                     node.push({
                         ...nodeObj,
-                        messageUuid: transmissionObject[child.id].transmissionUuid,
+                        id: transmissionObject[child.id],
+                        transmissionUuid: transmissionObject[child.id].transmissionUuid,
                         status: transmissionObject[child.id].status,
                         transmittedAt: transmissionObject[child.id].transmittedAt,
                         transmissionId: transmissionObject[child.id].id,
@@ -153,10 +159,6 @@ const Message = props => {
                 }
             } else {
                 node.push(nodeObj)
-            }
-
-            if (allChildren) {
-                node.children = allChildren;
             }
 
             return node;
@@ -167,6 +169,7 @@ const Message = props => {
 
         for(const child of children){
             const childArray = await getChildren(child, 1);
+
             temprHierarchy.push(...childArray)
         }
 
